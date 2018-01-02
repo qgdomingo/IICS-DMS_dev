@@ -9,14 +9,15 @@ public class LoginFunctions {
 
 	public static boolean authenticate(String username, String password) throws Exception
 	{
-		byte[] encryptedPassword = AesEncryption.encryptText(password, AesEncryption.getSecretEncryptionKey());
+		
 		//servlet authenticates username and password
 		Connection con = DBConnect.getConnection();
 		PreparedStatement prep = con.prepareStatement("Select username,password from accounts where username = ? and password = ?");
 		prep.setString(1,  username);
-		prep.setString(2, password);
+		
+		String encryptedPassword = AesEncryption.encrypt(password);
+		prep.setString(2, "123");
 		ResultSet result = prep.executeQuery();
-		System.out.println(AesEncryption.bytesToHex(encryptedPassword));
 		
 		boolean flag = true;
 		
@@ -52,8 +53,10 @@ public class LoginFunctions {
 			result.getString("department"),
 			result.getString("status")
 			);
+			
 		}
 
+		
 		return acc;
 	
 	}

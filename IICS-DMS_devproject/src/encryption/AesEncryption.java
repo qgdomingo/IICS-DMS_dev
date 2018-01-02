@@ -1,55 +1,39 @@
 package encryption;
-
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import javax.xml.bind.DatatypeConverter;
+import javax.crypto.spec.SecretKeySpec;
+import org.apache.commons.codec.binary.*;
 
-public class AesEncryption {
-	
-	 public static SecretKey getSecretEncryptionKey() throws Exception{
-	        KeyGenerator generator = KeyGenerator.getInstance("AES");
-	        generator.init(128); // The AES key size in number of bits
-	        SecretKey secKey = generator.generateKey();
-	        return secKey;
-	    }
-	    
-	    /**
-	     * Encrypts plainText in AES using the secret key
-	     * @param plainText
-	     * @param secKey
-	     * @return
-	     * @throws Exception 
-	     */
-	    public static byte[] encryptText(String plainText,SecretKey secKey) throws Exception{
-			// AES defaults to AES/ECB/PKCS5Padding in Java 7
-	        Cipher aesCipher = Cipher.getInstance("AES");
-	        aesCipher.init(Cipher.ENCRYPT_MODE, secKey);
-	        byte[] byteCipherText = aesCipher.doFinal(plainText.getBytes());
-	        return byteCipherText;
-	    }
-	    
-	    /**
-	     * Decrypts encrypted byte array using the key used for encryption.
-	     * @param byteCipherText
-	     * @param secKey
-	     * @return
-	     * @throws Exception 
-	     */
-	    public static String decryptText(byte[] byteCipherText, SecretKey secKey) throws Exception {
-			// AES defaults to AES/ECB/PKCS5Padding in Java 7
-	        Cipher aesCipher = Cipher.getInstance("AES");
-	        aesCipher.init(Cipher.DECRYPT_MODE, secKey);
-	        byte[] bytePlainText = aesCipher.doFinal(byteCipherText);
-	        return new String(bytePlainText);
-	    }
-	    
-	    /**
-	     * Convert a binary byte array into readable hex form
-	     * @param hash
-	     * @return 
-	     */
-	    public static String  bytesToHex(byte[] hash) {
-	        return DatatypeConverter.printHexBinary(hash);
-	    }
+public class AesEncryption{
+
+
+
+    private static byte[] key = {'i','i','c','s','d','m','s','0',
+                                 't','h','e','s','i','s','0','3'};
+    
+    public static String encrypt(String strToEncrypt) {
+        String encryptedString = null;
+        try {
+                                                // ServletContext (web.xml)
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            final SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            encryptedString = Base64.encodeBase64String(cipher.doFinal(strToEncrypt.getBytes()));
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+        return encryptedString;
+    }
+
+    public static String decrypt(String codeDecrypt) {
+        String decryptedString = null;
+        try {
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
+            final SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            decryptedString = new String(cipher.doFinal(Base64.decodeBase64(codeDecrypt)));
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+        return decryptedString;
+    }
 }
