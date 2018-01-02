@@ -8,5 +8,10 @@
 	</head>
 	<body>
 		<h1>Hello, fam.</h1>
+		<form>
+			<input type="text"/>
+			<input type="password" />
+			<input type="submit" value="Sub"/>
+		</form>
 	</body>
 </html>
