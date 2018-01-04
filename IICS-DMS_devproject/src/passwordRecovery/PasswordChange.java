@@ -1,7 +1,5 @@
 package passwordRecovery;
 
-import utility.SendMail;
-import utility.GenerateCode;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -11,19 +9,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
 /**
- * Servlet implementation class EmailRecovery
+ * Servlet implementation class PasswordChange
  */
-@WebServlet("/EmailRecovery")
-public class EmailRecovery extends HttpServlet {
+@WebServlet("/PasswordChange")
+public class PasswordChange extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public EmailRecovery() {
+    public PasswordChange() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,26 +31,19 @@ public class EmailRecovery extends HttpServlet {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		
-		String recipient = "2014069003@ust-ics.mygbiz.com";//request.getParameter("email");
-		String subject = "Password Recovery";
+		String email = request.getParameter("email");
+		String code = request.getParameter("code");
+        String newPassword = request.getParameter("new_password");
+        String confirmPassword = request.getParameter("confirm_password");
+        
+        try {
+        	
+			PasswordRecoveryFunctions.updatePassword(email ,newPassword ,confirmPassword ,code);//UPDATES PASSWORD
 		
-		/***********************start of message**********************/
-		String message = "Good day " +  recipient + ",";
-		String code = GenerateCode.generateRecoveryCode();
-		message += "Your security code is : " + code;
-		/************************end of message**********************/
-		
-		String userName = "jlteoh23@gmail.com";
-		String password = "jed231096";
-		 
-		try {
-			PasswordRecoveryFunctions.addRecoveryCode(recipient, code);//add to database
-		} catch (SQLException e) {
-			
+        } catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		SendMail.send(recipient,subject, message, userName, password);//send email
 	}
 
 	/**
