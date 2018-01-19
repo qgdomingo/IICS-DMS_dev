@@ -4,6 +4,7 @@
 
 	$(document).ready(() => {
 		$('#forgotpass1').modal();
+		
 	});
 	
 	$('#forgotpass_btn').click(() => {
