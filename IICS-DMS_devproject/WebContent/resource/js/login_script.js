@@ -8,5 +8,16 @@
 	});
 	
 	$('#forgotpass_btn').click(() => {
-		$('#forgotpass1').modal('show');
+		$('#forgotpass_1')
+			.modal({
+				blurring: true,
+				closable: false
+			})
+			.modal('show');
 	});
+	
+	$('#cancelforgot_btn').click(() => {
+		$('#forgotpass_1').modal('hide');
+		$('#forgotpass_email').val('');
+	});
+	

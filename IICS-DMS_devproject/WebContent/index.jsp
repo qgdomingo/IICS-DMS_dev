@@ -36,7 +36,7 @@
 					</div>
 					<div class="field">
 						<label>Password</label>
-						<input placeholder="Password" name="user_password"type="password" />
+						<input placeholder="Password" name="user_password" type="password" />
 					</div>
 					<input class="fluid medium ui green button" type="submit" value="Login"/>
 				</form>
@@ -52,15 +52,24 @@
 		
 		<!-- MODALS -->
 			<!-- FORGOT PASSWORD MODAL - 1 -->
-			<div class="ui tiny modal" id="forgotpass1">
-				<div class="header">Forgot Password</div>
-				<p>Please enter your account's email address.</p>
-				<div class="field">
-					<label>Email Address</label>
-					<input type="email" placeholder="Email Address">
+			<div class="ui tiny modal" id="forgotpass_1">
+				<div class="header">
+					<h3 class="ui header">
+						<i class="help circle outline icon"></i>
+						<div class="content">Forgot Password</div>
+					</h3>
+				</div>
+				<div class="modal-content">
+					<p class="element-mb">Please enter your account's email address.</p>
+					<form class="ui form">
+						<div class="field">
+							<label>Email Address</label>
+							<input id="forgotpass_email" type="email" placeholder="Email Address">
+						</div>
+					</form>
 				</div>
 				<div class="actions">
-					<button class="ui grey button">
+					<button class="ui grey button" id="cancelforgot_btn">
 						<i class="remove icon"></i>
 						Cancel
 					</button>
@@ -70,7 +79,11 @@
 					</button>
 				</div>
 			</div>
-		
+			
+			
+			<!-- CONTACT THE DIRECTOR MODAL -->
+			<div class="ui modal"></div>
+						
 	</body>
 	<script src="resource/js/jquery-3.2.1.min.js"></script>
 	<script src="resource/semanticui/semantic.min.js"></script>
