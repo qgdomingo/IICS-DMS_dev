@@ -32,27 +32,24 @@
 				<form class="ui form element-mb" method="Login" action="POST">
 					<div class="field">
 						<label>Username</label>
-						<input placeholder="Username" name="user_email" type="text"/>
+						<input placeholder="Username" name="user_email" type="text" required/>
 					</div>
 					<div class="field">
 						<label>Password</label>
-						<input placeholder="Password" name="user_password" type="password" />
+						<input placeholder="Password" name="user_password" type="password" required/>
 					</div>
 					<input class="fluid medium ui green button" type="submit" value="Login"/>
 				</form>
 				
 				<!-- AFTER FORM -->	
-				<a href="#" id="forgotpass_btn">Forgot Password?</a>
-				<br>
-				<a>Contact the Director</a>
-				
-				<br>
+				<p>Having trouble remembering your password? Click <a href="#" id="forgotpass_btn">here</a>!</p>
+				<p>Do you have some lovely messages for the Director? <a href="#"> Send a message</a>.</p>
 			</div>
 		</div>
 		
 		<!-- MODALS -->
 			<!-- FORGOT PASSWORD MODAL - 1 -->
-			<div class="ui tiny modal" id="forgotpass_1">
+			<div class="ui tiny modal" id="forgotpass_dia">
 				<div class="header">
 					<h3 class="ui header">
 						<i class="help circle outline icon"></i>
@@ -60,20 +57,27 @@
 					</h3>
 				</div>
 				<div class="modal-content">
-					<p class="element-mb">Please enter your account's email address.</p>
+					<p class="element-mb">
+						Let us help you with that by sending you an email! 
+						But first we're going to need the email address of your registered account.
+					</p>
 					<form class="ui form">
 						<div class="field">
 							<label>Email Address</label>
 							<input id="forgotpass_email" type="email" placeholder="Email Address">
 						</div>
 					</form>
+					<p class="microcopy-hint">
+						Pst! Cant remember your email? It's your gbiz account.
+					</p>
+
 				</div>
 				<div class="actions">
 					<button class="ui grey button" id="cancelforgot_btn">
 						<i class="remove icon"></i>
 						Cancel
 					</button>
-					<button class="positive ui button">
+					<button class="positive ui button" id="submitforgot_btn">
 						<i class="checkmark icon"></i>
 						Submit
 					</button>

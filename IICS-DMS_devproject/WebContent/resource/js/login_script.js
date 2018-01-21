@@ -1,5 +1,6 @@
 /**
- * 	JAVASCRIPT UTILIZED BY THE LOGIN PAGE
+ * 	login_script.js
+ * 	- used by the Login page (index.jsp) for scripting functionalities, mostly used for dialog boxes
  */
 
 	$(document).ready(() => {
@@ -8,7 +9,7 @@
 	});
 	
 	$('#forgotpass_btn').click(() => {
-		$('#forgotpass_1')
+		$('#forgotpass_dia')
 			.modal({
 				blurring: true,
 				closable: false
@@ -17,7 +18,16 @@
 	});
 	
 	$('#cancelforgot_btn').click(() => {
-		$('#forgotpass_1').modal('hide');
+		$('#forgotpass_dia').modal('hide');
 		$('#forgotpass_email').val('');
+	});
+	
+	$('#submitforgot_btn').click(() => {
+		$('#forgotpass_dia').modal('hide');
+		$('#forgotpass_email').val('');
+		$.ajax({
+			type: "POST",
+			url: ""
+		})
 	});
 	

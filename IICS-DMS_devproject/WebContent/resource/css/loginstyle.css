@@ -1,7 +1,7 @@
 @charset "ISO-8859-1";
 		
 	.login-background {
-		background-image: url("../images/login_bg.png");
+		background-image: url("../images/login_bg2.png");
 	    height: 100%;
 	    background-position: center;
 	    background-repeat: no-repeat;
@@ -18,4 +18,9 @@
 	
 	.modal-content {
 		margin: 20px;
+	}
+	
+	.microcopy-hint {
+		color: gray;
+		font-size: 12px;
 	}
