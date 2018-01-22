@@ -1,7 +1,6 @@
 package utility;
 
 import java.util.Random;
-import encryption.AesEncryption;
 
 public class GenerateCode {
 

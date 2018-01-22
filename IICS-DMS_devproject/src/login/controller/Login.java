@@ -1,7 +1,6 @@
-package passwordRecovery;
+package login.controller;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,19 +8,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class InputRecoveryCode
+ * Servlet implementation class Login
  */
-@WebServlet("/InputRecoveryCode")
-public class InputRecoveryCode extends HttpServlet {
+@WebServlet("/Login")
+public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public InputRecoveryCode() {
+    public Login() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,22 +32,7 @@ public class InputRecoveryCode extends HttpServlet {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		
-		String email = "quennelgiodomingo@gmail.com";//request.getParameter("email");
-		String code = "27250";//request.getParameter("code");
 		
-		try {
-			
-			 PasswordRecoveryFunctions.checkRecoveryCode(email, code);//checks if recovery code is valid
-			 request.setAttribute("email", email);
-			 request.setAttribute("code", code);
-			 
-	         RequestDispatcher rd = request.getRequestDispatcher("InputPassword.jsp");
-	         rd.forward(request, response);
-	         
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -57,6 +41,28 @@ public class InputRecoveryCode extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
+		
+		String email = request.getParameter("user_email");
+		String password = request.getParameter("user_password");
+		
+		try {
+			
+			HttpSession session = request.getSession();
+			if(LoginFunctions.authenticate( email , password ) == true)//authenticates if username and password is valid
+			{
+				session.setAttribute("currentCredentials", LoginFunctions.authorize(email));
+				
+				RequestDispatcher dispatcher =
+				getServletContext().getRequestDispatcher("/userprofile.jsp");
+				dispatcher.forward(request,response);
+				// if username is not empty it will set the Credentials for session
+			}
+			
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

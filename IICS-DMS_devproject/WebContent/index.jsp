@@ -29,7 +29,7 @@
 
 				<!-- LOGIN FORM -->
 				<h1 class="ui grey header">Login</h1>
-				<form class="ui form element-mb" method="Login" action="POST">
+				<form class="ui form element-mb" method="Post" action="Login">
 					<div class="field">
 						<label>Username</label>
 						<input placeholder="Username" name="user_email" type="text"/>
