@@ -1,4 +1,4 @@
-package passwordrecovery.controller;
+package passwordRecovery.controller;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

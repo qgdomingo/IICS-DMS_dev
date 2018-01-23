@@ -1,4 +1,4 @@
-package passwordrecovery.controller;
+package passwordRecovery.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
