@@ -1,4 +1,4 @@
-package passwordRecovery;
+package passwordrecovery.controller;
 
 import utility.SendMail;
 import utility.GenerateCode;

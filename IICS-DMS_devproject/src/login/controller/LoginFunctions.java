@@ -1,22 +1,22 @@
-package loginModule;
+package login.controller;
 
 import java.sql.*;
 import databaseConnection.*;
-import encryption.AesEncryption;
 import model.Account;
+import utility.AesEncryption;
 
 public class LoginFunctions {
 
-	public static boolean authenticate(String username, String password) throws Exception
+	public static boolean authenticate(String email, String password) throws SQLException
 	{
 		
 		//servlet authenticates username and password
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("Select username,password from accounts where username = ? and password = ?");
-		prep.setString(1,  username);
+		PreparedStatement prep = con.prepareStatement("Select email,password from accounts where email = ? and password = ?");
+		prep.setString(1,  email);
 		
 		String encryptedPassword = AesEncryption.encrypt(password);
-		prep.setString(2, "123");
+		prep.setString(2, encryptedPassword);
 		ResultSet result = prep.executeQuery();
 		
 		boolean flag = true;
@@ -26,8 +26,6 @@ public class LoginFunctions {
 			flag = false;
 		}
 		
-		
-		
 		return flag; //returns if username and password is authorized
 		
 	}
@@ -36,7 +34,7 @@ public class LoginFunctions {
 	{
 		
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("Select * from accounts where username = ?");
+		PreparedStatement prep = con.prepareStatement("Select * from accounts where email = ?");
 		prep.setString(1,  username);
 		ResultSet result = prep.executeQuery();
 		

@@ -1,4 +1,4 @@
-package passwordRecovery;
+package manageuser.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -10,16 +10,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class PasswordChange
+ * Servlet implementation class DisableUser
  */
-@WebServlet("/PasswordChange")
-public class PasswordChange extends HttpServlet {
+@WebServlet("/DisableUser")
+public class DisableUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public PasswordChange() {
+    public DisableUser() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,18 +31,18 @@ public class PasswordChange extends HttpServlet {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		
-		String email = request.getParameter("email");
-		String code = request.getParameter("code");
-        String newPassword = request.getParameter("new_password");
-        String confirmPassword = request.getParameter("confirm_password");
-        
-        try {
-        	
-			PasswordRecoveryFunctions.updatePassword(email ,newPassword ,confirmPassword ,code);//UPDATES PASSWORD
+		String[] selected = request.getParameterValues("selected");
 		
-        } catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		for(String email : selected)
+		{
+			try {
+				
+				manageUserFunctions.disableStatus("jlteoh23@gmail.com");
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

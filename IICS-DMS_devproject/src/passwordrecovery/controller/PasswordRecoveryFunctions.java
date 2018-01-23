@@ -1,4 +1,4 @@
-package passwordRecovery;
+package passwordrecovery.controller;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import databaseConnection.DBConnect;
-import encryption.AesEncryption;
+import utility.AesEncryption;
 
 public class PasswordRecoveryFunctions {
 	
@@ -20,6 +20,19 @@ public class PasswordRecoveryFunctions {
 			prep.setString(2, encryptedCode);
 			
 			prep.executeUpdate();
+	}
+	
+	public static void deleteRecoveryCode(String email,String code) throws SQLException
+	{
+
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("delete from account_recovery where email = ? and code = ?");
+			String encryptedCode = AesEncryption.encrypt(code);
+			prep.setString(1,  email);
+			prep.setString(2, encryptedCode);
+			
+			System.out.println(prep.executeUpdate());
+			
 	}
 	
 	public static boolean checkRecoveryCode(String email, String code) throws SQLException
@@ -62,17 +75,6 @@ public class PasswordRecoveryFunctions {
 			return result;
 	}
 	
-	public static void deleteRecoveryCode(String email,String code) throws SQLException
-	{
 
-			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("delete from account_recovery where email = ? and code = ?");
-			String encryptedCode = AesEncryption.encrypt(code);
-			prep.setString(1,  email);
-			prep.setString(2, encryptedCode);
-			
-			System.out.println(prep.executeUpdate());
-			
-	}
 
 }
