@@ -29,7 +29,7 @@ public class EnableUser extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		response.getWriter().append("Served at: enable user").append(request.getContextPath());
 		
 		String[] selected = request.getParameterValues("selected");
 		
@@ -37,7 +37,7 @@ public class EnableUser extends HttpServlet {
 		{
 			try {
 				
-				manageUserFunctions.enableStatus(email);
+				ManageUserFunctions.enableStatus(email);
 				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block

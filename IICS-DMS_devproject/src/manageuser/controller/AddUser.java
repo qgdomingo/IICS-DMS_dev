@@ -29,17 +29,17 @@ public class AddUser extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		response.getWriter().append("Served at: add user").append(request.getContextPath());
 		
-		String email = "jlteoh23@gmail.com";//request.getParameter("email");
-		String facultyNo = "2014069003";//request.getParameter("facultyNo");
-		String firstName = "Jed";//request.getParameter("firstName");
-		String lastName = "Teoh";//request.getParameter("lastName");
-		String userType = "Director";//request.getParameter("userType");
-		String department = "Information";//request.getParameter("department");
+		String email = request.getParameter("email");
+		String facultyNo = request.getParameter("facultyNo");
+		String firstName = request.getParameter("firstName");
+		String lastName = request.getParameter("lastName");
+		String userType = request.getParameter("userType");
+		String department = request.getParameter("department");
 		
 		try {
-			manageUserFunctions.addAccount(email, facultyNo, firstName, lastName, userType, department);
+			ManageUserFunctions.addAccount(email, facultyNo, firstName, lastName, userType, department);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

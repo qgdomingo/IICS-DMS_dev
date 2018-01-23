@@ -29,7 +29,7 @@ public class DisableUser extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		response.getWriter().append("Served at: disable user").append(request.getContextPath());
 		
 		String[] selected = request.getParameterValues("selected");
 		
@@ -37,7 +37,7 @@ public class DisableUser extends HttpServlet {
 		{
 			try {
 				
-				manageUserFunctions.disableStatus("jlteoh23@gmail.com");
+				ManageUserFunctions.disableStatus(email);
 				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block

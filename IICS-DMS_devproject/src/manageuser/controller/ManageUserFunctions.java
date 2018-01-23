@@ -2,12 +2,13 @@ package manageuser.controller;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import databaseConnection.DBConnect;
 import utility.AesEncryption;
 
-public class manageUserFunctions {
+public class ManageUserFunctions {
 
 	public static void addAccount( String email, String facultyNo, String firstName, String lastName, String userType, String department) throws SQLException
 	{
@@ -34,7 +35,7 @@ public class manageUserFunctions {
 			
 			prep.setString(1, "active");
 			prep.setString(2, email);
-		
+			System.out.println(email);
 			prep.executeUpdate();
 	}
 	
@@ -45,7 +46,17 @@ public class manageUserFunctions {
 			
 			prep.setString(1, "inactive");
 			prep.setString(2, email);
-		
+			System.out.println(email);
 			prep.executeUpdate();
+	}
+	
+	public static ResultSet viewAccounts() throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("Select * from accounts");
+			
+			ResultSet rs = prep.executeQuery();
+			
+			return rs;
 	}
 }
