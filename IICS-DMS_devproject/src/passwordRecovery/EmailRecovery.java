@@ -13,53 +13,54 @@ import javax.servlet.http.HttpServletResponse;
 
 
 /**
- * Servlet implementation class EmailRecovery
+ * EmailRecovery.java 
+ * - a servlet controller that would handle the sending of an email to the user that contains
+ * 		the reset code for authorization of changing the password of the user
  */
-@WebServlet("/EmailRecovery")
+@WebServlet("/sendemail")
 public class EmailRecovery extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public EmailRecovery() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		doPost(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String recipient = "2014069003@ust-ics.mygbiz.com";//request.getParameter("email");
-		String subject = "Password Recovery";
+		// ADD CODE TO CHECK IF THE EMAIL IS AN EXISTING USER
+		// IF EXISTING, PROCEED TO SEND EMAIL
+		// ELSE, DO NOT SEND EMAIL
 		
-		/***********************start of message**********************/
+		System.out.println(request.getParameter("foo"));
+		
+		String recipient = "2014069003@ust-ics.mygbiz.com"; //request.getParameter("email");
+		String subject = "IICS DMS Password Reset";
+		
+		/*********************** Start of E-Mail Message **********************/
 		String message = "Good day " +  recipient + ",";
 		String code = GenerateCode.generateRecoveryCode();
-		message += "Your security code is : " + code;
-		/************************end of message**********************/
+		message += "your security code is: " + code;
+		/************************ End of E-Mail Message **********************/
 		
 		String userName = "jlteoh23@gmail.com";
 		String password = "jed231096";
-		 
-		try {
-			PasswordRecoveryFunctions.addRecoveryCode(recipient, code);//add to database
-		} catch (SQLException e) {
-			
-			e.printStackTrace();
-		}
 		
-		SendMail.send(recipient,subject, message, userName, password);//send email
-	}
+		//SendMail.send(recipient, subject, message, userName, password); //send email
+		
+		//try {
+		//	PasswordRecoveryFunctions.addRecoveryCode(recipient, code); //add to database
+		//} catch (SQLException e) {
+		//	e.printStackTrace();
+		//}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
+		response.setContentType("text/plain");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().write("done");
+		// after the process, this servlet should send a response that the process is finished
 	}
 
 }

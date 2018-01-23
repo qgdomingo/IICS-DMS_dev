@@ -5,3 +5,10 @@
 	.element-mb {
 		margin-bottom: 20px;
 	}
+	
+	/* MICROCOPY */
+	
+	.microcopy-hint {
+		color: gray;
+		font-size: 12px;
+	}
