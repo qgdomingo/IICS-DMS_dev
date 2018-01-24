@@ -26,7 +26,10 @@
 					Document Management System
 				</div>
 				</h2>
-
+				
+				<!-- NOTIFICATIONS AREA -->
+				<div></div>
+				
 				<!-- LOGIN FORM -->
 				<h1 class="ui grey header">Login</h1>
 				<form class="ui form element-mb" method="Post" action="Login">
@@ -61,23 +64,22 @@
 						Let us help you with that by sending you an email! 
 						But first we're going to need the email address of your registered account.
 					</p>
-					<form class="ui form">
-						<div class="field">
+					<form class="ui form" id="forgotpass_form">
+						<div class="field" id="forgotpass_emailfield">
 							<label>Email Address</label>
-							<input id="forgotpass_email" name="forgotpass_email" type="email" placeholder="Email Address">
+							<input id="forgotpass_email" type="email" placeholder="Email Address">
 						</div>
 					</form>
 					<p class="microcopy-hint">
 						Pst! Cant remember your email? It's your gbiz account.
 					</p>
-
 				</div>
 				<div class="actions">
 					<button class="ui grey button" id="cancelforgot_btn">
 						<i class="remove icon"></i>
 						Cancel
 					</button>
-					<button class="positive ui button" id="submitforgot_btn">
+					<button class="ui green button" id="submitforgot_btn" disabled="disabled">
 						<i class="checkmark icon"></i>
 						Submit
 					</button>
@@ -88,23 +90,26 @@
 			<div class="ui tiny modal" id="resetcode_dia">
 				<div class="header">
 					<h3 class="ui header">
-						<i class="help circle outline icon"></i>
+						<i class="lock icon"></i>
 						<div class="content">Enter Reset Code</div>
 					</h3>
 				</div>
 				<div class="modal-content">
 					<p>
-						We've sent you an email containing the <b> six characters reset code </b>. 
+						We've sent you an email containing the <b> five (5) number reset code </b>. 
 						If you can't find the email in your inbox, please it check under your Spam or Junk mail. 
 					</p>
 					<p class="microcopy-hint">
 						<b>NOTE:</b> You won't be receiving any email if the address you entered is not
 						registered.
 					</p>
-					<form class="ui form">
-						<div class="field">
+					<form class="ui form" id="resetcode_form">
+						<div class="field" id="resetcode_field">
 							<label>Reset Code</label>
-							<input id="resetcode" name="resetcode" type="text" placeholder="xxxxxx">
+							<input id="resetcode" type="text" placeholder="00000">
+						</div>
+						<div class="ui error message">
+						    <p>The reset code you entered is incorrect.</p>
 						</div>
 					</form>
 				</div>
@@ -113,7 +118,7 @@
 						<i class="remove icon"></i>
 						Cancel
 					</button>
-					<button class="positive ui button" id="submitreset_btn">
+					<button class="ui green button" id="submitreset_btn" disabled="disabled">
 						<i class="checkmark icon"></i>
 						Submit
 					</button>
@@ -124,7 +129,7 @@
 			<div class="ui tiny modal" id="newpassword_dia">
 				<div class="header">
 					<h3 class="ui header">
-						<i class="help circle outline icon"></i>
+						<i class="lock icon"></i>
 						<div class="content">Enter New Password</div>
 					</h3>
 				</div>
@@ -133,18 +138,23 @@
 						This is the last step! Please enter your new password below. 
 						If you cancel, you will have to repeat the whole process. 	
 					</p>
-					<p class="microcopy-hint">
-						Your password contain: 
-					</p>
-					<form class="ui form">
-						<div class="field">
+					<div class="ui message microcopy-hint">
+						<p> The submit button will be disabled until: </p>
+						<ul>
+							<li>your passwords have a minimum of six (6) characters</li>
+							<li>both of the password fields match</li>
+						</ul>
+					</div>
+					<form class="ui form" id="newpass_form">
+						<div class="field" id="newpass_field">
 							<label>New Password</label>
-							<input id="resetcode" name="resetcode" type="password" placeholder="New Password">
+							<input id="new_password" type="password" placeholder="New Password">
 						</div>
-						<div class="field">
+						<div class="field" id="confnewpass_field">
 							<label>Repeat New Password</label>
-							<input id="resetcode" name="resetcode" type="password" placeholder="Repeat New Password">
+							<input id="confirm_password" type="password" placeholder="Repeat New Password">
 						</div>
+		
 					</form>
 				</div>
 				<div class="actions">
@@ -152,13 +162,46 @@
 						<i class="remove icon"></i>
 						Cancel
 					</button>
-					<button class="positive ui button" id="submitnewpass_btn">
+					<button class="ui green button" id="submitnewpass_btn" disabled="disabled">
 						<i class="checkmark icon"></i>
 						Submit
 					</button>
 				</div>
 			</div>
-									
+		
+		<!-- SUCCESS MESSAGE MODAL -->
+		<div class="ui tiny modal" id="successdia">
+			<div class="header">
+				<h3 class="ui header">
+					<i class="checkmark icon"></i>
+					<div class="content" id="successdia_header"></div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p id="successdia_content"></p>
+			</div>
+			<div class="actions">
+				<button class="ui primary button" id="successdia_ok">Ok</button>
+			</div>
+		</div>
+		
+		<!-- FAIL MESSAGE MODAL -->
+		<div class="ui tiny modal" id="faildia">
+			<div class="header">
+				<h3 class="ui header">
+					<i class="remove icon"></i>
+					<div class="content" id="faildia_header"></div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p id="faildia_content"></p>
+			</div>
+			<div class="actions center">
+				<button class="ui success button" id="faildia_ok">Ok</button>
+			</div>
+		</div>
+		
+		
 	</body>
 	<script src="resource/js/jquery-3.2.1.min.js"></script>
 	<script src="resource/semanticui/semantic.min.js"></script>

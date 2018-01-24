@@ -69,7 +69,7 @@ public class PasswordRecoveryFunctions {
 				
 				prep.executeUpdate();
 				deleteRecoveryCode(email, code);
-				
+				result = true;
 			}
 			
 			return result;

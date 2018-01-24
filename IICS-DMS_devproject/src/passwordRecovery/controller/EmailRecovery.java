@@ -33,11 +33,10 @@ public class EmailRecovery extends HttpServlet {
 		
 		// ADD CODE TO CHECK IF THE EMAIL IS AN EXISTING USER
 		// IF EXISTING, PROCEED TO SEND EMAIL
-		// ELSE, DO NOT SEND EMAIL
+		// ELSE, DO NOT SEND EMAIL 
 		
-		System.out.println(request.getParameter("foo"));
 		
-		String recipient = "2014069003@ust-ics.mygbiz.com"; //request.getParameter("email");
+		String recipient = request.getParameter("email");
 		String subject = "IICS DMS Password Reset";
 		
 		/*********************** Start of E-Mail Message **********************/
@@ -46,21 +45,20 @@ public class EmailRecovery extends HttpServlet {
 		message += "your security code is: " + code;
 		/************************ End of E-Mail Message **********************/
 		
-		String userName = "jlteoh23@gmail.com";
-		String password = "jed231096";
+		String userName = "2014069493@ust-ics.mygbiz.com";
+		String password = "bluespace09";
 		
-		//SendMail.send(recipient, subject, message, userName, password); //send email
+		SendMail.send(recipient, subject, message, userName, password); //send email
 		
-		//try {
-		//	PasswordRecoveryFunctions.addRecoveryCode(recipient, code); //add to database
-		//} catch (SQLException e) {
-		//	e.printStackTrace();
-		//}
+		try {
+			PasswordRecoveryFunctions.addRecoveryCode(recipient, code); //add to database
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
-		response.setContentType("text/plain");
+		response.setContentType("text/html");
 		response.setCharacterEncoding("UTF-8");
-		response.getWriter().write("done");
-		// after the process, this servlet should send a response that the process is finished
+		response.setStatus(HttpServletResponse.SC_OK);
 	}
 
 }

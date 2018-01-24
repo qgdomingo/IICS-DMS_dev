@@ -10,48 +10,46 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class PasswordChange
+ * PasswordChange.java
  */
 @WebServlet("/PasswordChange")
 public class PasswordChange extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public PasswordChange() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		doPost(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+		System.out.println(request.getParameter("email"));
+		System.out.println(request.getParameter("code"));
+		System.out.println(request.getParameter("new_password"));
+		System.out.println(request.getParameter("confirm_password"));
+		
 		
 		String email = request.getParameter("email");
 		String code = request.getParameter("code");
         String newPassword = request.getParameter("new_password");
         String confirmPassword = request.getParameter("confirm_password");
         
+		response.setContentType("text/html");
+		response.setCharacterEncoding("UTF-8");
+        
         try {
-        	
-			PasswordRecoveryFunctions.updatePassword(email ,newPassword ,confirmPassword ,code);//UPDATES PASSWORD
-		
+			if(PasswordRecoveryFunctions.updatePassword(email, newPassword, confirmPassword, code)) {
+				response.setStatus(HttpServletResponse.SC_OK);
+			} 
+			else {
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			}
         } catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
 	}
 
 }
