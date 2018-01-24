@@ -3,6 +3,7 @@ package manageuser.controller;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,7 +31,15 @@ public class AddUser extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: add user").append(request.getContextPath());
+		doPost(request, response);
 		
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		String email = request.getParameter("email");
 		String facultyNo = request.getParameter("facultyNo");
 		String firstName = request.getParameter("firstName");
@@ -44,14 +53,11 @@ public class AddUser extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		
+		
+		RequestDispatcher dispatcher =
+		getServletContext().getRequestDispatcher("/manageusers.jsp");
+		dispatcher.forward(request,response);
 	}
 
 }

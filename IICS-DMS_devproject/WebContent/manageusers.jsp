@@ -24,6 +24,7 @@
 			<% ResultSet accounts = ManageUserFunctions.viewAccounts();
 			%>
 			<%while(accounts.next()){%>
+			
 			<br>Select <input type="checkbox" name="selected" value="<%=accounts.getString("email")%>">
 			<br>Faculty Number:<%=accounts.getString("faculty_number")%>
 			<br>First Name:<%=accounts.getString("first_name")%>
@@ -34,6 +35,7 @@
 			<br>Status:<%=accounts.getString("status")%>
 			<br>
 			<br>
+			
 			<%} %>
 		</form>
 	</body>

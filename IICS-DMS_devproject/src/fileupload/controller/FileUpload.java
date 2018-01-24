@@ -41,6 +41,16 @@ public class FileUpload extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
+		doPost(request, response);
+		
+		
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		List<FileItem> multifiles;
 		try {
 			multifiles = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
@@ -82,15 +92,6 @@ public class FileUpload extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
 		
 
 		
