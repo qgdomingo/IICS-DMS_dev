@@ -1,0 +1,23 @@
+@charset "ISO-8859-1";
+
+	/* SPACING HELPERS */
+	
+	.element-mb {
+		margin-bottom: 20px;
+	}
+	
+	.element-rmb {
+		margin-bottom: 0px;
+	}
+	
+	/* MICROCOPY */
+	
+	.microcopy-hint {
+		color: gray;
+		font-size: 12px;
+	}
+	
+
+	
+	
+	

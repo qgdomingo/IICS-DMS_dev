@@ -1,0 +1,41 @@
+@charset "ISO-8859-1";
+
+	/* GENERAL PAGE STYLES */
+	
+	.page-background {
+		background-image: url("../images/page_bg.png");
+	    height: 100%;
+	    background-position: center;
+	    background-repeat: no-repeat;
+	    background-size: cover;
+	
+	}
+	
+	body.pushable>.pusher {
+	  background: #fff;
+	  		background-image: url("../images/page_bg.png");
+	  height: 100%;
+	  background-position: center;
+	  background-repeat: no-repeat;
+	  background-size: cover;
+	}
+	
+	.center-text {
+		text-align: center !important;
+	}
+	
+	.page-content-spacing {
+		padding: 70px 10px 10px 10px;
+	}
+	
+	.user-account-color {
+		color: rgba(255, 255, 255, 0.9) !important;
+	}
+	
+	.user-accountsub-color {
+		color: rgba(255, 255, 255, 0.7) !important;
+	}
+	
+	i.large.icon, i.large.icons {
+	    font-size: 1.3em;
+	}

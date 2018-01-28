@@ -7,8 +7,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="resource/semanticui/semantic.min.css">
-		<link rel="stylesheet" href="resource/css/masterstyle.css">
-		<link rel="stylesheet" href="resource/css/loginstyle.css">
+		<link rel="stylesheet" href="resource/css/master.css">
+		<link rel="stylesheet" href="resource/css/login.css">
 	</head>
 	<body class="login-background">
 		<div class="ui centered grid container">
@@ -32,7 +32,7 @@
 				
 				<!-- LOGIN FORM -->
 				<h1 class="ui grey header">Login</h1>
-				<form class="ui form element-mb" method="Post" action="Login">
+				<form class="ui form element-mb" method="POST" action="Login">
 					<div class="field">
 						<label>Username</label>
 						<input placeholder="Username" name="user_email" type="text" required/>
@@ -205,5 +205,5 @@
 	</body>
 	<script src="resource/js/jquery-3.2.1.min.js"></script>
 	<script src="resource/semanticui/semantic.min.js"></script>
-	<script src="resource/js/login_script.js"></script>
+	<script src="resource/js/login.js"></script>
 </html>
