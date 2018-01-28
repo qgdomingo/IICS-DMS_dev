@@ -13,15 +13,6 @@
 	removeInputErrorClass = function(inputField) {
 		if($(inputField).hasClass("error")) $(inputField).removeClass("error");
 	}
- 	
-/* MESSAGE MODALS */	
-	$('#faildia_ok').click(() => {
-		$('#faildia').modal('hide');
-	});
-	
-	$('#successdia_ok').click(() => {
-		$('#successdia').modal('hide');
-	});
 	
 /* FORGOT PASSWORD MODAL - GET EMAIL */
 
@@ -50,10 +41,8 @@
 	
 	/* Forgot Password Cancel Button */
 	$('#cancelforgot_btn').click(() => {
-		$('#forgotpass_dia').modal('hide');
-		$('#forgotpass_email').val('');
+		cleanGetMail();
 		removeInputErrorClass('#forgotpass_emailfield');
-		$("#submitforgot_btn").prop("disabled", "disabled");
 	});
 	
 	/* Forgot Password Submit Button */
@@ -71,11 +60,17 @@
 					closable: false
 				})
 				.modal('show');
-				$('#forgotpass_email').val('');
-				$("#cancelforgot_btn").prop("disabled", "");
-				$('#forgotpass_form').removeClass("loading");
+				cleanGetMail();
 			});
 	});
+	
+	/* CLEAN: GET MAIL MODAL */
+	function cleanGetMail() {
+		$('#forgotpass_email').val('');
+		$("#cancelforgot_btn").prop("disabled", "");
+		$("#submitforgot_btn").prop("disabled", "disabled");
+		$('#forgotpass_form').removeClass("loading");
+	}
 	
 /* FORGOT PASSWORD MODAL - INPUPT RESET CODE */
 	
@@ -163,19 +158,17 @@
 		
 		// conditions for the Confirm New Password input field
 		addErrorInput('#confnewpass_field', conf_passwordtemp);
+		
 	});
 	
 	/* Input New Password Cancel Button */
 	$('#cancelnewpass_btn').click(() => {
-		$('#newpassword_dia').modal('hide');
-		$('#new_password').val('');
-		$('#confirm_password').val('');
+		cleanInputNewPassword();
 		removeInputErrorClass('#confirm_password');
 		removeInputErrorClass('#new_password');
-		$('#submitnewpass_btn').prop("disabled", "disabled");
 	});
 	
-	/* Input New Password Submit Button*/
+	/* Input New Password Submit Button */
 	$('#submitnewpass_btn').click(() => {
 		$('#newpass_form').addClass("loading");
 		$('#cancelnewpass_btn').prop("disabled", "disabled");
@@ -195,10 +188,7 @@
 			})
 			.modal('show');
 			
-			$('#new_password').val('');
-			$('#confirm_password').val('');
-			$('#newpass_form').removeClass("loading");
-			$('#cancelnewpass_btn').prop("disabled", "");
+			cleanInputNewPassword();
 		}).fail( (response) => {
 			$('#faildia_header').text('Something Went Wrong');
 			$('#faildia_content').text('Oh no! Some guys on the back stage said that something went wrong.');
@@ -210,11 +200,17 @@
 			})
 			.modal('show');
 			
-			$('#new_password').val('');
-			$('#confirm_password').val('');
-			$('#newpass_form').removeClass("loading");
-			$('#cancelnewpass_btn').prop("disabled", "");
+			cleanInputNewPassword();
 		});
 	});	
+	
+	/* CLEAN: Input New Password Submit Button */
+	function cleanInputNewPassword() {
+		$('#new_password').val('');
+		$('#confirm_password').val('');
+		$('#newpass_form').removeClass("loading");
+		$('#cancelnewpass_btn').prop("disabled", "");
+		$('#submitnewpass_btn').prop("disabled", "disabled");
+	}
 
 	

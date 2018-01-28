@@ -75,7 +75,7 @@
 					</p>
 				</div>
 				<div class="actions">
-					<button class="ui grey button" id="cancelforgot_btn">
+					<button class="ui cancel grey button" id="cancelforgot_btn">
 						<i class="remove icon"></i>
 						Cancel
 					</button>
@@ -114,7 +114,7 @@
 					</form>
 				</div>
 				<div class="actions">
-					<button class="ui grey button" id="cancelreset_btn">
+					<button class="ui cancel grey button" id="cancelreset_btn">
 						<i class="remove icon"></i>
 						Cancel
 					</button>
@@ -158,7 +158,7 @@
 					</form>
 				</div>
 				<div class="actions">
-					<button class="ui grey button" id="cancelnewpass_btn">
+					<button class="ui cancel grey button" id="cancelnewpass_btn">
 						<i class="remove icon"></i>
 						Cancel
 					</button>
@@ -180,8 +180,8 @@
 			<div class="modal-content">
 				<p id="successdia_content"></p>
 			</div>
-			<div class="actions">
-				<button class="ui primary button" id="successdia_ok">Ok</button>
+			<div class="actions center-text">
+				<button class="ui ok secondary button">Okay</button>
 			</div>
 		</div>
 		
@@ -196,8 +196,8 @@
 			<div class="modal-content">
 				<p id="faildia_content"></p>
 			</div>
-			<div class="actions center">
-				<button class="ui success button" id="faildia_ok">Ok</button>
+			<div class="actions center-text">
+				<button class="ui ok secondary button">Okay</button>
 			</div>
 		</div>
 		

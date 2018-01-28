@@ -24,13 +24,7 @@ public class PasswordChange extends HttpServlet {
 		doPost(request, response);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
-		System.out.println(request.getParameter("email"));
-		System.out.println(request.getParameter("code"));
-		System.out.println(request.getParameter("new_password"));
-		System.out.println(request.getParameter("confirm_password"));
-		
-		
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {			
 		String email = request.getParameter("email");
 		String code = request.getParameter("code");
         String newPassword = request.getParameter("new_password");

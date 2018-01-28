@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Log Files | IICS DMS</title>
+		<title>Semestral Statistics | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="../resource/semanticui/semantic.min.css">
@@ -14,32 +14,60 @@
 	<body>
 		<!-- LEFT SIDE MENU -->
 		<div class="ui large left vertical menu sidebar" id="side_nav">
-			<a class="item mobile only user-account-bgcolor" href="profile.jsp">
+			<a class="item mobile only user-account-bgcolor" href="../userprofile.jsp">
 				<h5 class="ui header ">
 					<i class="large user circle icon user-account-color"></i>
 					<div class="content user-account-color">
-						Admin
-						<div class="sub header user-accountsub-color">Administrator</div>
+						Jeddi Boi
+						<div class="sub header user-accountsub-color">Department Head</div>
 					</div>
 				</h5>
 			</a>
-			<a class="item" href="manageusers.jsp">
-		      <i class="large users icon side"></i>User Management
+			<a class="item" href="../home.jsp">
+		      <i class="large home icon side"></i>Home
 		    </a>
-		    <a class="item" href="acadyear.jsp">
-		      <i class="large student icon side"></i>Academic Year
+		    <a class="item" href="../files/documents.jsp">
+		      <i class="large file icon side"></i>Documents
 		    </a>
-		    <a class="item" href="archive.jsp">
-		      <i class="large archive icon side"></i>Archive Documents
+		    <a class="item" href="../task/viewtasks.jsp">
+		      <i class="large folder open icon side"></i>Task Folders
 		    </a>
-		    <a class="item active" href="logs.jsp">
-		      <i class="large file text icon side"></i>Log Files
+		    <a class="item" href="../calendar/viewcalendar.jsp">
+		      <i class="large calendar icon side"></i>Calendar
 		    </a>
+		    <div class="item">
+		   		Mail
+		   		<div class="menu">
+			    	<a class="item" href="../mail/newmail.jsp">
+			    		<i class="large write icon side"></i>Create Mail
+			    	</a>
+			    	<a class="item" href="../mail/inbox.jsp">
+			    		<i class="large inbox icon side"></i>Inbox
+			    	</a>
+			    	<a class="item" href="../mail/sentmail.jsp">
+			    		<i class="large send icon side"></i>Sent Mail
+			    	</a>
+			    	<a class="item" href="../mail/viewmemoletter.jsp">
+			    		<i class="large open envelope icon side"></i>View Memo/Letter
+			    	</a>
+			    	<a class="item" href="../mail/requests.jsp">
+			    		<i class="large exchange icon side"></i>Requests
+			    	</a>
+		    	</div>
+		    </div>
+			<div class="item">
+		   		Reports
+		   		<div class="menu">
+			    	<a class="item active" href="../reports/semestralstats.jsp">
+			    		<i class="large bar chart icon side"></i>Semestral Statistics
+			    	</a>
+		    	</div>
+		    </div>
 		    <a class="item mobile only" id="logout_btn2">
 		      <i class="large power icon side"></i>Logout
 		    </a>
 		</div>
-		
+				
 		<!-- PAGE CONTENTS -->
 		<div class="pusher page-content-spacing page-background">
 		
@@ -49,18 +77,21 @@
 					<i class="large sidebar icon"></i>
 				</a>
 				<div class="item">
-					<i class="large file text icon"></i>
-					Log Files
+					<i class="large bar chart icon"></i>
+					Semestral Statistics
 				</div>
 				<div class="right menu">
-					<a class="item user-account-bgcolor mobile hidden" href="profile.jsp">
+					<a class="item user-account-bgcolor mobile hidden" href="../userprofile.jsp">
 						<h5 class="ui header">
 						  <i class="large user circle icon user-account-color"></i>
 						  <div class="content user-account-color">
-						    Admin
-						    <div class="sub header user-accountsub-color">Administrator</div>
+						    Jeddi Boi
+						    <div class="sub header user-accountsub-color">Department Head</div>
 						  </div>
 						</h5>
+					</a>
+					<a class="item">
+						<i class="large alarm icon"></i>
 					</a>
 					<a class="item mobile hidden" id="logout_btn">
 						<i class="large power icon"></i>

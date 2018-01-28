@@ -18,3 +18,10 @@
 		})
 		.modal('show');
 	});
+	
+	$('#logout_btn2').click(() => {
+		$('#logout_dia').modal({
+			closable: false
+		})
+		.modal('show');
+	});

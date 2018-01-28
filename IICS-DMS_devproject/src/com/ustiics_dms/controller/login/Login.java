@@ -53,7 +53,7 @@ public class Login extends HttpServlet {
 				session.setAttribute("currentCredentials", LoginFunctions.authorize(email));
 				
 				RequestDispatcher dispatcher =
-				getServletContext().getRequestDispatcher("/userprofile.jsp");
+				getServletContext().getRequestDispatcher("/home.jsp");
 				dispatcher.forward(request,response);
 				// if username is not empty it will set the Credentials for session
 			}

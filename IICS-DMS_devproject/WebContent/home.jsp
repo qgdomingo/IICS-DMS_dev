@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>User Profile | IICS DMS</title>
+		<title>Home | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="resource/semanticui/semantic.min.css">
@@ -23,7 +23,7 @@
 					</div>
 				</h5>
 			</a>
-			<a class="item" href="home.jsp">
+			<a class="item active" href="home.jsp">
 		      <i class="large home icon side"></i>Home
 		    </a>
 		    <a class="item" href="files/documents.jsp">
@@ -39,7 +39,7 @@
 		   		Mail
 		   		<div class="menu">
 			    	<a class="item" href="mail/newmail.jsp">
-			    		<i class="large mail icon side"></i>Create Mail
+			    		<i class="large write icon side"></i>Create Mail
 			    	</a>
 			    	<a class="item" href="mail/inbox.jsp">
 			    		<i class="large inbox icon side"></i>Inbox
@@ -77,8 +77,8 @@
 					<i class="large sidebar icon"></i>
 				</a>
 				<div class="item">
-					<i class="large user icon"></i>
-					User Profile
+					<i class="large home icon"></i>
+					Home
 				</div>
 				<div class="right menu">
 					<a class="item user-account-bgcolor mobile hidden" href="userprofile.jsp">

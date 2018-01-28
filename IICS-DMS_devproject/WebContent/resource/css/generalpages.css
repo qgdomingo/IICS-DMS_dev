@@ -1,6 +1,6 @@
 @charset "ISO-8859-1";
 
-	/* GENERAL PAGE STYLES */
+	/* PAGE BACKGROUNDS */
 	
 	.page-background {
 		background-image: url("../images/page_bg.png");
@@ -20,13 +20,13 @@
 	  background-size: cover;
 	}
 	
-	.center-text {
-		text-align: center !important;
-	}
+	/* PAGE LAYOUT */
 	
 	.page-content-spacing {
-		padding: 70px 10px 10px 10px;
+		padding: 65px 20px 10px 20px;
 	}
+	
+	/* MENU LAYOUT */
 	
 	.user-account-color {
 		color: rgba(255, 255, 255, 0.9) !important;
@@ -36,6 +36,19 @@
 		color: rgba(255, 255, 255, 0.7) !important;
 	}
 	
+	.user-account-bgcolor {
+		background-color: #be152f !important;
+	}
+	
+	.user-account-bgcolor:hover {
+		background-color: #bd2e44 !important;
+	}
+	
 	i.large.icon, i.large.icons {
 	    font-size: 1.3em;
 	}
+	
+	i.large.icon.side, i.large.icons.side {
+	    line-height: 0.7 !important;
+	}
+
