@@ -54,7 +54,7 @@ String[] selected = request.getParameterValues("selected");
 			}
 		}
 				RequestDispatcher dispatcher =
-				getServletContext().getRequestDispatcher("/manageusers.jsp");
+				getServletContext().getRequestDispatcher("/admin/manageusers.jsp");
 				dispatcher.forward(request,response);
 	}
 

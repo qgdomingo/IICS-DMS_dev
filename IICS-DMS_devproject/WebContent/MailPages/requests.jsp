@@ -7,14 +7,14 @@
 		<title>Memo / Letter Requests | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-		<link rel="stylesheet" href="../resource/semanticui/semantic.min.css">
-		<link rel="stylesheet" href="../resource/css/master.css">
-		<link rel="stylesheet" href="../resource/css/generalpages.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 	</head>
 	<body>
 		<!-- LEFT SIDE MENU -->
 		<div class="ui large left vertical menu sidebar" id="side_nav">
-			<a class="item mobile only user-account-bgcolor" href="../userprofile.jsp">
+			<a class="item mobile only user-account-bgcolor" href="${pageContext.request.contextPath}/userprofile.jsp">
 				<h5 class="ui header ">
 					<i class="large user circle icon user-account-color"></i>
 					<div class="content user-account-color">
@@ -23,34 +23,37 @@
 					</div>
 				</h5>
 			</a>
-			<a class="item" href="../home.jsp">
+			<a class="item" href="${pageContext.request.contextPath}/home.jsp">
 		      <i class="large home icon side"></i>Home
 		    </a>
-		    <a class="item" href="../files/documents.jsp">
+		   	<a class="item" href="${pageContext.request.contextPath}/files/fileupload.jsp">
+		      <i class="large cloud upload icon side"></i>Upload Document
+		    </a>
+		    <a class="item" href="${pageContext.request.contextPath}/files/documents.jsp">
 		      <i class="large file icon side"></i>Documents
 		    </a>
-		    <a class="item" href="../task/viewtasks.jsp">
+		    <a class="item" href="${pageContext.request.contextPath}/task/viewtasks.jsp">
 		      <i class="large folder open icon side"></i>Task Folders
 		    </a>
-		    <a class="item" href="../calendar/viewcalendar.jsp">
+		    <a class="item" href="${pageContext.request.contextPath}/calendar/viewcalendar.jsp">
 		      <i class="large calendar icon side"></i>Calendar
 		    </a>
 		    <div class="item">
 		   		Mail
 		   		<div class="menu">
-			    	<a class="item" href="../mail/newmail.jsp">
+			    	<a class="item" href="${pageContext.request.contextPath}/mail/newmail.jsp">
 			    		<i class="large write icon side"></i>Create Mail
 			    	</a>
-			    	<a class="item" href="../mail/inbox.jsp">
+			    	<a class="item" href="${pageContext.request.contextPath}/mail/inbox.jsp">
 			    		<i class="large inbox icon side"></i>Inbox
 			    	</a>
-			    	<a class="item" href="../mail/sentmail.jsp">
+			    	<a class="item" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
-			    	<a class="item" href="../mail/viewmemoletter.jsp">
+			    	<a class="item" href="${pageContext.request.contextPath}/mail/viewmemoletter.jsp">
 			    		<i class="large open envelope icon side"></i>View Memo/Letter
 			    	</a>
-			    	<a class="item active" href="../mail/requests.jsp">
+			    	<a class="item active" href="${pageContext.request.contextPath}/mail/requests.jsp">
 			    		<i class="large exchange icon side"></i>Requests
 			    	</a>
 		    	</div>
@@ -58,7 +61,7 @@
 			<div class="item">
 		   		Reports
 		   		<div class="menu">
-			    	<a class="item" href="../reports/semestralstats.jsp">
+			    	<a class="item" href="${pageContext.request.contextPath}/reports/semestralstats.jsp">
 			    		<i class="large bar chart icon side"></i>Semestral Statistics
 			    	</a>
 		    	</div>
@@ -81,7 +84,7 @@
 					Memo / Letter Requests
 				</div>
 				<div class="right menu">
-					<a class="item user-account-bgcolor mobile hidden" href="../userprofile.jsp">
+					<a class="item user-account-bgcolor mobile hidden" href="${pageContext.request.contextPath}/userprofile.jsp">
 						<h5 class="ui header">
 						  <i class="large user circle icon user-account-color"></i>
 						  <div class="content user-account-color">
@@ -127,8 +130,8 @@
 		</div>
 		
 	</body>
-	<script src="../resource/js/jquery-3.2.1.min.js"></script>
-	<script src="../resource/semanticui/semantic.min.js"></script>
-	<script src="../resource/js/tablesort.js"></script>
-	<script src="../resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/tablesort.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
 </html>

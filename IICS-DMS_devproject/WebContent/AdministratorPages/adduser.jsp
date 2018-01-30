@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-		<form action="../AddUser" method="post">
+		<form action="AddUser" method="post">
 		
 			Email:<input type="text" name ="email"/>
 			

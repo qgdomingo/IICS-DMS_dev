@@ -12,18 +12,18 @@
 	}
 	
 	body.pushable>.pusher {
-	  background: #fff;
-	  		background-image: url("../images/page_bg.png");
-	  height: 100%;
+	  background-image: url("../images/page_bg.png");
 	  background-position: center;
 	  background-repeat: no-repeat;
-	  background-size: cover;
-	}
+	  background-size: cover; 
+	  height: 100%;
+	  overflow-y: auto !important;
+	} 
 	
 	/* PAGE LAYOUT */
 	
 	.page-content-spacing {
-		padding: 65px 20px 10px 20px;
+		padding: 70px 20px 10px 20px;
 	}
 	
 	/* MENU LAYOUT */

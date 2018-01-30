@@ -2,8 +2,16 @@
  * 
  */
 
+	$(document).ready(() => {		
+		$('.ui.dropdown').dropdown();
+	})
+
 	$('#togglenav').click(() => {
-		$('#side_nav').sidebar('toggle');
+		$('#side_nav').sidebar({
+			dimPage: false,
+			returnScroll: true,
+			scrollLock: false
+		}).sidebar('toggle');
 	});
 	
 	$(document).ready(() => {
@@ -25,3 +33,4 @@
 		})
 		.modal('show');
 	});
+	

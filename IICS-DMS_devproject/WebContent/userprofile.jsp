@@ -26,6 +26,9 @@
 			<a class="item" href="home.jsp">
 		      <i class="large home icon side"></i>Home
 		    </a>
+		    <a class="item" href="${pageContext.request.contextPath}/files/fileupload.jsp">
+		      <i class="large cloud upload icon side"></i>Upload Document
+		    </a>
 		    <a class="item" href="files/documents.jsp">
 		      <i class="large file icon side"></i>Documents
 		    </a>
@@ -100,7 +103,47 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
-		
+		<div class="ui centered grid container">
+				<div class="ui center aligned eight wide computer eight wide table sixteen wide mobile column">
+					<h2 class="ui icon header">
+						<i class="circular user icon"></i>
+						<div class="content">Jeddi Boi</div>
+						<div class="sub header">Department Head</div>
+						<div class="sub header">Computer Science Department</div> <!-- NOTE: APPEND 'DEPARTMENT' -->
+					</h2><br>
+					
+					<div class="ui red mini statistic">
+						<div class="value">
+							2014123456
+						</div>
+						<div class="label">
+							Faculty No.
+						</div>
+					</div><br>
+					
+					<div class="ui red mini statistic">
+						<div class="value">
+							jeddiboi@ust-ics.mygbiz.com
+						</div>
+						<div class="label">
+							Email Address
+						</div>
+					</div><br>
+					
+					<div class="actions">
+						<button class="ui labeled icon orange button element-mb">
+							<i class="pencil icon"></i>
+							Edit User Profile
+						</button>
+						<button class="ui labeled icon grey button element-mb">
+							<i class="lock icon"></i>
+							Change Password
+						</button>
+					</div>
+					
+				</div>
+				<br>
+			</div>
 		
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>

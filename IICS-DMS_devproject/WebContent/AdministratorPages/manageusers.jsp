@@ -11,14 +11,14 @@
 		<title>User Management | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-		<link rel="stylesheet" href="../resource/semanticui/semantic.min.css">
-		<link rel="stylesheet" href="../resource/css/master.css">
-		<link rel="stylesheet" href="../resource/css/generalpages.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 	</head>
 	<body>
 		<!-- LEFT SIDE MENU -->
 		<div class="ui large left vertical menu sidebar" id="side_nav">
-			<a class="item mobile only user-account-bgcolor" href="profile.jsp">
+			<a class="item mobile only user-account-bgcolor" href="${pageContext.request.contextPath}/admin/profile.jsp">
 				<h5 class="ui header ">
 					<i class="large user circle icon user-account-color"></i>
 					<div class="content user-account-color">
@@ -27,16 +27,16 @@
 					</div>
 				</h5>
 			</a>
-			<a class="item active" href="manageusers.jsp">
+			<a class="item active" href="${pageContext.request.contextPath}/admin/manageusers.jsp">
 		      <i class="large users icon side"></i>User Management
 		    </a>
-		    <a class="item" href="acadyear.jsp">
+		    <a class="item" href="${pageContext.request.contextPath}/admin/acadyear.jsp">
 		      <i class="large student icon side"></i>Academic Year
 		    </a>
-		    <a class="item" href="archive.jsp">
+		    <a class="item" href="${pageContext.request.contextPath}/admin/archive.jsp">
 		      <i class="large archive icon side"></i>Archive Documents
 		    </a>
-		    <a class="item" href="logs.jsp">
+		    <a class="item" href="${pageContext.request.contextPath}/admin/logs.jsp">
 		      <i class="large file text icon side"></i>Log Files
 		    </a>
 		    <a class="item mobile only" id="logout_btn2">
@@ -57,7 +57,7 @@
 					User Management
 				</div>
 				<div class="right menu">
-					<a class="item user-account-bgcolor mobile hidden" href="profile.jsp">
+					<a class="item user-account-bgcolor mobile hidden" href="${pageContext.request.contextPath}/admin/profile.jsp">
 						<h5 class="ui header">
 						  <i class="large user circle icon user-account-color"></i>
 						  <div class="content user-account-color">
@@ -73,7 +73,69 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
-			<form action="../ManageUserRedirect" method="post">
+			<!-- SEARCH ROW -->
+			<form class="ui form">
+				<div class="inline fields">
+					<div class="field">
+						<div class="ui icon input">
+							<input type="text" placeholder="Seach User.."/>
+							<i class="search icon"></i>
+						</div>
+					</div>
+					<div class="field">
+						<select class="ui dropdown">
+							<option value="none">User Type</option>
+							<option value="dir">Director</option>
+							<option value="sec">Faculty Secretary</option>
+							<option value="dep">Department Head</option>
+							<option value="fac">Faculty</option>
+							<option value="sta">Staff</option>
+						</select>
+					</div>
+					<div class="field">
+						<select class="ui dropdown">
+							<option value="none">Department</option>
+							<option value="cs">Computer Science</option>
+							<option value="it">Information Technology</option>
+							<option value="is">Information Systems</option>
+						</select>
+					</div>
+					<div class="field">
+						<select class="ui dropdown">
+							<option value="none">Status</option>
+							<option value="ac">Active</option>
+							<option value="inac">Inactive</option>
+						</select>
+					</div>
+					<button class="ui grey button" type="button">
+						Search
+					</button>
+				</div>
+			</form>
+			
+			<!-- ACTION ROW -->
+			<button class="ui labeled icon green button" id="adduser_btn">
+				<i class="add user icon"></i>
+				Add User
+			</button>
+				
+			<button class="ui labeled icon orange button" id="edituser_btn">
+				<i class="write square icon"></i>
+				Edit User
+			</button>
+				
+			<button class="ui labeled icon blue button" id="enableuser_btn">
+				<i class="add check circle icon"></i>
+				Enable User/s
+			</button>
+				
+			<button class="ui labeled icon red button" id="disableuser_btn">
+				<i class="add remove circle icon"></i>
+				Disable User/s
+			</button>
+
+			<!-- TABLE AREA -->
+			<form action="${pageContext.request.contextPath}/ManageUserRedirect" method="post">
 			
 				<input type="submit" name ="buttonPress" value="Add User"/>
 				<input type="submit" name ="buttonPress" value="Edit User"/>
@@ -81,10 +143,11 @@
 				<input type="submit" name ="buttonPress" value="Disable User"/>
 				
 				
-				<table class="ui sortable table">
+				<table class="ui definition sortable table">
 					<thead>
 						<tr>
 							<th></th>
+							<th>Timestamp</th>
 							<th>Faculty No.</th>
 							<th>First Name</th>
 							<th>Last Name</th>
@@ -104,6 +167,7 @@
 								<input type="checkbox" name="selected" value="<%=accounts.getString("email")%>" >
 							</div>
 						</td>
+						<td>timestamp</td>
 						<td><%=accounts.getString("faculty_number")%></td>
 						<td><%=accounts.getString("first_name")%></td>
 						<td><%=accounts.getString("last_name")%></td>
@@ -117,6 +181,23 @@
 			</form>
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
+		
+		<!-- ADD USER MODAL -->
+		<div class="ui modal" id="adduser_dia">
+			<div class="ui icon header">
+				<i class="add user icon"></i>
+				<div class="content">Add User</div>
+			</div>
+			<div class="modal-content">
+				<form>
+					
+				</form>
+			</div>
+			<div class="actions">
+				
+			</div>
+		</div>
+		
 		
 		<!-- LOGOUT MODAL -->
 		<div class="ui basic tiny modal" id="logout_dia">
@@ -140,8 +221,8 @@
 		</div>
 		
 	</body>
-	<script src="../resource/js/jquery-3.2.1.min.js"></script>
-	<script src="../resource/semanticui/semantic.min.js"></script>
-	<script src="../resource/js/tablesort.js"></script>
-	<script src="../resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/tablesort.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
 </html>

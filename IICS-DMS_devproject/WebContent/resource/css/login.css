@@ -1,11 +1,12 @@
 @charset "ISO-8859-1";
 		
-	.login-background {
-		background-image: url("../images/login_bg2.png");
-	    height: 100%;
-	    background-position: center;
-	    background-repeat: no-repeat;
+	html, body {
+		background: url("../images/login_bg2.png") no-repeat center center fixed;
+	    -webkit-background-size: cover;
+	    -moz-background-size: cover;
+	    -o-background-size: cover;
 	    background-size: cover;
+	    height: 100%;
 	}
 	
 	.login-form-area {
@@ -16,7 +17,11 @@
 		width: 100px;
 	}	
 	
-	.modal-content {
-		margin: 20px;
+
+	/* USED BY THE SEND A MESSAGE TO THE DIRECTOR */
+	
+	.messagepage-header {
+		margin-top: 10px;
+		margin-bottom: 10px;
 	}
 	

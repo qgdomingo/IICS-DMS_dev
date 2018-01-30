@@ -49,7 +49,7 @@ public class ManageUserRedirect extends HttpServlet {
 		}
 		else if(buttonPress.equals("Edit User"))
 		{
-			url = "/edituser.jsp";
+			url = "/admin/edituser.jsp";
 		}
 		else if(buttonPress.equals("Enable User"))
 		{

@@ -26,6 +26,9 @@
 			<a class="item active" href="home.jsp">
 		      <i class="large home icon side"></i>Home
 		    </a>
+		    <a class="item" href="${pageContext.request.contextPath}/files/fileupload.jsp">
+		      <i class="large cloud upload icon side"></i>Upload Document
+		    </a>
 		    <a class="item" href="files/documents.jsp">
 		      <i class="large file icon side"></i>Documents
 		    </a>

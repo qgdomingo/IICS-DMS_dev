@@ -55,7 +55,7 @@ public class EditYear extends HttpServlet {
 		}
 		
 				RequestDispatcher dispatcher =
-				getServletContext().getRequestDispatcher("/acadyear.jsp");
+				getServletContext().getRequestDispatcher("/admin/acadyear.jsp");
 				dispatcher.forward(request,response);
 		
 		

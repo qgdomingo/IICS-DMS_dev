@@ -1,17 +1,25 @@
 @charset "ISO-8859-1";
 
+	.modal-content {
+		margin: 20px;
+	}
+
 	/* SPACING HELPERS */
 	
 	.element-mb {
-		margin-bottom: 20px;
+		margin-bottom: 20px !important;
 	}
 	
 	.element-rmb {
-		margin-bottom: 0px;
+		margin-bottom: 0px !important;
 	}
 	
 	.center-text {
 		text-align: center !important;
+	}
+	
+	.element-mt {
+		margin-top: 10px !important;
 	}
 	
 	/* MICROCOPY */

@@ -7,14 +7,14 @@
 		<title>Archive Documents | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-		<link rel="stylesheet" href="../resource/semanticui/semantic.min.css">
-		<link rel="stylesheet" href="../resource/css/master.css">
-		<link rel="stylesheet" href="../resource/css/generalpages.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 	</head>
 	<body>
 		<!-- LEFT SIDE MENU -->
 		<div class="ui large left vertical menu sidebar" id="side_nav">
-			<a class="item mobile only user-account-bgcolor" href="profile.jsp">
+			<a class="item mobile only user-account-bgcolor" href="${pageContext.request.contextPath}/admin/profile.jsp">
 				<h5 class="ui header ">
 					<i class="large user circle icon user-account-color"></i>
 					<div class="content user-account-color">
@@ -23,16 +23,16 @@
 					</div>
 				</h5>
 			</a>
-			<a class="item" href="manageusers.jsp">
+			<a class="item" href="${pageContext.request.contextPath}/admin/manageusers.jsp">
 		      <i class="large users icon side"></i>User Management
 		    </a>
-		    <a class="item" href="acadyear.jsp">
+		    <a class="item" href="${pageContext.request.contextPath}/admin/acadyear.jsp">
 		      <i class="large student icon side"></i>Academic Year
 		    </a>
-		    <a class="item active" href="archive.jsp">
+		    <a class="item active" href="${pageContext.request.contextPath}/admin/archive.jsp">
 		      <i class="large archive icon side"></i>Archive Documents
 		    </a>
-		    <a class="item" href="logs.jsp">
+		    <a class="item" href="${pageContext.request.contextPath}/admin/logs.jsp">
 		      <i class="large file text icon side"></i>Log Files
 		    </a>
 		    <a class="item mobile only" id="logout_btn2">
@@ -53,7 +53,7 @@
 					Archive Documents
 				</div>
 				<div class="right menu">
-					<a class="item user-account-bgcolor mobile hidden" href="profile.jsp">
+					<a class="item user-account-bgcolor mobile hidden" href="${pageContext.request.contextPath}/admin/profile.jsp">
 						<h5 class="ui header">
 						  <i class="large user circle icon user-account-color"></i>
 						  <div class="content user-account-color">
@@ -96,8 +96,8 @@
 		</div>
 		
 	</body>
-	<script src="../resource/js/jquery-3.2.1.min.js"></script>
-	<script src="../resource/semanticui/semantic.min.js"></script>
-	<script src="../resource/js/tablesort.js"></script>
-	<script src="../resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/tablesort.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
 </html>

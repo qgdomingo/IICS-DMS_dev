@@ -13,14 +13,14 @@
 		<title>Academic Year | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-		<link rel="stylesheet" href="../resource/semanticui/semantic.min.css">
-		<link rel="stylesheet" href="../resource/css/master.css">
-		<link rel="stylesheet" href="../resource/css/generalpages.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 	</head>
 	<body>
 		<!-- LEFT SIDE MENU -->
 		<div class="ui large left vertical menu sidebar" id="side_nav">
-			<a class="item mobile only user-account-bgcolor" href="profile.jsp">
+			<a class="item mobile only user-account-bgcolor" href="${pageContext.request.contextPath}/admin/profile.jsp">
 				<h5 class="ui header ">
 					<i class="large user circle icon user-account-color"></i>
 					<div class="content user-account-color">
@@ -29,16 +29,16 @@
 					</div>
 				</h5>
 			</a>
-			<a class="item" href="manageusers.jsp">
+			<a class="item" href="${pageContext.request.contextPath}/admin/manageusers.jsp">
 		      <i class="large users icon side"></i>User Management
 		    </a>
-		    <a class="item active" href="acadyear.jsp">
+		    <a class="item active" href="${pageContext.request.contextPath}/admin/acadyear.jsp">
 		      <i class="large student icon side"></i>Academic Year
 		    </a>
-		    <a class="item" href="archive.jsp">
+		    <a class="item" href="${pageContext.request.contextPath}/admin/archive.jsp">
 		      <i class="large archive icon side"></i>Archive Documents
 		    </a>
-		    <a class="item" href="logs.jsp">
+		    <a class="item" href="${pageContext.request.contextPath}/admin/logs.jsp">
 		      <i class="large file text icon side"></i>Log Files
 		    </a>
 		    <a class="item mobile only" id="logout_btn2">
@@ -59,7 +59,7 @@
 					Academic Year
 				</div>
 				<div class="right menu">
-					<a class="item user-account-bgcolor mobile hidden" href="profile.jsp">
+					<a class="item user-account-bgcolor mobile hidden" href="${pageContext.request.contextPath}/admin/profile.jsp">
 						<h5 class="ui header">
 						  <i class="large user circle icon user-account-color"></i>
 						  <div class="content user-account-color">
@@ -80,49 +80,77 @@
 				acadYear.next();
 			%>
 			
-			<form action="editYear" method="post">
-				Current Academic Year: <%=acadYear.getInt("start_year") %> - <%=acadYear.getInt("end_year") %> <br>
-				Academic Year Range: <%=acadYear.getString("start_month") %> - <%=acadYear.getString("end_month") %> <br>
-				Year from:	
-				Year to : <select name="year_to">
-				  				<option value="2018">2018</option>
-				  				<option value="2019">2019</option>
-				  				<option value="2020">2020</option>
-				  				<option value="2021">2021</option>
-				  				<option value="2022">2022</option>
-							</select>
-						 <br>
-				Start Month: <select name="month_start">
-				  				<option value="January">January</option>
-				  				<option value="February">February</option>
-				  				<option value="March">March</option>
-				  				<option value="April">April</option>
-				  				<option value="May">May</option>
-				  				<option value="June">June</option>
-				  				<option value="July">July</option>
-				  				<option value="August">August</option>
-				  				<option value="September">September</option>
-				  				<option value="October">October</option>
-				  				<option value="November">November</option>
-				  				<option value="December">December</option>
-							</select>
-						 <br>
-				End Month: <select name="month_end">
-				  				<option value="January">January</option>
-				  				<option value="February">February</option>
-				  				<option value="March">March</option>
-				  				<option value="April">April</option>
-				  				<option value="May">May</option>
-				  				<option value="June">June</option>
-				  				<option value="July">July</option>
-				  				<option value="August">August</option>
-				  				<option value="September">September</option>
-				  				<option value="October">October</option>
-				  				<option value="November">November</option>
-				  				<option value="December">December</option>
-							</select>
-						 <br>
-						 <input type="submit" name ="Submit" value="Submit"/>
+			<h3 class="element-mt">Current Academic Year:</h3> 
+			<p><%=acadYear.getInt("start_year") %> - <%=acadYear.getInt("end_year") %></p>
+			
+			<h3>Academic Year Range:</h3> 
+			<p><%=acadYear.getString("start_month") %> - <%=acadYear.getString("end_month") %></p>
+			
+			<hr>
+			
+			<h3 class="ui header">
+				<i class="setting icon"></i>
+				Change Academic Year Settings
+			</h3>
+			
+			<form class="ui form element-mb" action="${pageContext.request.contextPath}/editYear" method="post">
+				<div class="five wide field">
+					<label>Year from:</label>
+					<input type="text" value="<%=acadYear.getInt("end_year") %>" readonly=""/>
+				</div>
+				<div class="five wide required field">
+					<label>Year to:</label>
+					<select class="ui dropdown" name="year_to" required>
+						<option value="">Select Year End</option>
+						<option value="2018">2018</option>
+						<option value="2019">2019</option>
+						<option value="2020">2020</option>
+						<option value="2021">2021</option>
+						<option value="2022">2022</option>
+					</select>
+				</div>
+				
+				<div class="five wide required field">
+					<label>Start Month:</label>
+					<select class="ui dropdown" name="month_start" required>
+						<option value="">Select Start Month..</option>
+						<option value="January">January</option>
+						<option value="February">February</option>
+						<option value="March">March</option>
+						<option value="April">April</option>
+						<option value="May">May</option>
+						<option value="June">June</option>
+						<option value="July">July</option>
+						<option value="August">August</option>
+						<option value="September">September</option>
+						<option value="October">October</option>
+						<option value="November">November</option>
+						<option value="December">December</option>
+					</select>
+				</div>
+				<div class="five wide required field">
+					<label>End Month:</label>
+					<select class="ui dropdown" name="month_end" required>
+						<option value="">Select End Month..</option>
+						<option value="January">January</option>
+						<option value="February">February</option>
+						<option value="March">March</option>
+						<option value="April">April</option>
+						<option value="May">May</option>
+						<option value="June">June</option>
+						<option value="July">July</option>
+						<option value="August">August</option>
+						<option value="September">September</option>
+						<option value="October">October</option>
+						<option value="November">November</option>
+						<option value="December">December</option>
+					</select>
+				</div>
+				
+				<button class="ui labeled icon orange button" type="submit">
+					<i class="pencil icon"></i>
+					Apply Changes
+				</button>
 			</form>
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
@@ -149,8 +177,8 @@
 		</div>
 		
 	</body>
-	<script src="../resource/js/jquery-3.2.1.min.js"></script>
-	<script src="../resource/semanticui/semantic.min.js"></script>
-	<script src="../resource/js/tablesort.js"></script>
-	<script src="../resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/tablesort.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
 </html>
