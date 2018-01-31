@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>View Memo / Letter | IICS DMS</title>
+		<title>View All Memos / Letters | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
@@ -50,11 +50,11 @@
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
-			    	<a class="item active" href="${pageContext.request.contextPath}/mail/viewmemoletter.jsp">
-			    		<i class="large open envelope icon side"></i>View Memo/Letter
-			    	</a>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
 			    		<i class="large exchange icon side"></i>Requests
+			    	</a>
+			    	<a class="item active" href="${pageContext.request.contextPath}/mail/viewmemoletter.jsp">
+			    		<i class="large open envelope icon side"></i>View All Memos/Letters
 			    	</a>
 		    	</div>
 		    </div>
@@ -81,7 +81,7 @@
 				</a>
 				<div class="item">
 					<i class="large open envelope icon"></i>
-					View Memo / Letter
+					View All Memos / Letters
 				</div>
 				<div class="right menu">
 					<a class="item user-account-bgcolor mobile hidden" href="${pageContext.request.contextPath}/userprofile.jsp">

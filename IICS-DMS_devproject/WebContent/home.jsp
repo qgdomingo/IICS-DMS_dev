@@ -50,11 +50,11 @@
 			    	<a class="item" href="mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
-			    	<a class="item" href="mail/viewmemoletter.jsp">
-			    		<i class="large open envelope icon side"></i>View Memo/Letter
-			    	</a>
 			    	<a class="item" href="mail/requests.jsp">
 			    		<i class="large exchange icon side"></i>Requests
+			    	</a>
+			    	<a class="item" href="mail/viewmemoletter.jsp">
+			    		<i class="large open envelope icon side"></i>View All Memos/Letters
 			    	</a>
 		    	</div>
 		    </div>

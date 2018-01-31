@@ -50,11 +50,11 @@
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
-			    	<a class="item" href="${pageContext.request.contextPath}/mail/viewmemoletter.jsp">
-			    		<i class="large open envelope icon side"></i>View Memo/Letter
-			    	</a>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
 			    		<i class="large exchange icon side"></i>Requests
+			    	</a>
+			    	<a class="item" href="${pageContext.request.contextPath}/mail/viewmemoletter.jsp">
+			    		<i class="large open envelope icon side"></i>View All Memos/Letters
 			    	</a>
 		    	</div>
 		    </div>
@@ -104,6 +104,434 @@
 		
 <!-- ACTUAL PAGE CONTENTS -->
 		
+		<!-- DOCUMENT TYPE SELECTOR -->
+		<div class="ui grid form element-rpt">
+			<div class="three wide computer three wide tablet sixteen wide mobile column">
+				<div class="field">
+					<label>View Document Type:</label>
+					<select class="ui fluid dropdown" id="doctype_select">
+			  			<option value="Personal">Personal</option>
+			  			<option value="Incoming">Incoming</option>
+			  			<option value="Outgoing">Outgoing</option>
+			  			<option value="Archived">Archived</option>
+			  			<option value="All">All Documents</option>
+					</select>
+				</div>
+			</div>
+			
+			<br>
+			
+			<div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
+			
+		<!-- AREA FOR PERSONAL DOCUMENTS -->
+			<div id="personaldocs_table">
+				<h2 class="ui dividing header">
+					<i class="user outline icon"></i>
+					<div class="content">Personal Documents</div>
+				</h2>
+			
+				<!-- SEARCH AREA -->
+				<form class="ui form">
+					<div class="three fields">
+						<input type="hidden" name="doctype" value="Personal"/>
+					
+						<!-- SEARCH BOX -->
+						<div class="field">
+							<div class="ui icon input">
+								<input type="text" placeholder="Seach Document.."/>
+								<i class="search icon"></i>
+							</div>
+						</div>
+						
+						<!-- UPLOAD TIMESTAMP RANGE BOX -->
+						<div class="field">
+							<input type="text" placeholder="Upload Timestamp"/>
+						</div>
+						
+						<!-- CATEGORY DROPDOWN -->
+						<div class="field">
+							<select class="ui fluid dropdown" name="category">
+								<option value="">Select Category..</option>
+								<option value="memo">Memo</option>
+								<option value="letter">Letter</option>
+							</select>
+						</div>
+						
+						<!-- SEARCH BUTTON -->
+						<div class="field">
+							<button class="ui grey button" type="button">
+								Search
+							</button>
+						</div>
+					</div>
+				</form>
+				
+				<!-- TABLE AREA -->
+				<table class="ui compact selectable sortable table">
+					<thead>
+						<tr>
+							<th>Document Title</th>
+							<th>Upload Timestamp</th>
+							<th>Category</th>
+						</tr>
+					</thead>
+					<tr>
+						<td class="selectable"><a href="../index.jsp">
+							<i class="file icon"></i>
+							A Princess' Diary
+							</a>
+						</td>
+						<td>12-12-2018 12:00:00</td>
+						<td>Werpa point</td>
+					</tr>				
+				</table>
+			</div>
+			
+		<!-- AREA FOR INCOMING DOCUMENTS -->
+			<div id="incomingdocs_table">
+				<h2 class="ui dividing header">
+					<i class="sign in icon"></i>
+					<div class="content">
+						Incoming Documents
+						<div class="sub header">
+							Here lists all documents which have concerns to the institution.
+						</div>
+					</div>
+				</h2>
+			
+				<!-- SEARCH AREA -->
+				<form class="ui form">
+					<div class="five fields">
+						<input type="hidden" name="doctype" value="Incoming"/>
+					
+						<!-- SEARCH BOX -->
+						<div class="field">
+							<div class="ui icon input">
+								<input type="text" placeholder="Seach Document.."/>
+								<i class="search icon"></i>
+							</div>
+						</div>
+						
+						<!-- UPLOAD TIMESTAMP RANGE BOX -->
+						<div class="field">
+							<input type="text" placeholder="Upload Timestamp"/>
+						</div>
+						
+						<!-- CATEGORY DROPDOWN -->
+						<div class="field">
+							<select class="ui fluid dropdown" name="category">
+								<option value="">Select Category..</option>
+								<option value="memo">Memo</option>
+								<option value="letter">Letter</option>
+							</select>
+						</div>
+						
+						<!-- ACTION REQUIRED DROPDOWN -->
+						<div class="field">
+							<select class="ui fluid dropdown">
+								<option value="">Select Action</option>
+								<option value="none">None</option>
+								<option value="appr">Approval</option>
+								<option value="endor">Endorsement</option>
+								<option value="resp">Response</option>
+							</select>
+						</div>
+						
+						<!-- STATUS DROPDOWN -->
+						<div class="field">
+							<select class="ui fluid dropdown" name="status">
+								<option value="">Select Status</option>
+								<option value="forwarded">Forwarded to Director</option>
+								<option value="received">Received by Director</option>
+								<option value="done">Done</option>
+							</select>
+						</div>
+						
+						<!-- SEARCH BUTTON -->
+						<div class="field">
+							<button class="ui grey button" type="button">
+								Search
+							</button>
+						</div>
+					</div>
+				</form>
+				
+				<!-- TABLE AREA -->
+				<table class="ui compact selectable sortable table">
+					<thead>
+						<tr>
+							<th>Document Title</th>
+							<th>Document Source</th>
+							<th>Upload Timestamp</th>
+							<th>Category</th>
+							<th>Action Required</th>
+							<th>Status</th>
+							<th>Reference No.</th>
+						</tr>
+					</thead>
+					<tr>
+						<td class="selectable"><a href="../index.jsp">
+							<i class="file icon"></i>
+							A Princess' Diary
+							</a>
+						</td>
+						<td>Princess Peach</td>
+						<td>12-12-2018 12:00:00</td>
+						<td>Werpa point</td>
+						<td>Response</td>
+						<td>Forwarded to Director</td>
+						<td>IN0069</td>
+					</tr>
+									
+				</table>
+				
+			</div>
+			
+		<!-- AREA FOR OUTGOING DOCUMENTS -->
+			<div id="outgoingdocs_table">
+				<h2 class="ui dividing header">
+					<i class="sign out icon"></i>
+					<div class="content">
+						Outgoing Documents
+						<div class="sub header">
+							Here lists all documents which have concerns outside the institution.
+						</div>
+					</div>
+				</h2>
+			
+				<!-- SEARCH AREA -->
+				<form class="ui form">
+					<div class="three fields">
+						<input type="hidden" name="doctype" value="Outgoing"/>
+					
+						<!-- SEARCH BOX -->
+						<div class="field">
+							<div class="ui icon input">
+								<input type="text" placeholder="Seach Document.."/>
+								<i class="search icon"></i>
+							</div>
+						</div>
+						
+						<!-- UPLOAD TIMESTAMP RANGE BOX -->
+						<div class="field">
+							<input type="text" placeholder="Upload Timestamp"/>
+						</div>
+						
+						<!-- CATEGORY DROPDOWN -->
+						<div class="field">
+							<select class="ui fluid dropdown" name="category">
+								<option value="">Select Category..</option>
+								<option value="memo">Memo</option>
+								<option value="letter">Letter</option>
+							</select>
+						</div>
+						
+						<!-- SEARCH BUTTON -->
+						<div class="field">
+							<button class="ui grey button" type="button">
+								Search
+							</button>
+						</div>
+					</div>
+				</form>
+				
+				<!-- TABLE AREA -->
+				<table class="ui compact selectable sortable table">
+					<thead>
+						<tr>
+							<th>Document Title</th>
+							<th>Recipient</th>
+							<th>Upload Timestamp</th>
+							<th>Category</th>
+						</tr>
+					</thead>
+					<tr>
+						<td class="selectable"><a href="../index.jsp">
+							<i class="file icon"></i>
+							A Princess' Diary
+							</a>
+						</td>
+						<td>Princess Daisy</td>
+						<td>12-12-2018 12:00:00</td>
+						<td>Werpa point</td>
+					</tr>
+									
+				</table>
+				
+			</div>
+		
+		<!-- AREA FOR ARCHIVED DOCUMENTS -->
+			<div id="archiveddocs_table">
+				<h2 class="ui dividing header">
+					<i class="archive icon"></i>
+					<div class="content">
+						Archived Documents
+						<div class="sub header">
+							Here lists past documents which are now archived and enabled by the administrator.
+						</div>
+					</div>
+				</h2>
+			
+				<!-- SEARCH AREA -->
+				<form class="ui form">
+					<div class="five fields">
+					
+						<!-- SEARCH BOX -->
+						<div class="field">
+							<div class="ui icon input">
+								<input type="text" placeholder="Seach Document.."/>
+								<i class="search icon"></i>
+							</div>
+						</div>
+						
+						<!-- UPLOAD TIMESTAMP RANGE BOX -->
+						<div class="field">
+							<input type="text" placeholder="Upload Timestamp"/>
+						</div>
+						
+						<!-- DOCUMENT TYPE DROPDOWN -->
+						<div class="field">
+							<select class="ui fluid dropdown">
+					  			<option value="">Select Document Type</option>
+					  			<option value="Personal">Personal</option>
+					  			<option value="Incoming">Incoming</option>
+					  			<option value="Outgoing">Outgoing</option>
+							</select>
+						</div>
+						
+						<!-- CATEGORY DROPDOWN -->
+						<div class="field">
+							<select class="ui fluid dropdown" name="category">
+								<option value="">Select Category..</option>
+								<option value="memo">Memo</option>
+								<option value="letter">Letter</option>
+							</select>
+						</div>
+						
+						<!-- SEARCH BUTTON -->
+						<div class="field">
+							<button class="ui grey button" type="button">
+								Search
+							</button>
+						</div>
+					</div>
+				</form>
+				
+				<!-- TABLE AREA -->
+				<table class="ui compact selectable sortable table">
+					<thead>
+						<tr>
+							<th>Document Title</th>
+							<th>Uploader</th>
+							<th>Upload Timestamp</th>
+							<th>Document Type</th>
+							<th>Category</th>
+						</tr>
+					</thead>
+					<tr>
+						<td class="selectable"><a href="../index.jsp">
+							<i class="file icon"></i>
+							A Princess' Diary
+							</a>
+						</td>
+						<td>Mario</td>
+						<td>12-12-2018 12:00:00</td>
+						<td>Incoming</td>
+						<td>Werpa point</td>
+					</tr>
+									
+				</table>
+				
+			</div>
+			
+		<!-- AREA FOR ALL DOCUMENTS -->
+			<div id="alldocs_table">
+				<h2 class="ui dividing header">
+					<i class="server icon"></i>
+					<div class="content">
+						All Documents
+						<div class="sub header">
+							Here lists all document types except for archived documents.
+						</div>
+					</div>
+
+				</h2>
+			
+				<!-- SEARCH AREA -->
+				<form class="ui form">
+					<div class="five fields">
+					
+						<!-- SEARCH BOX -->
+						<div class="field">
+							<div class="ui icon input">
+								<input type="text" placeholder="Seach Document.."/>
+								<i class="search icon"></i>
+							</div>
+						</div>
+						
+						<!-- UPLOAD TIMESTAMP RANGE BOX -->
+						<div class="field">
+							<input type="text" placeholder="Upload Timestamp"/>
+						</div>
+						
+						<!-- DOCUMENT TYPE DROPDOWN -->
+						<div class="field">
+							<select class="ui fluid dropdown">
+					  			<option value="">Select Document Type</option>
+					  			<option value="Personal">Personal</option>
+					  			<option value="Incoming">Incoming</option>
+					  			<option value="Outgoing">Outgoing</option>
+							</select>
+						</div>
+						
+						<!-- CATEGORY DROPDOWN -->
+						<div class="field">
+							<select class="ui fluid dropdown" name="category">
+								<option value="">Select Category..</option>
+								<option value="memo">Memo</option>
+								<option value="letter">Letter</option>
+							</select>
+						</div>
+						
+						<!-- SEARCH BUTTON -->
+						<div class="field">
+							<button class="ui grey button" type="button">
+								Search
+							</button>
+						</div>
+					</div>
+				</form>
+				
+				<!-- TABLE AREA -->
+				<table class="ui compact selectable sortable table">
+					<thead>
+						<tr>
+							<th>Document Title</th>
+							<th>Uploader</th>
+							<th>Upload Timestamp</th>
+							<th>Document Type</th>
+							<th>Category</th>
+						</tr>
+					</thead>
+					<tr>
+						<td class="selectable"><a href="../index.jsp">
+							<i class="file icon"></i>
+							A Princess' Diary
+							</a>
+						</td>
+						<td>Mario</td>
+						<td>12-12-2018 12:00:00</td>
+						<td>Incoming</td>
+						<td>Werpa point</td>
+					</tr>
+									
+				</table>
+				
+			</div>
+			
+			
+			</div>
+		</div>
 		
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
@@ -134,4 +562,5 @@
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/tablesort.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/documents.js"></script>
 </html>

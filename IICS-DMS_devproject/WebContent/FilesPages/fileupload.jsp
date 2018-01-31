@@ -50,11 +50,11 @@
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
-			    	<a class="item" href="${pageContext.request.contextPath}/mail/viewmemoletter.jsp">
-			    		<i class="large open envelope icon side"></i>View Memo/Letter
-			    	</a>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
 			    		<i class="large exchange icon side"></i>Requests
+			    	</a>
+			    	<a class="item" href="${pageContext.request.contextPath}/mail/viewmemoletter.jsp">
+			    		<i class="large open envelope icon side"></i>View All Memos/Letters
 			    	</a>
 		    	</div>
 		    </div>
@@ -103,34 +103,211 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
+
 		<!-- DOCUMENT TYPE SELECTOR -->
 		<div class="ui grid form element-rpt">
-			<div class="three wide computer six wide tablet sixteen wide mobile column">
+			<div class="three wide computer four wide tablet sixteen wide mobile column">
 				<div class="field">
-					<label>Document Type</label>
-					<select class="ui fluid dropdown" name="document_type">
+					<label>Upload Document Type:</label>
+					<select class="ui fluid dropdown" id="doctype_select">
 			  			<option value="Personal">Personal</option>
 			  			<option value="Incoming">Incoming</option>
 			  			<option value="Outgoing">Outgoing</option>
 					</select>
 				</div>
 			</div>
-		</div>
-		
+			
+			<br>
+			
+			<div class="ten wide computer ten wide tablet sixteen wide mobile column">
+			
 		<!-- FORM FOR PERSONAL DOCUMENTS -->
-		<form class="ui form" action="${pageContext.request.contextPath}/FileUpload" method="post" enctype="multipart/form-data">
-			Category<input type="text" name="category"/>
-			Document Title<input type="text" name="document_title"/>
-			Attachment<input type="file" name="file"/>
-			Description<input type="text" name="description"/>
-			<input type="submit">
-		</form>
-		
+			<form class="ui form" action="${pageContext.request.contextPath}/FileUpload"
+					method="post" enctype="multipart/form-data" id="personaldocs_form">
+					
+				<input type="hidden" name="document_type" value="Personal"/>
+				
+				<div class="required field">
+					<label>Category:</label>
+					<div class="inline two fields">
+						<div class="field">
+						<select class="ui fluid dropdown" name="category">
+							<option value="">Select Category..</option>
+							<option value="memo">Memo</option>
+							<option value="letter">Letter</option>
+						</select>
+						</div>
+						<div class="field">
+						<button class="ui inverted orange button" type="button">
+							<i class="pencil icon"></i>
+							Add Category
+						</button>
+						</div>
+					</div>
+				</div>
+				
+				<div class="required field">
+					<label>Document Title:</label>
+					<input type="text" name="document_title" placeholder="e.g. Course Grades" required/>
+				</div>
+			
+				<div class="field">
+					<label>Document Description:</label>
+					<p class="microcopy-hint">
+						Give a short description about the document to give you, future you, or others a hint about the document.
+					</p>
+					<textarea name="description"></textarea>
+				</div>
+				
+				
+				<div class="required inline field">
+					<label>File to Upload:</label>
+					<input type="file" name="file" required/>
+				</div>
+				
+				<button class="ui labeled icon green button" type="submit">
+					<i class="upload icon"></i>
+					Upload Personal File
+				</button>
+				
+			</form>
+			
 		<!-- FORM FOR INCOMING DOCUMENTS -->
-		
-		
+			<form class="ui form" action="${pageContext.request.contextPath}/FileUpload"
+					method="post" enctype="multipart/form-data" id="incomingdocs_form">
+					
+				<input type="hidden" name="document_type" value="Incoming"/>
+				
+				<div class="required field">
+					<label>Category:</label>
+					<div class="inline two fields">
+						<div class="field">
+						<select class="ui fluid dropdown" name="category">
+							<option value="">Select Category..</option>
+							<option value="memo">Memo</option>
+							<option value="letter">Letter</option>
+						</select>
+						</div>
+						<div class="field">
+						<button class="ui inverted orange button" type="button">
+							<i class="pencil icon"></i>
+							Add Category
+						</button>
+						</div>
+					</div>
+				</div>
+				
+				<div class="required field">
+					<label>Document Source:</label>
+					<p class="microcopy-hint">
+						This indicates from whom the document was received.
+					</p>
+					<input type="text" name="document_source" placeholder="e.g. Dean, Faculty of Engineering" required/>
+				</div>
+				
+				<div class="required field">
+					<label>Document Title:</label>
+					<input type="text" name="document_title" placeholder="e.g. Announcement from the Dean of Eng'g" required/>
+				</div>
+			
+				<div class="field">
+					<label>Document Description:</label>
+					<p class="microcopy-hint">
+						Give a short description about the document to give you, future you, or others a hint about the document.
+					</p>
+					<textarea name="description"></textarea>
+				</div>
+				
+				<div class="two fields">
+					<div class="required field">
+						<label>Action Required:</label>
+						<select class="ui fluid dropdown">
+							<option value="">Select Action..</option>
+							<option value="none">None</option>
+							<option value="appr">Approval</option>
+							<option value="endor">Endorsement</option>
+							<option value="resp">Response</option>
+						</select>
+					</div>
+					<div class="field">
+						<label>Reference No.</label>
+						<input type="text" placeholder="IN0000" />
+						<p class="microcopy-hint">This is used for linking incoming documents.</p>
+					</div>
+				</div>
+				
+				<div class="required inline field">
+					<label>File to Upload:</label>
+					<input type="file" name="file" required/>
+				</div>
+				
+				<button class="ui labeled icon green button" type="submit">
+					<i class="upload icon"></i>
+					Upload Incoming File
+				</button>
+				
+			</form>
+			
 		<!-- FORM FOR OUTGOING DOCUMENTS -->
-		
+			<form class="ui form" action="${pageContext.request.contextPath}/FileUpload"
+					method="post" enctype="multipart/form-data" id="outgoingdocs_form">
+					
+				<input type="hidden" name="document_type" value="Outgoing"/>
+				
+				<div class="required field">
+					<label>Category:</label>
+					<div class="inline two fields">
+						<div class="field">
+						<select class="ui fluid dropdown" name="category">
+							<option value="">Select Category..</option>
+							<option value="memo">Memo</option>
+							<option value="letter">Letter</option>
+						</select>
+						</div>
+						<div class="field">
+						<button class="ui inverted orange button" type="button">
+							<i class="pencil icon"></i>
+							Add Category
+						</button>
+						</div>
+					</div>
+				</div>
+				
+				<div class="required field">
+					<label>Document Recipient:</label>
+					<p class="microcopy-hint">
+						This indicates to whom the document is for.
+					</p>
+					<input type="text" name="document_recipient" placeholder="e.g. Dean, Faculty of Engineering" required/>
+				</div>
+				
+				<div class="required field">
+					<label>Document Title:</label>
+					<input type="text" name="document_title" placeholder="e.g. Announcement from the Director of IICS" required/>
+				</div>
+			
+				<div class="field">
+					<label>Document Description:</label>
+					<p class="microcopy-hint">
+						Give a short description about the document to give you, future you, or others a hint about the document.
+					</p>
+					<textarea name="description"></textarea>
+				</div>
+				
+				<div class="required inline field">
+					<label>File to Upload:</label>
+					<input type="file" name="file" required/>
+				</div>
+				
+				<button class="ui labeled icon green button" type="submit">
+					<i class="upload icon"></i>
+					Upload Outgoing File
+				</button>
+				
+			</form>
+
+			</div>
+		</div>
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
 		
@@ -160,4 +337,5 @@
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/tablesort.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/fileupload.js"></script>
 </html>

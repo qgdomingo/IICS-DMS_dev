@@ -50,11 +50,11 @@
 			    	<a class="item active" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
-			    	<a class="item" href="${pageContext.request.contextPath}/mail/viewmemoletter.jsp">
-			    		<i class="large open envelope icon side"></i>View Memo/Letter
-			    	</a>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
 			    		<i class="large exchange icon side"></i>Requests
+			    	</a>
+			    	<a class="item" href="${pageContext.request.contextPath}/mail/viewmemoletter.jsp">
+			    		<i class="large open envelope icon side"></i>View All Memos/Letters
 			    	</a>
 		    	</div>
 		    </div>

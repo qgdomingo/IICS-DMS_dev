@@ -43,6 +43,9 @@
 						<div class="required field">
 							<label>Email Address:</label>
 							<input type="text" placeholder="e.g. jamesgosling@java.com" required/>
+							<p class="microcopy-hint">
+								We will use your email to send the Director's response. We won't send spam, promise!
+							</p>
 						</div>
 						<div class="required field">
 							<label>Contact Number:</label>
@@ -69,8 +72,7 @@
 					</div>
 					<div class="inline field">
 						<label>Attachment:</label>
-						<button class="ui grey button" type="button">Choose File</button>
-						<p>No file chosen</p>
+						<input type="file" name="file"/>
 					</div>
 					
 					<p>*INSERT CAPTCHA HERE*</p>
