@@ -12,7 +12,7 @@
 	</head>
 	<body class="login-background">
 		<div class="ui centered grid container">
-			<div class="eight wide computer eight wide table sixteen wide mobile column login-form-area">
+			<div class="eight wide computer eight wide tablet sixteen wide mobile column login-form-area">
 			
 				<!-- PAGE HEADER -->
 				<h2 class="ui center aligned icon header">

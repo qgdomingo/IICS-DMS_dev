@@ -75,15 +75,19 @@
 <!-- ACTUAL PAGE CONTENTS -->
 			<!-- SEARCH ROW -->
 			<form class="ui form">
-				<div class="inline fields">
+				<div class="five fields">
+				
+					<!-- SEARCH BOX -->
 					<div class="field">
 						<div class="ui icon input">
 							<input type="text" placeholder="Seach User.."/>
 							<i class="search icon"></i>
 						</div>
 					</div>
+					
+					<!-- USER TYPE DROPDOWN -->
 					<div class="field">
-						<select class="ui dropdown">
+						<select class="ui fluid dropdown">
 							<option value="none">User Type</option>
 							<option value="dir">Director</option>
 							<option value="sec">Faculty Secretary</option>
@@ -92,44 +96,53 @@
 							<option value="sta">Staff</option>
 						</select>
 					</div>
+					
+					<!-- DEPARTMENT DROPDOWN -->
 					<div class="field">
-						<select class="ui dropdown">
+						<select class="ui fluid dropdown">
 							<option value="none">Department</option>
 							<option value="cs">Computer Science</option>
 							<option value="it">Information Technology</option>
 							<option value="is">Information Systems</option>
 						</select>
 					</div>
+					
+					<!-- STATUS DROPDOWN -->
 					<div class="field">
-						<select class="ui dropdown">
+						<select class="ui fluid dropdown">
 							<option value="none">Status</option>
 							<option value="ac">Active</option>
 							<option value="inac">Inactive</option>
 						</select>
 					</div>
-					<button class="ui grey button" type="button">
-						Search
-					</button>
+					
+					<!-- SEARCH BUTTON -->
+					<div class="field">
+						<button class="ui grey button" type="button">
+							Search
+						</button>
+					</div>
+					
 				</div>
 			</form>
 			
 			<!-- ACTION ROW -->
-			<button class="ui labeled icon green button" id="adduser_btn">
+			<button class="ui labeled icon green button element-mb" id="adduser_btn">
 				<i class="add user icon"></i>
 				Add User
 			</button>
 				
-			<button class="ui labeled icon orange button" id="edituser_btn">
+			<button class="ui labeled icon orange button element-mb" id="edituser_btn">
 				<i class="write square icon"></i>
 				Edit User
 			</button>
 				
-			<button class="ui labeled icon blue button" id="enableuser_btn">
+			<button class="ui labeled icon blue button element-mb" id="enableuser_btn">
 				<i class="add check circle icon"></i>
 				Enable User/s
 			</button>
 				
-			<button class="ui labeled icon red button" id="disableuser_btn">
+			<button class="ui labeled icon red button element-mb" id="disableuser_btn">
 				<i class="add remove circle icon"></i>
 				Disable User/s
 			</button>
@@ -143,7 +156,7 @@
 				<input type="submit" name ="buttonPress" value="Disable User"/>
 				
 				
-				<table class="ui definition sortable table">
+				<table class="ui compact selectable definition sortable table">
 					<thead>
 						<tr>
 							<th></th>

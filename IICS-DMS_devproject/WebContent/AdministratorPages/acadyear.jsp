@@ -80,7 +80,7 @@
 				acadYear.next();
 			%>
 			
-			<h3 class="element-mt">Current Academic Year:</h3> 
+			<h3 class="element-rmt">Current Academic Year:</h3> 
 			<p><%=acadYear.getInt("start_year") %> - <%=acadYear.getInt("end_year") %></p>
 			
 			<h3>Academic Year Range:</h3> 
@@ -94,25 +94,29 @@
 			</h3>
 			
 			<form class="ui form element-mb" action="${pageContext.request.contextPath}/editYear" method="post">
-				<div class="five wide field">
-					<label>Year from:</label>
-					<input type="text" value="<%=acadYear.getInt("end_year") %>" readonly=""/>
-				</div>
-				<div class="five wide required field">
-					<label>Year to:</label>
-					<select class="ui dropdown" name="year_to" required>
-						<option value="">Select Year End</option>
-						<option value="2018">2018</option>
-						<option value="2019">2019</option>
-						<option value="2020">2020</option>
-						<option value="2021">2021</option>
-						<option value="2022">2022</option>
-					</select>
+				
+				<div class="fields">
+					<div class="four wide field">
+						<label>Year from:</label>
+						<input type="text" value="<%=acadYear.getInt("end_year") %>" readonly=""/>
+					</div>
+					<div class="four wide required field">
+						<label>Year to:</label>
+						<select class="ui fluid dropdown" name="year_to" required>
+							<option value="">Select Year End</option>
+							<option value="2018">2018</option>
+							<option value="2019">2019</option>
+							<option value="2020">2020</option>
+							<option value="2021">2021</option>
+							<option value="2022">2022</option>
+						</select>
+					</div>
 				</div>
 				
-				<div class="five wide required field">
+				<div class="fields">
+				<div class="four wide required field">
 					<label>Start Month:</label>
-					<select class="ui dropdown" name="month_start" required>
+					<select class="ui fluid dropdown" name="month_start" required>
 						<option value="">Select Start Month..</option>
 						<option value="January">January</option>
 						<option value="February">February</option>
@@ -128,9 +132,9 @@
 						<option value="December">December</option>
 					</select>
 				</div>
-				<div class="five wide required field">
+				<div class="four wide required field">
 					<label>End Month:</label>
-					<select class="ui dropdown" name="month_end" required>
+					<select class="ui fluid dropdown" name="month_end" required>
 						<option value="">Select End Month..</option>
 						<option value="January">January</option>
 						<option value="February">February</option>
@@ -146,8 +150,9 @@
 						<option value="December">December</option>
 					</select>
 				</div>
+				</div>
 				
-				<button class="ui labeled icon orange button" type="submit">
+				<button class="ui labeled icon orange button element-mt" type="submit">
 					<i class="pencil icon"></i>
 					Apply Changes
 				</button>

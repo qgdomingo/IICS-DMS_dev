@@ -16,16 +16,16 @@
 				<div class="messagepage-header">
 					<h2 class="ui header">
 					  <a href="index.jsp"><i class="red chevron left icon"></i></a> 
-					  Send a Message for the Director
+					  Send a Message to the Director
 					</h2>
 				</div>
-				<hr><br>
+				<br>
 				
 			<!-- START OF MESSAGE FORM -->
 				<form class="ui equal width form">
 				
 				<!-- SENDER'S INFORMATION -->
-					<h3 class="ui header">
+					<h3 class="ui dividing header">
 						<i class="user icon"></i>
 						<div class="content">Sender's Information</div>
 					</h3>
@@ -55,7 +55,7 @@
 					</div>
 					
 				<!-- MESSAGE BODY -->
-					<h3 class="ui header">
+					<h3 class="ui dividing header">
 						<i class="mail icon"></i>
 						<div class="content">Message</div>
 					</h3>

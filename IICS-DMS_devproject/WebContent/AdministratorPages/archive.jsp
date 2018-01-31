@@ -69,8 +69,83 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
-		
-		
+			<!-- SEARCH ROW -->
+			<form class="ui form">
+				<div class="three fields">
+					<!-- TIMESTAMP BOX -->
+					<div class="field">
+						<div class="ui icon input">
+							<input type="text" placeholder="Log Timestamp Range"/>
+							<i class="calendar icon"></i>
+						</div>
+					</div>
+				
+					<!-- SEARCH BOX -->
+					<div class="field">
+						<div class="ui icon input">
+							<input type="text" placeholder="Find Archive Title"/>
+							<i class="search icon"></i>
+						</div>
+					</div>
+					
+					<!-- SEARCH BUTTON -->
+					<div class="field">
+						<button class="ui grey button" type="button">
+							Search
+						</button>
+					</div>
+					
+				</div>
+			</form>
+			
+			<!-- ACTION ROW -->
+			<button class="ui labeled icon green button element-mb" id="adduser_btn">
+				<i class="add to calendar icon"></i>
+				Set Archive Date
+			</button>
+				
+			<button class="ui labeled icon orange button element-mb" id="edituser_btn">
+				<i class="archive icon"></i>
+				Archive Documents Now
+			</button>
+				
+			<button class="ui labeled icon blue button element-mb" id="enableuser_btn">
+				<i class="add check circle icon"></i>
+				Enable Archive
+			</button>
+				
+			<button class="ui labeled icon red button element-mb" id="disableuser_btn">
+				<i class="add remove circle icon"></i>
+				Disable Archive
+			</button>
+
+			<!-- TABLE AREA -->
+			<table class="ui compact selectable definition sortable table">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Archive Timestamp</th>
+						<th>Archive Title</th>
+						<th>Status</th>
+						<th class="one wide"></th>
+					</tr>
+				</thead>
+				<tr>
+					<td class="collapsing">
+						<div class="ui fitted checkbox">
+							<input type="checkbox" name="selected">
+						</div>
+					</td>
+					<td>12-12-2018 12:00:00</td>
+					<td>ARCHIVE001_AY2017-2018</td>
+					<td>Disabled</td>
+					<td>
+						<button class="mini ui blue button" type="button">Download</button> 
+					</td>
+				</tr>
+					
+			</table>
+
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
 		

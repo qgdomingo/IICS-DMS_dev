@@ -69,8 +69,99 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
-		
-		
+		<!-- SEARCH ROW -->
+			<form class="ui form">
+				<div class="two fields">
+					
+					<!-- TIMESTAMP BOX -->
+					<div class="field">
+						<div class="ui icon input">
+							<input type="text" placeholder="Log Timestamp Range"/>
+							<i class="calendar icon"></i>
+						</div>
+					</div>
+					
+					<!-- LOG TYPE DROPDOWN -->
+					<div class="field">
+						<select class="ui fluid dropdown">
+							<option value="none">Log Type</option>
+							<option value="sys">System Log</option>
+							<option value="err">Error Log</option>
+						</select>
+					</div>
+					
+					<!-- LOG SEARCH BOX -->
+					<div class="field">
+						<div class="ui icon input">
+							<input type="text" placeholder="Find Log Information.."/>
+							<i class="search icon"></i>
+						</div>
+					</div>
+					
+					<!-- USER SEARCH BOX -->
+					<div class="field">
+						<div class="ui icon input">
+							<input type="text" placeholder="Seach User.."/>
+							<i class="search icon"></i>
+						</div>
+					</div>
+					
+					<!-- USER TYPE DROPDOWN -->
+					<div class="field">
+						<select class="ui fluid dropdown">
+							<option value="none">User Type</option>
+							<option value="dir">Director</option>
+							<option value="sec">Faculty Secretary</option>
+							<option value="dep">Department Head</option>
+							<option value="fac">Faculty</option>
+							<option value="sta">Staff</option>
+						</select>
+					</div>
+					
+					<!-- DEPARTMENT DROPDOWN -->
+					<div class="field">
+						<select class="ui fluid dropdown">
+							<option value="none">Department</option>
+							<option value="cs">Computer Science</option>
+							<option value="it">Information Technology</option>
+							<option value="is">Information Systems</option>
+						</select>
+					</div>
+					
+
+					
+					<!-- SEARCH BUTTON -->
+					<div class="field">
+						<button class="ui grey button" type="button">
+							Search
+						</button>
+					</div>
+					
+				</div>
+			</form>
+			
+			<!-- TABLE AREA -->
+			<table class="ui compact selectable sortable table">
+				<thead>
+					<tr>
+						<th>Log Timestamp</th>
+						<th>Log Type</th>
+						<th>Log Information</th>
+						<th>User</th>
+						<th>User Type</th>
+						<th>Department</th>
+					</tr>
+				</thead>
+				<tr>
+					<td>12-12-2018 12:00:00</td>
+					<td>System Log</td>
+					<td>UPLOAD --- incoming document</td>
+					<td>Jeddi Boi</td>
+					<td>Department Head</td>
+					<td>Computer Science</td>
+				</tr>				
+			</table>
+
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
 		
