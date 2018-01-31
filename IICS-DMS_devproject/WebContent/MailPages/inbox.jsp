@@ -103,8 +103,52 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
-		
-		
+		<!-- SEARCH AREA -->
+		<form class="ui form">
+			<div class="three fields">
+					
+				<!-- SEARCH BOX -->
+				<div class="field">
+					<div class="ui icon input">
+						<input type="text" placeholder="Seach Mail"/>
+						<i class="search icon"></i>
+					</div>
+				</div>
+						
+				<!-- MAIL TIMESTAMP RANGE BOX -->
+				<div class="field">
+					<input type="text" placeholder="Mail Timestamp Range"/>
+				</div>
+									
+				<!-- SEARCH BUTTON -->
+				<div class="field">
+					<button class="ui grey button" type="button">
+						Search
+					</button>
+				</div>
+			</div>
+		</form>
+				
+		<!-- TABLE AREA -->
+		<table class="ui compact selectable sortable table">
+			<thead>
+				<tr>
+					<th>Sender</th>
+					<th>Subject</th>
+					<th>Timestamp</th>
+				</tr>
+			</thead>
+			<tr>
+				<td>Princess Daisy</td>
+				<td class="selectable"><a href="../index.jsp">
+					<i class="mail icon"></i>
+					A Princess' Diary
+					</a>
+				</td>
+				<td>12-12-2018 12:00:00</td>
+			</tr>				
+		</table>	
+			
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
 		

@@ -103,8 +103,71 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
+		<form class="ui form">
+			<div class="two fields">
+			<div class="three wide field">
+				<label>Mail Type:</label>
+				<select class="ui fluid dropdown">
+					<option value="">Select Mail Type</option>
+					<option value="Memo">Memo</option>
+					<option value="Letter">Letter</option>
+				</select>
+			</div>
+			</div>
+			
+			<div class="required field">
+				<label>To:</label>
+				<div class="inline two fields">
+					<div class="fourteen wide field">
+						<input class="fluid" type="text" required/>
+					</div>
+					<div class="two wide field">
+					<button class="ui inverted orange button" type="button">
+						<i class="users icon"></i>
+						Directory
+					</button>
+					</div>
+				</div>
+			</div>
 		
-		
+			<div class="field">
+				<label>External To:</label>
+				<input type="text" />
+			</div>
+			
+			<div class="required field">
+				<label>Subject:</label>
+				<input type="text"/>
+			</div>
+			
+			<div class="required field">
+				<label>Message:</label>
+				<textarea></textarea>
+			</div>
+			
+			<!-- SENDING MAIL BUTTONS -->
+			<button class="ui labeled icon green button element-mb">
+				<i class="send icon"></i>
+				Send Mail
+			</button>
+			
+			<button class="ui labeled icon orange button element-mb">
+				<i class="exchange icon"></i>
+				Send Mail as Request
+			</button>	
+				
+			<button class="ui labeled icon blue button element-mb">
+				<i class="save icon"></i>
+				Save Mail
+			</button>
+				
+			<button class="ui labeled icon blue button element-mb">
+				<i class="download icon"></i>
+				Save and Export as PDF
+			</button>
+						
+		</form>
+				
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
 		

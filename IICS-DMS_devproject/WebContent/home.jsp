@@ -103,7 +103,9 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
-		
+		<h1 class="ui header">
+			Hello, Jeddi!
+		</h1>
 		
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
