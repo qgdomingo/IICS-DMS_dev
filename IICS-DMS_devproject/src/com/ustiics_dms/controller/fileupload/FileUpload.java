@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,6 +18,7 @@ import org.apache.commons.fileupload.disk.*;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.ustiics_dms.model.Account;
+import com.ustiics_dms.utility.SessionChecking;
 
 
 
@@ -27,17 +29,13 @@ import com.ustiics_dms.model.Account;
 public class FileUpload extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+
     public FileUpload() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
@@ -46,11 +44,16 @@ public class FileUpload extends HttpServlet {
 		
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
+		if(SessionChecking.checkSession(request.getSession()) != false) //if there is no session redirects to login page
+		{
+					RequestDispatcher dispatcher =
+					getServletContext().getRequestDispatcher("/index.jsp");
+					dispatcher.forward(request,response);
+		}
+		
 		List<FileItem> multifiles;
 		try {
 			multifiles = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);

@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ustiics_dms.utility.SessionChecking;
+
 /**
  * Servlet implementation class editYear
  */
@@ -35,12 +37,15 @@ public class EditYear extends HttpServlet {
 		
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		
+		if(SessionChecking.checkSession(request.getSession()) != false) //if there is no session redirects to login page
+		{
+					RequestDispatcher dispatcher =
+					getServletContext().getRequestDispatcher("/index.jsp");
+					dispatcher.forward(request,response);
+		}
 		
 		int yearEnd = Integer.parseInt(request.getParameter("year_to"));
 		int yearStart = yearEnd - 1 ;
@@ -50,7 +55,7 @@ public class EditYear extends HttpServlet {
 		try {
 			AcademicYearFunctions.updateYear(yearStart, monthStart, yearEnd, monthEnd);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		
