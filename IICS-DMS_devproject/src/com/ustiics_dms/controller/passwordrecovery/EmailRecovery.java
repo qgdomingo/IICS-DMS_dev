@@ -52,7 +52,7 @@ public class EmailRecovery extends HttpServlet {
 		SendMail.send(recipient, subject, message, userName, password); //send email
 		
 		try {
-			PasswordRecoveryFunctions.addRecoveryCode(recipient, code); //add to database
+			PasswordRecoveryFunctions.addRecoveryCode("jlteoh_cheehooi23@yahoo.com", code); //add to database
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
