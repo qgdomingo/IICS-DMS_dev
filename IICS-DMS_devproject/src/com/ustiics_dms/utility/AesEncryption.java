@@ -5,8 +5,6 @@ import org.apache.commons.codec.binary.*;
 
 public class AesEncryption{
 
-
-
     private static byte[] key = {'i','i','c','s','d','m','s','0',
                                  't','h','e','s','i','s','0','3'};
     

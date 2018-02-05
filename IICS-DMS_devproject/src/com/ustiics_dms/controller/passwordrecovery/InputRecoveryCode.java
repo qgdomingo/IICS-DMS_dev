@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 /**
  * InputRecoveryCode.java 
+ *  - a servlet controller that would check if the reset code entered is valid or not
  * 
  */
 @WebServlet("/InputRecoveryCode")

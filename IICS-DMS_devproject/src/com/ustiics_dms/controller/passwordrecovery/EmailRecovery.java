@@ -32,34 +32,35 @@ public class EmailRecovery extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		// ADD CODE TO CHECK IF THE EMAIL IS AN EXISTING USER
-		// IF EXISTING, PROCEED TO SEND EMAIL
-		// ELSE, DO NOT SEND EMAIL 
-		
-		
 		String recipient = request.getParameter("email");
-		String subject = "IICS DMS Password Reset";
-		
-		/*********************** Start of E-Mail Message **********************/
-		String message = "Good day " +  recipient + ",";
-		String code = GenerateCode.generateRecoveryCode();
-		message += "your security code is: " + code;
-		/************************ End of E-Mail Message **********************/
-		
-		String userName = "2014069493@ust-ics.mygbiz.com";
-		String password = "bluespace09";
-		
-		SendMail.send(recipient, subject, message, userName, password); //send email
-		
+
 		try {
-			PasswordRecoveryFunctions.addRecoveryCode("jlteoh_cheehooi23@yahoo.com", code); //add to database
-		} catch (SQLException e) {
+			//TODO: HOW ABOUT PREVIOUS RESET CODES? WHAT IF IT IS EXISTING. RESEND CODE INSTEAD?
+			if(PasswordRecoveryFunctions.checkEmailExists(recipient))
+			{
+				String subject = "IICS DMS Password Reset";
+				
+				/*********************** Start of E-Mail Message **********************/
+				String message = "Good day " +  recipient + ",";
+				String code = GenerateCode.generateRecoveryCode();
+				message += "your security code is: " + code;
+				/************************ End of E-Mail Message **********************/
+				
+				String userName = "2014069493@ust-ics.mygbiz.com";
+				String password = "bluespace09";
+				
+				SendMail.send(recipient, subject, message, userName, password); //send email
+				
+				PasswordRecoveryFunctions.addRecoveryCode(recipient, code); //add to database
+			
+				response.setContentType("text/html");
+				response.setCharacterEncoding("UTF-8");
+				response.setStatus(HttpServletResponse.SC_OK);
+			}
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		response.setContentType("text/html");
-		response.setCharacterEncoding("UTF-8");
-		response.setStatus(HttpServletResponse.SC_OK);
 	}
 
 }

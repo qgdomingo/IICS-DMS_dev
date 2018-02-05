@@ -1,6 +1,6 @@
 /**
  *  generalpages.js
- *   - a javascript used by all general pages (regular user account pages) 
+ *   - a javascript used by all general pages (regular user account pages) except of the login page
  */
 
 	$(document).ready(() => {		
@@ -8,35 +8,13 @@
 		$('.checkbox').checkbox();
 	})
 
-/* FUNCTION HELPERS */	
-	
-	function addCSSClass(element, cssClass) {
-		if(!$(element).hasClass(cssClass)) $(element).addClass(cssClass); 
-	}
-	
-	function removeCSSClass(element, cssClass) {
-		if($(element).hasClass(cssClass)) $(element).removeClass(cssClass); 
-	}
-	
-	function sendServerErrorMessage() {
+/* FUNCTION HELPERS */
 		
+	function activatePageLoading(loadingText) {
+		$('#page_loading_text').text(loadingText);
+		addCSSClass('#page_loading', 'active');
 	}
 	
-	function getContextPath() {
-		return $('#context_path').val();
-	}
-	
-	function setFailModal(header, body) {
-		$('#faildia_header').text(header);
-		$('#faildia_content').text(body);
-		
-		$('#faildia')
-		.modal({
-			blurring: true,
-			closable: false
-		})
-		.modal('show');
-	}	
 	
 /* SIDE MENU FUNCTIONALITY */ 
 	
@@ -64,10 +42,15 @@
 		.modal('show');
 	});
 
-
 	$('#logout_submit').click(() => {
+		$('#logout_dia').modal('hide');
+		activatePageLoading('Logging out');
+		
 		$.get(getContextPath() + '/Logout', (response) => {
 			window.location = getContextPath() + response.redirect;
-		});
+		})
+		 .fail((response) => {
+			 removeCSSClass('#page_loading', 'active');
+		 });
 	});
 	

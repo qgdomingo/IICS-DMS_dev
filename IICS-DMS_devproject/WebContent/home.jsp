@@ -11,8 +11,14 @@
 		<link rel="stylesheet" href="resource/css/master.css">
 		<link rel="stylesheet" href="resource/css/generalpages.css">
 	</head>
-	<body>
+	<body class="dimmable">
+		<!-- LOADING INDICATOR FOR THE WHOLE PAGE -->
+		<div class="ui dimmer" id="page_loading">
+			<div class="ui huge text loader" id="page_loading_text"></div>
+		</div>
+		<!-- RETRIEVE CONTEXT PAGE FOR JS -->
 		<input type="hidden" value="${pageContext.request.contextPath}" id="context_path"/> 
+		
 		<!-- LEFT SIDE MENU -->
 		<div class="ui large left vertical menu sidebar" id="side_nav">
 			<a class="item mobile only user-account-bgcolor" href="userprofile.jsp">
@@ -111,7 +117,7 @@
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
 		
-		<!-- LOGOUT MODAL -->
+		<!-- LOGOUT MODAL -->	  
 		<div class="ui basic tiny modal" id="logout_dia">
 		  <div class="ui icon header">
 		    <i class="power icon"></i>
@@ -131,10 +137,9 @@
 		    </div>
 		  </div>
 		</div>
-		
 	</body>
 	<script src="resource/js/jquery-3.2.1.min.js"></script>
 	<script src="resource/semanticui/semantic.min.js"></script>
-	<script src="resource/js/tablesort.js"></script>
+	<script src="resource/js/master.js"></script>
 	<script src="resource/js/generalpages.js"></script>
 </html>

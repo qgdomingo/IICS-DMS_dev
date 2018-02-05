@@ -8,6 +8,10 @@ import com.ustiics_dms.utility.AesEncryption;
 
 import com.ustiics_dms.databaseconnection.*;
 
+/*
+ *  LoginFunctions.java
+ *   - a java class that contains static functions needed by the Login functionality to interact with database
+ */
 public class LoginFunctions {
 
 	public static boolean authenticate(String email, String password) throws SQLException

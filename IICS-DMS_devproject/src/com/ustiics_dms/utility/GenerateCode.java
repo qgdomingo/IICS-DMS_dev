@@ -2,6 +2,10 @@ package com.ustiics_dms.utility;
 
 import java.util.Random;
 
+/*
+ *  GeneradeCode.java
+ *   - a java class that contains a static function that would generate a reset code used for password recovery
+ */
 public class GenerateCode {
 
 	public static String generateRecoveryCode()

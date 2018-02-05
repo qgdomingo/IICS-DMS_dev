@@ -34,11 +34,11 @@
 				<!-- LOGIN FORM -->
 				<h1 class="ui grey header">Login</h1>
 				<form class="ui form element-mb" id="login_form">
-					<div class="field">
+					<div class="field" id="user_email_field">
 						<label>Username</label>
 						<input placeholder="Username" id="user_email" type="text" required/>
 					</div>
-					<div class="field">
+					<div class="field" id="user_password_field">
 						<label>Password</label>
 						<input placeholder="Password" id="user_password" type="password" required/>
 					</div>
@@ -208,6 +208,6 @@
 	</body>
 	<script src="resource/js/jquery-3.2.1.min.js"></script>
 	<script src="resource/semanticui/semantic.min.js"></script>
-	<script src="resource/js/generalpages.js"></script>
+	<script src="resource/js/master.js"></script>
 	<script src="resource/js/login.js"></script>
 </html>

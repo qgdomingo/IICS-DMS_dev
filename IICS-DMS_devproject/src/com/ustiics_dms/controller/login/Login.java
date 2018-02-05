@@ -15,6 +15,10 @@ import javax.servlet.http.HttpSession;
 import com.google.gson.Gson;
 import com.ustiics_dms.model.Account;
 
+/*
+ * Login.java
+ *  - a servlet controller that would check if the credentials entered by the user is valid or not
+ */
 @WebServlet("/Login")
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;

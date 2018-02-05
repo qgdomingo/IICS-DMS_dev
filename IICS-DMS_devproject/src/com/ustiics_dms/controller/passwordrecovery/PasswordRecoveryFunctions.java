@@ -8,28 +8,32 @@ import java.sql.SQLException;
 import com.ustiics_dms.databaseconnection.DBConnect;
 import com.ustiics_dms.utility.AesEncryption;
 
+/*
+ * PasswordRecoveryFunctions.java
+ * 	- a java class that contains static functions needed for Password Recovery specifically methods used to
+ * 		interact with the database
+ */
 public class PasswordRecoveryFunctions {
 	
 	public static void addRecoveryCode(String email, String code) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			if(checkEmailExists(email)&&checkDuplicateEmailCode(email))
-			{
-				PreparedStatement prep = con.prepareStatement("Insert into account_recovery values (?,?)");
-				String encryptedCode = AesEncryption.encrypt(code);
+
+			PreparedStatement prep = con.prepareStatement("INSERT INTO account_recovery VALUES (?,?)");
+			String encryptedCode = AesEncryption.encrypt(code);
 				
-				prep.setString(1,  email);
-				prep.setString(2, encryptedCode);
+			prep.setString(1,  email);
+			prep.setString(2, encryptedCode);
 				
-				prep.executeUpdate();
-			}
+			prep.executeUpdate();
+			
 	}
 	
 	public static void deleteRecoveryCode(String email,String code) throws SQLException
 	{
 
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("delete from account_recovery where email = ? and code = ?");
+			PreparedStatement prep = con.prepareStatement("DELETE FROM account_recovery WHERE email = ? AND code = ?");
 			String encryptedCode = AesEncryption.encrypt(code);
 			prep.setString(1,  email);
 			prep.setString(2, encryptedCode);
@@ -41,7 +45,7 @@ public class PasswordRecoveryFunctions {
 	public static boolean checkRecoveryCode(String email, String code) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("Select email,code from account_recovery where email = ? and code = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT email, code FROM account_recovery WHERE email = ? AND code = ?");
 			String encryptedCode = AesEncryption.encrypt(code);
 			prep.setString(1,  email);
 			prep.setString(2, encryptedCode);
@@ -65,9 +69,9 @@ public class PasswordRecoveryFunctions {
 			{
 				
 				Connection con = DBConnect.getConnection();
-				PreparedStatement prep = con.prepareStatement("update accounts set password = ? where email = ?");
+				PreparedStatement prep = con.prepareStatement("UPDATE accounts SET password = ? WHERE email = ?");
 	
-				prep.setString(1,  password);
+				prep.setString(1, AesEncryption.encrypt(password));
 				prep.setString(2, email);
 				
 				prep.executeUpdate();
@@ -81,7 +85,7 @@ public class PasswordRecoveryFunctions {
 	public static boolean checkEmailExists(String email) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("Select email from accounts where email = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT email FROM accounts WHERE email = ?");
 			boolean flag = true;
 			
 			prep.setString(1,  email);
@@ -98,7 +102,7 @@ public class PasswordRecoveryFunctions {
 	public static boolean checkDuplicateEmailCode(String email) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("Select email from account_recovery where email = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT email FROM account_recovery WHERE email = ?");
 			boolean flag = true;
 			
 			prep.setString(1,  email);
@@ -112,7 +116,4 @@ public class PasswordRecoveryFunctions {
 			return flag;
 	}
 	
-	
-
-
 }

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * PasswordChange.java
+ *  - a servlet controller that takes the new password of the user and would update it to the database
  */
 @WebServlet("/PasswordChange")
 public class PasswordChange extends HttpServlet {

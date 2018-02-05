@@ -3,6 +3,9 @@
  * 	- used by the Login page (index.jsp) for scripting functionalities, mostly used for dialog boxes
  */
 	
+/* 
+ * VARIABLES 
+ */ 
 	var emailRecoveryParams = 
 		{
 			email: '',
@@ -11,13 +14,15 @@
 			confirm_password: ''
 		}
 	
-	function removeInputErrorClass(inputField) {
-		if($(inputField).hasClass("error")) $(inputField).removeClass("error");
-	}
+/* 
+ * LOGIN FUNCTIONALITY  
+ */
 	
-/* LOGIN FUNCTION */
+	/* SUBMIT - Login Form */
 	$('#login_form').submit((event) => {	
 		event.preventDefault();
+		removeCSSClass('#user_email_field', 'error');
+		removeCSSClass('#user_password_field', 'error');
 		addCSSClass('#login_form', 'loading');
 		loginParams = {
 			user_email: $('#user_email').val(),
@@ -29,100 +34,68 @@
 		})
 		 .fail((response) => {
 			 removeCSSClass('#login_form', 'loading');
-			 addCSSClass('#user_email', 'error');
-			 addCSSClass('#user_password', 'error');
+			 addCSSClass('#user_email_field', 'error');
+			 addCSSClass('#user_password_field', 'error');
 			 setFailModal('Invalid Login Credentials',
 					 	  'Please try logging in again.');
 		 });
 	});
 	
-/* FORGOT PASSWORD MODAL - GET EMAIL */
-
-	/* Email Field Validator */
-	$('#forgotpass_email').on('input', () => {
-		var emailTest = $('#forgotpass_email').val();
-		if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailTest)) {
-			$('#submitforgot_btn').prop("disabled", "");
-			if($('#forgotpass_emailfield').hasClass("error")) $('#forgotpass_emailfield').removeClass("error");
-		} 
-		else {
-			$('#submitforgot_btn').prop("disabled", "disabled");
-			if(!$('#forgotpass_emailfield').hasClass("error")) $('#forgotpass_emailfield').addClass("error");
-		}
-	});
+/* 
+ *  FORGOT PASSWORD MODAL - GET EMAIL 
+ */
 	
-	/* Forgot Password Button */
+	/* OPEN MODAL - Forgot Password Email */
 	$('#forgotpass_btn').click(() => {
-		$('#forgotpass_dia')
-			.modal({
-				blurring: true,
-				closable: false
-			})
-			.modal('show');
+		$('#forgotpass_dia').modal({
+			blurring: true,
+			closable: false
+		}).modal('show');
 	});
 	
-	/* Forgot Password Cancel Button */
+	/* CLOSE MODAL - Forgot Password Email */
 	$('#cancelforgot_btn').click(() => {
 		cleanGetMail();
 		removeInputErrorClass('#forgotpass_emailfield');
 	});
 	
-	/* Forgot Password Submit Button */
-	$('#submitforgot_btn').click(() => {		
-		$('#forgotpass_form').addClass("loading");
+	/* SUBMIT - Forgot Password Email */
+	$('#submitforgot_btn').click(() => {
+		addCSSClass('#forgotpass_form', 'loading');
 		$("#cancelforgot_btn").prop("disabled", "disabled");
 		$("#submitforgot_btn").prop("disabled", "disabled");
 		
 		emailRecoveryParams['email'] = $('#forgotpass_email').val();
-		$.post('sendemail', $.param(emailRecoveryParams), 
-			(success) => { 
-				$('#resetcode_dia')
-				.modal({
-					blurring: true,
-					closable: false
-				})
-				.modal('show');
-				cleanGetMail();
-			});
+		$.post('sendemail', $.param(emailRecoveryParams), (success) => { 
+			$('#resetcode_dia').modal({
+				blurring: true,
+				closable: false
+			}).modal('show');
+			cleanGetMail();			
+		})
+		.fail((response) => {
+			callFailModal('Uh oh! Something Went Wrong', 'We are unable to process your request, please try again.' 
+							+ 'If your problem persists, try talking with your administrator.');
+			cleanGetMail();	
+		});
 	});
+
+/* 
+ * FORGOT PASSWORD MODAL - INPUT RESET CODE
+ */
 	
-	/* CLEAN: GET MAIL MODAL */
-	function cleanGetMail() {
-		$('#forgotpass_email').val('');
-		$("#cancelforgot_btn").prop("disabled", "");
-		$("#submitforgot_btn").prop("disabled", "disabled");
-		$('#forgotpass_form').removeClass("loading");
-	}
-	
-/* FORGOT PASSWORD MODAL - INPUPT RESET CODE */
-	
-	/* Reset Code Validator */
-	$('#resetcode').on('input', () => { 
-		var resetCodeTest = $('#resetcode').val();
-		if(!isNaN(resetCodeTest) && resetCodeTest > 9999 
-				&& resetCodeTest < 100000 && resetCodeTest.length == 5) {
-			$('#submitreset_btn').prop("disabled", "");
-			if($('#resetcode_field').hasClass("error")) $('#resetcode_field').removeClass("error");
-		}
-		else {
-			$('#submitreset_btn').prop("disabled", "disabled");
-			if(!$('#resetcode_field').hasClass("error")) $('#resetcode_field').addClass("error");
-		}
-	});
-	
-	/* Input Reset Code Cancel Button */
+	/* CLOSE MODAL - Input Reset Code */
 	$('#cancelreset_btn').click(() => {
-		$('#resetcode_dia').modal('hide');
 		$('#resetcode').val('');
-		removeInputErrorClass('#resetcode_form');
-		removeInputErrorClass('#resetcode_field');
+		removeCSSClass('#resetcode_form', 'error');
+		removeCSSClass('#resetcode_field', 'error');
 		$("#submitreset_btn").prop("disabled", "disabled");
 	});
 	
-	/* Input Reset Code Submit Button*/
+	/* SUBMIT - Input Reset Code */
 	$('#submitreset_btn').click(() => {
-		if($('#resetcode_form').hasClass("error")) $('#resetcode_form').removeClass("error");
-		$('#resetcode_form').addClass("loading");
+		removeCSSClass('#resetcode_form', 'error');
+		addCSSClass('#resetcode_form', 'loading');
 		$("#cancelreset_btn").prop("disabled", "disabled");
 		$("#submitreset_btn").prop("disabled", "disabled");
 		
@@ -139,28 +112,106 @@
 				
 				$('#resetcode').val('');
 				$("#cancelreset_btn").prop("disabled", "");
-				$('#resetcode_form').removeClass("loading");
+				removeCSSClass('#resetcode_form', 'loading');
 		})
 		.fail( (response) => {
 			$("#cancelreset_btn").prop("disabled", "");
-			$('#resetcode_form').removeClass("loading");
-			$('#resetcode_form').addClass("error");
-			$('#resetcode_field').addClass("error");
+			removeCSSClass('#resetcode_form', 'loading');
+			addCSSClass('#resetcode_form', 'error');
+			addCSSClass('#resetcode_field', 'loading');
 		});
 	});
 
-/* FORGOT PASSWORD MODAL - INPUT NEW PASSWORD */
+/* 
+ * FORGOT PASSWORD MODAL - INPUT NEW PASSWORD 
+ */
 	
-	/* Individual Password Field Validator */
-	addErrorInput = function(inputField, inputValue, secondInput) {
+	/* CLOSE MODAL - Input New Password */
+	$('#cancelnewpass_btn').click(() => {
+		cleanInputNewPassword();
+		removeInputErrorClass('#confirm_password');
+		removeInputErrorClass('#new_password');
+	});
+	
+	/* SUBMIT - Input New Password */
+	$('#submitnewpass_btn').click(() => {
+		addCSSClass('#newpass_form', 'loading');
+		$('#cancelnewpass_btn').prop("disabled", "disabled");
+		$('#submitnewpass_btn').prop("disabled", "disabled");
+		
+		emailRecoveryParams['new_password'] = $('#new_password').val();
+		emailRecoveryParams['confirm_password'] = $('#confirm_password').val();
+		
+		$.post('PasswordChange', $.param(emailRecoveryParams), () => {
+			callSuccessModal('Successful Password Change', 'You have successfully changed your account`s password!');
+			cleanInputNewPassword();
+		}).fail( (response) => {
+			callFailModal('Something Went Wrong', 'Sorry about that! Your password was unable to be changed. Please try again.');
+			cleanInputNewPassword();
+		});
+	});	
+	
+/*
+ *  FORM CLEANERS
+ */
+	
+	/* CLEAN - Forgot Password Email */
+	function cleanGetMail() {
+		$('#forgotpass_email').val('');
+		$("#cancelforgot_btn").prop("disabled", "");
+		$("#submitforgot_btn").prop("disabled", "disabled");
+		removeCSSClass('#forgotpass_form', 'loading');
+	}
+	
+	/* CLEAN - Input New Password */
+	function cleanInputNewPassword() {
+		$('#new_password').val('');
+		$('#confirm_password').val('');
+		removeCSSClass('#newpass_form', 'loading');
+		$('#cancelnewpass_btn').prop("disabled", "");
+		$('#submitnewpass_btn').prop("disabled", "disabled");
+	}
+
+/*
+ * 	FIELD VALIDATORS
+ */
+	
+	/* VALIDATOR - Email Field */
+	$('#forgotpass_email').on('input', () => {
+		var emailTest = $('#forgotpass_email').val();
+		if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailTest)) {
+			$('#submitforgot_btn').prop("disabled", "");
+			removeCSSClass('#forgotpass_emailfield', 'error');
+		} 
+		else {
+			$('#submitforgot_btn').prop("disabled", "disabled");
+			addCSSClass('#forgotpass_emailfield', 'error');
+		}
+	});
+	
+	/* VALIDATOR - Reset Code */
+	$('#resetcode').on('input', () => { 
+		var resetCodeTest = $('#resetcode').val();
+		if(!isNaN(resetCodeTest) && resetCodeTest > 9999 && resetCodeTest < 100000 && resetCodeTest.length == 5) {
+			$('#submitreset_btn').prop("disabled", "");
+			removeCSSClass('#resetcode_field', 'error');
+		}
+		else {
+			$('#submitreset_btn').prop("disabled", "disabled");
+			addCSSClass('#resetcode_field', 'error');
+		}
+	});
+	
+	/*  VALIDATOR - Individual Password Field */
+	function addPasswordErrorInput(inputField, inputValue, secondInput) {
 		if(inputValue.length >= 6) {
-			if($(inputField).hasClass("error")) $(inputField).removeClass("error");
+			removeCSSClass(inputField, 'error');
 		} else {
-			if(!$(inputField).hasClass("error")) $(inputField).addClass("error");
+			addCSSClass(inputField, 'error')
 		}
 	}
 	
-	/* New Password Form Validator */
+	/* VALIDATOR - New Password Form */
 	$('#newpass_form').on('input', () => {
 		var new_passwordtemp = $('#new_password').val();
 		var conf_passwordtemp = $('#confirm_password').val();
@@ -180,59 +231,6 @@
 		
 		// conditions for the Confirm New Password input field
 		addErrorInput('#confnewpass_field', conf_passwordtemp);
-		
 	});
-	
-	/* Input New Password Cancel Button */
-	$('#cancelnewpass_btn').click(() => {
-		cleanInputNewPassword();
-		removeInputErrorClass('#confirm_password');
-		removeInputErrorClass('#new_password');
-	});
-	
-	/* Input New Password Submit Button */
-	$('#submitnewpass_btn').click(() => {
-		$('#newpass_form').addClass("loading");
-		$('#cancelnewpass_btn').prop("disabled", "disabled");
-		$('#submitnewpass_btn').prop("disabled", "disabled");
-		
-		emailRecoveryParams['new_password'] = $('#new_password').val();
-		emailRecoveryParams['confirm_password'] = $('#confirm_password').val();
-		
-		$.post('PasswordChange', $.param(emailRecoveryParams), () => {
-			$('#successdia_header').text('Success');
-			$('#successdia_content').text('You have successfully changed your account`s password!');
-			
-			$('#successdia')
-			.modal({
-				blurring: true,
-				closable: false
-			})
-			.modal('show');
-			
-			cleanInputNewPassword();
-		}).fail( (response) => {
-			$('#faildia_header').text('Something Went Wrong');
-			$('#faildia_content').text('Oh no! Some guys on the back stage said that something went wrong.');
-			
-			$('#faildia')
-			.modal({
-				blurring: true,
-				closable: false
-			})
-			.modal('show');
-			
-			cleanInputNewPassword();
-		});
-	});	
-	
-	/* CLEAN: Input New Password Submit Button */
-	function cleanInputNewPassword() {
-		$('#new_password').val('');
-		$('#confirm_password').val('');
-		$('#newpass_form').removeClass("loading");
-		$('#cancelnewpass_btn').prop("disabled", "");
-		$('#submitnewpass_btn').prop("disabled", "disabled");
-	}
 
 	
