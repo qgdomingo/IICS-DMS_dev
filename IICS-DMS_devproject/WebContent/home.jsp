@@ -140,6 +140,6 @@
 	</body>
 	<script src="resource/js/jquery-3.2.1.min.js"></script>
 	<script src="resource/semanticui/semantic.min.js"></script>
-	<script src="resource/js/master.js"></script>
+ 	<script src="resource/js/master.js"></script>
 	<script src="resource/js/generalpages.js"></script>
 </html>

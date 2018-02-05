@@ -35,10 +35,9 @@ public class PasswordRecoveryFunctions {
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("DELETE FROM account_recovery WHERE email = ? AND code = ?");
 			String encryptedCode = AesEncryption.encrypt(code);
-			prep.setString(1,  email);
+			prep.setString(1, email);
 			prep.setString(2, encryptedCode);
-			
-			System.out.println(prep.executeUpdate());
+			prep.executeUpdate();
 			
 	}
 	

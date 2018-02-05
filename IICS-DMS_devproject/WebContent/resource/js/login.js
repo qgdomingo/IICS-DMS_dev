@@ -56,7 +56,7 @@
 	/* CLOSE MODAL - Forgot Password Email */
 	$('#cancelforgot_btn').click(() => {
 		cleanGetMail();
-		removeInputErrorClass('#forgotpass_emailfield');
+		removeCSSClass('#forgotpass_emailfield', 'error');
 	});
 	
 	/* SUBMIT - Forgot Password Email */
@@ -129,8 +129,8 @@
 	/* CLOSE MODAL - Input New Password */
 	$('#cancelnewpass_btn').click(() => {
 		cleanInputNewPassword();
-		removeInputErrorClass('#confirm_password');
-		removeInputErrorClass('#new_password');
+		removeCSSClass('#confirm_password', 'error');
+		removeCSSClass('#new_password', 'error');
 	});
 	
 	/* SUBMIT - Input New Password */
