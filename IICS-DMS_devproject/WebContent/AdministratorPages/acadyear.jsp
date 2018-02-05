@@ -18,6 +18,7 @@
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 	</head>
 	<body>
+		<input type="hidden" value="${pageContext.request.contextPath}" id="context_path"/> 
 		<!-- LEFT SIDE MENU -->
 		<div class="ui large left vertical menu sidebar" id="side_nav">
 			<a class="item mobile only user-account-bgcolor" href="${pageContext.request.contextPath}/admin/profile.jsp">

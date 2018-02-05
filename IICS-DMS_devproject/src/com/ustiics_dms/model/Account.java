@@ -1,7 +1,10 @@
 package com.ustiics_dms.model;
 
-public class Account  {
+import java.util.Date;
 
+public class Account  {
+	
+	private Date creationTimestamp;
 	private int facultyNumber;
 	private String firstName;
 	private String lastName;
@@ -10,9 +13,9 @@ public class Account  {
 	private String department;
 	private String status;
 	
-	public Account(int facultyNumber, String firstName, String lastName, String email, String userType, String department, String status)
+	public Account(Date creationTimestamp, int facultyNumber, String firstName, String lastName, String email, String userType, String department, String status)
 	{
-
+		setCreationTimestamp(creationTimestamp);
 		setFacultyNumber(facultyNumber);
 		setFirstName(firstName);
 		setLastName(lastName);
@@ -20,8 +23,14 @@ public class Account  {
 		setUserType(userType);
 		setDepartment(department);
 		setStatus(status);
+	}
 
-		
+	public Date getCreationTimestamp() {
+		return creationTimestamp;
+	}
+
+	public void setCreationTimestamp(Date creationTimestamp) {
+		this.creationTimestamp = creationTimestamp;
 	}
 
 	public int getFacultyNumber() {

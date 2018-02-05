@@ -16,6 +16,7 @@
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 	</head>
 	<body>
+		<input type="hidden" value="${pageContext.request.contextPath}" id="context_path"/> 
 		<!-- LEFT SIDE MENU -->
 		<div class="ui large left vertical menu sidebar" id="side_nav">
 			<a class="item mobile only user-account-bgcolor" href="${pageContext.request.contextPath}/admin/profile.jsp">
@@ -146,71 +147,200 @@
 				<i class="add remove circle icon"></i>
 				Disable User/s
 			</button>
-
-			<!-- TABLE AREA -->
-			<form action="${pageContext.request.contextPath}/ManageUserRedirect" method="post">
 			
-				<input type="submit" name ="buttonPress" value="Add User"/>
-				<input type="submit" name ="buttonPress" value="Edit User"/>
-				<input type="submit" name ="buttonPress" value="Enable User"/>
-				<input type="submit" name ="buttonPress" value="Disable User"/>
-				
-				
+			<div class="dimmable">
+				<div class="ui active inverted dimmer" id="table-loading">
+					<div class="ui text loader">Loading</div>
+				</div>
+				<!-- TABLE AREA -->
 				<table class="ui compact selectable definition sortable table">
-					<thead>
-						<tr>
-							<th></th>
-							<th>Timestamp</th>
-							<th>Faculty No.</th>
-							<th>First Name</th>
-							<th>Last Name</th>
-							<th>Email</th>
-							<th>User Type</th>
-							<th>Department</th>
-							<th>Status</th>
-						</tr>
-					</thead>
-					<% 
-						ResultSet accounts = ManageUserFunctions.viewAccounts();
-						while(accounts.next()) { 
-					%>
-					<tr>
-						<td class="collapsing">
-							<div class="ui fitted checkbox">
-								<input type="checkbox" name="selected" value="<%=accounts.getString("email")%>" >
-							</div>
-						</td>
-						<td>timestamp</td>
-						<td><%=accounts.getString("faculty_number")%></td>
-						<td><%=accounts.getString("first_name")%></td>
-						<td><%=accounts.getString("last_name")%></td>
-						<td><%=accounts.getString("email")%></td>
-						<td><%=accounts.getString("user_type")%></td>
-						<td><%=accounts.getString("department")%></td>
-						<td><%=accounts.getString("status")%></td>
-					</tr>
-					<% } %>
-				</table>
-			</form>
+						<thead>
+							<tr>
+								<th></th>
+								<th>Faculty No.</th>
+								<th>First Name</th>
+								<th>Last Name</th>
+								<th>Email</th>
+								<th>User Type</th>
+								<th>Department</th>
+								<th>Status</th>
+								<th>Creation Timestamp</th>
+							</tr>
+						</thead>
+						<tbody id="usertable-body"></tbody>		
+				</table>	
+			</div>
+
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
 		
 		<!-- ADD USER MODAL -->
 		<div class="ui modal" id="adduser_dia">
-			<div class="ui icon header">
+			<div class="ui header add-modal">
 				<i class="add user icon"></i>
 				<div class="content">Add User</div>
 			</div>
 			<div class="modal-content">
-				<form>
+				<form class="ui form" id="adduser_form">
+					<div class="fields">
+					<div class="four wide required field">
+						<label>Faculty No.</label>
+						<input type="number" id="add_facultyno" required />
+					</div>
+					</div>
 					
+					<div class="two fields">
+						<div class="required field">
+							<label>First Name</label>
+							<input type="text" id="add_firstname" required />
+						</div>
+						<div class="required field">
+							<label>Last Name</label>
+							<input type="text" id="add_lastname" required />
+						</div>
+					</div>
+					
+					<div class="three fields">
+						<div class="eight wide required field">
+							<label>Email Address</label>
+							<input type="email" id="add_email" required />
+						</div>
+						
+							<div class="four wide required field">
+								<label>User Type</label>
+								<select class="ui fluid dropdown" id="add_usertype">
+									<option value="">Select User Type</option>
+									<option value="Director">Director</option>
+									<option value="Secretary">Faculty Secretary</option>
+									<option value="Head">Department Head</option>
+									<option value="Faculty">Faculty</option>
+									<option value="Staff">Staff</option>
+								</select>
+							</div>
+							<div class="four wide field">
+								<label>Department</label>
+								<select class="ui fluid dropdown" id="add_department">
+									<option value="">Select Department</option>
+									<option value="IT">Information Technology</option>
+									<option value="CS">Computer Science</option>
+									<option value="IS">Information Systems</option>
+								</select>
+							</div>
+			
+					</div>
 				</form>
 			</div>
 			<div class="actions">
-				
+				<button class="ui cancel grey button">
+					<i class="remove icon"></i>
+					Cancel
+				</button>
+				<button class="ui green button" id="adduser_submit">
+					<i class="checkmark icon"></i>
+					Submit
+				</button>
 			</div>
 		</div>
 		
+		<!-- EDIT USER MODAL -->
+		<div class="ui modal" id="edituser_dia">
+			<div class="ui header edit-modal">
+				<i class="write icon"></i>
+				<div class="content">Edit User</div>
+			</div>
+			<div class="modal-content">
+				<form class="ui form" id="edituser_form">
+					<div class="fields">
+					<div class="four wide required field">
+						<label>Faculty No.</label>
+						<input type="number" required />
+					</div>
+					</div>
+					
+					<div class="two fields">
+						<div class="required field">
+							<label>First Name</label>
+							<input type="text" required />
+						</div>
+						<div class="required field">
+							<label>Last Name</label>
+							<input type="text" required />
+						</div>
+					</div>
+					
+					<div class="three fields">
+						<div class="eight wide required field">
+							<label>Email Address</label>
+							<input type="email" required />
+						</div>
+						
+							<div class="four wide required field">
+								<label>User Type</label>
+								<select class="ui fluid dropdown">
+									<option value="">Select User Type</option>
+									<option value="Director">Director</option>
+									<option value="Secretary">Faculty Secretary</option>
+									<option value="Head">Department Head</option>
+									<option value="Faculty">Faculty</option>
+									<option value="Staff">Staff</option>
+								</select>
+							</div>
+							<div class="four wide field">
+								<label>Department</label>
+								<select class="ui fluid dropdown">
+									<option value="">Select Department</option>
+									<option value="IT">Information Technology</option>
+									<option value="CS">Computer Science</option>
+									<option value="IS">Information Systems</option>
+								</select>
+							</div>
+			
+					</div>
+				</form>
+			</div>
+			<div class="actions">
+				<button class="ui cancel grey button">
+					<i class="remove icon"></i>
+					Cancel
+				</button>
+				<button class="ui green button">
+					<i class="checkmark icon"></i>
+					Confirm Edit
+				</button>
+			</div>
+		</div>
+		
+		<!-- SUCCESS MESSAGE MODAL -->
+		<div class="ui tiny modal" id="successdia">
+			<div class="header">
+				<h3 class="ui header">
+					<i class="checkmark icon"></i>
+					<div class="content" id="successdia_header"></div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p id="successdia_content"></p>
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button">Okay</button>
+			</div>
+		</div>
+		
+		<!-- FAIL MESSAGE MODAL -->
+		<div class="ui tiny modal" id="faildia">
+			<div class="header">
+				<h3 class="ui header">
+					<i class="remove icon"></i>
+					<div class="content" id="faildia_header"></div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p id="faildia_content"></p>
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button">Okay</button>
+			</div>
+		</div>
 		
 		<!-- LOGOUT MODAL -->
 		<div class="ui basic tiny modal" id="logout_dia">
@@ -238,4 +368,5 @@
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/tablesort.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/manage_users.js"></script>
 </html>

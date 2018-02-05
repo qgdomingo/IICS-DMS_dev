@@ -1,6 +1,6 @@
 @charset "ISO-8859-1";
 
-	/* PAGE BACKGROUNDS */
+/* PAGE BACKGROUNDS */
 	
 	.page-background {
 		background-image: url("../images/page_bg.png");
@@ -20,7 +20,7 @@
 	  overflow-y: auto !important;
 	} 
 	
-	/* PAGE LAYOUT */
+/* PAGE LAYOUT */
 	
 	.page-content-spacing {
 		padding: 70px 20px 10px 20px;
@@ -32,7 +32,7 @@
 		}
 	}
 	
-	/* MENU LAYOUT */
+/* MENU LAYOUT */
 	
 	.user-account-color {
 		color: rgba(255, 255, 255, 0.9) !important;
@@ -58,3 +58,15 @@
 	    line-height: 0.7 !important;
 	}
 
+/* MODAL HEADER COLORS */
+
+	.add-modal {
+		background-color: #16ab39 !important;
+		color: white !important;
+	}
+	
+	.edit-modal {
+		background-color: #f2711c !important;
+		color: white !important;
+	}
+	

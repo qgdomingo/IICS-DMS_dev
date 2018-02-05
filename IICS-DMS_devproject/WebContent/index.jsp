@@ -11,6 +11,7 @@
 		<link rel="stylesheet" href="resource/css/login.css">
 	</head>
 	<body class="login-background">
+		<input type="hidden" value="${pageContext.request.contextPath}" id="context_path"/> 
 		<div class="ui centered grid container">
 			<div class="eight wide computer eight wide tablet sixteen wide mobile column login-form-area">
 			
@@ -32,16 +33,18 @@
 				
 				<!-- LOGIN FORM -->
 				<h1 class="ui grey header">Login</h1>
-				<form class="ui form element-mb" method="POST" action="Login">
+				<form class="ui form element-mb" id="login_form">
 					<div class="field">
 						<label>Username</label>
-						<input placeholder="Username" name="user_email" type="text" required/>
+						<input placeholder="Username" id="user_email" type="text" required/>
 					</div>
 					<div class="field">
 						<label>Password</label>
-						<input placeholder="Password" name="user_password" type="password" required/>
+						<input placeholder="Password" id="user_password" type="password" required/>
 					</div>
-					<input class="fluid medium ui green button" type="submit" value="Login"/>
+					<button class="fluid medium ui green button" id="login_submit">
+						Login
+					</button>
 				</form>
 				
 				<!-- AFTER FORM -->	
@@ -205,5 +208,6 @@
 	</body>
 	<script src="resource/js/jquery-3.2.1.min.js"></script>
 	<script src="resource/semanticui/semantic.min.js"></script>
+	<script src="resource/js/generalpages.js"></script>
 	<script src="resource/js/login.js"></script>
 </html>

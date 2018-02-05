@@ -12,6 +12,7 @@
 		<link rel="stylesheet" href="resource/css/generalpages.css">
 	</head>
 	<body>
+		<input type="hidden" value="${pageContext.request.contextPath}" id="context_path"/> 
 		<!-- LEFT SIDE MENU -->
 		<div class="ui large left vertical menu sidebar" id="side_nav">
 			<a class="item mobile only user-account-bgcolor" href="userprofile.jsp">
@@ -120,7 +121,7 @@
 		    <p>Are you sure you want to logout from the system?</p>
 		  </div>
 		  <div class="actions center-text">
-		  	<div class="ui green inverted button">
+		  	<div class="ui green inverted button" id="logout_submit">
 		      <i class="checkmark icon"></i>
 		      Yes
 		    </div>

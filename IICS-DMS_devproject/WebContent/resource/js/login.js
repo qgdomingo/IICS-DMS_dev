@@ -3,16 +3,38 @@
  * 	- used by the Login page (index.jsp) for scripting functionalities, mostly used for dialog boxes
  */
 	
-	var emailRecoveryParams = {
+	var emailRecoveryParams = 
+		{
 			email: '',
 			code: '',
 			new_password: '',
 			confirm_password: ''
 		}
 	
-	removeInputErrorClass = function(inputField) {
+	function removeInputErrorClass(inputField) {
 		if($(inputField).hasClass("error")) $(inputField).removeClass("error");
 	}
+	
+/* LOGIN FUNCTION */
+	$('#login_form').submit((event) => {	
+		event.preventDefault();
+		addCSSClass('#login_form', 'loading');
+		loginParams = {
+			user_email: $('#user_email').val(),
+			user_password: $('#user_password').val()
+		}
+		
+		$.post('Login', $.param(loginParams), (response) => {
+			window.location = getContextPath() + response.redirect;
+		})
+		 .fail((response) => {
+			 removeCSSClass('#login_form', 'loading');
+			 addCSSClass('#user_email', 'error');
+			 addCSSClass('#user_password', 'error');
+			 setFailModal('Invalid Login Credentials',
+					 	  'Please try logging in again.');
+		 });
+	});
 	
 /* FORGOT PASSWORD MODAL - GET EMAIL */
 
