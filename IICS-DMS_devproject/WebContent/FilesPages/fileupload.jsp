@@ -322,7 +322,7 @@
 		    <p>Are you sure you want to logout from the system?</p>
 		  </div>
 		  <div class="actions center-text">
-		  	<div class="ui green inverted button">
+		  	<div class="ui green inverted button" id="logout_submit">
 		      <i class="checkmark icon"></i>
 		      Yes
 		    </div>

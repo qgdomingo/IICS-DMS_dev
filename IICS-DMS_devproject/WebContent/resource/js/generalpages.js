@@ -11,7 +11,7 @@
 /* FUNCTION HELPERS */	
 	
 	function addCSSClass(element, cssClass) {
-		if(!$(element).hasClass(cssClass)) $(element).removeClass(cssClass); 
+		if(!$(element).hasClass(cssClass)) $(element).addClass(cssClass); 
 	}
 	
 	function removeCSSClass(element, cssClass) {
@@ -66,7 +66,7 @@
 
 
 	$('#logout_submit').click(() => {
-		$.get('Logout', (response) => {
+		$.get(getContextPath() + '/Logout', (response) => {
 			window.location = getContextPath() + response.redirect;
 		});
 	});
