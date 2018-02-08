@@ -1,14 +1,9 @@
 package com.ustiics_dms.controller.manageuser;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
-import com.ustiics_dms.utility.SessionChecking;
+import com.ustiics_dms.model.Account;
 
 /**
  * AddUser.java
@@ -42,21 +37,13 @@ public class AddUser extends HttpServlet {
 		String lastName = request.getParameter("last_name");
 		String userType = request.getParameter("user_type");
 		String department = request.getParameter("department");
-		String displayTimestamp = "";
 		
 		try {
 			ManageUserFunctions.addAccount(email, facultyNo, firstName, lastName, userType, department);
-			ResultSet newUserRS = ManageUserFunctions.getAccountTimestamp(email);
+			ArrayList<Account> newUserList = new ArrayList<Account>();
+			newUserList.add(ManageUserFunctions.getAccount(email));
 			
-			if(newUserRS.next()) {
-				displayTimestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-						.format(newUserRS.getTimestamp("time_created"));
-			}
-			
-			Map<String, String> data = new HashMap<>();
-			data.put("timestamp", displayTimestamp);
-			String json = new Gson().toJson(data);
-
+			String json = new Gson().toJson(newUserList);
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 			response.setStatus(HttpServletResponse.SC_OK);

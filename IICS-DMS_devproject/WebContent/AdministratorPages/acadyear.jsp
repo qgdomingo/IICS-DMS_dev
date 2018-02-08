@@ -1,11 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-    
-<%@page import="java.sql.PreparedStatement"%>
-<%@page import="java.sql.Connection"%>
-<%@page import="java.sql.ResultSet"%>
-<%@page import="javax.servlet.http.HttpSession"%> 
-<%@page import="com.ustiics_dms.controller.academicyear.AcademicYearFunctions"%> 
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
 <html>
@@ -17,7 +10,7 @@
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 	</head>
-	<body>
+	<body class="dimmable">
 		<!-- LOADING INDICATOR FOR THE WHOLE PAGE -->
 		<div class="ui dimmer" id="page_loading">
 			<div class="ui huge text loader" id="page_loading_text"></div>
@@ -71,7 +64,7 @@
 						  <i class="large user circle icon user-account-color"></i>
 						  <div class="content user-account-color">
 						    Admin
-						    <div class="sub header user-accountsub-color">Administrator</div>
+						    <div class="sub header user-accountsub-color">Administrator></div>
 						  </div>
 						</h5>
 					</a>
@@ -82,16 +75,12 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
-			<% 
-				ResultSet acadYear = AcademicYearFunctions.getAcademicYear();
-				acadYear.next();
-			%>
+			<h3 class="element-rmt element-rmb">Current Academic Year:</h3> 
+			<p class="microcopy-hint">The academic year will be used in the auto-generation of ISO numbers for the memo and letters.</p>
+			<p id="current_acadyear"></p>
 			
-			<h3 class="element-rmt">Current Academic Year:</h3> 
-			<p><%=acadYear.getInt("start_year") %> - <%=acadYear.getInt("end_year") %></p>
-			
-			<h3>Academic Year Range:</h3> 
-			<p><%=acadYear.getString("start_month") %> - <%=acadYear.getString("end_month") %></p>
+			<h3>Current Academic Month:</h3> 
+			<p id="current_acadmonth"></p>
 			
 			<hr>
 			
@@ -100,31 +89,27 @@
 				Change Academic Year Settings
 			</h3>
 			
-			<form class="ui form element-mb" action="${pageContext.request.contextPath}/editYear" method="post">
+			<form class="ui form element-mb" id="acadyear_form">
 				
 				<div class="fields">
-					<div class="four wide field">
-						<label>Year from:</label>
-						<input type="text" value="<%=acadYear.getInt("end_year") %>" readonly=""/>
-					</div>
-					<div class="four wide required field">
-						<label>Year to:</label>
-						<select class="ui fluid dropdown" name="year_to" required>
-							<option value="">Select Year End</option>
-							<option value="2018">2018</option>
-							<option value="2019">2019</option>
-							<option value="2020">2020</option>
-							<option value="2021">2021</option>
-							<option value="2022">2022</option>
+					<div class="four wide required field" id="start_year_field">
+						<label>Start Year:</label>
+						<select class="ui fluid dropdown" id="start_year" required>
+							<option value="">Select Start Year</option>
 						</select>
 					</div>
+					<div class="four wide field" id="end_year_field">
+						<label>End Year:</label>
+						<input type="text" placeholder="End Year" id="end_year" readonly=""/>
+					</div>
+					
 				</div>
 				
 				<div class="fields">
-				<div class="four wide required field">
+				<div class="four wide required field" id="start_month_field">
 					<label>Start Month:</label>
-					<select class="ui fluid dropdown" name="month_start" required>
-						<option value="">Select Start Month..</option>
+					<select class="ui fluid dropdown" id="start_month" required>
+						<option value="">Select Start Month</option>
 						<option value="January">January</option>
 						<option value="February">February</option>
 						<option value="March">March</option>
@@ -139,10 +124,10 @@
 						<option value="December">December</option>
 					</select>
 				</div>
-				<div class="four wide required field">
+				<div class="four wide required field" id="end_month_field">
 					<label>End Month:</label>
-					<select class="ui fluid dropdown" name="month_end" required>
-						<option value="">Select End Month..</option>
+					<select class="ui fluid dropdown" id="end_month" required>
+						<option value="">Select End Month</option>
 						<option value="January">January</option>
 						<option value="February">February</option>
 						<option value="March">March</option>
@@ -158,13 +143,45 @@
 					</select>
 				</div>
 				</div>
-				
-				<button class="ui labeled icon orange button element-mt" type="submit">
-					<i class="pencil icon"></i>
-					Apply Changes
-				</button>
 			</form>
+			
+			<button class="ui labeled icon orange button element-mt" id="acadyear_submit">
+				<i class="pencil icon"></i>
+				Apply Changes
+			</button>
 <!-- END OF ACTUAL PAGE CONTENTS -->
+		</div>
+		
+		<!-- SUCCESS MESSAGE MODAL -->
+		<div class="ui tiny modal" id="successdia">
+			<div class="header">
+				<h3 class="ui header">
+					<i class="checkmark icon"></i>
+					<div class="content" id="successdia_header"></div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p id="successdia_content"></p>
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button">Okay</button>
+			</div>
+		</div>
+		
+		<!-- FAIL MESSAGE MODAL -->
+		<div class="ui tiny modal" id="faildia">
+			<div class="header">
+				<h3 class="ui header">
+					<i class="remove icon"></i>
+					<div class="content" id="faildia_header"></div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p id="faildia_content"></p>
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button">Okay</button>
+			</div>
 		</div>
 		
 		<!-- LOGOUT MODAL -->
@@ -191,7 +208,7 @@
 	</body>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/tablesort.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/admin/acadyear.js"></script>
 </html>

@@ -19,28 +19,55 @@
  */
 	
 	/* SUBMIT - Login Form */
-	$('#login_form').submit((event) => {	
+	$('#login_form').submit((event) => {
 		event.preventDefault();
-		removeCSSClass('#user_email_field', 'error');
-		removeCSSClass('#user_password_field', 'error');
-		addCSSClass('#login_form', 'loading');
-		loginParams = {
-			user_email: $('#user_email').val(),
-			user_password: $('#user_password').val()
+		
+		if(checkEmailField('#user_email', '#user_email_field'))
+		{
+			removeCSSClass('#user_email_field', 'error');
+			removeCSSClass('#user_password_field', 'error');
+			addCSSClass('#login_form', 'loading');
+			loginParams = {
+				user_email: $('#user_email').val(),
+				user_password: $('#user_password').val()
+			}
+			
+			$.post('Login', $.param(loginParams), (response) => {
+				if(response == 'invalid')
+				{
+					removeCSSClass('#login_form', 'loading');
+					addCSSClass('#user_email_field', 'error');
+					addCSSClass('#user_password_field', 'error');
+					callFailModal('Invalid Login Credentials',  'Please try logging in again.')
+				}
+				else if(response)
+				{
+					window.location = getContextPath() + response.redirect;
+				}
+			})
+			 .fail((response) => {
+				removeCSSClass('#login_form', 'loading');
+				callFailModal('Unable to Login', 'Please try logging in again later. ' +
+							'If the problem persists, please contact your administrator.');
+			 });
 		}
 		
-		$.post('Login', $.param(loginParams), (response) => {
-			// add handler if empty
-			window.location = getContextPath() + response.redirect;
-		})
-		 .fail((response) => {
-			 removeCSSClass('#login_form', 'loading');
-			 addCSSClass('#user_email_field', 'error');
-			 addCSSClass('#user_password_field', 'error');
-			 callFailModal('Invalid Login Credentials',
-					 	  'Please try logging in again.');
-		 });
 	});
+	
+	/* VALIDATOR - Email Field */
+	function checkEmailField(email, emailField) {
+		var emailTest = $(email).val();
+		if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailTest)) 
+		{
+			removeCSSClass(emailField, 'error');
+			return true;
+		} 
+		else 
+		{
+			addCSSClass(emailField, 'error');
+			return false;
+		}
+	}
 	
 /* 
  *  FORGOT PASSWORD MODAL - GET EMAIL 
@@ -50,16 +77,14 @@
 	$('#forgotpass_btn').click(() => {
 		$('#forgotpass_dia').modal({
 			blurring: true,
-			closable: false
+			closable: false,
+			onHidden: () => {
+				cleanGetMail();
+				removeCSSClass('#forgotpass_emailfield', 'error');
+			}
 		}).modal('show');
 	});
-	
-	/* CLOSE MODAL - Forgot Password Email */
-	$('#cancelforgot_btn').click(() => {
-		cleanGetMail();
-		removeCSSClass('#forgotpass_emailfield', 'error');
-	});
-	
+		
 	/* SUBMIT - Forgot Password Email */
 	$('#submitforgot_btn').click(() => {
 		addCSSClass('#forgotpass_form', 'loading');
@@ -68,30 +93,34 @@
 		
 		emailRecoveryParams['email'] = $('#forgotpass_email').val();
 		$.post('sendemail', $.param(emailRecoveryParams), (success) => { 
-			$('#resetcode_dia').modal({
-				blurring: true,
-				closable: false
-			}).modal('show');
-			cleanGetMail();			
+			if(success)
+			{
+				$('#resetcode_dia').modal({
+					blurring: true,
+					closable: false,
+					onHidden: () => {
+						$('#resetcode').val('');
+						removeCSSClass('#resetcode_form', 'error');
+						removeCSSClass('#resetcode_field', 'error');
+						removeCSSClass('#resetcode_form', 'loading');
+						$("#submitreset_btn").prop("disabled", "disabled");
+						$("#cancelreset_btn").prop("disabled", "");
+					}
+				}).modal('show');
+			}
+			else
+			{
+				callFailRequestModal();
+			}
 		})
 		.fail((response) => {
-			callFailModal('Uh oh! Something Went Wrong', 'We are unable to process your request, please try again.' 
-							+ 'If the problem persists, please contact your administrator.');
-			cleanGetMail();	
+			callFailRequestModal();
 		});
 	});
 
 /* 
  * FORGOT PASSWORD MODAL - INPUT RESET CODE
  */
-	
-	/* CLOSE MODAL - Input Reset Code */
-	$('#cancelreset_btn').click(() => {
-		$('#resetcode').val('');
-		removeCSSClass('#resetcode_form', 'error');
-		removeCSSClass('#resetcode_field', 'error');
-		$("#submitreset_btn").prop("disabled", "disabled");
-	});
 	
 	/* SUBMIT - Input Reset Code */
 	$('#submitreset_btn').click(() => {
@@ -102,37 +131,37 @@
 		
 		emailRecoveryParams['code'] = $('#resetcode').val();
 
-		$.post('InputRecoveryCode', $.param(emailRecoveryParams), 
-			(success) => {
+		$.post('InputRecoveryCode', $.param(emailRecoveryParams), (success) => {
+			if(success == 'valid code')
+			{
 				$('#newpassword_dia')
-					.modal({
-						blurring: true,
-						closable: false
-					})
-					.modal('show');
-				
-				$('#resetcode').val('');
+				.modal({
+					blurring: true,
+					closable: false,
+					onHidden: () => {
+						cleanInputNewPassword();
+						removeCSSClass('#confirm_password', 'error');
+						removeCSSClass('#new_password', 'error');
+					}
+				})
+				.modal('show');
+			}
+			else if(success == 'invalid')
+			{
 				$("#cancelreset_btn").prop("disabled", "");
 				removeCSSClass('#resetcode_form', 'loading');
+				addCSSClass('#resetcode_form', 'error');
+				addCSSClass('#resetcode_field', 'error');
+			}
 		})
 		.fail( (response) => {
-			$("#cancelreset_btn").prop("disabled", "");
-			removeCSSClass('#resetcode_form', 'loading');
-			addCSSClass('#resetcode_form', 'error');
-			addCSSClass('#resetcode_field', 'loading');
+			callFailRequestModal();
 		});
 	});
 
 /* 
  * FORGOT PASSWORD MODAL - INPUT NEW PASSWORD 
  */
-	
-	/* CLOSE MODAL - Input New Password */
-	$('#cancelnewpass_btn').click(() => {
-		cleanInputNewPassword();
-		removeCSSClass('#confirm_password', 'error');
-		removeCSSClass('#new_password', 'error');
-	});
 	
 	/* SUBMIT - Input New Password */
 	$('#submitnewpass_btn').click(() => {
@@ -143,12 +172,17 @@
 		emailRecoveryParams['new_password'] = $('#new_password').val();
 		emailRecoveryParams['confirm_password'] = $('#confirm_password').val();
 		
-		$.post('PasswordChange', $.param(emailRecoveryParams), () => {
-			callSuccessModal('Successful Password Change', 'You have successfully changed your account`s password!');
-			cleanInputNewPassword();
+		$.post('PasswordChange', $.param(emailRecoveryParams), (success) => {
+			if(success == 'changed')
+			{
+				callSuccessModal('Successful Password Change', 'You have successfully changed your account`s password!');
+			}
+			else if(success == 'unchanged')
+			{
+				callFailModal('Something Went Wrong', 'Sorry about that! Your password was unable to be changed. Please try again.');
+			}
 		}).fail( (response) => {
-			callFailModal('Something Went Wrong', 'Sorry about that! Your password was unable to be changed. Please try again.');
-			cleanInputNewPassword();
+			callFailRequestModal();
 		});
 	});	
 	

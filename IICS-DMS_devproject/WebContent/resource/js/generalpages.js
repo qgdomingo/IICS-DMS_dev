@@ -17,6 +17,11 @@
 		addCSSClass('#page_loading', 'active');
 	}
 	
+	function deactivatePageLoading() {
+		$('#page_loading_text').text('');
+		removeCSSClass('#page_loading', 'active');
+	}
+	
 	function checkEmailField(email, emailField) {
 		var emailTest = $(email).val();
 		if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailTest)) 
@@ -119,9 +124,18 @@
 		activatePageLoading('Logging out');
 		
 		$.get(getContextPath() + '/Logout', (response) => {
-			window.location = getContextPath() + response.redirect;
+			if(response) 
+			{
+				window.location = getContextPath() + response.redirect;
+			}
+			else
+			{
+				callFailRequestModal();
+				removeCSSClass('#page_loading', 'active');
+			}
 		})
 		 .fail((response) => {
+			 callFailRequestModal();
 			 removeCSSClass('#page_loading', 'active');
 		 });
 	});

@@ -31,15 +31,17 @@ public class PasswordChange extends HttpServlet {
         String newPassword = request.getParameter("new_password");
         String confirmPassword = request.getParameter("confirm_password");
         
-		response.setContentType("text/html");
+		response.setContentType("text/plain");
 		response.setCharacterEncoding("UTF-8");
         
         try {
 			if(PasswordRecoveryFunctions.updatePassword(email, newPassword, confirmPassword, code)) {
 				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write("changed");
 			} 
 			else {
-				response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write("unchanged");
 			}
         } catch (SQLException e) {
 			e.printStackTrace();

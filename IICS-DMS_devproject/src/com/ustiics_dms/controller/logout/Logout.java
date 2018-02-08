@@ -26,18 +26,22 @@ public class Logout extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		session.invalidate();
-		
-		String redirectURL = "/index.jsp";
-		Map<String, String> data = new HashMap<>();
-		data.put("redirect", redirectURL);
-		String json = new Gson().toJson(data);
+		try {
+			HttpSession session = request.getSession();
+			session.invalidate();
+			
+			String redirectURL = "/index.jsp";
+			Map<String, String> data = new HashMap<>();
+			data.put("redirect", redirectURL);
+			String json = new Gson().toJson(data);
 
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		response.setStatus(HttpServletResponse.SC_OK);
-		response.getWriter().write(json);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write(json);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -37,8 +37,8 @@ public class RetrieveUsers extends HttpServlet {
 									  accounts.getString("email"),
 									  accounts.getString("user_type"),
 									  accounts.getString("department"),
-									  accounts.getString("status"))
-						 );	
+									  accounts.getString("status")
+									 ));	
 			}
 			String json = new Gson().toJson(users);
 			

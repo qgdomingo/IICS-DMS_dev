@@ -38,11 +38,12 @@ public class Login extends HttpServlet {
 		String password = request.getParameter("user_password");
 		String redirectURL = "";
 		
+		response.setCharacterEncoding("UTF-8");
+		
 		try {
-			HttpSession session = request.getSession();
-			
 			if(LoginFunctions.authenticate(email, password) == true)//authenticates if username and password is valid
 			{
+				HttpSession session = request.getSession();
 				session.setAttribute("currentCredentials", LoginFunctions.authorize(email));
 				Account acc = (Account) session.getAttribute("currentCredentials");
 				
@@ -60,13 +61,14 @@ public class Login extends HttpServlet {
 				String json = new Gson().toJson(data);
 
 				response.setContentType("application/json");
-				response.setCharacterEncoding("UTF-8");
 				response.setStatus(HttpServletResponse.SC_OK);
 				response.getWriter().write(json);
 			}	
 			else 
 			{
-				response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+				response.setContentType("text/plain");
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write("invalid");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -4,8 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.ustiics_dms.databaseconnection.DBConnect;
+import com.ustiics_dms.model.Account;
 import com.ustiics_dms.utility.AesEncryption;
 
 public class ManageUserFunctions {
@@ -77,26 +80,26 @@ public class ManageUserFunctions {
 			ResultSet rs = prep.executeQuery();
 			return rs;
 	}
-	
-	public static ResultSet getAccount(String email) throws SQLException
+		
+	public static Account getAccount(String email) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("SELECT email, faculty_number, first_name, "
-					+ "last_name, department, user_type, status FROM accounts WHERE email = ?");
+					+ "last_name, department, user_type, status, time_created FROM accounts WHERE email = ?");
 			
 			prep.setString(1, email);
 			ResultSet rs = prep.executeQuery();
-			return rs;
-	}
-	
-	public static ResultSet getAccountTimestamp(String email) throws SQLException
-	{
-			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT time_created FROM accounts WHERE email = ?");
-			
-			prep.setString(1, email);
-			ResultSet rs = prep.executeQuery();
-			return rs;
+			rs.next();
+			Account user = new Account (rs.getTimestamp("time_created"),
+									  Integer.parseInt(rs.getString("faculty_number")),
+									  rs.getString("first_name"),
+									  rs.getString("last_name"),
+									  rs.getString("email"),
+									  rs.getString("user_type"),
+									  rs.getString("department"),
+									  rs.getString("status")
+									  );
+			return user;
 	}
 }
 

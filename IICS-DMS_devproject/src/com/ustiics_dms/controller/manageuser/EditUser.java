@@ -2,16 +2,21 @@ package com.ustiics_dms.controller.manageuser;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ustiics_dms.utility.SessionChecking;
+import com.google.gson.Gson;
+import com.ustiics_dms.model.Account;
 
+/**
+ * EditUser.java
+ *  - this servlet controller is responsible for retrieving updates to user account data and storing it into the database
+ */
 @WebServlet("/EditUser")
 public class EditUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -38,10 +43,14 @@ public class EditUser extends HttpServlet {
 		
 		try {
 			ManageUserFunctions.updateAccount(email, facultyNo, firstName, lastName, userType, department, originalEmail);
+			ArrayList<Account> updatedUserList = new ArrayList<Account>();
+			updatedUserList.add(ManageUserFunctions.getAccount(email));
 			
-			response.setContentType("text/html");
+			String json = new Gson().toJson(updatedUserList);
+			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write(json);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	

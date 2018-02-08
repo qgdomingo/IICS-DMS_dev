@@ -38,3 +38,8 @@
 			closable: false
 		}).modal('show');
 	}	
+	
+	function callFailRequestModal() {
+		callFailModal('Uh oh! Something Went Wrong', 'We are unable to process your request, please try again. ' 
+				+ 'If the problem persists, please contact your administrator.');
+	}

@@ -34,6 +34,9 @@ public class EmailRecovery extends HttpServlet {
 		
 		String recipient = request.getParameter("email");
 
+		response.setContentType("text/plain");
+		response.setCharacterEncoding("UTF-8");
+		
 		try {
 			//TODO: HOW ABOUT PREVIOUS RESET CODES? WHAT IF IT IS EXISTING. RESEND CODE INSTEAD?
 			if(PasswordRecoveryFunctions.checkEmailExists(recipient))
@@ -54,11 +57,14 @@ public class EmailRecovery extends HttpServlet {
 				
 				PasswordRecoveryFunctions.addRecoveryCode(recipient, code); //add to database
 			
-				response.setContentType("text/html");
-				response.setCharacterEncoding("UTF-8");
 				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write("success");
 			}
-			
+			else
+			{
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write("success - no email sent");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

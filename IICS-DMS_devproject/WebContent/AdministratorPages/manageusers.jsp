@@ -1,10 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8"%>
  
-<%@page import="java.sql.PreparedStatement"%>
-<%@page import="java.sql.Connection"%>
-<%@page import="java.sql.ResultSet"%>
-<%@page import="javax.servlet.http.HttpSession"%> 
-<%@page import="com.ustiics_dms.controller.manageuser.ManageUserFunctions"%> 
 <!DOCTYPE html>
 <html>
 	<head>
@@ -82,52 +77,52 @@
 		
 <!-- ACTUAL PAGE CONTENTS -->
 			<!-- SEARCH ROW -->
-			<form class="ui form">
+			<form class="ui form" id="search_form">
 				<div class="five fields">
 				
 					<!-- SEARCH BOX -->
 					<div class="field">
 						<div class="ui icon input">
-							<input type="text" placeholder="Seach User.."/>
+							<input type="text" placeholder="Seach User.." id="search_textfield"/>
 							<i class="search icon"></i>
 						</div>
 					</div>
 					
 					<!-- USER TYPE DROPDOWN -->
 					<div class="field">
-						<select class="ui fluid dropdown">
-							<option value="none">User Type</option>
-							<option value="dir">Director</option>
-							<option value="sec">Faculty Secretary</option>
-							<option value="dep">Department Head</option>
-							<option value="fac">Faculty</option>
-							<option value="sta">Staff</option>
+						<select class="ui fluid dropdown" id="search_usertype">
+							<option value="">User Type</option>
+							<option value="Director">Director</option>
+							<option value="Faculty Secretary">Faculty Secretary</option>
+							<option value="Department Head">Department Head</option>
+							<option value="Faculty">Faculty</option>
+							<option value="Staff">Staff</option>
 						</select>
 					</div>
 					
 					<!-- DEPARTMENT DROPDOWN -->
 					<div class="field">
-						<select class="ui fluid dropdown">
-							<option value="none">Department</option>
-							<option value="cs">Computer Science</option>
-							<option value="it">Information Technology</option>
-							<option value="is">Information Systems</option>
+						<select class="ui fluid dropdown" id="search_department">
+							<option value="">Department</option>
+							<option value="Computer Science">Computer Science</option>
+							<option value="Information Technology">Information Technology</option>
+							<option value="Information Systems">Information Systems</option>
 						</select>
 					</div>
 					
 					<!-- STATUS DROPDOWN -->
 					<div class="field">
-						<select class="ui fluid dropdown">
-							<option value="none">Status</option>
-							<option value="ac">Active</option>
-							<option value="inac">Inactive</option>
+						<select class="ui fluid dropdown" id="search_status">
+							<option value="">Status</option>
+							<option value="active">Active</option>
+							<option value="inactive">Inactive</option>
 						</select>
 					</div>
 					
 					<!-- SEARCH BUTTON -->
 					<div class="field">
-						<button class="ui grey button" type="button">
-							Search
+						<button class="ui grey button" type="button" id="search_clear">
+							Clear Search
 						</button>
 					</div>
 					
@@ -424,5 +419,5 @@
 	<script src="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/manage_users.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/admin/manage_users.js"></script>
 </html>

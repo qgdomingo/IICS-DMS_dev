@@ -32,15 +32,17 @@ public class InputRecoveryCode extends HttpServlet {
 		String email = request.getParameter("email");
 		String code = request.getParameter("code");
 		
-		response.setContentType("text/html");
+		response.setContentType("text/plain");
 		response.setCharacterEncoding("UTF-8");
-		
+
 		try {
 			//checks if recovery code is valid
 			if(PasswordRecoveryFunctions.checkRecoveryCode(email, code)) {
-				response.setStatus(HttpServletResponse.SC_CONTINUE);
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write("valid code");
 			} else {
-				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "The Reset Code submitted is invalid.");
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write("invalid");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

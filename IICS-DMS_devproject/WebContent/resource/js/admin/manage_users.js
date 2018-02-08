@@ -1,11 +1,14 @@
 /**
  *  manage_users.js
- *   - Javascript used for the manageusers.jsp page for scripting functionalities such as retrieving users, add, edit, 
+ *   - Javascript used for the manageusers.jsp for scripting functionalities such as retrieving users, add, edit, 
  *   	enable and disable users.
  */
 	$(document).ready(() => {
 		hideButtons();
 		retriveUserList();
+		resetSearchFields();
+		
+		$('#userstable_filter').hide();
 	});
 
 /* 
@@ -46,7 +49,7 @@
 	function retriveUserList() {
 		addCSSClass('#table-loading', 'active');
 		
-		$.get(getContextPath() + '/RetrieveUsers', (responseData, textStatus, xhr) => {
+		$.get(getContextPath() + '/RetrieveUsers', (responseData) => {
 			if(!responseData.length == 0) 
 			{
 				localUserAccountsData = responseData;
@@ -70,12 +73,20 @@
 				
 				removeCSSClass('#table-loading', 'active');	
 			} 
-			else 
+			else if(responseData.length == 0)
 			{
 				$('<tr>').appendTo('#usertable-body')
 					.append($('<td class="center-text" colspan="9">')
 							.text("Your account list is empty. Click on the 'Add User' button to add one."));
 				removeCSSClass('#table-loading', 'active');
+			}
+			else
+			{
+				$('<tr>').appendTo('#usertable-body')
+				.append($('<td class="center-text error" colspan="9">')
+						.text("Unable to retrieve list of users. :("));
+				removeCSSClass('#table-loading', 'active');
+				callFailRequestModal();
 			}
 		})
 		.fail((response, textStatus, xhr) => {
@@ -83,6 +94,7 @@
 			.append($('<td class="center-text error" colspan="9">')
 					.text("Unable to retrieve list of users. :("));
 			removeCSSClass('#table-loading', 'active');
+			callFailRequestModal();
 		});
 	}
 	
@@ -99,10 +111,17 @@
 		$('#edit_department').dropdown('set selected', existingData[5]);
 	}
 	
-	/* REMOVE - List of Users in Table */
-	function removeUserLists() {
-		$('#usertable-body').empty();
-		hideButtons();
+	/* GET - List of Selected Data Email */
+	function getSelectedDataEmail() {
+		var emailList = { 
+			selected: []
+		};
+		
+		$.each(table.rows('.active').data(), (index, userData) => {
+			emailList['selected'].push(userData[3]);
+		});
+		
+		return emailList
 	}
 	
 	/* HIDE - User Management Actions */
@@ -135,45 +154,19 @@
 	/* UPDATE - Add new row data */
 	function addNewRowData(newData) {
 		var rowString = '<tr>'
-			+ '<td>' + newData.faculty_no + '</td>'
-			+ '<td>' + newData.first_name + '</td>'
-			+ '<td>' + newData.last_name + '</td>'
+			+ '<td>' + newData.facultyNumber + '</td>'
+			+ '<td>' + newData.firstName + '</td>'
+			+ '<td>' + newData.lastName + '</td>'
 			+ '<td>' + newData.email + '</td>'
-			+ '<td>' + newData.user_type + '</td>'
+			+ '<td>' + newData.userType + '</td>'
 			+ '<td>' + newData.department + '</td>'
-			+ '<td>active</td>'
-			+ '<td>' + newData.creation_timestamp + '</td>'
+			+ '<td>' + newData.status + '</td>'
+			+ '<td>' + newData.creationTimestamp + '</td>'
 		+ '</tr>';
 		
 		return rowString;
 	}
-	
-	/* UPDATE - Replace Edit Row with new data */
-	function replaceEditedRow(index, newData) {
-		localUserAccountsData[index]['facultyNumber'] = newData.faculty_no;
-		localUserAccountsData[index]['email'] = newData.email;
-		localUserAccountsData[index]['firstName'] = newData.first_name;
-		localUserAccountsData[index]['lastName'] = newData.last_name;
-		localUserAccountsData[index]['userType'] = newData.user_type;
-		localUserAccountsData[index]['department'] = newData.department;
 		
-		table.row.add(localUserAccountsData[index]);
-		
-		//$('#data'+index)
-		//	.empty()			
-		//	.append($('<td>').text(localUserAccountsData[index].facultyNumber))
-		//	.append($('<td>').text(localUserAccountsData[index].firstName))
-		//	.append($('<td>').text(localUserAccountsData[index].lastName))
-		//	.append($('<td>').text(localUserAccountsData[index].email))
-		//	.append($('<td>').text(localUserAccountsData[index].userType))
-		//	.append($('<td>').text(localUserAccountsData[index].department))
-		//	.append($('<td>').text(localUserAccountsData[index].status))
-		//	.append($('<td>').text(localUserAccountsData[index].creationTimestamp));
-		
-		// change to selected
-		//selectedRowsTogglers();
-	}
-	
 	/* SELECT ROW */
 	function selectRow() {
 	    $('#userstable tbody').on('click', 'tr', function (){
@@ -181,6 +174,37 @@
 			selectedRowsTogglers();
 	    });
 	}
+
+/*
+ *  SEARCH FUNCTIONS
+ */
+	$('#search_textfield').on('input', function() {
+		table.search( $(this).val() ).draw();
+	});
+	
+	$('#search_usertype').on('change', function() {
+		table.column(4).search( $(this).val() ).draw();
+	});
+	
+	$('#search_department').on('change', function() {
+		table.column(5).search( $(this).val() ).draw();
+	});
+	
+	$('#search_status').on('change', function() {
+		table.column(6).search( $(this).val() ).draw();
+	});
+	
+	$('#search_clear').click(() => {
+		resetSearchFields();
+	})
+	
+	function resetSearchFields() {
+		$('#search_textfield').val('');
+		$('#search_usertype').dropdown('restore defaults');
+		$('#search_department').dropdown('restore defaults');
+		$('#search_status').dropdown('restore defaults');
+	}
+	
 /* 
  *  ADD USER MODAL 
  */
@@ -196,6 +220,7 @@
 			onHidden: () => {
 				enableFormButtons(addUserModalButtons);
 				removeCSSClass('#adduser_form', 'loading');
+				selectedRowsTogglers();
 			}
 		}).modal('show');
 	});
@@ -224,18 +249,23 @@
 				last_name: $('#add_lastname').val(),
 				user_type: $('#add_usertype').val(),
 				department: $('#add_department').val(),
-				creation_timestamp: ''
 			};
 				
-			$.post(getContextPath() + '/AddUser', $.param(userAccountData), (success) => {
-				userAccountData['creation_timestamp'] = success.timestamp;
-				table.row.add(addNewRowData(userAccountData)).draw();
-				clearAddUserModal();
-				callSuccessModal('Success', 'A new account has successfully been added.');
+			$.post(getContextPath() + '/AddUser', $.param(userAccountData), (responseJson) => {
+				if(responseJson) 
+				{
+					table.row.add( $(addNewRowData(responseJson[0]))[0] ).draw();
+					clearAddUserModal();
+					callSuccessModal('Success', 'A new account has successfully been added.');
+				}
+				else
+				{
+					callFailModal('Unable to Add New User', 'An error has occured when adding a new account. ' +
+						'Please try again. If the problem persists, please contact your administrator.');
+				}
 			})
 			.fail((response) => {
-				callFailModal('Unable to Add New User', 'An error has occured when adding a new account. ' +
-								'Please try again. If the problem persists, please contact your administrator.');
+				callFailRequestModal();
 			});
 		}
 		
@@ -261,6 +291,7 @@
 				clearEditUserModal();
 				enableFormButtons(editUserModalButtons);
 				removeCSSClass('#edituser_form', 'loading');
+				selectedRowsTogglers();
 			}
 		}).modal('show');
 		
@@ -293,13 +324,21 @@
 				original_email: originalEmail
 			};
 			
-			$.post(getContextPath() + '/EditUser', $.param(userAccountData), (success) => {
-				callSuccessModal('Success', 'The account has successfully been updated.');
-				replaceEditedRow($('.checked > input:checkbox').val(), userAccountData);
+			$.post(getContextPath() + '/EditUser', $.param(userAccountData), (responseJson) => {
+				if(responseJson)
+				{
+					table.row('.active').remove();
+					table.row.add( $(addNewRowData(responseJson[0]))[0] ).draw();	
+					callSuccessModal('Success', 'The account has successfully been updated.');
+				}
+				else
+				{
+					callFailModal('Unable to Edit User', 'An error has occured when updating an account. ' +
+						'Please try again. If the problem persists, please contact your administrator.');
+				}
 			})
 			.fail((response) => {
-				callFailModal('Unable to Edit User', 'An error has occured when updating an account. ' +
-								'Please try again. If the problem persists, please contact your administrator.');
+				callFailRequestModal();
 			});
 		}
 		
@@ -316,15 +355,40 @@
 	$('#enableuser_btn').click(() => {		
 		$('#enableuser_dia').modal({
 			blurring: true,
-			closable: false,
+			closable: false
 		}).modal('show');	
 	});
 	
 	/* SUBMIT - Enable User */
 	$('#enableuser_submit').click(() => {
-		var checkedIndex = $('.checked > input:checkbox').val();
-		console.log(checkedIndex);
+		$('#enableuser_dia').modal('hide');
+		activatePageLoading('Enabling Users');
 		
+		$.post(getContextPath() + '/EnableUser', $.param(getSelectedDataEmail()), (responseJson) => {
+			if(responseJson)
+			{
+				table.rows('.active').remove();
+				$.each(responseJson, (index, userData) => {
+					table.row.add( $(addNewRowData(userData))[0] ).draw();
+				});
+				callSuccessModal('Success', 'User accounts have successfully been enabled.');
+				deactivatePageLoading();
+				selectedRowsTogglers();
+			}
+			else
+			{
+				callFailModal('Unable to Enable User/s', 'An error has occured when enabling account/s. ' +
+					'Please try again. If the problem persists, please contact your administrator.');
+				deactivatePageLoading();
+				selectedRowsTogglers();
+			}
+
+		})
+		.fail( (response) => {
+			callFailRequestModal();
+			deactivatePageLoading();
+			selectedRowsTogglers();
+		});
 	});
 /* 
  * DISABLE USER MODAL
@@ -334,10 +398,40 @@
 	$('#disableuser_btn').click(() => {		
 		$('#disableuser_dia').modal({
 			blurring: true,
-			closable: false,
+			closable: false
 		}).modal('show');	
 	});
 	
+	/* SUBMIT - Disable User */
+	$('#disableuser_submit').click(() => {
+		$('#disableuser_dia').modal('hide');
+		activatePageLoading('Disabling Users');
+		
+		$.post(getContextPath() + '/DisableUser', $.param(getSelectedDataEmail()), (responseJson) => {
+			if(responseJson)
+			{
+				table.rows('.active').remove();
+				$.each(responseJson, (index, userData) => {
+					table.row.add( $(addNewRowData(userData))[0] ).draw();
+				});
+				callSuccessModal('Success', 'User accounts have successfully been disabled.');
+				deactivatePageLoading();
+				selectedRowsTogglers();
+			}
+			else
+			{
+				callFailModal('Unable to Disable User/s', 'An error has occured when enabling account/s. ' +
+				'Please try again. If the problem persists, please contact your administrator.');
+				deactivatePageLoading();
+				selectedRowsTogglers();
+			}
+		})
+		.fail( (response) => {
+			callFailRequestModal();
+			deactivatePageLoading();
+			selectedRowsTogglers();
+		});
+	});
 /*
  * FORM CLEANERS
 */	
@@ -419,6 +513,4 @@
 		else $(departmentField).hide();
 		return false;
 	}
-	
-	
 	

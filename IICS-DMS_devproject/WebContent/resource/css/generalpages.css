@@ -31,6 +31,11 @@
 			padding: 55px 10px 5px 10px;
 		}
 	}
+
+/* DATATABLE SEARCH FIELD */
+	#userstable_filter {
+		display: none !important;
+	}
 	
 /* MENU LAYOUT */
 	
