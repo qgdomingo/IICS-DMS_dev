@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -29,13 +31,13 @@ public class ManageTasksFunctions {
 	public static void addTask(String title, String date, String time, String category, String instructions, String email [], String assignedBy) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("INSERT INTO tasks (title, due_date, due_time, category, instructions, assigned_by) VALUES (?,?,?,?,?,?)");
+			PreparedStatement prep = con.prepareStatement("INSERT INTO tasks (title, deadline, category, instructions, assigned_by) VALUES (?,?,?,?,?)");
 			prep.setString(1, title);
-			prep.setString(2, date);
-			prep.setString(3, time);
-			prep.setString(4, category);
-			prep.setString(5, instructions);
-			prep.setString(6, assignedBy);
+			String deadline =date + " " + time;
+			prep.setString(2, deadline);
+			prep.setString(3, category);
+			prep.setString(4, instructions);
+			prep.setString(5, assignedBy);
 			
 			prep.executeUpdate();
 			
@@ -163,21 +165,42 @@ public class ManageTasksFunctions {
 			return flag;
 	}
 	
-	public static void submitTask(String documentTitle, FileItem item, String description, String email) throws SQLException, IOException
+	public static void submitTask(String documentTitle, FileItem item, String description, String email, String id, String deadline) throws SQLException, IOException, ParseException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("UPDATE tasks_assigned_to SET title = ?, file_name = ?, file_data = ?, description = ?, upload_date = ? , status = ? WHERE email = ?");
+			PreparedStatement prep = con.prepareStatement("UPDATE tasks_assigned_to SET title = ?, file_name = ?, file_data = ?, description = ?, upload_date = ? , status = ? WHERE email = ? AND id = ?");
 			
 			prep.setString(1, documentTitle);
 			prep.setString(2, item.getName());//file name
 			prep.setBinaryStream(3, item.getInputStream(),(int) item.getSize());//file data 
 			prep.setString(4, description);
-			String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+			String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 			prep.setString(5, timeStamp);
-			prep.setString(6, "On-time Submission");
+			prep.setString(6, compareTime(timeStamp, deadline));
 			prep.setString(7, email);
-			
+			prep.setString(8, id);
 			prep.executeUpdate();
+	}
+	
+	public static String compareTime (String currentTime, String deadline) throws SQLException, ParseException 
+	{
+		   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		   deadline = deadline.substring(0, deadline.length() - 2);
+		   Date deadlineDate = sdf.parse(deadline);
+	       Date submitDate = sdf.parse(currentTime);
+	       String result = "";
+	       if(submitDate.after(deadlineDate))
+	       {
+	    	   System.out.println("Late Submission");
+	    	   result = "Late Submission";
+	       }
+	       else
+	       {
+	    	   System.out.println("On-time Submission");
+	    	   result = "On-time Submission";
+	       }
+	       
+	       return result;
 	}
 	
 	public static File getFile (int id, String email) throws SQLException 
@@ -200,7 +223,10 @@ public class ManageTasksFunctions {
 	       }
 	       return null;
 	}
-		
+	
+
+	
+
+	
 
 }
-

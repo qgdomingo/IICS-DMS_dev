@@ -12,10 +12,10 @@ import com.ustiics_dms.databaseconnection.DBConnect;
 
 public class FileUploadFunctions {
 	
-	public static void uploadDocument( String documentType, String documentTitle, String category, FileItem item, String description, String fullName) throws SQLException, IOException
+	public static void uploadDocument( String documentType, String documentTitle, String category, FileItem item, String description, String fullName, String email) throws SQLException, IOException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("INSERT INTO documents (type, title, category, file_name, file_data, description, created_by) VALUES (?,?,?,?,?,?,?)");
+			PreparedStatement prep = con.prepareStatement("INSERT INTO documents (type, title, category, file_name, file_data, description, created_by, email) VALUES (?,?,?,?,?,?,?,?)");
 			
 			prep.setString(1, documentType);
 			prep.setString(2, documentTitle);
@@ -24,7 +24,8 @@ public class FileUploadFunctions {
 			prep.setBinaryStream(5, item.getInputStream(),(int) item.getSize());//file data 
 			prep.setString(6, description);
 			prep.setString(7, fullName);
-
+			prep.setString(7, email);
+			
 			prep.executeUpdate();
 	}
 

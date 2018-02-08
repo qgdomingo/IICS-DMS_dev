@@ -1,7 +1,6 @@
 package com.ustiics_dms.controller.managetasks;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -13,11 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import com.ustiics_dms.controller.fileupload.FileUploadFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.utility.SessionChecking;
 
@@ -52,7 +49,7 @@ public class SubmitTask extends HttpServlet {
 			multifiles = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 
 			int counter = 0;
-			String[] tempStorage = new String[6];
+			String[] tempStorage = new String[5];
 			FileItem fileData = null;
 			for(FileItem item : multifiles)
 			{
@@ -70,22 +67,20 @@ public class SubmitTask extends HttpServlet {
 			
 			String documentTitle = tempStorage[0];
 			String documentDescription = tempStorage[1];
-
-            
+			String id = tempStorage[2];
+			String deadline = tempStorage[3];
 			HttpSession session = request.getSession();
 			
 			Account acc = (Account)session.getAttribute("currentCredentials");
 			
-			ManageTasksFunctions.submitTask(documentTitle,  fileData, documentDescription, acc.getEmail());
+			ManageTasksFunctions.submitTask(documentTitle,  fileData, documentDescription, acc.getEmail(), id, deadline);
 				
 				
-			} catch (FileUploadException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
 	}
 
 }

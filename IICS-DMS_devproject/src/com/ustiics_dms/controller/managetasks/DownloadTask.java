@@ -62,7 +62,7 @@ public class DownloadTask extends HttpServlet {
 			} catch (Exception e) 
 			{
 				RequestDispatcher dispatcher =
-				getServletContext().getRequestDispatcher("/viewtaskprogress.jsp");
+				getServletContext().getRequestDispatcher("/ManageTaskPages/viewtaskprogress.jsp");
 				dispatcher.forward(request,response);
 			}
 		

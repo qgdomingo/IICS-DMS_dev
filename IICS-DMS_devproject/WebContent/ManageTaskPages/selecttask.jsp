@@ -35,11 +35,11 @@
 		{
 			
 			%>
-			<form action="viewtaskprogress.jsp" method="post">
+			<form action="${pageContext.request.contextPath}/ManageTaskPages/viewtaskprogress.jsp" method="post">
 				<tr>
 					<input type="hidden" name="id" value="<%=tasksCreated.getString("id") %>">
 					<td><%=tasksCreated.getString("title") %> </td>
-					<td><%=tasksCreated.getString("due_date") %> <%=tasksCreated.getString("due_time") %> </td>
+					<td><%=tasksCreated.getString("deadline") %> </td>
 					<td><%=tasksCreated.getString("category") %> </td>
 					<td><%=tasksCreated.getString("status") %> </td>
 					<td><input type="submit" value="View"></td>
@@ -55,7 +55,7 @@
 		
 		
 		
-		<br><b>Tasks you need to accomplish</b>
+		<br><b>Tasks you need to accomplish</b><br>
 			<% 
 			getTasks.beforeFirst();
 			while(getTasks.next())
@@ -66,15 +66,14 @@
 					while(tasksInfo.next())
 					{
 			%>
-					<form action="TaskSelected" method="post">
-					<br>
+					<form action="${pageContext.request.contextPath}/TaskSelected" method="post">
+					
 						<%=tasksInfo.getString("title")%>
-						<%=tasksInfo.getString("due_date")%>
-						<%=tasksInfo.getString("due_time")%>
+						<%=tasksInfo.getString("deadline")%>
 						<%=tasksInfo.getString("category")%>
 						<%=tasksInfo.getString("instructions")%>
 						<%=tasksInfo.getString("assigned_by")%>
-						<input type="hidden" name="id" value="<%=tasksInfo.getInt("id")%>">
+						<input type="hidden" name="id" value="<%=tasksInfo.getInt("id")%>"><br>
 						
 						<%if(getTasks.getString("status").equals("No Submission"))
 						{%>

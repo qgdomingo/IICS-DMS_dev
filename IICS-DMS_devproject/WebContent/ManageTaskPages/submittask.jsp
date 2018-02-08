@@ -32,28 +32,33 @@
 			%>
 					<br>
 						Task Title: <%=tasksInfo.getString("title")%> <br>
-						Deadline: <%=tasksInfo.getString("due_date")%> <%=tasksInfo.getString("due_time")%> <br>
+						Deadline: <%=tasksInfo.getString("deadline")%> <br>
 						Category: <%=tasksInfo.getString("category")%> <br>
 						Instruction: <%=tasksInfo.getString("instructions")%> <br>
 						Created by: <%=tasksInfo.getString("assigned_by")%> <br>
+						
 						<%if(getTasks.getString("status").equals("No Submission"))
 						{
 						%>
-						<form method="post" action="SubmitTask" enctype="multipart/form-data">
-						
-							Document Title: <input type="text" name="document_title" required/><br>
-							File: <input type="file" name="file" required/><br>
-							Description: <input type="text" name="description" required/><br>
-							<input type="submit" name="Submit">
-						
-						</form>
+							<form method="post" action="${pageContext.request.contextPath}/SubmitTask" enctype="multipart/form-data">
+								Document Title: <input type="text" name="document_title" required/><br>
+								File: <input type="file" name="file" required/><br>
+								Description: <input type="text" name="description" required/><br>
+								<input type="hidden" name="id" value="<%=getTasks.getInt("id")%>">
+								<input type="hidden" name="deadline" value="<%=tasksInfo.getString("deadline")%>">
+								<input type="submit" name="Submits">
+							</form>
+				<%		} 
+						else
+						{
+						%>
+							<form method="get" action="${pageContext.request.contextPath}/DownloadTask">
+								<input type="hidden" name="id" value="<%=request.getParameter("id")%>">
+								<input type="hidden" name="email" value="<%=acc.getEmail()%>">
+								<input type="submit" value="View File">
+							</form>
 						<%} 
-						else{%>
-						<form method="get" action="DownloadTask">
-							<input type="hidden" name="id" value="<%=request.getParameter("id")%>">
-							<input type="submit" name="View File">
-						</form>
-						<%} %>
+						%>
 
 						
 			<%		}

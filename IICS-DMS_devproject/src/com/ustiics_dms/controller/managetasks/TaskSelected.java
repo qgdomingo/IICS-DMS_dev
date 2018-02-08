@@ -32,25 +32,27 @@ public class TaskSelected extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
+		
 		Account acc = (Account) session.getAttribute("currentCredentials");
 		String id = request.getParameter("id");
 		String email = acc.getEmail();
-		String redirectURL = "";
+		String redirectURL = "/ManageTaskPages";
+		
 		try 
 		{
 			
 			if(ManageTasksFunctions.checkAssignedTask(email, id))
 			{
-				redirectURL = "/submittask.jsp";
+				redirectURL += "/submittask.jsp";
 			}
 			else
 			{
-				redirectURL = "/selecttask.jsp";
+				redirectURL += "/selecttask.jsp";
 			}
 			
-			RequestDispatcher dispatcher =
-			getServletContext().getRequestDispatcher(redirectURL);
-			dispatcher.forward(request,response);
+		RequestDispatcher dispatcher =
+		getServletContext().getRequestDispatcher(redirectURL);
+		dispatcher.forward(request,response);
 		} 
 		catch (SQLException e) 
 		{

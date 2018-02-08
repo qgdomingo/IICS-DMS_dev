@@ -85,7 +85,7 @@ public class FileUpload extends HttpServlet {
 			Account acc = (Account)session.getAttribute("currentCredentials");
 			String fullName = acc.getFirstName() + " " + acc.getLastName();
 			
-			FileUploadFunctions.uploadDocument(documentType, documentTitle, category, fileData, description, fullName);
+			FileUploadFunctions.uploadDocument(documentType, documentTitle, category, fileData, description, fullName, acc.getEmail());
 				
 				
 			} catch (FileUploadException e) {

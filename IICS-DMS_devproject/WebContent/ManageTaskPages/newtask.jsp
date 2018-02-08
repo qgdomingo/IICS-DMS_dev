@@ -19,7 +19,7 @@
 		Account acc = (Account) session.getAttribute("currentCredentials");
 		ResultSet account = ManageTasksFunctions.getAccountsList(acc.getEmail());%>
 	
-		<form action="AddTask" method="post">
+		<form action="${pageContext.request.contextPath}/AddTask" method="post">
 		
 			Task Title:<input type="text" name="title">
 			Task Due Date & Time:<input type="date" name="date"> <input type="time" name="time">

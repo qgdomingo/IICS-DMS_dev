@@ -30,15 +30,17 @@
 		</tr>
 	<%while(userInfo.next())
 	{ %>
-		<form method="get" action="DownloadTask">
+		<form method="get" action="${pageContext.request.contextPath}/DownloadTask">
 			<tr>
 				<td><%=userInfo.getString("name")%></td>
 				<td><%=userInfo.getString("title")%></td>
 				<td><%=userInfo.getString("upload_date")%></td>
 				<td><%=userInfo.getString("status")%></td>
-				<td><input type="submit" value="View File"></td>
+		<%if(!userInfo.getString("status").equals("No Submission")){ %>
 				<input type="hidden" name="id" value="<%=userInfo.getString("id")%>">
 				<input type="hidden" name="email" value="<%=userInfo.getString("email")%>">
+				<td><input type="submit" value="View File"></td>
+		<%} %>
 			</tr>
 		</form>
 	<%} %>
