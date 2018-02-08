@@ -12,11 +12,18 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/dataTables.semanticui.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 	</head>
 	<body>
+		<!-- LOADING INDICATOR FOR THE WHOLE PAGE -->
+		<div class="ui dimmer" id="page_loading">
+			<div class="ui huge text loader" id="page_loading_text"></div>
+		</div>
+		<!-- RETRIEVE CONTEXT PAGE FOR JS -->
 		<input type="hidden" value="${pageContext.request.contextPath}" id="context_path"/> 
+		
 		<!-- LEFT SIDE MENU -->
 		<div class="ui large left vertical menu sidebar" id="side_nav">
 			<a class="item mobile only user-account-bgcolor" href="${pageContext.request.contextPath}/admin/profile.jsp">
@@ -139,12 +146,12 @@
 			</button>
 				
 			<button class="ui labeled icon blue button element-mb" id="enableuser_btn">
-				<i class="add check circle icon"></i>
+				<i class="check circle icon"></i>
 				Enable User/s
 			</button>
 				
 			<button class="ui labeled icon red button element-mb" id="disableuser_btn">
-				<i class="add remove circle icon"></i>
+				<i class="remove circle icon"></i>
 				Disable User/s
 			</button>
 			
@@ -153,10 +160,9 @@
 					<div class="ui text loader">Loading</div>
 				</div>
 				<!-- TABLE AREA -->
-				<table class="ui compact selectable definition sortable table">
+				<table class="ui compact selectable table" id="userstable">
 						<thead>
 							<tr>
-								<th></th>
 								<th>Faculty No.</th>
 								<th>First Name</th>
 								<th>Last Name</th>
@@ -170,7 +176,8 @@
 						<tbody id="usertable-body"></tbody>		
 				</table>	
 			</div>
-
+		
+		<br>
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
 		
@@ -183,47 +190,47 @@
 			<div class="modal-content">
 				<form class="ui form" id="adduser_form">
 					<div class="fields">
-					<div class="four wide required field">
+					<div class="four wide required field" id="add_facultyno_field">
 						<label>Faculty No.</label>
-						<input type="number" id="add_facultyno" required />
+						<input type="text" id="add_facultyno" />
 					</div>
 					</div>
 					
 					<div class="two fields">
-						<div class="required field">
+						<div class="required field" id="add_firstname_field">
 							<label>First Name</label>
-							<input type="text" id="add_firstname" required />
+							<input type="text" id="add_firstname" />
 						</div>
-						<div class="required field">
+						<div class="required field" id="add_lastname_field">
 							<label>Last Name</label>
-							<input type="text" id="add_lastname" required />
+							<input type="text" id="add_lastname" />
 						</div>
 					</div>
 					
 					<div class="three fields">
-						<div class="eight wide required field">
+						<div class="eight wide required field" id="add_email_field">
 							<label>Email Address</label>
-							<input type="email" id="add_email" required />
+							<input type="email" id="add_email" />
 						</div>
 						
-							<div class="four wide required field">
+							<div class="four wide required field" id="add_usertype_field">
 								<label>User Type</label>
 								<select class="ui fluid dropdown" id="add_usertype">
 									<option value="">Select User Type</option>
 									<option value="Director">Director</option>
-									<option value="Secretary">Faculty Secretary</option>
-									<option value="Head">Department Head</option>
+									<option value="Faculty Secretary">Faculty Secretary</option>
+									<option value="Department Head">Department Head</option>
 									<option value="Faculty">Faculty</option>
 									<option value="Staff">Staff</option>
 								</select>
 							</div>
-							<div class="four wide field">
+							<div class="four wide required field" id="add_department_field">
 								<label>Department</label>
 								<select class="ui fluid dropdown" id="add_department">
 									<option value="">Select Department</option>
-									<option value="IT">Information Technology</option>
-									<option value="CS">Computer Science</option>
-									<option value="IS">Information Systems</option>
+									<option value="Information Technology">Information Technology</option>
+									<option value="Computer Science">Computer Science</option>
+									<option value="Information Systems">Information Systems</option>
 								</select>
 							</div>
 			
@@ -231,7 +238,10 @@
 				</form>
 			</div>
 			<div class="actions">
-				<button class="ui cancel grey button">
+				<button class="ui button" id="adduser_clear"> 
+					Clear Fields
+				</button>
+				<button class="ui cancel grey button" id="adduser_cancel">
 					<i class="remove icon"></i>
 					Cancel
 				</button>
@@ -251,47 +261,47 @@
 			<div class="modal-content">
 				<form class="ui form" id="edituser_form">
 					<div class="fields">
-					<div class="four wide required field">
+					<div class="four wide required field" id="edit_facultyno_field">
 						<label>Faculty No.</label>
-						<input type="number" required />
+						<input type="text" id="edit_facultyno" required/>
 					</div>
 					</div>
 					
 					<div class="two fields">
-						<div class="required field">
+						<div class="required field" id="edit_firstname_field">
 							<label>First Name</label>
-							<input type="text" required />
+							<input type="text" id="edit_firstname" required/>
 						</div>
-						<div class="required field">
+						<div class="required field" id="edit_lastname_field">
 							<label>Last Name</label>
-							<input type="text" required />
+							<input type="text" id="edit_lastname" required/>
 						</div>
 					</div>
 					
 					<div class="three fields">
-						<div class="eight wide required field">
+						<div class="eight wide required field" id="edit_email_field">
 							<label>Email Address</label>
-							<input type="email" required />
+							<input type="email" id="edit_email" required/>
 						</div>
 						
-							<div class="four wide required field">
+							<div class="four wide required field" id="edit_usertype_field">
 								<label>User Type</label>
-								<select class="ui fluid dropdown">
+								<select class="ui fluid dropdown" id="edit_usertype">
 									<option value="">Select User Type</option>
 									<option value="Director">Director</option>
-									<option value="Secretary">Faculty Secretary</option>
-									<option value="Head">Department Head</option>
+									<option value="Faculty Secretary">Faculty Secretary</option>
+									<option value="Department Head">Department Head</option>
 									<option value="Faculty">Faculty</option>
 									<option value="Staff">Staff</option>
 								</select>
 							</div>
-							<div class="four wide field">
+							<div class="four wide required field" id="edit_department_field">
 								<label>Department</label>
-								<select class="ui fluid dropdown">
+								<select class="ui fluid dropdown" id="edit_department">
 									<option value="">Select Department</option>
-									<option value="IT">Information Technology</option>
-									<option value="CS">Computer Science</option>
-									<option value="IS">Information Systems</option>
+									<option value="Information Technology">Information Technology</option>
+									<option value="Computer Science">Computer Science</option>
+									<option value="Information Systems">Information Systems</option>
 								</select>
 							</div>
 			
@@ -299,13 +309,57 @@
 				</form>
 			</div>
 			<div class="actions">
-				<button class="ui cancel grey button">
+				<button class="ui cancel grey button" id="edituser_cancel">
 					<i class="remove icon"></i>
 					Cancel
 				</button>
-				<button class="ui green button">
+				<button class="ui green button" id="edituser_submit">
 					<i class="checkmark icon"></i>
 					Confirm Edit
+				</button>
+			</div>
+		</div>
+		
+		<!-- ENABLE USER MODAL -->
+		<div class="ui tiny modal" id="enableuser_dia">
+			<div class="ui header neutral-modal">
+				<i class="check circle icon"></i>
+				<div class="content">Enable User/s</div>
+			</div>
+			<div class="modal-content" id="enableuser_form">
+				<p>Are you sure you want to enable the selected user/s?</p>
+				<p class="microcopy-hint">Enabling users would make them able to login into the system.</p>
+			</div>
+			<div class="actions">
+				<button class="ui cancel grey button" id="enableuser_cancel">
+					<i class="remove icon"></i>
+					Cancel
+				</button>
+				<button class="ui blue button" id="enableuser_submit">
+					<i class="checkmark icon"></i>
+					Confirm Enable
+				</button>
+			</div>
+		</div>
+		
+		<!-- DISABLE USER MODAL -->
+		<div class="ui tiny modal" id="disableuser_dia">
+			<div class="ui header delete-modal">
+				<i class="remove circle icon"></i>
+				<div class="content">Disable User/s</div>
+			</div>
+			<div class="modal-content" id="disableuser_form">
+				<p>Are you sure you want to disable the selected user/s?</p>
+				<p class="microcopy-hint">Disabling users would prevent them from logging into the system.</p>
+			</div>
+			<div class="actions">
+				<button class="ui cancel grey button" id="disableuser_cancel">
+					<i class="remove icon"></i>
+					Cancel
+				</button>
+				<button class="ui red button" id="disableuser_submit">
+					<i class="checkmark icon"></i>
+					Confirm Disable
 				</button>
 			</div>
 		</div>
@@ -366,7 +420,9 @@
 	</body>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/tablesort.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/jquery.dataTables.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/dataTables.semanticui.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/manage_users.js"></script>
 </html>

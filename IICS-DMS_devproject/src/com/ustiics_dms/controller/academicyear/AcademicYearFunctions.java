@@ -27,7 +27,7 @@ public class AcademicYearFunctions {
 	public static ResultSet getAcademicYear() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("Select * from academic_year");
+			PreparedStatement prep = con.prepareStatement("SELECT * FROM academic_year");
 			
 			ResultSet rs = prep.executeQuery();
 			

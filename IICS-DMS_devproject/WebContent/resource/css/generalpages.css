@@ -70,3 +70,13 @@
 		color: white !important;
 	}
 	
+	.neutral-modal {
+		background-color: #1678c2 !important;
+		color: white !important;
+	}
+	
+	.delete-modal {
+		background-color: #d01919 !important;
+		color: white !important;
+	}
+	

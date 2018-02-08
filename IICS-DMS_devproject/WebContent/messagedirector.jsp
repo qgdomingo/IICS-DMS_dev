@@ -11,6 +11,9 @@
 		<link rel="stylesheet" href="resource/css/login.css">
 	</head>
 	<body>
+		<!-- RETRIEVE CONTEXT PAGE FOR JS -->
+		<input type="hidden" value="${pageContext.request.contextPath}" id="context_path"/> 
+	
 		<div class="ui centered grid container">
 			<div class="fourteen wide computer fourteen wide table sixteen wide mobile column login-form-area">
 				<div class="messagepage-header">

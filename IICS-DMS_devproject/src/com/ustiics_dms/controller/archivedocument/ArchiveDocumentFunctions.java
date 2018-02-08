@@ -14,7 +14,7 @@ public class ArchiveDocumentFunctions
 	public static void transferToArchived() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("Insert into archived_documents (type, title, category, file_name, file_data, description, created_by, academic_year) values (?,?,?,?,?,?,?,?)");
+			PreparedStatement prep = con.prepareStatement("INSERT INTO archived_documents (type, title, category, file_name, file_data, description, created_by, academic_year) VALUES (?,?,?,?,?,?,?,?)");
 			
 			ResultSet currentDocuments = getCurrentDocuments();
 			
@@ -42,7 +42,7 @@ public class ArchiveDocumentFunctions
 	private static ResultSet getCurrentDocuments() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("Select * from documents");
+			PreparedStatement prep = con.prepareStatement("SELECT * FROM documents");
 
 			ResultSet rs = prep.executeQuery();
 			
@@ -52,7 +52,7 @@ public class ArchiveDocumentFunctions
 	private static String getAcademicYear() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("Select * from academic_year");
+			PreparedStatement prep = con.prepareStatement("SELECT * FROM academic_year");
 
 			ResultSet rs = prep.executeQuery();
 			rs.next();
@@ -69,7 +69,7 @@ public class ArchiveDocumentFunctions
 	private static void deleteCurrentDocuments() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("Delete from documents");
+			PreparedStatement prep = con.prepareStatement("DELETE FROM documents");
 
 			prep.executeUpdate();
 			

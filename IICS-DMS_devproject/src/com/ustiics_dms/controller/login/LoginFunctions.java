@@ -18,11 +18,12 @@ public class LoginFunctions {
 	{
 		//servlet authenticates username and password
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("SELECT email, password FROM accounts WHERE email = ? AND password = ?");
+		PreparedStatement prep = con.prepareStatement("SELECT email, password FROM accounts WHERE email = ? AND password = ? AND status = ?");
 		prep.setString(1,  email);
 		
 		String encryptedPassword = AesEncryption.encrypt(password);
 		prep.setString(2, encryptedPassword);
+		prep.setString(3, "active");
 		ResultSet result = prep.executeQuery();
 		
 		boolean flag = true;
@@ -46,7 +47,7 @@ public class LoginFunctions {
 		if (result.next()) //servlet authorizes user privilege extracting from db
 		{
 			acc = new Account(
-				result.getDate("time_created"),
+				result.getTimestamp("time_created"),
 				result.getInt("faculty_Number"),
 				result.getString("first_Name"),
 				result.getString("last_Name"),

@@ -12,7 +12,13 @@
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 	</head>
 	<body>
+		<!-- LOADING INDICATOR FOR THE WHOLE PAGE -->
+		<div class="ui dimmer" id="page_loading">
+			<div class="ui huge text loader" id="page_loading_text"></div>
+		</div>
+		<!-- RETRIEVE CONTEXT PAGE FOR JS -->
 		<input type="hidden" value="${pageContext.request.contextPath}" id="context_path"/> 
+		 
 		<!-- LEFT SIDE MENU -->
 		<div class="ui large left vertical menu sidebar" id="side_nav">
 			<a class="item mobile only user-account-bgcolor" href="${pageContext.request.contextPath}/userprofile.jsp">
@@ -196,6 +202,6 @@
 	</body>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/tablesort.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
 </html>

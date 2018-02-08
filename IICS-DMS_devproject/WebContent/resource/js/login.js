@@ -30,13 +30,14 @@
 		}
 		
 		$.post('Login', $.param(loginParams), (response) => {
+			// add handler if empty
 			window.location = getContextPath() + response.redirect;
 		})
 		 .fail((response) => {
 			 removeCSSClass('#login_form', 'loading');
 			 addCSSClass('#user_email_field', 'error');
 			 addCSSClass('#user_password_field', 'error');
-			 setFailModal('Invalid Login Credentials',
+			 callFailModal('Invalid Login Credentials',
 					 	  'Please try logging in again.');
 		 });
 	});
@@ -75,7 +76,7 @@
 		})
 		.fail((response) => {
 			callFailModal('Uh oh! Something Went Wrong', 'We are unable to process your request, please try again.' 
-							+ 'If your problem persists, try talking with your administrator.');
+							+ 'If the problem persists, please contact your administrator.');
 			cleanGetMail();	
 		});
 	});
@@ -202,35 +203,34 @@
 		}
 	});
 	
-	/*  VALIDATOR - Individual Password Field */
-	function addPasswordErrorInput(inputField, inputValue, secondInput) {
-		if(inputValue.length >= 6) {
-			removeCSSClass(inputField, 'error');
-		} else {
-			addCSSClass(inputField, 'error')
-		}
-	}
-	
+		
 	/* VALIDATOR - New Password Form */
 	$('#newpass_form').on('input', () => {
 		var new_passwordtemp = $('#new_password').val();
 		var conf_passwordtemp = $('#confirm_password').val();
 		
 		// conditions for the whole form
-		if(new_passwordtemp === conf_passwordtemp
-				&& new_passwordtemp.length >= 6
-				&& conf_passwordtemp.length >= 6) {
+		if( checkPasswordInput(new_passwordtemp, '#newpass_field')
+			&& checkPasswordInput(conf_passwordtemp, '#confnewpass_field')
+			&& new_passwordtemp === conf_passwordtemp)
+		{
 			$('#submitnewpass_btn').prop("disabled", "");
 		} 
-		else {
+		else 
+		{
 			$('#submitnewpass_btn').prop("disabled", "disabled");
 		}
-		
-		// conditions for the New Password input field
-		addErrorInput('#newpass_field', new_passwordtemp);
-		
-		// conditions for the Confirm New Password input field
-		addErrorInput('#confnewpass_field', conf_passwordtemp);
 	});
+	
+	/*  VALIDATOR - Individual Password Field */
+	function checkPasswordInput(inputValue, inputField) {
+		if(inputValue.length >= 6) {
+			removeCSSClass(inputField, 'error');
+			return true;
+		} else {
+			addCSSClass(inputField, 'error');
+			return false;
+		}
+	}
 
 	

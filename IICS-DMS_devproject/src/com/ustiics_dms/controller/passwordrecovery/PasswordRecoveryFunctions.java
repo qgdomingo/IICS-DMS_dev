@@ -98,21 +98,16 @@ public class PasswordRecoveryFunctions {
 			return flag;
 	}
 	
-	public static boolean checkDuplicateEmailCode(String email) throws SQLException
+	public static void deleteExistingRecoveryCode(String email) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT email FROM account_recovery WHERE email = ?");
-			boolean flag = true;
+			PreparedStatement prep = con.prepareStatement("DELETE FROM account_recovery WHERE email = ?");
+
 			
 			prep.setString(1,  email);
-			ResultSet result = prep.executeQuery();
+			prep.executeUpdate();
 			
-			if (!result.isBeforeFirst())
-			{
-				flag = false;
-			}
-			
-			return flag;
+
 	}
 	
 }

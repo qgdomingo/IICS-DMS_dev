@@ -13,8 +13,8 @@ public class ManageUserFunctions {
 	public static void addAccount(String email, String facultyNo, String firstName, String lastName, String userType, String department) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("INSTERT INTO accounts (email, password, faculty_number, "
-					+ "first_name, last_name, user_type, department) values (?,?,?,?,?,?,?)");
+			PreparedStatement prep = con.prepareStatement("INSERT INTO accounts (email, password, faculty_number, "
+					+ "first_name, last_name, user_type, department) VALUES (?,?,?,?,?,?,?)");
 			String encryptedPassword = AesEncryption.encrypt(facultyNo);
 			
 			prep.setString(1, email);
@@ -88,4 +88,15 @@ public class ManageUserFunctions {
 			ResultSet rs = prep.executeQuery();
 			return rs;
 	}
+	
+	public static ResultSet getAccountTimestamp(String email) throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("SELECT time_created FROM accounts WHERE email = ?");
+			
+			prep.setString(1, email);
+			ResultSet rs = prep.executeQuery();
+			return rs;
+	}
 }
+

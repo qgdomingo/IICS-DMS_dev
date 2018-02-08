@@ -39,7 +39,7 @@ public class SendMail
        message.setSubject(sub);
        message.setText(msg);
 
-       /* Transport class is used to deliver the message to the recipients */
+
        
        Transport.send(message);
  

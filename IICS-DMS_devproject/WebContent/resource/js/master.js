@@ -3,7 +3,9 @@
  *   - a javascript used by all the pages found on the application
  */
 
-/* FUNCTION HELPERS */	
+/* 
+ * FUNCTION HELPERS 
+ */	
 	
 	function addCSSClass(element, cssClass) {
 		if(!$(element).hasClass(cssClass)) $(element).addClass(cssClass); 

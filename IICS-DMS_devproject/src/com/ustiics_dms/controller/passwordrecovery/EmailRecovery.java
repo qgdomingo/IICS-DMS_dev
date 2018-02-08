@@ -38,6 +38,7 @@ public class EmailRecovery extends HttpServlet {
 			//TODO: HOW ABOUT PREVIOUS RESET CODES? WHAT IF IT IS EXISTING. RESEND CODE INSTEAD?
 			if(PasswordRecoveryFunctions.checkEmailExists(recipient))
 			{
+				PasswordRecoveryFunctions.deleteExistingRecoveryCode(recipient);
 				String subject = "IICS DMS Password Reset";
 				
 				/*********************** Start of E-Mail Message **********************/
@@ -64,3 +65,4 @@ public class EmailRecovery extends HttpServlet {
 	}
 
 }
+

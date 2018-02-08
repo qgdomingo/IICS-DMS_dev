@@ -15,7 +15,7 @@ public class FileUploadFunctions {
 	public static void uploadDocument( String documentType, String documentTitle, String category, FileItem item, String description, String fullName) throws SQLException, IOException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("Insert into documents (type, title, category, file_name, file_data, description, created_by) values (?,?,?,?,?,?,?)");
+			PreparedStatement prep = con.prepareStatement("INSERT INTO documents (type, title, category, file_name, file_data, description, created_by) VALUES (?,?,?,?,?,?,?)");
 			
 			prep.setString(1, documentType);
 			prep.setString(2, documentTitle);

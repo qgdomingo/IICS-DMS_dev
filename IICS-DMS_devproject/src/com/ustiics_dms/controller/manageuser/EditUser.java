@@ -27,28 +27,24 @@ public class EditUser extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		//if(SessionChecking.checkSession(request.getSession()) != false) //if there is no session redirects to login page
-		//{
-		//			RequestDispatcher dispatcher =
-		//			getServletContext().getRequestDispatcher("/index.jsp");
-		//			dispatcher.forward(request,response);
-		//}
-		
+			
 		String email = request.getParameter("email");
-		String facultyNo = request.getParameter("facultyNo");
-		String firstName = request.getParameter("firstName");
-		String lastName = request.getParameter("lastName");
-		String userType = request.getParameter("userType");
+		String facultyNo = request.getParameter("faculty_no");
+		String firstName = request.getParameter("first_name");
+		String lastName = request.getParameter("last_name");
+		String userType = request.getParameter("user_type");
 		String department = request.getParameter("department");
-		String originalEmail = request.getParameter("originalEmail");
+		String originalEmail = request.getParameter("original_email");	
 		
 		try {
 			ManageUserFunctions.updateAccount(email, facultyNo, firstName, lastName, userType, department, originalEmail);
+			
+			response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
+			response.setStatus(HttpServletResponse.SC_OK);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-		
+		}	
 	}
 
 }

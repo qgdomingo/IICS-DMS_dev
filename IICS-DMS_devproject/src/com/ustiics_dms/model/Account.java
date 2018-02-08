@@ -1,10 +1,12 @@
 package com.ustiics_dms.model;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Account  {
 	
-	private Date creationTimestamp;
+	private String creationTimestamp;
 	private int facultyNumber;
 	private String firstName;
 	private String lastName;
@@ -13,7 +15,7 @@ public class Account  {
 	private String department;
 	private String status;
 	
-	public Account(Date creationTimestamp, int facultyNumber, String firstName, String lastName, String email, String userType, String department, String status)
+	public Account(Timestamp creationTimestamp, int facultyNumber, String firstName, String lastName, String email, String userType, String department, String status)
 	{
 		setCreationTimestamp(creationTimestamp);
 		setFacultyNumber(facultyNumber);
@@ -25,12 +27,12 @@ public class Account  {
 		setStatus(status);
 	}
 
-	public Date getCreationTimestamp() {
+	public String getCreationTimestamp() {
 		return creationTimestamp;
 	}
 
-	public void setCreationTimestamp(Date creationTimestamp) {
-		this.creationTimestamp = creationTimestamp;
+	public void setCreationTimestamp(Timestamp creationTimestamp) {
+		this.creationTimestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(creationTimestamp);
 	}
 
 	public int getFacultyNumber() {

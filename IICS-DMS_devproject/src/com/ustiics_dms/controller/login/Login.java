@@ -41,7 +41,7 @@ public class Login extends HttpServlet {
 		try {
 			HttpSession session = request.getSession();
 			
-			if(LoginFunctions.authenticate(email, password ) == true)//authenticates if username and password is valid
+			if(LoginFunctions.authenticate(email, password) == true)//authenticates if username and password is valid
 			{
 				session.setAttribute("currentCredentials", LoginFunctions.authorize(email));
 				Account acc = (Account) session.getAttribute("currentCredentials");

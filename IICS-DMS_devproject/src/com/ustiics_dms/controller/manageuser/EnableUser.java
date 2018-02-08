@@ -35,30 +35,18 @@ public class EnableUser extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		if(SessionChecking.checkSession(request.getSession()) != false) //if there is no session redirects to login page
-		{
-					RequestDispatcher dispatcher =
-					getServletContext().getRequestDispatcher("/index.jsp");
-					dispatcher.forward(request,response);
-		}
-		
+	
 		String[] selected = request.getParameterValues("selected");
 		
 		for(String email : selected)
 		{
 			try {
-				
-				ManageUserFunctions.enableStatus(email);
-				
+				ManageUserFunctions.enableStatus(email);	
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-				RequestDispatcher dispatcher =
-				getServletContext().getRequestDispatcher("/admin/manageusers.jsp");
-				dispatcher.forward(request,response);
+
 	}
 
 }

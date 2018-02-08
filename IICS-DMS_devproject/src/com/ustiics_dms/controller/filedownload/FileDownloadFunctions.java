@@ -16,7 +16,7 @@ public class FileDownloadFunctions {
 			Connection con = DBConnect.getConnection();
 			
 
-	       PreparedStatement prep = con.prepareStatement("Select file_name, file_data, description from documents where id = ?");
+	       PreparedStatement prep = con.prepareStatement("SELECT file_name, file_data, description FROM documents WHERE id = ?");
 	       prep.setInt(1, id);
 	       ResultSet rs = prep.executeQuery();
 	       
@@ -34,7 +34,7 @@ public class FileDownloadFunctions {
 	public static ResultSet viewFiles() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("Select * from documents");
+			PreparedStatement prep = con.prepareStatement("SELECT * FROM documents");
 			
 			ResultSet rs = prep.executeQuery();
 			
