@@ -11,10 +11,23 @@ public class RetrieveDocumentFunctions {
 	
 	public static ResultSet retrieveDocuments(String type, String email) throws SQLException
 	{
+			String sqlStatement = null;
+			if(type.equalsIgnoreCase("Incoming"))
+			{
+				sqlStatement = "SELECT * FROM incoming_documents WHERE email = ?";
+			}
+			else if(type.equalsIgnoreCase("Outgoing"))
+			{
+				sqlStatement = "SELECT * FROM outgoing_documents WHERE email = ?";
+			}
+			else if(type.equalsIgnoreCase("Personal"))
+			{
+				sqlStatement = "SELECT * FROM personal_documents WHERE email = ?";
+			}
+			
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM documents WHERE type = ? AND email = ?");
-			prep.setString(1,  type);
-			prep.setString(2,  email);
+			PreparedStatement prep = con.prepareStatement(sqlStatement);
+			prep.setString(1,  email);
 			
 			ResultSet result = prep.executeQuery();
 			

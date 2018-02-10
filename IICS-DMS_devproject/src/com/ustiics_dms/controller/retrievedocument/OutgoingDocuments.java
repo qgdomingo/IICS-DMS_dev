@@ -42,7 +42,7 @@ public class OutgoingDocuments extends HttpServlet {
 			{ 
 				documents.add(new Document(
 						documentFiles.getString("id"),
-						documentFiles.getString("type"),
+						"Outgoing",
 						documentFiles.getString("title"),
 						documentFiles.getString("category"),
 						documentFiles.getString("file_name"),

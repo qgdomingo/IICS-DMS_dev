@@ -1,4 +1,4 @@
-package com.ustiics_dms.controller.retrievedocument;
+package com.ustiics_dms.controller.manageuser;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -14,41 +14,49 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
+import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
+import com.ustiics_dms.controller.retrievedocument.RetrieveDocumentFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Document;
+import com.ustiics_dms.model.Task;
 
 
-@WebServlet("/PersonalDocuments")
-public class PersonalDocuments extends HttpServlet {
+@WebServlet("/TasksCreated")
+public class TasksCreated extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+       
 
-    public PersonalDocuments() {
+    public TasksCreated() {
         super();
 
     }
 
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<Document> documents = new ArrayList<Document>();
+		
+		List<Task> task = new ArrayList<Task>();
 	    response.setCharacterEncoding("UTF-8");
-	    
+		
 	    HttpSession session = request.getSession();
 	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
-			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveDocuments("Personal", acc.getEmail());
-			while(documentFiles.next()) 
+			ResultSet getTasks = (ResultSet) ManageTasksFunctions.getTaskAssigned(acc.getEmail());
+			ResultSet tasksCreated = (ResultSet) ManageTasksFunctions.getTasksCreated(acc.getEmail());
+			
+
+			while(tasksCreated.next())
 			{ 
-				documents.add(new Document(
-						documentFiles.getString("id"),
-						"Personal",
-						documentFiles.getString("title"),
-						documentFiles.getString("category"),
-						documentFiles.getString("file_name"),
-						documentFiles.getString("description"),
-						documentFiles.getString("created_by"),
-						documentFiles.getString("time_created")
+				task.add(new Task(
+						tasksCreated.getString("id"),
+						tasksCreated.getString("title"),
+						tasksCreated.getString("deadline"),
+						tasksCreated.getString("category"),
+						tasksCreated.getString("instructions"),
+						tasksCreated.getString("status"),
+						tasksCreated.getString("assigned_by")
 						 ));	
 			}
-			String json = new Gson().toJson(documents);
+			String json = new Gson().toJson(task);
 			
 		    response.setContentType("application/json");
 		    response.setStatus(HttpServletResponse.SC_OK);
@@ -63,7 +71,6 @@ public class PersonalDocuments extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		
 	}
 
 }

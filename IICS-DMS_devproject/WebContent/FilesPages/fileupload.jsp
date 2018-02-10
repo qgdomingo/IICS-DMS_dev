@@ -227,7 +227,7 @@
 				<div class="two fields">
 					<div class="required field">
 						<label>Action Required:</label>
-						<select class="ui fluid dropdown">
+						<select class="ui fluid dropdown" name="action_required">
 							<option value="">Select Action..</option>
 							<option value="none">None</option>
 							<option value="appr">Approval</option>
@@ -237,7 +237,7 @@
 					</div>
 					<div class="field">
 						<label>Reference No.</label>
-						<input type="text" placeholder="IN0000" />
+						<input type="text" placeholder="IN0000"  name="reference_no"/>
 						<p class="microcopy-hint">This is used for linking incoming documents.</p>
 					</div>
 				</div>

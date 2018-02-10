@@ -54,12 +54,18 @@ public class FileUpload extends HttpServlet {
 					dispatcher.forward(request,response);
 		}
 		
+		HttpSession session = request.getSession();
+		
+		Account acc = (Account)session.getAttribute("currentCredentials");
+		
 		List<FileItem> multifiles;
+		
 		try {
 			multifiles = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 
 			int counter = 0;
-			String[] tempStorage = new String[6];
+			String[] tempStorage = new String[10];
+			
 			FileItem fileData = null;
 			for(FileItem item : multifiles)
 			{
@@ -75,17 +81,55 @@ public class FileUpload extends HttpServlet {
 	            }
             }
 			
+			//used by all documents
 			String documentType = tempStorage[0];
-			String documentTitle = tempStorage[1];
-			String category = tempStorage[2];
-			String description = tempStorage[3];
-            
-			HttpSession session = request.getSession();
-			
-			Account acc = (Account)session.getAttribute("currentCredentials");
+			String documentTitle = null;
+			String category = null;
+			String description = null;
 			String fullName = acc.getFirstName() + " " + acc.getLastName();
 			
-			FileUploadFunctions.uploadDocument(documentType, documentTitle, category, fileData, description, fullName, acc.getEmail());
+			//used by incoming documents
+			String documentSource = null;
+			String referenceNo = null;
+			String actionRequired = null;
+			
+			//used by outgoing documents
+			String documentRecipient = null;
+			
+			
+			
+			if(documentType.equalsIgnoreCase("Personal"))
+			{
+				documentTitle = tempStorage[1];
+				category = tempStorage[2];
+				description = tempStorage[3];
+				
+				FileUploadFunctions.uploadPersonalDocument(documentTitle, category, fileData, description, fullName, acc.getEmail());
+			}
+			else if(documentType.equalsIgnoreCase("Incoming"))
+			{
+				category = tempStorage[1];
+				documentSource = tempStorage[2];
+				documentTitle = tempStorage[3];
+				description = tempStorage[4];
+				actionRequired = tempStorage[5];
+				referenceNo = tempStorage[6];
+				
+				FileUploadFunctions.uploadIncomingDocument(referenceNo, documentSource, documentTitle, category, actionRequired, fileData, description, fullName, acc.getEmail());
+			}
+			else if(documentType.equalsIgnoreCase("Outgoing"))
+			{
+				category = tempStorage[1];
+				documentRecipient = tempStorage[2];
+				documentTitle = tempStorage[3];
+				description = tempStorage[4];
+				
+				FileUploadFunctions.uploadOutgoingDocument(documentRecipient, documentTitle, category, fileData, description, fullName, acc.getEmail());
+			}
+			
+			
+			
+			
 				
 				
 			} catch (FileUploadException e) {

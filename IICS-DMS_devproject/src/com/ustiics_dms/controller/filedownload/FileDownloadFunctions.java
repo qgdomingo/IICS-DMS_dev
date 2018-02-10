@@ -14,9 +14,9 @@ public class FileDownloadFunctions {
 	public static File getFile (int id) throws SQLException 
 	{
 			Connection con = DBConnect.getConnection();
-			
+			if
 
-	       PreparedStatement prep = con.prepareStatement("SELECT file_name, file_data, description FROM documents WHERE id = ?");
+	       PreparedStatement prep = con.prepareStatement("SELECT *FROM documents WHERE id = ?");
 	       prep.setInt(1, id);
 	       ResultSet rs = prep.executeQuery();
 	       
