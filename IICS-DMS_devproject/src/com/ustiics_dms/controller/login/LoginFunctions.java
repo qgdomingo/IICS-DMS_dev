@@ -46,11 +46,14 @@ public class LoginFunctions {
 
 		if (result.next()) //servlet authorizes user privilege extracting from db
 		{
+			String fullName = result.getString("first_Name") + " " + result.getString("last_Name");
+			
 			acc = new Account(
-				result.getTimestamp("time_created"),
+				result.getString("time_created"),
 				result.getInt("faculty_Number"),
 				result.getString("first_Name"),
 				result.getString("last_Name"),
+				fullName,
 				result.getString("email"),
 				result.getString("user_Type"),
 				result.getString("department"),

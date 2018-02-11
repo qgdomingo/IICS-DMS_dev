@@ -35,11 +35,12 @@ public class AddUser extends HttpServlet {
 		String facultyNo = request.getParameter("faculty_no");
 		String firstName = request.getParameter("first_name");
 		String lastName = request.getParameter("last_name");
+		String fullName = firstName + " " + lastName;
 		String userType = request.getParameter("user_type");
 		String department = request.getParameter("department");
 		
 		try {
-			ManageUserFunctions.addAccount(email, facultyNo, firstName, lastName, userType, department);
+			ManageUserFunctions.addAccount(email, facultyNo, firstName, lastName, fullName, userType, department);
 			ArrayList<Account> newUserList = new ArrayList<Account>();
 			newUserList.add(ManageUserFunctions.getAccount(email));
 			

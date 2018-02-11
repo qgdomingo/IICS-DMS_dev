@@ -1,4 +1,4 @@
-package com.ustiics_dms.controller.manageuser;
+package com.ustiics_dms.controller.mail;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -14,55 +14,52 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
-import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
-import com.ustiics_dms.controller.retrievedocument.RetrieveDocumentFunctions;
 import com.ustiics_dms.model.Account;
-import com.ustiics_dms.model.Document;
-import com.ustiics_dms.model.Task;
+import com.ustiics_dms.model.Mail;
 
 
-@WebServlet("/AssignedTasks")
-public class AssignedTasks extends HttpServlet {
+
+@WebServlet("/RetrieveInbox")
+public class RetrieveInbox extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 
-    public AssignedTasks() {
+    public RetrieveInbox() {
         super();
-
+ 
     }
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		List<Task> task = new ArrayList<Task>();
+		List<Mail> mail = new ArrayList<Mail>();
 	    response.setCharacterEncoding("UTF-8");
 		
 	    HttpSession session = request.getSession();
 	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
-			ResultSet getTasks = (ResultSet) ManageTasksFunctions.getTaskAssigned(acc.getEmail());
 			
-
-			while(getTasks.next())
-			{ 
-				ResultSet tasksInfo = (ResultSet) ManageTasksFunctions.getTaskInfo(getTasks.getInt("id"));
+			ResultSet getInbox = (ResultSet) MailFunctions.getInbox(acc.getEmail());
+			
+			while(getInbox.next())
+			{
+				ResultSet inboxInfo = (ResultSet) MailFunctions.getInboxInformation(getInbox.getString("id"));
 				
-				while(tasksInfo.next())
-				{
-					task.add(new Task(
-							tasksInfo.getString("id"),
-							tasksInfo.getString("title"),
-							tasksInfo.getString("deadline"),
-							tasksInfo.getString("category"),
-							tasksInfo.getString("instructions"),
-							tasksInfo.getString("status"),
-							tasksInfo.getString("assigned_by")
+				while(inboxInfo.next())
+				{ 
+					mail.add(new Mail(
+							inboxInfo.getString("id"),
+							inboxInfo.getString("type"),
+							inboxInfo.getString("external_recipient"),
+							inboxInfo.getString("subject"),
+							inboxInfo.getString("message"),
+							inboxInfo.getString("sender_name"),
+							inboxInfo.getString("sent_by"),
+							inboxInfo.getString("date_created")
 							 ));	
 				}
-
 			}
-			
-			String json = new Gson().toJson(task);
+			String json = new Gson().toJson(mail);
 			
 		    response.setContentType("application/json");
 		    response.setStatus(HttpServletResponse.SC_OK);
@@ -72,8 +69,9 @@ public class AssignedTasks extends HttpServlet {
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
+		
 	}
-	
+
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

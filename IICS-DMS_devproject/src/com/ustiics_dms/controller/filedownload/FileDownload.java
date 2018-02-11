@@ -28,10 +28,10 @@ public class FileDownload extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		int id = Integer.parseInt(request.getParameter("id"));
-		
+		String type = request.getParameter("type");
 		try {
 			
-			 File file = FileDownloadFunctions.getFile(id);
+			 File file = FileDownloadFunctions.getFile(id, type);
 			 
 			 String contentType = this.getServletContext().getMimeType(file.getFileName());
 			 

@@ -30,10 +30,11 @@ public class RetrieveUsers extends HttpServlet {
 		try {
 			ResultSet accounts = (ResultSet) ManageUserFunctions.viewAccounts();
 			while(accounts.next()) { 
-				users.add(new Account(accounts.getTimestamp("time_created"),
+				users.add(new Account(accounts.getString("time_created"),
 									  Integer.parseInt(accounts.getString("faculty_number")),
 									  accounts.getString("first_name"),
 									  accounts.getString("last_name"),
+									  accounts.getString("first_name") + " " + accounts.getString("last_name"),
 									  accounts.getString("email"),
 									  accounts.getString("user_type"),
 									  accounts.getString("department"),

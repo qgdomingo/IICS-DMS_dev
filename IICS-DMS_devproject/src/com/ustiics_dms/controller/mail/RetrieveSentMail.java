@@ -1,4 +1,4 @@
-package com.ustiics_dms.controller.retrievedocument;
+package com.ustiics_dms.controller.mail;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -15,43 +15,47 @@ import javax.servlet.http.HttpSession;
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.model.Account;
-import com.ustiics_dms.model.Document;
+import com.ustiics_dms.model.Mail;
 
 
-@WebServlet("/IncomingDocument")
-public class IncomingDocuments extends HttpServlet {
+@WebServlet("/RetrieveSentMail")
+public class RetrieveSentMail extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 
-    public IncomingDocuments() {
+    public RetrieveSentMail() {
         super();
-
+   
     }
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		List<Document> documents = new ArrayList<Document>();
+
+		List<Mail> mail = new ArrayList<Mail>();
 	    response.setCharacterEncoding("UTF-8");
 		
 	    HttpSession session = request.getSession();
 	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
-			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveDocuments("Incoming", acc.getEmail());
-			while(documentFiles.next()) 
-			{ 
-				documents.add(new Document(
-						documentFiles.getString("id"),
-						documentFiles.getString("type"),
-						documentFiles.getString("title"),
-						documentFiles.getString("category"),
-						documentFiles.getString("file_name"),
-						documentFiles.getString("description"),
-						documentFiles.getString("created_by"),
-						documentFiles.getString("time_created")
-						 ));	
-			}
-			String json = new Gson().toJson(documents);
+			
+	
+				ResultSet inboxInfo = (ResultSet) MailFunctions.getSentMail(acc.getEmail());
+				
+				while(inboxInfo.next())
+				{ 
+					mail.add(new Mail(
+							inboxInfo.getString("id"),
+							inboxInfo.getString("type"),
+							inboxInfo.getString("external_recipient"),
+							inboxInfo.getString("subject"),
+							inboxInfo.getString("message"),
+							inboxInfo.getString("sender_name"),
+							inboxInfo.getString("sent_by"),
+							inboxInfo.getString("date_created")
+							 ));	
+				}
+			
+			String json = new Gson().toJson(mail);
 			
 		    response.setContentType("application/json");
 		    response.setStatus(HttpServletResponse.SC_OK);

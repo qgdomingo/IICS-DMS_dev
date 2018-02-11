@@ -10,25 +10,41 @@ public class Account  {
 	private int facultyNumber;
 	private String firstName;
 	private String lastName;
+	private String fullName;
 	private String email;
 	private String userType;
 	private String department;
 	private String status;
-	
-	public Account(Timestamp creationTimestamp, int facultyNumber, String firstName, String lastName, String email, String userType, String department, String status)
-	{
-		setCreationTimestamp(creationTimestamp);
-		setFacultyNumber(facultyNumber);
-		setFirstName(firstName);
-		setLastName(lastName);
-		setEmail(email);
-		setUserType(userType);
-		setDepartment(department);
-		setStatus(status);
+
+
+	public Account(String creationTimestamp, int facultyNumber, String firstName, String lastName, String fullName,
+			String email, String userType, String department, String status) {
+		super();
+		this.creationTimestamp = creationTimestamp;
+		this.facultyNumber = facultyNumber;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.fullName = fullName;
+		this.email = email;
+		this.userType = userType;
+		this.department = department;
+		this.status = status;
 	}
 
 	public String getCreationTimestamp() {
 		return creationTimestamp;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public void setCreationTimestamp(String creationTimestamp) {
+		this.creationTimestamp = creationTimestamp;
 	}
 
 	public void setCreationTimestamp(Timestamp creationTimestamp) {

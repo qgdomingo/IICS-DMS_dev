@@ -39,7 +39,7 @@ public class PersonalDocuments extends HttpServlet {
 			{ 
 				documents.add(new Document(
 						documentFiles.getString("id"),
-						"Personal",
+						documentFiles.getString("type"),
 						documentFiles.getString("title"),
 						documentFiles.getString("category"),
 						documentFiles.getString("file_name"),

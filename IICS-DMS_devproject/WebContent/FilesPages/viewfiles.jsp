@@ -23,6 +23,7 @@
 					<tr>
 						<form method="get" action="${pageContext.request.contextPath}/FileDownload">
 							<input type = "hidden" name = "id" value = "<%=file.getInt("id")%>">
+							<input type = "hidden" name = "type" value = "<%=file.getString("type")%>">
 							<td>TYPE: <%=file.getString("type")%></td>
 							<td>TITLE: <%=file.getString("title")%></td>
 							<td>CATEGORY: <%=file.getString("category")%></td>

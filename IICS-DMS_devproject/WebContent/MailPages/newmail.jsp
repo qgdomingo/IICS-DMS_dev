@@ -109,11 +109,11 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
-		<form class="ui form">
+		<form class="ui form" method="post" action="${pageContext.request.contextPath}/ForwardMail">
 			<div class="two fields">
 			<div class="three wide field">
 				<label>Mail Type:</label>
-				<select class="ui fluid dropdown">
+				<select class="ui fluid dropdown" name="type">
 					<option value="">Select Mail Type</option>
 					<option value="Memo">Memo</option>
 					<option value="Letter">Letter</option>
@@ -125,7 +125,7 @@
 				<label>To:</label>
 				<div class="inline two fields">
 					<div class="fourteen wide field">
-						<input class="fluid" type="text" required/>
+						<input class="fluid" type="text" name="recipient" required/>
 					</div>
 					<div class="two wide field">
 					<button class="ui inverted orange button" type="button">
@@ -138,21 +138,21 @@
 		
 			<div class="field">
 				<label>External To:</label>
-				<input type="text" />
+				<input type="text" name="external_recipient" />
 			</div>
 			
 			<div class="required field">
 				<label>Subject:</label>
-				<input type="text"/>
+				<input type="text" name="subject"/>
 			</div>
 			
 			<div class="required field">
 				<label>Message:</label>
-				<textarea></textarea>
+				<textarea name="message"></textarea>
 			</div>
 			
 			<!-- SENDING MAIL BUTTONS -->
-			<button class="ui labeled icon green button element-mb">
+			<button name="submit" value="send mail" class="ui labeled icon green button element-mb">
 				<i class="send icon"></i>
 				Send Mail
 			</button>

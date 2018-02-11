@@ -13,11 +13,11 @@ import com.ustiics_dms.utility.AesEncryption;
 
 public class ManageUserFunctions {
 
-	public static void addAccount(String email, String facultyNo, String firstName, String lastName, String userType, String department) throws SQLException
+	public static void addAccount(String email, String facultyNo, String firstName, String lastName, String fullName, String userType, String department) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("INSERT INTO accounts (email, password, faculty_number, "
-					+ "first_name, last_name, user_type, department) VALUES (?,?,?,?,?,?,?)");
+					+ "first_name, last_name, fullName, user_type, department) VALUES (?,?,?,?,?,?,?,?)");
 			String encryptedPassword = AesEncryption.encrypt(facultyNo);
 			
 			prep.setString(1, email);
@@ -25,8 +25,9 @@ public class ManageUserFunctions {
 			prep.setString(3, facultyNo);
 			prep.setString(4, firstName);
 			prep.setString(5, lastName);
-			prep.setString(6, userType);
-			prep.setString(7, department);
+			prep.setString(6, fullName);
+			prep.setString(7, userType);
+			prep.setString(8, department);
 
 			prep.executeUpdate();
 	}
@@ -35,15 +36,17 @@ public class ManageUserFunctions {
 	{
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("UPDATE accounts SET email = ?, faculty_number = ?, first_name = ?, "
-					+ "last_name =?, user_type = ?, department = ? WHERE email = ?");
+					+ "last_name = ?, fullName = ?, user_type = ?, department = ? WHERE email = ?");
 			
+			String fullName = firstName + " " + lastName;
 			prep.setString(1, email);
 			prep.setString(2, facultyNo);
 			prep.setString(3, firstName);
 			prep.setString(4, lastName);
-			prep.setString(5, userType);
-			prep.setString(6, department);
-			prep.setString(7, originalEmail);
+			prep.setString(5, fullName);
+			prep.setString(6, userType);
+			prep.setString(7, department);
+			prep.setString(8, originalEmail);
 			
 			prep.executeUpdate();
 	}
@@ -90,10 +93,11 @@ public class ManageUserFunctions {
 			prep.setString(1, email);
 			ResultSet rs = prep.executeQuery();
 			rs.next();
-			Account user = new Account (rs.getTimestamp("time_created"),
+			Account user = new Account (rs.getString("time_created"),
 									  Integer.parseInt(rs.getString("faculty_number")),
 									  rs.getString("first_name"),
 									  rs.getString("last_name"),
+									  rs.getString("first_name") + " " + rs.getString("last_name"),
 									  rs.getString("email"),
 									  rs.getString("user_type"),
 									  rs.getString("department"),
