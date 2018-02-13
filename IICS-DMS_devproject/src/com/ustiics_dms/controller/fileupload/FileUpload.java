@@ -29,38 +29,22 @@ import com.ustiics_dms.utility.SessionChecking;
 public class FileUpload extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public FileUpload() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-		doPost(request, response);
-		
-		
+		doPost(request, response);	
 	}
-
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		if(SessionChecking.checkSession(request.getSession()) != false) //if there is no session redirects to login page
-		{
-					RequestDispatcher dispatcher =
-					getServletContext().getRequestDispatcher("/index.jsp");
-					dispatcher.forward(request,response);
-		}
-		
-		HttpSession session = request.getSession();
-		
-		Account acc = (Account)session.getAttribute("currentCredentials");
-		
 		List<FileItem> multifiles;
+		response.setCharacterEncoding("UTF-8");
 		
 		try {
+			HttpSession session = request.getSession();
+			Account acc = (Account)session.getAttribute("currentCredentials");
 			multifiles = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 
 			int counter = 0;
@@ -96,12 +80,10 @@ public class FileUpload extends HttpServlet {
 			//used by outgoing documents
 			String documentRecipient = null;
 			
-			
-			
 			if(documentType.equalsIgnoreCase("Personal"))
 			{
-				documentTitle = tempStorage[1];
-				category = tempStorage[2];
+				category = tempStorage[1];
+				documentTitle = tempStorage[2];
 				description = tempStorage[3];
 				
 				FileUploadFunctions.uploadPersonalDocument(documentTitle, category, fileData, description, fullName, acc.getEmail());
@@ -126,23 +108,15 @@ public class FileUpload extends HttpServlet {
 				
 				FileUploadFunctions.uploadOutgoingDocument(documentRecipient, documentTitle, category, fileData, description, fullName, acc.getEmail());
 			}
-			
-			
-			
-			
 				
-				
-			} catch (FileUploadException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
-
-		
-		
+			response.setContentType("text/plain");
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write("success upload");
+		} catch (FileUploadException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

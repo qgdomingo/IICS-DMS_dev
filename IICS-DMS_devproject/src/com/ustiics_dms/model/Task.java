@@ -9,10 +9,11 @@ public class Task {
 	private String instructions;
 	private String status;
 	private String assignedBy;
+	private String dateCreated;
 	
 	
 	public Task(String id, String title, String deadline, String category, String instructions, String status,
-			String assignedBy) {
+			String assignedBy, String dateCreated) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -21,8 +22,17 @@ public class Task {
 		this.instructions = instructions;
 		this.status = status;
 		this.assignedBy = assignedBy;
+		this.dateCreated = dateCreated;
 	}
 	
+	public String getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
 	public String getId() {
 		return id;
 	}

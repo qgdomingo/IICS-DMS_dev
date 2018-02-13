@@ -21,19 +21,19 @@ public class ManageTasksFunctions {
 	public static ResultSet getAccountsList(String userMail) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT first_name, last_name, email FROM accounts WHERE NOT email = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT first_name, last_name, email, user_type, department FROM accounts WHERE NOT email = ? OR NOT user_type = ?");
 			prep.setString(1, userMail);
+			prep.setString(2, "Administrator");
 			ResultSet rs = prep.executeQuery();
 			
 			return rs;
 	}
 	
-	public static void addTask(String title, String date, String time, String category, String instructions, String email [], String assignedBy) throws SQLException
+	public static void addTask(String title, String deadline, String category, String instructions, String email [], String assignedBy) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("INSERT INTO tasks (title, deadline, category, instructions, assigned_by) VALUES (?,?,?,?,?)");
 			prep.setString(1, title);
-			String deadline =date + " " + time;
 			prep.setString(2, deadline);
 			prep.setString(3, category);
 			prep.setString(4, instructions);
@@ -93,7 +93,7 @@ public class ManageTasksFunctions {
 	public static ResultSet getTaskAssigned(String email) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT id,status FROM tasks_assigned_to WHERE email = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT id, status FROM tasks_assigned_to WHERE email = ?");
 			prep.setString(1, email);
 			ResultSet rs = prep.executeQuery();
 			
@@ -103,7 +103,8 @@ public class ManageTasksFunctions {
 	public static ResultSet getTask(String id) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM tasks_assigned_to WHERE id = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT id, name, email, title, file_name, file_data, description, "
+					+ "upload_date, status FROM tasks_assigned_to WHERE id = ?");
 			prep.setString(1, id);
 			ResultSet rs = prep.executeQuery();
 			
@@ -113,7 +114,8 @@ public class ManageTasksFunctions {
 	public static ResultSet getSpecificTask(String email, String id) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM tasks_assigned_to WHERE email = ? AND id = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT id, email, title, file_name, description, "  
+					+ "upload_date, status FROM tasks_assigned_to WHERE email = ? AND id = ?");
 			prep.setString(1, email);
 			prep.setString(2, id);
 			ResultSet rs = prep.executeQuery();
@@ -127,7 +129,8 @@ public class ManageTasksFunctions {
 			
 			ResultSet rs;
 
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM tasks WHERE id = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT id, title, deadline, category, instructions,"
+					+ "status, assigned_by, date_created FROM tasks WHERE id = ?");
 			prep.setInt(1, taskID);
 			rs = prep.executeQuery();
 			
@@ -140,29 +143,12 @@ public class ManageTasksFunctions {
 			
 			ResultSet rs;
 
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM tasks WHERE assigned_by = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT id, title, deadline, category, instructions, "
+					+ "status, assigned_by, date_created FROM tasks WHERE assigned_by = ?");
 			prep.setString(1, email);
 			rs = prep.executeQuery();
 			
 			return rs;
-	}
-	
-	public static boolean checkAssignedTask(String email, String id) throws SQLException
-	{
-			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT id FROM tasks_assigned_to WHERE email = ? AND id = ?");
-			boolean flag = true;
-			
-			prep.setString(1,  email);
-			prep.setString(2,  id);
-			ResultSet result = prep.executeQuery();
-			
-			if (!result.isBeforeFirst())
-			{
-				flag = false;
-			}
-			
-			return flag;
 	}
 	
 	public static void submitTask(String documentTitle, FileItem item, String description, String email, String id, String deadline) throws SQLException, IOException, ParseException
@@ -171,8 +157,8 @@ public class ManageTasksFunctions {
 			PreparedStatement prep = con.prepareStatement("UPDATE tasks_assigned_to SET title = ?, file_name = ?, file_data = ?, description = ?, upload_date = ? , status = ? WHERE email = ? AND id = ?");
 			
 			prep.setString(1, documentTitle);
-			prep.setString(2, item.getName());//file name
-			prep.setBinaryStream(3, item.getInputStream(),(int) item.getSize());//file data 
+			prep.setString(2, item.getName()); //file name
+			prep.setBinaryStream(3, item.getInputStream(),(int) item.getSize()); //file data 
 			prep.setString(4, description);
 			String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 			prep.setString(5, timeStamp);
@@ -185,9 +171,12 @@ public class ManageTasksFunctions {
 	public static String compareTime (String currentTime, String deadline) throws SQLException, ParseException 
 	{
 		   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		   deadline = deadline.substring(0, deadline.length() - 2);
+		   //deadline = deadline.substring(0, deadline.length() - 2);
+		   System.out.println("Deadline: " + deadline);
 		   Date deadlineDate = sdf.parse(deadline);
 	       Date submitDate = sdf.parse(currentTime);
+	       System.out.println("Deadline Date: " + deadlineDate);
+	       System.out.println("Submit Date: " + submitDate);
 	       String result = "";
 	       if(submitDate.after(deadlineDate))
 	       {

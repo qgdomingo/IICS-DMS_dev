@@ -25,25 +25,23 @@ import com.ustiics_dms.model.Task;
 public class TasksCreated extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public TasksCreated() {
         super();
 
     }
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		List<Task> task = new ArrayList<Task>();
-	    response.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
 		
-	    HttpSession session = request.getSession();
-	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
-			ResultSet getTasks = (ResultSet) ManageTasksFunctions.getTaskAssigned(acc.getEmail());
+		    HttpSession session = request.getSession();
+		    Account acc = (Account) session.getAttribute("currentCredentials");
+			
+			//ResultSet getTasks = (ResultSet) ManageTasksFunctions.getTaskAssigned(acc.getEmail());
 			ResultSet tasksCreated = (ResultSet) ManageTasksFunctions.getTasksCreated(acc.getEmail());
 			
-
 			while(tasksCreated.next())
 			{ 
 				task.add(new Task(
@@ -53,7 +51,8 @@ public class TasksCreated extends HttpServlet {
 						tasksCreated.getString("category"),
 						tasksCreated.getString("instructions"),
 						tasksCreated.getString("status"),
-						tasksCreated.getString("assigned_by")
+						tasksCreated.getString("assigned_by"),
+						tasksCreated.getString("date_created")
 						 ));	
 			}
 			String json = new Gson().toJson(task);
@@ -68,9 +67,8 @@ public class TasksCreated extends HttpServlet {
 		}
 	}
 
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		doGet(request, response);
 	}
 
 }

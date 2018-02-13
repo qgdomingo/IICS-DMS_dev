@@ -137,10 +137,11 @@
 					<label>Category:</label>
 					<div class="inline two fields">
 						<div class="field">
-						<select class="ui fluid dropdown" name="category">
+						<select class="ui fluid dropdown" name="category" id="personal_category">
 							<option value="">Select Category..</option>
-							<option value="memo">Memo</option>
-							<option value="letter">Letter</option>
+							<option value="Course Grades">Course Grades</option>
+							<option value="Course Syllabus">Course Syllabus</option>
+							<option value="Research">Research</option>
 						</select>
 						</div>
 						<div class="field">
@@ -154,7 +155,7 @@
 				
 				<div class="required field">
 					<label>Document Title:</label>
-					<input type="text" name="document_title" placeholder="e.g. Course Grades" required/>
+					<input type="text" name="document_title" placeholder="e.g. ICS 111 Grades" required/>
 				</div>
 			
 				<div class="field">
@@ -176,6 +177,10 @@
 					Upload Personal File
 				</button>
 				
+				<button class="ui grey button" type="button" id="personal_clear">
+					Clear Fields
+				</button>
+				
 			</form>
 			
 		<!-- FORM FOR INCOMING DOCUMENTS -->
@@ -188,10 +193,11 @@
 					<label>Category:</label>
 					<div class="inline two fields">
 						<div class="field">
-						<select class="ui fluid dropdown" name="category">
+						<select class="ui fluid dropdown" name="category" id="incoming_category">
 							<option value="">Select Category..</option>
-							<option value="memo">Memo</option>
-							<option value="letter">Letter</option>
+							<option value="Course Grades">Course Grades</option>
+							<option value="Course Syllabus">Course Syllabus</option>
+							<option value="Research">Research</option>
 						</select>
 						</div>
 						<div class="field">
@@ -227,12 +233,12 @@
 				<div class="two fields">
 					<div class="required field">
 						<label>Action Required:</label>
-						<select class="ui fluid dropdown" name="action_required">
+						<select class="ui fluid dropdown" name="action_required" id="incoming_action">
 							<option value="">Select Action..</option>
-							<option value="none">None</option>
-							<option value="appr">Approval</option>
-							<option value="endor">Endorsement</option>
-							<option value="resp">Response</option>
+							<option value="None">None</option>
+							<option value="Approval">Approval</option>
+							<option value="Endorsement">Endorsement</option>
+							<option value="Response">Response</option>
 						</select>
 					</div>
 					<div class="field">
@@ -252,6 +258,10 @@
 					Upload Incoming File
 				</button>
 				
+				<button class="ui grey button" type="button" id="incoming_clear">
+					Clear Fields
+				</button>
+				
 			</form>
 			
 		<!-- FORM FOR OUTGOING DOCUMENTS -->
@@ -264,10 +274,11 @@
 					<label>Category:</label>
 					<div class="inline two fields">
 						<div class="field">
-						<select class="ui fluid dropdown" name="category">
+						<select class="ui fluid dropdown" name="category" id="outgoing_category">
 							<option value="">Select Category..</option>
-							<option value="memo">Memo</option>
-							<option value="letter">Letter</option>
+							<option value="Course Grades">Course Grades</option>
+							<option value="Course Syllabus">Course Syllabus</option>
+							<option value="Research">Research</option>
 						</select>
 						</div>
 						<div class="field">
@@ -310,11 +321,47 @@
 					Upload Outgoing File
 				</button>
 				
+				<button class="ui grey button" type="button" id="outgoing_clear">
+					Clear Fields
+				</button>
+				
 			</form>
 
 			</div>
 		</div>
 <!-- END OF ACTUAL PAGE CONTENTS -->
+		</div>
+		
+		<!-- SUCCESS MESSAGE MODAL -->
+		<div class="ui tiny modal" id="successdia">
+			<div class="header">
+				<h3 class="ui header">
+					<i class="checkmark icon"></i>
+					<div class="content" id="successdia_header"></div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p id="successdia_content"></p>
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button">Okay</button>
+			</div>
+		</div>
+		
+		<!-- FAIL MESSAGE MODAL -->
+		<div class="ui tiny modal" id="faildia">
+			<div class="header">
+				<h3 class="ui header">
+					<i class="remove icon"></i>
+					<div class="content" id="faildia_header"></div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p id="faildia_content"></p>
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button">Okay</button>
+			</div>
 		</div>
 		
 		<!-- LOGOUT MODAL -->
@@ -341,7 +388,7 @@
 	</body>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/tablesort.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/fileupload.js"></script>

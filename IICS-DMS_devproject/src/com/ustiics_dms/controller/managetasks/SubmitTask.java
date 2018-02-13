@@ -1,6 +1,8 @@
 package com.ustiics_dms.controller.managetasks;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -34,23 +36,16 @@ public class SubmitTask extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		
-		
-		if(SessionChecking.checkSession(request.getSession()) != false) //if there is no session redirects to login page
-		{
-					RequestDispatcher dispatcher =
-					getServletContext().getRequestDispatcher("/index.jsp");
-					dispatcher.forward(request,response);
-		}
-		
 		List<FileItem> multifiles;
+		response.setCharacterEncoding("UTF-8");
+		
 		try {
 			multifiles = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 
 			int counter = 0;
 			String[] tempStorage = new String[5];
 			FileItem fileData = null;
+			
 			for(FileItem item : multifiles)
 			{
 				if (item.isFormField()) 
@@ -61,7 +56,7 @@ public class SubmitTask extends HttpServlet {
 	            } 
 				else 
 				{
-	                fileData = item;
+	               fileData = item;
 	            }
             }
 			
@@ -74,13 +69,18 @@ public class SubmitTask extends HttpServlet {
 			Account acc = (Account)session.getAttribute("currentCredentials");
 			
 			ManageTasksFunctions.submitTask(documentTitle,  fileData, documentDescription, acc.getEmail(), id, deadline);
-				
-				
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
+			
+			//TODO: return new submitted task data to update row
+			//ResultSet rsUpdatedTask = ManageTasksFunctions.getSpecificTask(acc.getEmail(), id);
+			//List<String> updatedTask = new ArrayList<String>();
+			
+			response.setContentType("text/plain");
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write("success");
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

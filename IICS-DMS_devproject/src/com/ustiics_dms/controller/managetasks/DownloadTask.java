@@ -29,49 +29,37 @@ public class DownloadTask extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		
-
-		try {
-				 int id = Integer.parseInt(request.getParameter("id"));
-				 String email = request.getParameter("email");
-				 
-				 File file = ManageTasksFunctions.getFile(id, email);
-				 
-				 String contentType = this.getServletContext().getMimeType(file.getFileName());
-				 
-				 response.setHeader("Content-Type", contentType);
-				 
-		         response.setHeader("Content-Length", String.valueOf(file.getFileData().length()));
-		 
-		         response.setHeader("Content-Disposition", "inline; filename=\"" + file.getFileName() + "\"");
-			
-			
-				 Blob fileData = file.getFileData();
-		         InputStream is = fileData.getBinaryStream();
-		
-		         byte[] bytes = new byte[1024];
-		         int bytesRead;
-		
-		         while ((bytesRead = is.read(bytes)) != -1) 
-		         {
-		         
-		             response.getOutputStream().write(bytes, 0, bytesRead);
-		         }
-	         
-			} catch (Exception e) 
-			{
-				RequestDispatcher dispatcher =
-				getServletContext().getRequestDispatcher("/ManageTaskPages/viewtaskprogress.jsp");
-				dispatcher.forward(request,response);
-			}
-		
-			
+		doPost(request, response);
 	}
-
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
+		try {
+			 int id = Integer.parseInt(request.getParameter("id"));
+			 String email = request.getParameter("email");
+			 
+			 File file = ManageTasksFunctions.getFile(id, email);
+			 
+			 String contentType = this.getServletContext().getMimeType(file.getFileName());
+			 
+			 response.setCharacterEncoding("UTF-8");
+			 response.setHeader("Content-Type", contentType);
+	         response.setHeader("Content-Length", String.valueOf(file.getFileData().length()));
+	         response.setHeader("Content-Disposition", "inline; filename=\"" + file.getFileName() + "\"");
+		
+			 Blob fileData = file.getFileData();
+	         InputStream is = fileData.getBinaryStream();
+	
+	         byte[] bytes = new byte[1024];
+	         int bytesRead;
+	
+	         while ((bytesRead = is.read(bytes)) != -1) 
+	         {
+	            response.getOutputStream().write(bytes, 0, bytesRead);
+	         }
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}		
 	}
-
 }

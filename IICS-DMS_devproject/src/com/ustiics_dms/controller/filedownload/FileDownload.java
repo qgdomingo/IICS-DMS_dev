@@ -24,12 +24,11 @@ public class FileDownload extends HttpServlet {
 
     }
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int id = Integer.parseInt(request.getParameter("id"));
-		String type = request.getParameter("type");
 		try {
+			int id = Integer.parseInt(request.getParameter("id"));
+			String type = request.getParameter("type");
 			
 			 File file = FileDownloadFunctions.getFile(id, type);
 			 
@@ -50,14 +49,19 @@ public class FileDownload extends HttpServlet {
 	
 	         while ((bytesRead = is.read(bytes)) != -1) 
 	         {
-	         // Write image data to Response.
-	             response.getOutputStream().write(bytes, 0, bytesRead);
+	        	 // Write image data to Response.
+	            response.getOutputStream().write(bytes, 0, bytesRead);
 	         }
 	         
-			} catch (SQLException e) {}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		
 	}
-
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
+	}
 
 	
 }

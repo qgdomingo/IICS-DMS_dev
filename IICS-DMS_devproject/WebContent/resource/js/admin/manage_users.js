@@ -15,28 +15,23 @@
  * VARIABLES 
  */
 	var table;
-	
 	var localUserAccountsData;
-	
 	var originalEmail;
-	
+	var isUsersTableEmpty = false;
 	var addUserModalInputs = 
 		[ 
 		  '#add_email', '#add_facultyno', '#add_firstname', 
 		  '#add_lastname', '#add_usertype'
 		];
-	
 	var addUserModalButtons =
 		[
 			'#adduser_clear', '#adduser_cancel', '#adduser_submit'
 		];
-	
 	var editUserModalInputs = 
 		[ 
 		  '#edit_email', '#edit_facultyno', '#edit_firstname', 
 		  '#edit_lastname', '#edit_usertype'
 		];
-	
 	var editUserModalButtons =
 		[
 			'#edituser_cancel', '#edituser_submit'
@@ -50,6 +45,7 @@
 		addCSSClass('#table-loading', 'active');
 		
 		$.get(getContextPath() + '/RetrieveUsers', (responseData) => {
+			$('#usertable-body').empty();
 			if(!responseData.length == 0) 
 			{
 				localUserAccountsData = responseData;
@@ -79,12 +75,13 @@
 					.append($('<td class="center-text" colspan="9">')
 							.text("Your account list is empty. Click on the 'Add User' button to add one."));
 				removeCSSClass('#table-loading', 'active');
+				isUsersTableEmpty = true;
 			}
 			else
 			{
 				$('<tr>').appendTo('#usertable-body')
 				.append($('<td class="center-text error" colspan="9">')
-						.text("Unable to retrieve list of users. :("));
+						.text("Unable to retrieve list of users. Please refresh page. :("));
 				removeCSSClass('#table-loading', 'active');
 				callFailRequestModal();
 			}
@@ -92,7 +89,7 @@
 		.fail((response, textStatus, xhr) => {
 			$('<tr>').appendTo('#usertable-body')
 			.append($('<td class="center-text error" colspan="9">')
-					.text("Unable to retrieve list of users. :("));
+					.text("Unable to retrieve list of users. Please refresh page. :("));
 			removeCSSClass('#table-loading', 'active');
 			callFailRequestModal();
 		});
@@ -179,19 +176,19 @@
  *  SEARCH FUNCTIONS
  */
 	$('#search_textfield').on('input', function() {
-		table.search( $(this).val() ).draw();
+		if(!isUsersTableEmpty) table.search( $(this).val() ).draw();
 	});
 	
 	$('#search_usertype').on('change', function() {
-		table.column(4).search( $(this).val() ).draw();
+		if(!isUsersTableEmpty) table.column(4).search( $(this).val() ).draw();
 	});
 	
 	$('#search_department').on('change', function() {
-		table.column(5).search( $(this).val() ).draw();
+		if(!isUsersTableEmpty) table.column(5).search( $(this).val() ).draw();
 	});
 	
 	$('#search_status').on('change', function() {
-		table.column(6).search( $(this).val() ).draw();
+		if(!isUsersTableEmpty) table.column(6).search( $(this).val() ).draw();
 	});
 	
 	$('#search_clear').click(() => {
@@ -220,7 +217,7 @@
 			onHidden: () => {
 				enableFormButtons(addUserModalButtons);
 				removeCSSClass('#adduser_form', 'loading');
-				selectedRowsTogglers();
+				if(!isUsersTableEmpty) selectedRowsTogglers();
 			}
 		}).modal('show');
 	});
@@ -254,7 +251,15 @@
 			$.post(getContextPath() + '/AddUser', $.param(userAccountData), (responseJson) => {
 				if(responseJson) 
 				{
-					table.row.add( $(addNewRowData(responseJson[0]))[0] ).draw();
+					if(!isUsersTableEmpty)
+					{
+						table.row.add( $(addNewRowData(responseJson[0]))[0] ).draw();
+					}
+					else
+					{
+						isUsersTableEmpty = false;
+						retriveUserList();
+					}
 					clearAddUserModal();
 					callSuccessModal('Success', 'A new account has successfully been added.');
 				}

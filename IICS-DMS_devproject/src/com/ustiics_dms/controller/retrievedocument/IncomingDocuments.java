@@ -22,12 +22,9 @@ import com.ustiics_dms.model.Document;
 public class IncomingDocuments extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public IncomingDocuments() {
         super();
-
     }
-
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -63,9 +60,8 @@ public class IncomingDocuments extends HttpServlet {
 		}
 	}
 
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		doGet(request, response);
 	}
 
 }

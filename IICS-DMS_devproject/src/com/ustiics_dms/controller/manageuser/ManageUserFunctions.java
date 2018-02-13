@@ -17,7 +17,7 @@ public class ManageUserFunctions {
 	{
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("INSERT INTO accounts (email, password, faculty_number, "
-					+ "first_name, last_name, fullName, user_type, department) VALUES (?,?,?,?,?,?,?,?)");
+					+ "first_name, last_name, full_name, user_type, department) VALUES (?,?,?,?,?,?,?,?)");
 			String encryptedPassword = AesEncryption.encrypt(facultyNo);
 			
 			prep.setString(1, email);
@@ -36,7 +36,7 @@ public class ManageUserFunctions {
 	{
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("UPDATE accounts SET email = ?, faculty_number = ?, first_name = ?, "
-					+ "last_name = ?, fullName = ?, user_type = ?, department = ? WHERE email = ?");
+					+ "last_name = ?, full_name = ?, user_type = ?, department = ? WHERE email = ?");
 			
 			String fullName = firstName + " " + lastName;
 			prep.setString(1, email);

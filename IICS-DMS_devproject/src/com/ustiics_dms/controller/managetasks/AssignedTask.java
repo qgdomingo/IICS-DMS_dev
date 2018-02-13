@@ -25,24 +25,22 @@ import com.ustiics_dms.model.Task;
 public class AssignedTask extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public AssignedTask() {
         super();
-
     }
-
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		List<Task> task = new ArrayList<Task>();
 	    response.setCharacterEncoding("UTF-8");
 		
-	    HttpSession session = request.getSession();
-	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
+			
+		    HttpSession session = request.getSession();
+		    Account acc = (Account) session.getAttribute("currentCredentials");
+		    
 			ResultSet getTasks = (ResultSet) ManageTasksFunctions.getTaskAssigned(acc.getEmail());
 			
-
 			while(getTasks.next())
 			{ 
 				ResultSet tasksInfo = (ResultSet) ManageTasksFunctions.getTaskInfo(getTasks.getInt("id"));
@@ -55,11 +53,11 @@ public class AssignedTask extends HttpServlet {
 							tasksInfo.getString("deadline"),
 							tasksInfo.getString("category"),
 							tasksInfo.getString("instructions"),
-							tasksInfo.getString("status"),
-							tasksInfo.getString("assigned_by")
+							getTasks.getString("status"),
+							tasksInfo.getString("assigned_by"),
+							tasksInfo.getString("date_created")
 							 ));	
 				}
-
 			}
 			
 			String json = new Gson().toJson(task);
@@ -67,16 +65,15 @@ public class AssignedTask extends HttpServlet {
 		    response.setContentType("application/json");
 		    response.setStatus(HttpServletResponse.SC_OK);
 		    response.getWriter().write(json);
-		   
+		    
 		} catch (SQLException e) {
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 	
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		doGet(request, response);
 	}
 
 }
