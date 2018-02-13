@@ -49,12 +49,24 @@ public class ForwardMail extends HttpServlet {
 					MailFunctions.saveMailInformation(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail());
 				
 			}
+			else if(button.equalsIgnoreCase("Mail Request") && acc.getUserType().equals("Faculty") || acc.getUserType().equals("Faculty Secretary"))
+			{
+				MailFunctions.forwardRequestMail(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail());
+			}
+			else if(button.equalsIgnoreCase("Save Mail"))
+			{
+				//MailFunctions.forwardRequest(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail());
+			}
+			else if(button.equalsIgnoreCase("Save And Export"))
+			{
+				//MailFunctions.forwardRequest(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail());
+			}
 				
 			} catch (SQLException e) {
 				
 				e.printStackTrace();
 			}
-
+			//insert redirection back to page 
 	}
 
 }

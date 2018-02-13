@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8"%>
+<%@page import="javax.servlet.http.HttpSession"%> 
+<%@page import="com.ustiics_dms.model.Account"%>
 
+	<% 
+		Account acc = (Account) session.getAttribute("currentCredentials");
+	%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -157,17 +162,18 @@
 				Send Mail
 			</button>
 			
-			<button class="ui labeled icon orange button element-mb">
+			<%if(acc.getUserType().equals("Faculty Secretary") || acc.getUserType().equals("Faculty")){%>
+			<button name="submit" value="mail request" class="ui labeled icon orange button element-mb">
 				<i class="exchange icon"></i>
 				Send Mail as Request
 			</button>	
-				
-			<button class="ui labeled icon blue button element-mb">
+			<%} %>
+			<button name="submit" value="save mail" class="ui labeled icon blue button element-mb">
 				<i class="save icon"></i>
 				Save Mail
 			</button>
 				
-			<button class="ui labeled icon blue button element-mb">
+			<button name="submit" value="save and export" class="ui labeled icon blue button element-mb">
 				<i class="download icon"></i>
 				Save and Export as PDF
 			</button>

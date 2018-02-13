@@ -18,15 +18,14 @@ import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Mail;
 
 
-
-@WebServlet("/RetrieveInbox")
-public class RetrieveInbox extends HttpServlet {
+@WebServlet("/RetrieveRequestMail")
+public class RetrieveRequestMail extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 
-    public RetrieveInbox() {
+    public RetrieveRequestMail() {
         super();
- 
+
     }
 
 
@@ -39,11 +38,8 @@ public class RetrieveInbox extends HttpServlet {
 	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
 			
-			ResultSet getInbox = (ResultSet) MailFunctions.getInbox(acc.getEmail());
-			
-			while(getInbox.next())
-			{
-				ResultSet inboxInfo = (ResultSet) MailFunctions.getInboxInformation(getInbox.getString("id"));
+	
+				ResultSet inboxInfo = (ResultSet) MailFunctions.getRequestMail(acc.getEmail());
 				
 				while(inboxInfo.next())
 				{ 
@@ -58,18 +54,17 @@ public class RetrieveInbox extends HttpServlet {
 							inboxInfo.getString("date_created")
 							 ));	
 				}
-			}
+			
 			String json = new Gson().toJson(mail);
 			
 		    response.setContentType("application/json");
 		    response.setStatus(HttpServletResponse.SC_OK);
 		    response.getWriter().write(json);
 		   
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
-		
 	}
 
 
