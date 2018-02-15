@@ -42,7 +42,7 @@ public class EditYear extends HttpServlet {
 			response.setCharacterEncoding("UTF-8");
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write("success");
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		

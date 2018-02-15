@@ -53,7 +53,7 @@ public class FileDownload extends HttpServlet {
 	            response.getOutputStream().write(bytes, 0, bytesRead);
 	         }
 	         
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		

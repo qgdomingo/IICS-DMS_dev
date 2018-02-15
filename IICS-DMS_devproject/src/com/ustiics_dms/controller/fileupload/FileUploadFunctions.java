@@ -24,14 +24,15 @@ public class FileUploadFunctions {
 			prep.setString(5, description);
 			prep.setString(6, fullName);
 			prep.setString(7, email);
+
 			
 			prep.executeUpdate();
 	}
 	
-	public static void uploadIncomingDocument(String referenceNo, String source, String documentTitle, String category, String actionRequired, FileItem item, String description, String fullName, String email) throws SQLException, IOException
+	public static void uploadIncomingDocument(String referenceNo, String source, String documentTitle, String category, String actionRequired, FileItem item, String description, String fullName, String email, String department) throws SQLException, IOException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("INSERT INTO incoming_documents (reference_no, source, title, category, action_required, file_name, file_data, description, created_by, email) VALUES (?,?,?,?,?,?,?,?,?,?)");
+			PreparedStatement prep = con.prepareStatement("INSERT INTO incoming_documents (reference_no, source, title, category, action_required, file_name, file_data, description, created_by, email, department) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
 			
 			prep.setString(1, referenceNo);
 			prep.setString(2, source);
@@ -43,14 +44,15 @@ public class FileUploadFunctions {
 			prep.setString(8, description);
 			prep.setString(9, fullName);
 			prep.setString(10, email);
+			prep.setString(11, department);
 			
 			prep.executeUpdate();
 	}
 	
-	public static void uploadOutgoingDocument(String recipient, String documentTitle, String category, FileItem item, String description, String fullName, String email) throws SQLException, IOException
+	public static void uploadOutgoingDocument(String recipient, String documentTitle, String category, FileItem item, String description, String fullName, String email, String department) throws SQLException, IOException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("INSERT INTO outgoing_documents (recipient, title, category, file_name, file_data, description, created_by, email) VALUES (?,?,?,?,?,?,?,?)");
+			PreparedStatement prep = con.prepareStatement("INSERT INTO outgoing_documents (recipient, title, category, file_name, file_data, description, created_by, email, department) VALUES (?,?,?,?,?,?,?,?,?)");
 			
 			prep.setString(1, recipient);
 			prep.setString(2, documentTitle);
@@ -60,6 +62,7 @@ public class FileUploadFunctions {
 			prep.setString(6, description);
 			prep.setString(7, fullName);
 			prep.setString(8, email);
+			prep.setString(9, department);
 			
 			prep.executeUpdate();
 	}

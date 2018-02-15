@@ -33,7 +33,7 @@ public class ApproveRequestMail extends HttpServlet {
 			String id = "1";//request.getParameter("id");
 		
 			MailFunctions.approveRequestMail(id);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 
 			e.printStackTrace();
 		}

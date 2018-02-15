@@ -9,16 +9,16 @@ import com.ustiics_dms.databaseconnection.DBConnect;
 
 public class RetrieveDocumentFunctions {
 	
-	public static ResultSet retrieveDocuments(String type, String email) throws SQLException
+	public static ResultSet retrieveDocuments(String type, String department) throws SQLException
 	{
 			String sqlStatement = null;
 			if(type.equalsIgnoreCase("Incoming"))
 			{
-				sqlStatement = "SELECT * FROM incoming_documents WHERE email = ?";
+				sqlStatement = "SELECT * FROM incoming_documents WHERE department = ?";
 			}
 			else if(type.equalsIgnoreCase("Outgoing"))
 			{
-				sqlStatement = "SELECT * FROM outgoing_documents WHERE email = ?";
+				sqlStatement = "SELECT * FROM outgoing_documents WHERE department = ?";
 			}
 			else if(type.equalsIgnoreCase("Personal"))
 			{
@@ -27,7 +27,7 @@ public class RetrieveDocumentFunctions {
 			
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement(sqlStatement);
-			prep.setString(1,  email);
+			prep.setString(1,  department);
 			
 			ResultSet result = prep.executeQuery();
 			
@@ -47,15 +47,33 @@ public class RetrieveDocumentFunctions {
 	public static ResultSet retrieveAllDocuments(String email) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM documents WHERE email = ?");
-			prep.setString(1,  email);
+			PreparedStatement prep = con.prepareStatement("SELECT type, id, reference_no, source_recipient, title, category, action_required, file_name, description, created_by, email, status,  time_created, department  FROM incoming_documents WHERE email = ? " + 
+					"UNION" + 
+					" SELECT type, id, reference_no, source_recipient, title, category, null, file_name, description, created_by, email, null, time_created, department  FROM outgoing_documents WHERE email = ? " + 
+					"UNION" + 
+					" SELECT type, id, null, null, title, category, null,  file_name, description, created_by, email, null, time_created , null FROM personal_documents WHERE email = ? ORDER BY time_created DESC");
 			
+			prep.setString(1,  email);
+			prep.setString(2,  email);
+			prep.setString(3,  email);
 			ResultSet result = prep.executeQuery();
 
 			return result;
 	}
 	
+	public static ResultSet retrieveThread(String referenceNumber) throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("SELECT type, id, reference_no, source_recipient, title, category, action_required, file_name, description, created_by, email, status,  time_created, department  FROM incoming_documents WHERE reference_no = ? " + 
+					"UNION "+ 
+					"SELECT type, id, reference_no, source_recipient, title, category, null, file_name, description, created_by, email, null, time_created, department  FROM outgoing_documents WHERE reference_no = ? ORDER BY time_created DESC");
+			prep.setString(1,  referenceNumber);
+			prep.setString(2,  referenceNumber);
+			
+			ResultSet result = prep.executeQuery();
 
+			return result;
+	}
 	
 	
 

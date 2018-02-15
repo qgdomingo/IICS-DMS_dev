@@ -31,7 +31,7 @@ public class AllDocuments extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<Document> documents = new ArrayList<Document>();
+		List<Document> files = new ArrayList<Document>();
 	    response.setCharacterEncoding("UTF-8");
 		
 	    HttpSession session = request.getSession();
@@ -40,18 +40,24 @@ public class AllDocuments extends HttpServlet {
 			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveAllDocuments(acc.getEmail());
 			while(documentFiles.next()) 
 			{ 
-				documents.add(new Document(
-						documentFiles.getString("id"),
+				files.add(new Document(
 						documentFiles.getString("type"),
+						documentFiles.getString("id"),
+						documentFiles.getString("reference_no"),
+						documentFiles.getString("source_recipient"),
 						documentFiles.getString("title"),
+						documentFiles.getString("action_required"),
 						documentFiles.getString("category"),
 						documentFiles.getString("file_name"),
 						documentFiles.getString("description"),
 						documentFiles.getString("created_by"),
-						documentFiles.getString("time_created")
+						documentFiles.getString("email"),
+						documentFiles.getString("status"),
+						documentFiles.getString("time_created"),
+						documentFiles.getString("department")
 						 ));	
 			}
-			String json = new Gson().toJson(documents);
+			String json = new Gson().toJson(files);
 			
 		    response.setContentType("application/json");
 		    response.setStatus(HttpServletResponse.SC_OK);

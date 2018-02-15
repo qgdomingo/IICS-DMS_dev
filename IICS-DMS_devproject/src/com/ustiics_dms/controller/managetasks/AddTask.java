@@ -28,6 +28,7 @@ public class AddTask extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		
 		try {
+			
 			HttpSession session = request.getSession();
 			
 			Account acc = (Account) session.getAttribute("currentCredentials");
