@@ -39,7 +39,7 @@ public class IncomingDocuments extends HttpServlet {
 			{ 
 				incomingFiles.add(new IncomingDocument(
 						documentFiles.getString("type"),
-						documentFiles.getString("id"),
+						documentFiles.getString("thread_number"),
 						documentFiles.getString("reference_no"),
 						documentFiles.getString("source_recipient"),
 						documentFiles.getString("title"),

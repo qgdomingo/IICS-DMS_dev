@@ -69,7 +69,7 @@ public class FileUpload extends HttpServlet {
 			String documentTitle = null;
 			String category = null;
 			String description = null;
-			String fullName = acc.getFirstName() + " " + acc.getLastName();
+			String fullName = acc.getFullName();
 			
 			//used by incoming documents
 			String documentSource = null;

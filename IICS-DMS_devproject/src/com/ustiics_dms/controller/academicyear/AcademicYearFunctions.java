@@ -9,16 +9,14 @@ import com.ustiics_dms.databaseconnection.DBConnect;
 
 public class AcademicYearFunctions {
 
-	public static void updateYear( int yearStart, String monthStart, int yearEnd, String monthEnd) throws SQLException
+	public static void updateYear( int yearStart, int yearEnd) throws SQLException
 	{
 		
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("update academic_year set start_year = ? , start_month = ? , end_year = ? , end_month = ?");
+			PreparedStatement prep = con.prepareStatement("update academic_year set start_year = ?, end_year = ?");
 			
 			prep.setInt(1, yearStart);
-			prep.setString(2, monthStart);
-			prep.setInt(3, yearEnd);
-			prep.setString(4, monthEnd);
+			prep.setInt(2, yearEnd);
 		
 			prep.executeUpdate();
 			

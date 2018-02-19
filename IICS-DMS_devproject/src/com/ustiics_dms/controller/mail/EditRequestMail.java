@@ -10,29 +10,31 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-@WebServlet("/ApproveRequestMail")
-public class ApproveRequestMail extends HttpServlet {
+@WebServlet("/EditRequestMail")
+public class EditRequestMail extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 
-    public ApproveRequestMail() {
+    public EditRequestMail() {
         super();
 
     }
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 		doPost(request, response);
 	}
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
 		try {
 			
-			String id = request.getParameter("id");
+			String editedNote = request.getParameter("editedNote");
+			String requestId = request.getParameter("requestId");
 		
-			MailFunctions.approveRequestMail(id);
+			MailFunctions.editRequest(editedNote, requestId);
 		} catch (Exception e) {
 
 			e.printStackTrace();

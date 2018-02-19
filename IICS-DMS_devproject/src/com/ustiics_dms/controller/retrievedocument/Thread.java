@@ -38,12 +38,12 @@ public class Thread extends HttpServlet {
 	    HttpSession session = request.getSession();
 	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
-			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveThread("234");
+			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveThread("1");
 			while(documentFiles.next()) 
 			{ 
 				files.add(new Document(
 						documentFiles.getString("type"),
-						documentFiles.getString("id"),
+						documentFiles.getString("thread_number"),
 						documentFiles.getString("reference_no"),
 						documentFiles.getString("source_recipient"),
 						documentFiles.getString("title"),

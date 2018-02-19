@@ -1,6 +1,8 @@
 package com.ustiics_dms.controller.managetasks;
 
 import java.io.IOException;
+import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -41,6 +43,12 @@ public class EditTask extends HttpServlet {
 		String instructions = request.getParameter("instructions");
 		String email [] = request.getParameterValues("assigned_to");
 		
+		try {
+			ManageTasksFunctions.editTask(id, userEmail, title, deadline, category, instructions, email);
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
 		//edit task
 		
 	}

@@ -39,7 +39,7 @@ public class RetrieveRequestMail extends HttpServlet {
 		try {
 			
 	
-				ResultSet inboxInfo = (ResultSet) MailFunctions.getRequestMail(acc.getEmail());
+				ResultSet inboxInfo = (ResultSet) MailFunctions.getRequestMail(acc.getDepartment());
 				
 				while(inboxInfo.next())
 				{ 

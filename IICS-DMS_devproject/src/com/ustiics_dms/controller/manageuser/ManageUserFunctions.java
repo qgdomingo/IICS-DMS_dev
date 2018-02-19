@@ -59,7 +59,7 @@ public class ManageUserFunctions {
 			
 			prep.setString(1, "active");
 			prep.setString(2, email);
-			System.out.println(email);
+
 			prep.executeUpdate();
 	}
 	
@@ -107,17 +107,7 @@ public class ManageUserFunctions {
 			return user;
 	}
 	
-	public static void editTask (String id, String userEmail, String title, String deadline, String category, String instructions, String email[])
-	{
-		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("SELECT id, title, deadline, category, instructions, status, assigned_by, date_created FROM tasks where id = ?");
-		
-		prep.setString(1, "inactive");
-		prep.setString(2, email);
-		
-		prep.executeUpdate();
-		
-	}
+
 }
 
 

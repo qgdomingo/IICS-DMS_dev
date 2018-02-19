@@ -12,10 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ustiics_dms.utility.SessionChecking;
 
-/**
- *  EditYear.java
- *   - this controller is used to get user input and update the academic year configurations in the database
- */
+
 @WebServlet("/EditYear")
 public class EditYear extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -32,11 +29,10 @@ public class EditYear extends HttpServlet {
 		
 		int yearEnd = Integer.parseInt(request.getParameter("year_to"));
 		int yearStart = Integer.parseInt(request.getParameter("year_from"));
-		String monthStart = request.getParameter("month_start");
-		String monthEnd = request.getParameter("month_end");
+
 		
 		try {
-			AcademicYearFunctions.updateYear(yearStart, monthStart, yearEnd, monthEnd);
+			AcademicYearFunctions.updateYear(yearStart, yearEnd);
 			
 			response.setContentType("text/html");
 			response.setCharacterEncoding("UTF-8");

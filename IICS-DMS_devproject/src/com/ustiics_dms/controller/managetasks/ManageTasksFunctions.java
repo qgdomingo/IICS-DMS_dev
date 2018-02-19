@@ -75,17 +75,14 @@ public class ManageTasksFunctions {
 	public static String getFullName(String email) throws SQLException
 	{
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("SELECT first_name, last_name FROM accounts WHERE email = ?");
+		PreparedStatement prep = con.prepareStatement("SELECT full_name FROM accounts WHERE email = ?");
 		prep.setString(1, email);
 		
 		ResultSet rs = prep.executeQuery();
 		
 		rs.next();
 		
-		String fullName = rs.getString("first_name") + " ";
-		fullName += rs.getString("last_name");
-		
-		return fullName;
+		return rs.getString("full_name");
 			
 	}
 	
@@ -212,7 +209,40 @@ public class ManageTasksFunctions {
 	       return null;
 	}
 	
-
+	public static void editTask (String id, String userEmail, String title, String deadline, String category, String instructions, String email[]) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("UPDATE tasks SET title = ?, deadline = ?, category = ?, instructions = ? WHERE id = ? AND assigned_by = ?");
+		prep.setString(1, title);
+		prep.setString(2, deadline);
+		prep.setString(3, category);
+		prep.setString(4, instructions);
+		prep.setString(5, id);
+		prep.setString(6, userEmail);
+		
+		prep.executeUpdate();
+		
+		assignEditUsers(email, id);
+		
+	}
+	
+	public static void assignEditUsers(String email[], String id) throws SQLException
+	{
+			String tempID = id;
+			Connection con = DBConnect.getConnection();
+			
+			for(String mail: email)
+			{
+				PreparedStatement prep = con.prepareStatement("INSERT INTO tasks_assigned_to (id, name, email) VALUES (?,?,?)");
+				
+				String fullName = getFullName(mail);
+				prep.setString(1, tempID);
+				prep.setString(2, fullName);
+				prep.setString(3, mail);
+				prep.executeUpdate();
+			}
+			
+	}
 	
 
 	
