@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
+import javax.servlet.http.HttpServletResponse;
 
 public class SendMail 
 { 
@@ -47,7 +48,7 @@ public class SendMail
     }
     catch(Exception e)
     {
-    	 e.printStackTrace();
+    	
     }
   }  
 }

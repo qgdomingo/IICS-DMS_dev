@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -70,7 +69,7 @@ public class FileUpload extends HttpServlet {
 			String documentTitle = null;
 			String category = null;
 			String description = null;
-			String fullName = acc.getFirstName() + " " + acc.getLastName();
+			String fullName = acc.getFullName();
 			
 			//used by incoming documents
 			String documentSource = null;
@@ -97,7 +96,7 @@ public class FileUpload extends HttpServlet {
 				actionRequired = tempStorage[5];
 				referenceNo = tempStorage[6];
 				
-				FileUploadFunctions.uploadIncomingDocument(referenceNo, documentSource, documentTitle, category, actionRequired, fileData, description, fullName, acc.getEmail());
+				FileUploadFunctions.uploadIncomingDocument(referenceNo, documentSource, documentTitle, category, actionRequired, fileData, description, fullName, acc.getEmail(),acc.getDepartment());
 			}
 			else if(documentType.equalsIgnoreCase("Outgoing"))
 			{
@@ -106,7 +105,7 @@ public class FileUpload extends HttpServlet {
 				documentTitle = tempStorage[3];
 				description = tempStorage[4];
 				
-				FileUploadFunctions.uploadOutgoingDocument(documentRecipient, documentTitle, category, fileData, description, fullName, acc.getEmail());
+				FileUploadFunctions.uploadOutgoingDocument(documentRecipient, documentTitle, category, fileData, description, fullName, acc.getEmail(),acc.getDepartment());
 			}
 				
 			response.setContentType("text/plain");

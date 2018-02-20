@@ -59,7 +59,7 @@ public class ManageUserFunctions {
 			
 			prep.setString(1, "active");
 			prep.setString(2, email);
-			System.out.println(email);
+
 			prep.executeUpdate();
 	}
 	
@@ -103,7 +103,11 @@ public class ManageUserFunctions {
 									  rs.getString("department"),
 									  rs.getString("status")
 									  );
+			
 			return user;
 	}
+	
+
 }
+
 

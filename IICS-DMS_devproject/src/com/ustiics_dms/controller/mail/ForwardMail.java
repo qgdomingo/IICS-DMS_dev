@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import com.ustiics_dms.controller.login.LoginFunctions;
 import com.ustiics_dms.model.Account;
+import com.ustiics_dms.utility.SendMail;
 
 
 @WebServlet("/ForwardMail")
@@ -47,11 +48,12 @@ public class ForwardMail extends HttpServlet {
 			{
 				
 					MailFunctions.saveMailInformation(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail());
-				
+					ExternalMail.send(externalRecipient, subject, message, "jlteoh23@gmail.com", "jed231096");
 			}
 			else if(button.equalsIgnoreCase("Mail Request") && acc.getUserType().equals("Faculty") || acc.getUserType().equals("Faculty Secretary"))
 			{
-				MailFunctions.forwardRequestMail(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail());
+				MailFunctions.forwardRequestMail(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getUserType(), acc.getDepartment());
+				
 			}
 			else if(button.equalsIgnoreCase("Save Mail"))
 			{

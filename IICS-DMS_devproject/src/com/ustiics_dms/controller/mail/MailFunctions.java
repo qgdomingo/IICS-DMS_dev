@@ -32,11 +32,11 @@ public class MailFunctions {
 	{
 			List<String> emailList = Arrays.asList(recipient.split(","));
 			Connection con = DBConnect.getConnection();
-			
+
 			for(String tempEmail : emailList)
 			{
-				String email = getEmail(tempEmail.trim());
-				
+				String email = tempEmail.trim();
+
 				PreparedStatement prep = con.prepareStatement("INSERT INTO sent_mail_to (id, recipient_mail) VALUES (?,?)");
 				prep.setInt(1, getIncrement());
 				prep.setString(2, email);
@@ -45,17 +45,7 @@ public class MailFunctions {
 			}
 	}
 	
-	public static String getEmail(String recipient) throws SQLException
-	{
-			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT email FROM accounts WHERE full_name LIKE ?");
-			recipient = "%" + recipient + "%";
-			prep.setString(1, recipient);
-			ResultSet rs = prep.executeQuery();
-			rs.next();
 
-			return rs.getString("email");
-	}
 	
 	public static int getIncrement() throws SQLException
 	{
@@ -105,10 +95,10 @@ public class MailFunctions {
 	}
 	
 	//Requests
-	public static void forwardRequestMail(String type, String recipient, String externalRecipient, String  subject, String  message, String  name, String  sentBy) throws SQLException
+	public static void forwardRequestMail(String type, String recipient, String externalRecipient, String  subject, String  message, String  name, String  sentBy, String userType, String department) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("INSERT INTO request (type, recipient, external_recipient, subject, message, sender_name, sent_by) VALUES (?,?,?,?,?,?,?)");
+			PreparedStatement prep = con.prepareStatement("INSERT INTO request (type, recipient, external_recipient, subject, message, sender_name, sent_by, department) VALUES (?,?,?,?,?,?,?,?)");
 			prep.setString(1, type);
 			prep.setString(2, recipient);
 			prep.setString(3, externalRecipient);
@@ -116,18 +106,18 @@ public class MailFunctions {
 			prep.setString(5, message);
 			prep.setString(6, name);
 			prep.setString(7, sentBy);
+			prep.setString(8, department);
 			
 			prep.executeUpdate();
 			
-			sendInternalMail(recipient);
 	}
 	
-	public static ResultSet getRequestMail(String email) throws SQLException
+	public static ResultSet getRequestMail(String department) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM request WHERE sent_by = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT * FROM request WHERE department = ?");
 			
-			prep.setString(1, email);
+			prep.setString(1, department);
 			ResultSet rs = prep.executeQuery();
 		
 
@@ -172,6 +162,18 @@ public class MailFunctions {
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("DELETE FROM request WHERE id = ?");
 			prep.setString(1, id);
+			
+			prep.executeUpdate();
+			
+	}
+	
+	public static void editRequest(String editedMessage, String id) throws SQLException
+	{
+
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("UPDATE request SET message = ? WHERE id = ?");
+			prep.setString(1, editedMessage);
+			prep.setString(2, id);
 			
 			prep.executeUpdate();
 			
