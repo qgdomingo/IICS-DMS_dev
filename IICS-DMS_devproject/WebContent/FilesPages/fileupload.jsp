@@ -1,5 +1,10 @@
+<%@page import="com.ustiics_dms.model.Account"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8"%>
 
+<%
+	Account acc = (Account) session.getAttribute("currentCredentials");
+	String userType = acc.getUserType();
+%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -24,8 +29,8 @@
 				<h5 class="ui header ">
 					<i class="large user circle icon user-account-color"></i>
 					<div class="content user-account-color">
-						Jeddi Boi
-						<div class="sub header user-accountsub-color">Department Head</div>
+						<%= acc.getFullName() %>
+						<div class="sub header user-accountsub-color"><%= acc.getUserType() %></div>
 					</div>
 				</h5>
 			</a>
@@ -47,23 +52,30 @@
 		    <div class="item">
 		   		Mail
 		   		<div class="menu">
+	<% if(!userType.equalsIgnoreCase("Staff")) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/newmail.jsp">
 			    		<i class="large write icon side"></i>Create Mail
 			    	</a>
+	<%  } %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/inbox.jsp">
 			    		<i class="large inbox icon side"></i>Inbox
 			    	</a>
+	<% if(!userType.equalsIgnoreCase("Faculty") && !userType.equalsIgnoreCase("Staff")) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
+	<%  } %>
+	<% if(!userType.equalsIgnoreCase("Staff")) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
 			    		<i class="large exchange icon side"></i>Requests
 			    	</a>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/viewmemoletter.jsp">
 			    		<i class="large open envelope icon side"></i>View All Memos/Letters
 			    	</a>
+	<%  } %>
 		    	</div>
 		    </div>
+	<% if(!userType.equalsIgnoreCase("Faculty") && !userType.equalsIgnoreCase("Staff")) { %>
 			<div class="item">
 		   		Reports
 		   		<div class="menu">
@@ -72,6 +84,7 @@
 			    	</a>
 		    	</div>
 		    </div>
+	<%  } %>
 		    <a class="item mobile only" id="logout_btn2">
 		      <i class="large power icon side"></i>Logout
 		    </a>
@@ -94,8 +107,8 @@
 						<h5 class="ui header">
 						  <i class="large user circle icon user-account-color"></i>
 						  <div class="content user-account-color">
-						    Jeddi Boi
-						    <div class="sub header user-accountsub-color">Department Head</div>
+						    <%= acc.getFullName() %>
+						    <div class="sub header user-accountsub-color"><%= acc.getUserType() %></div>
 						  </div>
 						</h5>
 					</a>
@@ -117,8 +130,10 @@
 					<label>Upload Document Type:</label>
 					<select class="ui fluid dropdown" id="doctype_select">
 			  			<option value="Personal">Personal</option>
-			  			<option value="Incoming">Incoming</option>
-			  			<option value="Outgoing">Outgoing</option>
+			  		<% if(!userType.equalsIgnoreCase("Faculty")) { %>
+					  	<option value="Incoming">Incoming</option>
+					  	<option value="Outgoing">Outgoing</option>
+					<% } %>
 					</select>
 				</div>
 			</div>
@@ -137,18 +152,17 @@
 					<label>Category:</label>
 					<div class="inline two fields">
 						<div class="field">
-						<select class="ui fluid dropdown" name="category" id="personal_category">
+						<select class="ui fluid dropdown" name="category" id="personal_category" required>
 							<option value="">Select Category..</option>
-							<option value="Course Grades">Course Grades</option>
-							<option value="Course Syllabus">Course Syllabus</option>
-							<option value="Research">Research</option>
 						</select>
 						</div>
 						<div class="field">
-						<button class="ui inverted orange button" type="button">
+				<% if(!userType.equalsIgnoreCase("Faculty")) { %>	
+						<button class="ui inverted orange button" type="button" id="personal_category_add">
 							<i class="pencil icon"></i>
 							Add Category
 						</button>
+				<% } %>
 						</div>
 					</div>
 				</div>
@@ -182,7 +196,9 @@
 				</button>
 				
 			</form>
-			
+	
+	<% if(!userType.equalsIgnoreCase("Faculty")) { %>	
+		
 		<!-- FORM FOR INCOMING DOCUMENTS -->
 			<form class="ui form" action="${pageContext.request.contextPath}/FileUpload"
 					method="post" enctype="multipart/form-data" id="incomingdocs_form">
@@ -193,15 +209,12 @@
 					<label>Category:</label>
 					<div class="inline two fields">
 						<div class="field">
-						<select class="ui fluid dropdown" name="category" id="incoming_category">
-							<option value="">Select Category..</option>
-							<option value="Course Grades">Course Grades</option>
-							<option value="Course Syllabus">Course Syllabus</option>
-							<option value="Research">Research</option>
+						<select class="ui fluid dropdown" name="category" id="incoming_category" required>
+							<option value="">Select Category</option>
 						</select>
 						</div>
-						<div class="field">
-						<button class="ui inverted orange button" type="button">
+						<div class="field">	
+						<button class="ui inverted orange button" type="button" id="incoming_category_add">
 							<i class="pencil icon"></i>
 							Add Category
 						</button>
@@ -214,7 +227,19 @@
 					<p class="microcopy-hint">
 						This indicates from whom the document was received.
 					</p>
-					<input type="text" name="document_source" placeholder="e.g. Dean, Faculty of Engineering" required/>
+					<div class="inline two fields">
+						<div class="field">
+						<select class="ui fluid dropdown" name="document_source" id="incoming_source" required>
+							<option value="">Select Document Source</option>
+						</select>
+						</div>
+						<div class="field">	
+						<button class="ui inverted orange button" type="button" id="incoming_source_add">
+							<i class="pencil icon"></i>
+							Add Source 
+						</button>
+						</div>
+					</div>
 				</div>
 				
 				<div class="required field">
@@ -276,13 +301,10 @@
 						<div class="field">
 						<select class="ui fluid dropdown" name="category" id="outgoing_category">
 							<option value="">Select Category..</option>
-							<option value="Course Grades">Course Grades</option>
-							<option value="Course Syllabus">Course Syllabus</option>
-							<option value="Research">Research</option>
 						</select>
 						</div>
 						<div class="field">
-						<button class="ui inverted orange button" type="button">
+						<button class="ui inverted orange button" type="button" id="outgoing_category_add">
 							<i class="pencil icon"></i>
 							Add Category
 						</button>
@@ -295,7 +317,19 @@
 					<p class="microcopy-hint">
 						This indicates to whom the document is for.
 					</p>
-					<input type="text" name="document_recipient" placeholder="e.g. Dean, Faculty of Engineering" required/>
+					<div class="inline two fields">
+						<div class="field">
+						<select class="ui fluid dropdown" name="document_recipient" id="outgoing_recipient" required>
+							<option value="">Select Document Recipient</option>
+						</select>
+						</div>
+						<div class="field">	
+						<button class="ui inverted orange button" type="button" id="outgoing_recipient_add">
+							<i class="pencil icon"></i>
+							Add Source 
+						</button>
+						</div>
+					</div>
 				</div>
 				
 				<div class="required field">
@@ -329,8 +363,68 @@
 
 			</div>
 		</div>
+		
+	<% } %>
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
+		
+	<% if(!userType.equalsIgnoreCase("Faculty")) { %>	
+		<!-- ADD CATEGORY DIALOG BOX -->
+		<div class="ui tiny modal" id="category_dia">
+			<div class="header edit-modal">
+				<h3 class="ui header edit-modal">
+					<i class="pencil icon"></i>
+					<div class="content">Add New Category</div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<div class="ui form" id="category_form">
+					<div class="field" id="category_input_field">
+						<label>Category</label>
+						<input type="text" id="category_input"/>
+					</div>
+				</div>
+			</div>
+			<div class="actions">
+				<button class="ui cancel grey button" id="category_cancel">
+					<i class="remove icon"></i>
+					Cancel
+				</button>
+				<button class="ui green button" id="category_submit">
+					<i class="checkmark icon"></i>
+					Add Category
+				</button>
+			</div>
+		</div>
+		
+		<!-- ADD SOURCE/RECIPIENT DIALOG BOX -->
+		<div class="ui tiny modal" id="source_dia">
+			<div class="header edit-modal">
+				<h3 class="ui header edit-modal">
+					<i class="pencil icon"></i>
+					<div class="content">Add New Document Source/Recipient</div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<div class="ui form" id="source_form">
+					<div class="field" id="source_input_field">
+						<label>Document Source/Recipient</label>
+						<input type="text" id="source_input"/>
+					</div>
+				</div>
+			</div>
+			<div class="actions">
+				<button class="ui cancel grey button" id="source_cancel">
+					<i class="remove icon"></i>
+					Cancel
+				</button>
+				<button class="ui green button" id="source_submit">
+					<i class="checkmark icon"></i>
+					Add Source/Recipient
+				</button>
+			</div>
+		</div>
+	<% } %>
 		
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">

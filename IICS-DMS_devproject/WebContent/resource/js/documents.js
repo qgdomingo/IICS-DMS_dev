@@ -203,7 +203,6 @@
 	    	getPersonalDocumentsData($(this).attr('id'));
 	    	$(this).toggleClass('active');
 	    	$('#viewpersonal_dialog').modal({
-				blurring: true,
 				closable: false,
 				onHidden: () => {
 					$(this).toggleClass('active');

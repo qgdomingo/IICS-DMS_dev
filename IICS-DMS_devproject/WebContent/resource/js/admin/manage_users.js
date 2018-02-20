@@ -15,7 +15,6 @@
  * VARIABLES 
  */
 	var table;
-	var localUserAccountsData;
 	var originalEmail;
 	var isUsersTableEmpty = false;
 	var addUserModalInputs = 
@@ -48,7 +47,6 @@
 			$('#usertable-body').empty();
 			if(!responseData.length == 0) 
 			{
-				localUserAccountsData = responseData;
 				$.each(responseData, (index, account) => {
 					$('<tr id="data'+index+'">').appendTo('#usertable-body')		
 						.append($('<td>').text(account.facultyNumber))
@@ -209,7 +207,6 @@
 	/* OPEN MODAL - Add User */
 	$('#adduser_btn').click(() => {
 		$('#adduser_dia').modal({
-			blurring: true,
 			closable: false,
 			onShow: () => {
 				checkUserTypeDepartment('#add_usertype', '#add_department_field'); 
@@ -286,7 +283,6 @@
 	/* OPEN MODAL - Edit User */
 	$('#edituser_btn').click(() => {		
 		$('#edituser_dia').modal({
-			blurring: true,
 			closable: false,
 			onShow: () => {
 				checkUserTypeDepartment('#edit_usertype', '#edit_department_field'); 
@@ -359,7 +355,6 @@
 	/* OPEN MODAL - Enable User */
 	$('#enableuser_btn').click(() => {		
 		$('#enableuser_dia').modal({
-			blurring: true,
 			closable: false
 		}).modal('show');	
 	});
@@ -402,7 +397,6 @@
 	/* OPEN MODAL - Disable User */
 	$('#disableuser_btn').click(() => {		
 		$('#disableuser_dia').modal({
-			blurring: true,
 			closable: false
 		}).modal('show');	
 	});

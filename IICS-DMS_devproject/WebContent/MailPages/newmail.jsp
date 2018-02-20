@@ -1,10 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8"%>
-<%@page import="javax.servlet.http.HttpSession"%> 
 <%@page import="com.ustiics_dms.model.Account"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8"%>
 
-	<% 
-		Account acc = (Account) session.getAttribute("currentCredentials");
-	%>
+<%
+	Account acc = (Account) session.getAttribute("currentCredentials");
+	String userType = acc.getUserType();
+%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -29,8 +29,8 @@
 				<h5 class="ui header ">
 					<i class="large user circle icon user-account-color"></i>
 					<div class="content user-account-color">
-						Jeddi Boi
-						<div class="sub header user-accountsub-color">Department Head</div>
+						<%= acc.getFullName() %>
+						<div class="sub header user-accountsub-color"><%= acc.getUserType() %></div>
 					</div>
 				</h5>
 			</a>
@@ -58,9 +58,11 @@
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/inbox.jsp">
 			    		<i class="large inbox icon side"></i>Inbox
 			    	</a>
+	<% if(!userType.equalsIgnoreCase("Faculty")) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
+	<%  } %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
 			    		<i class="large exchange icon side"></i>Requests
 			    	</a>
@@ -69,6 +71,7 @@
 			    	</a>
 		    	</div>
 		    </div>
+	<% if(!userType.equalsIgnoreCase("Faculty")) { %>
 			<div class="item">
 		   		Reports
 		   		<div class="menu">
@@ -77,6 +80,7 @@
 			    	</a>
 		    	</div>
 		    </div>
+	<%  } %>
 		    <a class="item mobile only" id="logout_btn2">
 		      <i class="large power icon side"></i>Logout
 		    </a>
@@ -99,8 +103,8 @@
 						<h5 class="ui header">
 						  <i class="large user circle icon user-account-color"></i>
 						  <div class="content user-account-color">
-						    Jeddi Boi
-						    <div class="sub header user-accountsub-color">Department Head</div>
+						    <%= acc.getFullName() %>
+						    <div class="sub header user-accountsub-color"><%= acc.getUserType() %></div>
 						  </div>
 						</h5>
 					</a>

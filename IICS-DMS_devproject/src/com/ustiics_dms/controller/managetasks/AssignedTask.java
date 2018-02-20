@@ -15,9 +15,7 @@ import javax.servlet.http.HttpSession;
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
-import com.ustiics_dms.controller.retrievedocument.RetrieveDocumentFunctions;
 import com.ustiics_dms.model.Account;
-import com.ustiics_dms.model.Document;
 import com.ustiics_dms.model.Task;
 
 

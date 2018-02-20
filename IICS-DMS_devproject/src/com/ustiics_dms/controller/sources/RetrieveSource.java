@@ -20,12 +20,9 @@ import com.ustiics_dms.model.Account;
 public class RetrieveSource extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public RetrieveSource() {
         super();
-
     }
-
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -40,9 +37,7 @@ public class RetrieveSource extends HttpServlet {
 			
 			while(categoryList.next())
 			{
-				
-					sources.add(categoryList.getString("sources_name"));	
-				
+				sources.add(categoryList.getString("sources_name"));		
 			}
 			String json = new Gson().toJson(sources);
 			

@@ -1,5 +1,10 @@
+<%@page import="com.ustiics_dms.model.Account"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8"%>
 
+<%
+	Account acc = (Account) session.getAttribute("currentCredentials");
+	String userType = acc.getUserType();
+%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -26,8 +31,8 @@
 				<h5 class="ui header ">
 					<i class="large user circle icon user-account-color"></i>
 					<div class="content user-account-color">
-						Jeddi Boi
-						<div class="sub header user-accountsub-color">Department Head</div>
+						<%= acc.getFullName() %>
+						<div class="sub header user-accountsub-color"><%= acc.getUserType() %></div>
 					</div>
 				</h5>
 			</a>
@@ -49,23 +54,30 @@
 		    <div class="item">
 		   		Mail
 		   		<div class="menu">
+	<% if(!userType.equalsIgnoreCase("Staff")) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/newmail.jsp">
 			    		<i class="large write icon side"></i>Create Mail
 			    	</a>
+	<%  } %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/inbox.jsp">
 			    		<i class="large inbox icon side"></i>Inbox
 			    	</a>
+	<% if(!userType.equalsIgnoreCase("Faculty") && !userType.equalsIgnoreCase("Staff")) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
+	<%  } %>
+	<% if(!userType.equalsIgnoreCase("Staff")) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
 			    		<i class="large exchange icon side"></i>Requests
 			    	</a>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/viewmemoletter.jsp">
 			    		<i class="large open envelope icon side"></i>View All Memos/Letters
 			    	</a>
+	<%  } %>
 		    	</div>
 		    </div>
+	<% if(!userType.equalsIgnoreCase("Faculty") && !userType.equalsIgnoreCase("Staff")) { %>
 			<div class="item">
 		   		Reports
 		   		<div class="menu">
@@ -74,6 +86,7 @@
 			    	</a>
 		    	</div>
 		    </div>
+	<%  } %>
 		    <a class="item mobile only" id="logout_btn2">
 		      <i class="large power icon side"></i>Logout
 		    </a>
@@ -96,8 +109,8 @@
 						<h5 class="ui header">
 						  <i class="large user circle icon user-account-color"></i>
 						  <div class="content user-account-color">
-						    Jeddi Boi
-						    <div class="sub header user-accountsub-color">Department Head</div>
+						    <%= acc.getFullName() %>
+						    <div class="sub header user-accountsub-color"><%= acc.getUserType() %></div>
 						  </div>
 						</h5>
 					</a>
@@ -118,10 +131,12 @@
 				<i class="folder open icon"></i>
 				My Tasks
 			</a>
+	<% if(!userType.equalsIgnoreCase("Faculty") && !userType.equalsIgnoreCase("Staff")) { %>
 			<a class="item" id="taskscreated_button">
 				<i class="folder icon"></i>
 				Tasks Created
 			</a>
+	<% } %>
 		</div>
 		
 		<!-- MY TASKS SEGMENT -->
@@ -156,9 +171,6 @@
 					<div class="field">
 						<select class="ui fluid dropdown" id="mytask_category">
 							<option value="">Category</option>
-							<option value="Course Grades">Course Grades</option>
-							<option value="Course Syllabus">Course Syllabus</option>
-							<option value="Research">Research</option>
 						</select>
 					</div>
 					
@@ -195,7 +207,9 @@
 				<tbody id="mytasks_tablebody"></tbody>		
 			</table>	
 		</div>
-		
+	
+	<% if(!userType.equalsIgnoreCase("Faculty") && !userType.equalsIgnoreCase("Staff")) { %>
+	
 		<!-- TASKS CREATED SEGMENT -->
 		<div class="ui segment" id="taskscreated_segment">
 			<div class="ui dimmer" id="taskscreated_loading">
@@ -281,7 +295,7 @@
 				<tbody id="taskscreated_tablebody"></tbody>		
 			</table>	
 		</div>
-		
+	<% } %>
 		
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
@@ -353,7 +367,9 @@
 				<button class="ui ok secondary button" id="viewmytask_close">Close</button>
 			</div>
 		</div>
-		
+	
+	<% if(!userType.equalsIgnoreCase("Faculty") && !userType.equalsIgnoreCase("Staff")) { %>
+	
 		<!-- ADD TASK MODAL -->
 		<div class="ui tiny modal" id="addtask_dialog">
 			<div class="header add-modal">
@@ -383,9 +399,6 @@
 						<label>Category:</label>
 						<select class="ui fluid dropdown" id="addtask_category">
 							<option value="">Category</option>
-							<option value="Course Grades">Course Grades</option>
-							<option value="Course Syllabus">Course Syllabus</option>
-							<option value="Research">Research</option>
 						</select>
 					</div>
 					
@@ -458,7 +471,7 @@
 		</div>
 		
 		<!-- VIEW TASK CREATED MODAL -->
-		<div class="ui tiny modal" id="taskscreated_dialog">
+		<div class="ui modal" id="taskscreated_dialog">
 			<div class="header neutral-modal">
 				<h3 class="ui header neutral-modal">
 					<i class="tasks icon"></i>
@@ -466,19 +479,39 @@
 				</h3>
 			</div>
 			<div class="modal-content">
+				<p class="element-rmb"><b>Status: </b><span id="taskscreated_viewstatus"></span></p>
 				<p class="element-rmb"><b>Category: </b><span id="taskscreated_viewcategory"></span></p>
-				<p class="element-rmb"><b>Assigned by: </b><span id="taskscreated_assignedby"></span></p>
+				<p class="element-rmb"><b>Created by: </b><%= acc.getFullName() %></p>
 				<p class="element-rmb"><b>Date Created: </b><span id="taskscreated_datecreated"></span></p>
 				<p class="element-rmb"><b>Deadline: </b><span id="taskscreated_viewdeadline"></span></p>
 				<p><b>Instructions: </b><span id="taskscreated_instructions"></span></p>
-				
+			
+			<div class="dimmable">
+				<div class="ui dimmer" id="viewcreatedtask_table_loading">
+					<div class="ui text loader">Retrieving Users</div>
+				</div>
+									
+				<table class="ui compact selectable table" id="viewcreatedtask_table">
+					<thead>
+						<tr>
+							<th>Assigned To</th>
+							<th>Document Title</th>
+							<th>Upload Date</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody id="viewcreatedtask_tablebody"></tbody>		
+				</table>	
+			</div>	
 				
 			</div>
 			<div class="actions center-text">
 				<button class="ui ok secondary button">Close</button>
 			</div>
 		</div>
-		
+	
+	<% } %>
+	
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">
 			<div class="header">

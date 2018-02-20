@@ -5,6 +5,7 @@
 	
 	$(document).ready(() => {
 		$('#taskscreated_segment').hide();
+		retrieveCategory('#mytask_category');
 		retrieveMyTasks();
 		
 		submitMyTask();
@@ -13,14 +14,24 @@
 /* 
  * VARIABLES
  */
+	// checkers
 	var isNewlyLoadedPageTC = true;
 	var isNewlyLoadedPageMT = true;
 	var isNewlyLoadedDirectory = true;
+	var isCategoryNotEmpty = false;
+	
+	// local data variables
 	var localMyTasksData;
 	var localCreatedTasksData;
+	var localCategoriesData;
+	var localAssignedTasksData;
+	
+	// table references
 	var myTasksTable;
 	var createdTasksTable;
 	var directoryTable;
+	var assignedToTasksTable;
+	
 	var today = new Date();
 	
 /*
@@ -45,7 +56,7 @@
 		
 	/* DATE FORMAT FOR yyyy/MM/dd HH:mm:ss */
 	var datetimeFormat = {
-		// not yet working :(
+		
 		date: function (date, settings) {
 			if (!date) return '';
 		    var day = date.getDate() + '';
@@ -57,15 +68,30 @@
 		        month = '0' + month;
 		    }
 		    var year = date.getFullYear();
-		    var hour = date.getHour();
-		    var minute = date.getMinute();
-		    console.log('time: ' + hour + ":" + minute + ":00");
-		    return year + '-' + month + '-' + day + ' ' + hour + ":" + minute + ":00";
-		}
+		    return year + '-' + month + '-' + day;
+		    
+		},
+	// not yet working :(
+//		time: function (date, settings, forCalendar) {
+//		    var hour = date.getHours() + '';
+//		    if(hour.length < 2) {
+//		    	hour = '0' + hour;
+//		    }
+//		    var minute = date.getMinutes();
+//		    if(minute.length < 2) {
+//		    	minute = '0' + minute;
+//		    }
+//		    var seconds = date.getSeconds();
+//		    if(seconds.length < 2) {
+//		    	seconds = '0' + seconds;
+//		    }
+//		    return hour + ":" + minute + ":" + seconds;
+//		}
+
 	};
 
 /*
- * FUNCTIONS
+ * FUNCTIONS - MY TASKS
  */
 	
 	/* GET - My Tasks */
@@ -118,55 +144,6 @@
 		isNewlyLoadedPageMT = false;
 	}
 	
-	/* GET - Tasks Created */
-	function retrieveTasksCreated() {
-		addCSSClass('#taskscreated_loading', 'active');	
-		
-		$.get(getContextPath() + '/TasksCreated', (responseData) => {
-			if(!responseData.length == 0) 
-			{
-				localCreatedTasksData = responseData;
-				$.each(responseData, (index, mytask) => {
-					$('<tr id="'+index+'">').appendTo('#taskscreated_tablebody')		
-						.append($('<td>').text(mytask.title))
-						.append($('<td>').text(mytask.dateCreated))
-						.append($('<td>').text(mytask.deadline))
-						.append($('<td>').text(mytask.category))
-						.append($('<td>').text(mytask.status))
-				});
-				
-				// bind events and classes to the table after all data received
-				createdTasksTable = $('#taskscreated_table').DataTable({
-					'order': [[0, 'asc'], [1, 'asc'], [2, 'asc']]
-				});
-				removeCSSClass('#taskscreated_loading', 'active');	
-			} 
-			else if(responseData.length == 0)
-			{
-				$('<tr>').appendTo('#taskscreated_tablebody')
-					.append($('<td class="center-text" colspan="5">')
-							.text("You do not have tasks you created. Click on 'Add Task' to add one."));
-				removeCSSClass('#taskscreated_loading', 'active');	
-			}
-			else
-			{
-				$('<tr>').appendTo('#taskscreated_tablebody')
-				.append($('<td class="center-text error" colspan="5">')
-						.text("Unable to retrieve list of the tasks you created. :("));
-				removeCSSClass('#taskscreated_loading', 'active');
-				callFailRequestModal();
-			}
-		})
-		.fail((response) => {
-			$('<tr>').appendTo('#taskscreated_tablebody')
-			.append($('<td class="center-text error" colspan="5">')
-					.text("Unable to retrieve list of the tasks you created. :("));
-			removeCSSClass('#taskscreated_loading', 'active');
-			callFailRequestModal();
-		});
-		isNewlyLoadedPageTC = false;
-	}
-	
 	/* GET - Submission of My Task */
 	function getMyTaskSubmission(id) {
 		addCSSClass('#mytask_submissiondetails_loading', 'active');
@@ -199,11 +176,6 @@
 		});
 	}
 	
-	/* GET - Category List */
-	function getCategoryList(categoryField) {
-		
-	}
-	
 	/* SUBMIT - My Task */
 	function submitMyTask() {
 		 $('#mytask_form').submit(() => {
@@ -229,15 +201,14 @@
 	     });
 	}
 	
-	
 	/* SELECT ROW - MY TASK TABLE */
 	function selectMyTaskRow() {
 	    $('#mytasks_table tbody').on('dblclick', 'tr', function () {
 	    	getMyTaskData($(this).attr('id'));
 	    	$(this).toggleClass('active');
 	    	$('#mytask_dialog').modal({
-				blurring: true,
 				closable: false,
+				observeChanges: true,
 				onHidden: () => {
 					removeCSSClass('#mytask_form', 'loading');
 					$('#viewmytask_close').prop("disabled", "");
@@ -280,23 +251,168 @@
 	}
 
 /*
+ *  FUNCTIONS - TASK CREATED
+ */
+	
+	/* GET - Tasks Created */
+	function retrieveTasksCreated() {
+		addCSSClass('#taskscreated_loading', 'active');	
+		
+		$.get(getContextPath() + '/TasksCreated', (responseData) => {
+			if(!responseData.length == 0) 
+			{
+				localCreatedTasksData = responseData;
+				$.each(responseData, (index, mytask) => {
+					$('<tr id="'+index+'">').appendTo('#taskscreated_tablebody')		
+						.append($('<td>').text(mytask.title))
+						.append($('<td>').text(mytask.dateCreated))
+						.append($('<td>').text(mytask.deadline))
+						.append($('<td>').text(mytask.category))
+						.append($('<td>').text(mytask.status))
+				});
+				
+				// bind events and classes to the table after all data received
+				createdTasksTable = $('#taskscreated_table').DataTable({
+					'order': [[0, 'asc'], [1, 'asc'], [2, 'asc']]
+				});
+				selectTaskCreatedRow();
+				removeCSSClass('#taskscreated_loading', 'active');	
+			} 
+			else if(responseData.length == 0)
+			{
+				$('<tr>').appendTo('#taskscreated_tablebody')
+					.append($('<td class="center-text" colspan="5">')
+							.text("You do not have tasks you created. Click on 'Add Task' to add one."));
+				removeCSSClass('#taskscreated_loading', 'active');	
+			}
+			else
+			{
+				$('<tr>').appendTo('#taskscreated_tablebody')
+				.append($('<td class="center-text error" colspan="5">')
+						.text("Unable to retrieve list of the tasks you created. :("));
+				removeCSSClass('#taskscreated_loading', 'active');
+				callFailRequestModal();
+			}
+		})
+		.fail((response) => {
+			$('<tr>').appendTo('#taskscreated_tablebody')
+			.append($('<td class="center-text error" colspan="5">')
+					.text("Unable to retrieve list of the tasks you created. :("));
+			removeCSSClass('#taskscreated_loading', 'active');
+			callFailRequestModal();
+		});
+		isNewlyLoadedPageTC = false;
+	}
+	
+	/* SELECT ROW - TASK CREATED TABLE */
+	function selectTaskCreatedRow() {
+	    $('#taskscreated_table tbody').on('dblclick', 'tr', function () {
+	    	populateCreatedTasksDetails($(this).attr('id'));
+	    	$(this).toggleClass('active');
+	    	$('#taskscreated_dialog').modal({
+				closable: false,
+				allowMultiple: true,
+				observeChanges: true,
+				onHidden: () => {
+					$(this).toggleClass('active');
+				}
+			}).modal('show');
+	    });
+	}
+	
+	/* SET - Populate the Task Created Details */
+	function populateCreatedTasksDetails(id) {
+		var data = localCreatedTasksData[id];
+		retrieveAssignedTasks(data['id']);
+		$('#taskscreated_viewstatus').text(data['status']);
+		$('#taskscreated_title').text(data['title']);
+		$('#taskscreated_viewcategory').text(data['category']);
+		$('#taskscreated_datecreated').text(data['dateCreated']);
+		$('#taskscreated_viewdeadline').text(data['deadline']);
+		$('#taskscreated_instructions').text(data['instructions']);	
+	}
+	
+	/* GET - Assigned Tasks */
+	function retrieveAssignedTasks(id) {
+		addCSSClass('#viewcreatedtask_table_loading', 'active');
+		$('#viewcreatedtask_tablebody').empty();
+		
+		var data = {
+			id: id
+		}
+		
+		$.post(getContextPath() + '/RetrieveAssignedToTasks', $.param(data), (responseJson) => {
+			if(!responseJson.length == 0)
+			{
+				localAssignedTasksData = responseJson;
+				$.each(responseJson, (index, taskassign) => {
+					$('<tr id="'+index+'">').appendTo('#viewcreatedtask_tablebody')		
+						.append($('<td>').text(taskassign.name + ' ('+taskassign.email+')'))
+						.append($('<td>').text(taskassign.title))
+						.append($('<td>').text(taskassign.dateUploaded))
+						.append($('<td>').text(taskassign.status))
+				});
+				
+				// bind events and classes to the table after all data received
+				assignedToTasksTable = $('#viewcreatedtask_table').DataTable({
+					'order': [[0, 'asc']]
+				});
+				// row selection
+				removeCSSClass('#viewcreatedtask_table_loading', 'active');	
+			}
+			else if(responseJson.legth == 0)
+			{
+				$('<tr>').appendTo('#viewcreatedtask_tablebody')
+				.append($('<td class="center-text" colspan="4">')
+						.text("You did not assign the task to anyone. Click on Edit Task to assign to a user."));
+				removeCSSClass('#viewcreatedtask_table_loading', 'active');
+			}
+			else
+			{
+				$('<tr>').appendTo('#viewcreatedtask_tablebody')
+				.append($('<td class="center-text" colspan="4">')
+						.text("Unable to retrieved tasks assigned."));
+				removeCSSClass('#viewcreatedtask_table_loading', 'active');
+			}
+		})
+		.fail ((response) => {
+			$('<tr>').appendTo('#viewcreatedtask_tablebody')
+			.append($('<td class="center-text" colspan="4">')
+					.text("Unable to retrieved tasks assigned."));
+			removeCSSClass('#viewcreatedtask_table_loading', 'active');
+		});
+	}
+/*
  *  TASKS CREATED - ADD TASK
  */
 	/* OPEN MODAL - Add Task */
 	$('#taskscreated_addtask_btn').click(() => {
 		$('#addtask_dialog').modal({
-			blurring: true,
 			closable: false,
-			allowMultiple: true
+			observeChanges: true,
+			onShow: () => {
+				/* INITIALIZE - Calendar Input */
+				$('#addtask_deadline_calendar').calendar({
+					minDate: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+					ampm: false,
+					formatter: datetimeFormat
+				});
+				populateCategory('#addtask_category');
+			}
 		}).modal('show');
+	});
+	
+	/* CLOSE MODAL - Add Task */
+	$('#addtask_cancel').click(() => {
+		//console.log('This shit was clicked');
+		//$('#directory_dialog').modal('hide');
 	});
 	
 	/* OPEN MODAL - Directory */
 	$('#addtask_directory').click(() => {
 		$('#directory_dialog').modal({
-			blurring: true,
 			closable: false,
-			allowMultiple: true,
+			observeChanges: true,
 			onShow: () => {
 				if(isNewlyLoadedDirectory) 
 				{
@@ -304,8 +420,8 @@
 					getListOfUsers();
 				}
 			},
-			onHide: () => {
-				
+			onHidden: () => {
+				$('#addtask_dialog').modal('show');
 			}
 		}).modal('show');
 	});
@@ -325,12 +441,6 @@
 		// in the assigned_to array, slice the string separated by ";", then push each data
 	});
 
-	/* INITIALIZE - Calendar Input */
-	$('#addtask_deadline_calendar').calendar({
-		minDate: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
-		ampm: false,
-		formatter: datetimeFormat
-	});
 	
 /*
  *  TASK CREATED - Directory 
@@ -387,9 +497,6 @@
 		    $('#directory_usercount').text(directoryTable.rows('.active').data().length);
 		});
 	}
-	
-	
-	
 
 /*
  * SEARCH FUNCTIONS - MY TASKS
@@ -427,6 +534,49 @@
 		$('#mytask_status').dropdown('restore defaults');
 	}
 
+/*
+ *  CATEGORY FUNCTIONS
+ */
+	/* GET CATEGORIES */
+	function retrieveCategory(categoryDropdown) {
+		$.get(getContextPath() + '/RetrieveCategory', (responseList) => {
+			if(!responseList.length == 0)
+			{
+				localCategoriesData = responseList;
+				isCategoryNotEmpty = true;
+				populateCategory(categoryDropdown);
+			}
+			else if(responseList.length == 0)
+			{
+				localCategoriesData = ['Category List Empty.'];
+				populateCategory(categoryDropdown);
+			}
+			else
+			{
+				callFailModal('Retrieve Category List Error', 'We are unable to retrieve the category list. ');
+			}
+			})
+			.fail((response) => {
+				callFailModal('Retrieve Category List Error', 'We are unable to retrieve the category list. ');
+			});
+		}
+		
+	/* POPULATE CATEGORY */
+	function populateCategory(categoryDropdown) {
+		if(isCategoryNotEmpty) {
+			$(categoryDropdown).empty();
+			$(categoryDropdown).append($('<option value="">').text('Category'));
+			$.each(localCategoriesData, (index, stringData) => {
+				$(categoryDropdown).append($('<option value="'+stringData+'">').text(stringData));
+			});
+		}
+		else {
+			$(categoryDropdown).empty();
+			$(categoryDropdown).append($('<option value="">').text(localCategoriesData[0]));
+		}
+		$(categoryDropdown).dropdown();
+	}
+		
 /*
 * SEARCH FUNCTIONS - CREATED TASKS
 */
@@ -499,26 +649,24 @@
 	
 	/* SWTICH TABLE */
 	function switchTaskTable(openTaskCreated) {
-		if(openTaskCreated)
-		{
+		if(openTaskCreated) {
 			$('#taskscreated_segment').show();
 			$('#mytasks_segment').hide();
 			
-			if(isNewlyLoadedPageTC) 
-			{ 
+			if(isNewlyLoadedPageTC) { 
 				retrieveTasksCreated();
 				isNewlyLoadedPageTC = false;
 			}
+			populateCategory('#taskscreated_category');
 		}
-		else
-		{
+		else {
 			$('#mytasks_segment').show();
 			$('#taskscreated_segment').hide();
 			
-			if(isNewlyLoadedPageMT) 
-			{
+			if(isNewlyLoadedPageMT) {
 				retrieveMyTasks();
 				isNewlyLoadedPageMT = false;
 			}
+			populateCategory('#mytask_category');
 		}
 	}

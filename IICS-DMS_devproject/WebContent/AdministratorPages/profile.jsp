@@ -1,5 +1,9 @@
+<%@page import="com.ustiics_dms.model.Account"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8"%>
 
+<%
+	Account acc = (Account) session.getAttribute("currentCredentials");
+%> 
 <!DOCTYPE html>
 <html>
 	<head>
@@ -24,8 +28,8 @@
 				<h5 class="ui header ">
 					<i class="large user circle icon user-account-color"></i>
 					<div class="content user-account-color">
-						Admin
-						<div class="sub header user-accountsub-color">Administrator</div>
+						<%= acc.getFullName() %>
+						<div class="sub header user-accountsub-color"><%= acc.getUserType() %></div>
 					</div>
 				</h5>
 			</a>
@@ -63,8 +67,8 @@
 						<h5 class="ui header">
 						  <i class="large user circle icon user-account-color"></i>
 						  <div class="content user-account-color">
-						    Admin
-						    <div class="sub header user-accountsub-color">Administrator</div>
+						    <%= acc.getFullName() %>
+						    <div class="sub header user-accountsub-color"><%= acc.getUserType() %></div>
 						  </div>
 						</h5>
 					</a>
@@ -79,13 +83,13 @@
 				<div class="ui center aligned eight wide computer eight wide table sixteen wide mobile column">
 					<h2 class="ui icon header">
 						<i class="circular user icon"></i>
-						<div class="content">Admin</div>
-						<div class="sub header">Administrator</div>
+						<div class="content"><% acc.getFullName(); %></div>
+						<div class="sub header"><% acc.getUserType(); %></div>
 					</h2><br>
 					
 					<div class="ui red mini statistic">
 						<div class="value">
-							2014123456
+							<%= acc.getFacultyNumber() %>
 						</div>
 						<div class="label">
 							Faculty No.
@@ -94,7 +98,7 @@
 					
 					<div class="ui red mini statistic">
 						<div class="value">
-							administratoriics@ust-ics.mygbiz.com
+							<%= acc.getEmail() %>
 						</div>
 						<div class="label">
 							Email Address

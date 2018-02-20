@@ -1,5 +1,10 @@
+<%@page import="com.ustiics_dms.model.Account"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8"%>
 
+<%
+	Account acc = (Account) session.getAttribute("currentCredentials");
+	String userType = acc.getUserType();
+%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -24,8 +29,8 @@
 				<h5 class="ui header ">
 					<i class="large user circle icon user-account-color"></i>
 					<div class="content user-account-color">
-						Jeddi Boi
-						<div class="sub header user-accountsub-color">Department Head</div>
+						<%= acc.getFullName() %>
+						<div class="sub header user-accountsub-color"><%= acc.getUserType() %></div>
 					</div>
 				</h5>
 			</a>
@@ -47,31 +52,39 @@
 		    <div class="item">
 		   		Mail
 		   		<div class="menu">
-			    	<a class="item" href="mail/newmail.jsp">
-			    		<i class="large mail icon side"></i>Create Mail
+	<% if(!userType.equalsIgnoreCase("Staff")) { %>
+			    	<a class="item" href="${pageContext.request.contextPath}/mail/newmail.jsp">
+			    		<i class="large write icon side"></i>Create Mail
 			    	</a>
-			    	<a class="item" href="mail/inbox.jsp">
+	<%  } %>
+			    	<a class="item" href="${pageContext.request.contextPath}/mail/inbox.jsp">
 			    		<i class="large inbox icon side"></i>Inbox
 			    	</a>
-			    	<a class="item" href="mail/sentmail.jsp">
+	<% if(!userType.equalsIgnoreCase("Faculty") && !userType.equalsIgnoreCase("Staff")) { %>
+			    	<a class="item" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
-			    	<a class="item" href="mail/requests.jsp">
+	<%  } %>
+	<% if(!userType.equalsIgnoreCase("Staff")) { %>
+			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
 			    		<i class="large exchange icon side"></i>Requests
 			    	</a>
-			    	<a class="item" href="mail/viewmemoletter.jsp">
+			    	<a class="item" href="${pageContext.request.contextPath}/mail/viewmemoletter.jsp">
 			    		<i class="large open envelope icon side"></i>View All Memos/Letters
 			    	</a>
+	<%  } %>
 		    	</div>
 		    </div>
+	<% if(!userType.equalsIgnoreCase("Faculty") && !userType.equalsIgnoreCase("Staff")) { %>
 			<div class="item">
 		   		Reports
 		   		<div class="menu">
-			    	<a class="item" href="reports/semestralstats.jsp">
+			    	<a class="item" href="${pageContext.request.contextPath}/reports/semestralstats.jsp">
 			    		<i class="large bar chart icon side"></i>Semestral Statistics
 			    	</a>
 		    	</div>
 		    </div>
+	<%  } %>
 		    <a class="item mobile only" id="logout_btn2">
 		      <i class="large power icon side"></i>Logout
 		    </a>
@@ -94,8 +107,8 @@
 						<h5 class="ui header">
 						  <i class="large user circle icon user-account-color"></i>
 						  <div class="content user-account-color">
-						    Jeddi Boi
-						    <div class="sub header user-accountsub-color">Department Head</div>
+						    <%= acc.getFullName() %>
+						    <div class="sub header user-accountsub-color"><%= acc.getUserType() %></div>
 						  </div>
 						</h5>
 					</a>
@@ -113,14 +126,17 @@
 				<div class="ui center aligned eight wide computer eight wide table sixteen wide mobile column">
 					<h2 class="ui icon header">
 						<i class="circular user icon"></i>
-						<div class="content">Jeddi Boi</div>
-						<div class="sub header">Department Head</div>
-						<div class="sub header">Computer Science Department</div> <!-- NOTE: APPEND 'DEPARTMENT' -->
+						<div class="content"><%= acc.getFullName() %></div>
+						<div class="sub header"><%= acc.getUserType() %></div>
+				<% if(!userType.equalsIgnoreCase("Director") && !userType.equalsIgnoreCase("Faculty Secretary") 
+					&& !userType.equalsIgnoreCase("Staff")) { %>	
+						<div class="sub header"><%= acc.getDepartment() %> Department</div>
+				<% } %>
 					</h2><br>
 					
 					<div class="ui red mini statistic">
 						<div class="value">
-							2014123456
+							<%= acc.getFacultyNumber() %>
 						</div>
 						<div class="label">
 							Faculty No.
@@ -129,7 +145,7 @@
 					
 					<div class="ui red mini statistic">
 						<div class="value">
-							jeddiboi@ust-ics.mygbiz.com
+							<%= acc.getEmail() %>
 						</div>
 						<div class="label">
 							Email Address

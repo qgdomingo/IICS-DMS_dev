@@ -1,5 +1,10 @@
+<%@page import="com.ustiics_dms.model.Account"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8"%>
 
+<%
+	Account acc = (Account) session.getAttribute("currentCredentials");
+	String userType = acc.getUserType();
+%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -24,8 +29,8 @@
 				<h5 class="ui header ">
 					<i class="large user circle icon user-account-color"></i>
 					<div class="content user-account-color">
-						Jeddi Boi
-						<div class="sub header user-accountsub-color">Department Head</div>
+						<%= acc.getFullName() %>
+						<div class="sub header user-accountsub-color"><%= acc.getUserType() %></div>
 					</div>
 				</h5>
 			</a>
@@ -53,7 +58,7 @@
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/inbox.jsp">
 			    		<i class="large inbox icon side"></i>Inbox
 			    	</a>
-			    	<a class="item active" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
+			    	<a class="item" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
@@ -94,8 +99,8 @@
 						<h5 class="ui header">
 						  <i class="large user circle icon user-account-color"></i>
 						  <div class="content user-account-color">
-						    Jeddi Boi
-						    <div class="sub header user-accountsub-color">Department Head</div>
+						    <%= acc.getFullName() %>
+						    <div class="sub header user-accountsub-color"><%= acc.getUserType() %></div>
 						  </div>
 						</h5>
 					</a>

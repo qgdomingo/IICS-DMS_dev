@@ -29,22 +29,21 @@ public class RetrieveCategory extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<String> sources = new ArrayList<String>();
+		List<String> category = new ArrayList<String>();
 	    response.setCharacterEncoding("UTF-8");
 		
-	    HttpSession session = request.getSession();
-	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
+			
+		    HttpSession session = request.getSession();
+		    Account acc = (Account) session.getAttribute("currentCredentials");
 			
 			ResultSet categoryList = (ResultSet) CategoryFunctions.getCategoryList();
 			
 			while(categoryList.next())
 			{
-				
-					sources.add(categoryList.getString("category_name"));	
-				
+				category.add(categoryList.getString("category_name"));		
 			}
-			String json = new Gson().toJson(sources);
+			String json = new Gson().toJson(category);
 			
 		    response.setContentType("application/json");
 		    response.setStatus(HttpServletResponse.SC_OK);

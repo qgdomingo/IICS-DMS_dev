@@ -103,7 +103,7 @@ public class ManageTasksFunctions {
 	public static ResultSet getTask(String id) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT id, name, email, title, file_name, file_data, description, "
+			PreparedStatement prep = con.prepareStatement("SELECT id, email, name, title, file_name, description, "
 					+ "upload_date, status FROM tasks_assigned_to WHERE id = ?");
 			prep.setString(1, id);
 			ResultSet rs = prep.executeQuery();
