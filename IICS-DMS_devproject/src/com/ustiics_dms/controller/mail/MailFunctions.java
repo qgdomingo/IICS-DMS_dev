@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import com.ustiics_dms.databaseconnection.DBConnect;
@@ -124,6 +126,18 @@ public class MailFunctions {
 			return rs;
 	}
 	
+	public static ResultSet getRequesterMail(String email) throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("SELECT * FROM request WHERE sent_by = ?");
+			
+			prep.setString(1, email);
+			ResultSet rs = prep.executeQuery();
+		
+
+			return rs;
+	}
+	
 	public static void approveRequestMail(String id) throws SQLException
 	{
 			
@@ -166,16 +180,88 @@ public class MailFunctions {
 			prep.executeUpdate();
 			
 	}
-	
-	public static void editRequest(String editedMessage, String id) throws SQLException
+	// to be updated
+	public static void editRequestNote(String editedNote, String id) throws SQLException
 	{
 
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("UPDATE request SET message = ? WHERE id = ?");
-			prep.setString(1, editedMessage);
+			PreparedStatement prep = con.prepareStatement("UPDATE request SET note = ? WHERE id = ?");
+			
+			prep.setString(1, editedNote);
 			prep.setString(2, id);
 			
 			prep.executeUpdate();
 			
+	}
+	
+	public static void updateReadTimeStamp(String emailID, String email) throws SQLException
+	{
+		if(hasRead(emailID,email))
+		{
+			String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("UPDATE sent_mail_to SET acknowledgement = ?, time_read = ? WHERE id = ? AND recipient_mail = ?");
+			prep.setString(1, "Read");
+			prep.setString(2, timeStamp);
+			prep.setString(3, emailID);
+			prep.setString(4, email);
+			
+			prep.executeUpdate();
+		}
+			
+	}
+	
+	public static void updateAcknowledgeTimeStamp(String emailID, String email) throws SQLException
+	{
+		if(hasAcknowledged(emailID,email))
+		{
+			String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("UPDATE sent_mail_to SET acknowledgement = ?, time_acknowledged = ? WHERE id = ? AND recipient_mail = ?");
+			prep.setString(1, "Acknowledged");
+			prep.setString(2, timeStamp);
+			prep.setString(3, emailID);
+			prep.setString(4, email);
+			
+			prep.executeUpdate();
+		}
+	}
+	
+	public static boolean hasRead(String id, String email) throws SQLException
+	{
+			boolean result = true;
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("SELECT acknowledgement FROM sent_mail_to WHERE id = ? AND recipient_mail = ?");
+			prep.setString(1, id);
+			prep.setString(2, email);
+			
+			ResultSet rs = prep.executeQuery();
+		
+			if(rs.getString("acknowledgement").equals("Read"))
+			{
+				result = false;
+			}
+			
+			return result;
+	}
+	
+	public static boolean hasAcknowledged(String id, String email) throws SQLException
+	{
+			boolean result = true;
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("SELECT acknowledgement FROM sent_mail_to WHERE id = ? AND recipient_mail = ?");
+			prep.setString(1, id);
+			prep.setString(2, email);
+			
+			ResultSet rs = prep.executeQuery();
+		
+			if(rs.getString("acknowledgement").equals("Acknowledged"))
+			{
+				result = false;
+			}
+			
+			return result;
 	}
 }

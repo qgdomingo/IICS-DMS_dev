@@ -1,4 +1,4 @@
-package com.ustiics_dms.controller.retrievedocument;
+package com.ustiics_dms.controller.mail;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -15,47 +15,46 @@ import javax.servlet.http.HttpSession;
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.model.Account;
-import com.ustiics_dms.model.OutgoingDocument;
+import com.ustiics_dms.model.Mail;
 
 
-@WebServlet("/OutgoingDocument")
-public class OutgoingDocuments extends HttpServlet {
+@WebServlet("/RetrieveRequesterMail")
+public class RetrieveRequesterMail extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 
-    public OutgoingDocuments() {
+    public RetrieveRequesterMail() {
         super();
-
     }
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		List<OutgoingDocument> outgoingFiles = new ArrayList<OutgoingDocument>();
+
+		List<Mail> mail = new ArrayList<Mail>();
 	    response.setCharacterEncoding("UTF-8");
 		
 	    HttpSession session = request.getSession();
 	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
-			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveDocuments("Outgoing", acc.getDepartment());
-			while(documentFiles.next()) 
-			{ 
-				outgoingFiles.add(new OutgoingDocument(
-						documentFiles.getString("type"),
-						documentFiles.getString("thread_number"),
-						documentFiles.getString("source_recipient"),
-						documentFiles.getString("title"),
-						documentFiles.getString("category"),
-						documentFiles.getString("file_name"),
-						documentFiles.getString("description"),
-						documentFiles.getString("created_by"),
-						documentFiles.getString("email"),
-						documentFiles.getString("time_created"),
-						documentFiles.getString("department")
-						 ));	
+			
+	
+				ResultSet inboxInfo = (ResultSet) MailFunctions.getRequesterMail(acc.getEmail());
 				
-			}
-			String json = new Gson().toJson(outgoingFiles);
+				while(inboxInfo.next())
+				{ 
+					mail.add(new Mail(
+							inboxInfo.getString("id"),
+							inboxInfo.getString("type"),
+							inboxInfo.getString("external_recipient"),
+							inboxInfo.getString("subject"),
+							inboxInfo.getString("message"),
+							inboxInfo.getString("sender_name"),
+							inboxInfo.getString("sent_by"),
+							inboxInfo.getString("date_created")
+							 ));	
+				}
+			
+			String json = new Gson().toJson(mail);
 			
 		    response.setContentType("application/json");
 		    response.setStatus(HttpServletResponse.SC_OK);
@@ -70,6 +69,7 @@ public class OutgoingDocuments extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		
 	}
 
 }
