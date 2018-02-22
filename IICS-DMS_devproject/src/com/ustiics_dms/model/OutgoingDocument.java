@@ -4,7 +4,6 @@ public class OutgoingDocument {
 
 	private String type;
 	private String threadNumber;
-	private String referenceNo;
 	private String sourceRecipient;
 	private String title;
 	private String category;
@@ -15,13 +14,12 @@ public class OutgoingDocument {
 	private String timeCreated;
 	private String department;
 	
-	public OutgoingDocument(String type, String threadNumber, String referenceNo, String sourceRecipient, String title,
+	public OutgoingDocument(String type, String threadNumber, String sourceRecipient, String title,
 			String category, String fileName, String description, String createdBy, String email, String timeCreated,
 			String department) {
 		super();
 		this.type = type;
 		this.threadNumber = threadNumber;
-		this.referenceNo = referenceNo;
 		this.sourceRecipient = sourceRecipient;
 		this.title = title;
 		this.category = category;
@@ -47,14 +45,6 @@ public class OutgoingDocument {
 
 	public void setThreadNumber(String threadNumber) {
 		this.threadNumber = threadNumber;
-	}
-
-	public String getReferenceNo() {
-		return referenceNo;
-	}
-
-	public void setReferenceNo(String referenceNo) {
-		this.referenceNo = referenceNo;
 	}
 
 	public String getSourceRecipient() {

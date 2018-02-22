@@ -31,10 +31,10 @@ public class EditRequestMail extends HttpServlet {
 		
 		try {
 			
-			String editedNote = request.getParameter("editedNote");
+			String editedNote =  request.getParameter("editedNote");
 			String requestId = request.getParameter("requestId");
 		
-			MailFunctions.editRequest(editedNote, requestId);
+			MailFunctions.editRequestNote(editedNote, requestId);
 		} catch (Exception e) {
 
 			e.printStackTrace();
