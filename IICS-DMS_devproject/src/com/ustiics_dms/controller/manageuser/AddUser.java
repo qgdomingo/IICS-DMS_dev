@@ -39,7 +39,8 @@ public class AddUser extends HttpServlet {
 		String userType = request.getParameter("user_type");
 		String department = request.getParameter("department");
 		
-		if(userType.equalsIgnoreCase("Director") || userType.equalsIgnoreCase("Faculty Secretary") || userType.equalsIgnoreCase("Staff"))
+		if(userType.equalsIgnoreCase("Director") || userType.equalsIgnoreCase("Faculty Secretary") 
+				|| userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff"))
 		{
 			department = "IICS";
 		}

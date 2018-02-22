@@ -4,6 +4,19 @@
 <%
 	Account acc = (Account) session.getAttribute("currentCredentials");
 	String userType = acc.getUserType();
+	
+	boolean restrictionCase1 = false;
+	boolean restrictionCase2 = false;
+	
+	// Restriction Case 1 - not allowed for Faculty, Supervisor and Staff
+	if(userType.equalsIgnoreCase("Faculty") || userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) { 
+		restrictionCase1 = true;
+	}
+	
+	// Restriction Case 2 - not allowed for Supervisor and Staff
+	if(userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) {
+		restrictionCase2 = true;
+	}
 %>
 <!DOCTYPE html>
 <html>
@@ -54,7 +67,7 @@
 		    <div class="item">
 		   		Mail
 		   		<div class="menu">
-	<% if(!userType.equalsIgnoreCase("Staff")) { %>
+	<% if(!restrictionCase2) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/newmail.jsp">
 			    		<i class="large write icon side"></i>Create Mail
 			    	</a>
@@ -62,12 +75,10 @@
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/inbox.jsp">
 			    		<i class="large inbox icon side"></i>Inbox
 			    	</a>
-	<% if(!userType.equalsIgnoreCase("Faculty") && !userType.equalsIgnoreCase("Staff")) { %>
+	<% if(!restrictionCase2) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
-	<%  } %>
-	<% if(!userType.equalsIgnoreCase("Staff")) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
 			    		<i class="large exchange icon side"></i>Requests
 			    	</a>
@@ -77,7 +88,7 @@
 	<%  } %>
 		    	</div>
 		    </div>
-	<% if(!userType.equalsIgnoreCase("Faculty") && !userType.equalsIgnoreCase("Staff")) { %>
+	<% if(!restrictionCase1) { %>
 			<div class="item">
 		   		Reports
 		   		<div class="menu">
@@ -126,475 +137,129 @@
 <!-- ACTUAL PAGE CONTENTS -->
 		
 		<!-- DOCUMENT TYPE SELECTOR FOR MOBILE // mobile only-->
-		<div class="">
+		<!-- <div class="">
 			<div class="field">
 				<label>View Document Type:</label>
 				<select class="ui fluid dropdown" id="doctype_select">
 				  	<option value="Personal">Personal</option>
-				<% if(!userType.equalsIgnoreCase("Faculty")) { %>
+				<% //if(!userType.equalsIgnoreCase("Faculty")) { %>
 				  	<option value="Incoming">Incoming</option>
 				  	<option value="Outgoing">Outgoing</option>
-				  	<!-- <option value="Archived">Archived</option>
-				  	<option value="All">All Documents</option>  -->
-				<% } %>
+				  	<option value="Archived">Archived</option>
+				  	<option value="All">All Documents</option>
+				<% //} %>
 				</select>
 			</div>
-		</div>
-			
+		</div>  -->
+		
+		
 		<!-- DOCUMENT TYPE SELECTOR FOR NON-MOBILE -->
-		<!-- <div class="mobile hidden">
+		<div class="mobile hidden">
 			<div class="ui secondary pointing menu">
-				<a class="item active" id="personaldocs_button">
+				<a class="item active" href="${pageContext.request.contextPath}/files/documents.jsp">
 					<i class="folder open icon"></i>
 					Personal
 				</a>
-				<a class="item" id="incomingdocs_button">
+			<% if(!userType.equalsIgnoreCase("Faculty")) { %>
+				<a class="item" href="${pageContext.request.contextPath}/files/incomingdocs.jsp">
 					<i class="folder icon"></i>
 					Incoming
 				</a>
-				<a class="item" id="outgoingdocs_button">
+				<a class="item" href="${pageContext.request.contextPath}/files/outgoingdocs.jsp">
 					<i class="folder icon"></i>
 					Outgoing
 				</a>
-				<a class="item" id="archiveddocs_button">
+				<a class="item" href="${pageContext.request.contextPath}/files/archivedocs.jsp">
 					<i class="folder icon"></i>
 					Archived
 				</a>
-				<a class="item" id="alldocs_button">
+				<a class="item" href="${pageContext.request.contextPath}/files/alldocs.jsp">
 					<i class="folder icon"></i>
 					All Files
 				</a>
+			<% } %>
 			</div>		
 		</div>
-		 -->
+		
 		<br>
 			
 		<!-- SEGMENT FOR PERSONAL DOCUMENTS -->
-			<div id="personaldocs_table">
-				<h2 class="ui dividing header">
-					<i class="user outline icon"></i>
-					<div class="content">Personal Documents</div>
-				</h2>
+		<div id="personaldocs_table">
+			<h2 class="ui dividing header">
+				<i class="user outline icon"></i>
+				<div class="content">Personal Documents</div>
+			</h2>
 			
-				<div class="ui segment">
-					<div class="ui dimmer" id="personal_loading">
-						<div class="ui text loader" >Retrieving Personal Documents</div>
-					</div>
-				
-					<!-- SEARCH AREA -->
-					<form class="ui form">
-						<div class="four fields">
-						
-							<!-- SEARCH BOX -->
-							<div class="field">
-								<div class="ui icon input">
-									<i class="search icon"></i>
-									<input type="text" placeholder="Seach Document" id="personal_search"/>
-								</div>
-							</div>
-							
-							<!-- UPLOAD FROM DATE BOX -->
-							<div class="field">
-								<div class="ui calendar" id="personal_uploadfrom_calendar">
-									<div class="ui icon input">
-										<input type="text" placeholder="Upload From" id="personal_uploadfrom"/>
-										<i class="calendar icon"></i>
-									</div>
-								</div>
-							</div>
-							
-							<!-- UPLOAD TO DATE BOX -->
-							<div class="field">
-								<div class="ui calendar" id="personal_uploadto_calendar">
-									<div class="ui icon input">
-										<input type="text" placeholder="Upload To" id="personal_uploadto"/>
-										<i class="calendar icon"></i>
-									</div>
-								</div>
-							</div>
-							
-							<!-- CATEGORY DROPDOWN -->
-							<div class="field">
-								<select class="ui fluid dropdown" id="personal_category">
-									<option value="">Category</option>
-									<option value="Course Grades">Course Grades</option>
-									<option value="Course Syllabus">Course Syllabus</option>
-									<option value="Research">Research</option>
-								</select>
-							</div>
-							
-							<!-- SEARCH BUTTON -->
-							<div class="field">
-								<button class="ui grey button" type="button" id="personal_clear">
-									Clear Search
-								</button>
-							</div>
-						</div>
-					</form>
-					
-					<!-- TABLE AREA -->
-					<table class="ui compact selectable table" id="personal_table">
-						<thead>
-							<tr>
-								<th>Document Title</th>
-								<th>Upload Timestamp</th>
-								<th>Category</th>
-							</tr>
-						</thead>
-						<tbody id="personal_tablebody"></tbody>			
-					</table>
-				</div>		
-			</div>
-		
-	<% if(!userType.equalsIgnoreCase("Faculty")) { %>	
-	
-		<!-- SEGMENT FOR INCOMING DOCUMENTS -->
-			<div id="incomingdocs_table">
-				<h2 class="ui dividing header">
-					<i class="sign in icon"></i>
-					<div class="content">
-						Incoming Documents
-						<div class="sub header">
-							Here lists all documents which have concerns to the institution.
-						</div>
-					</div>
-				</h2>
-				
-				<div class="ui segment">
-					<div class="ui dimmer" id="incoming_loading">
-						<div class="ui text loader" >Retrieving Incoming Documents</div>
-					</div>
-				
-					<!-- SEARCH AREA -->
-					<form class="ui form">
-						<div class="five fields">
-							<input type="hidden" value="Incoming"/>
-						
-							<!-- SEARCH BOX -->
-							<div class="field">
-								<div class="ui icon input">
-									<input type="text" placeholder="Seach Document" id="incoming_search"/>
-									<i class="search icon"></i>
-								</div>
-							</div>
-							
-							<!-- UPLOAD TIMESTAMP RANGE BOX -->
-							<div class="field">
-								<input type="text" placeholder="Upload Date"/>
-							</div>
-							
-							<!-- CATEGORY DROPDOWN -->
-							<div class="field">
-								<select class="ui fluid dropdown" name="category">
-									<option value="">Select Category..</option>
-									<option value="memo">Memo</option>
-									<option value="letter">Letter</option>
-								</select>
-							</div>
-							
-							<!-- ACTION REQUIRED DROPDOWN -->
-							<div class="field">
-								<select class="ui fluid dropdown">
-									<option value="">Select Action</option>
-									<option value="none">None</option>
-									<option value="appr">Approval</option>
-									<option value="endor">Endorsement</option>
-									<option value="resp">Response</option>
-								</select>
-							</div>
-							
-							<!-- STATUS DROPDOWN -->
-							<div class="field">
-								<select class="ui fluid dropdown" name="status">
-									<option value="">Select Status</option>
-									<option value="forwarded">Forwarded to Director</option>
-									<option value="received">Received by Director</option>
-									<option value="done">Done</option>
-								</select>
-							</div>
-							
-							<!-- SEARCH BUTTON -->
-							<div class="field">
-								<button class="ui grey button" type="button">
-									Search
-								</button>
-							</div>
-						</div>
-					</form>
-					
-					<!-- TABLE AREA -->
-					<table class="ui compact selectable sortable table">
-						<thead>
-							<tr>
-								<th>Document Title</th>
-								<th>Document Source</th>
-								<th>Upload Timestamp</th>
-								<th>Category</th>
-								<th>Action Required</th>
-								<th>Status</th>
-								<th>Reference No.</th>
-							</tr>
-						</thead>
-						<tr>
-							<td class="selectable"><a href="../index.jsp">
-								<i class="file icon"></i>
-								A Princess' Diary
-								</a>
-							</td>
-							<td>Princess Peach</td>
-							<td>12-12-2018 12:00:00</td>
-							<td>Werpa point</td>
-							<td>Response</td>
-							<td>Forwarded to Director</td>
-							<td>IN0069</td>
-						</tr>
-										
-					</table>
+			<div class="ui segment">
+				<div class="ui dimmer" id="personal_loading">
+					<div class="ui text loader" >Retrieving Personal Documents</div>
 				</div>
-			</div>
-			
-		<!-- AREA FOR OUTGOING DOCUMENTS -->
-			<div id="outgoingdocs_table">
-				<h2 class="ui dividing header">
-					<i class="sign out icon"></i>
-					<div class="content">
-						Outgoing Documents
-						<div class="sub header">
-							Here lists all documents which have concerns outside the institution.
-						</div>
-					</div>
-				</h2>
-			
+				
 				<!-- SEARCH AREA -->
 				<form class="ui form">
-					<div class="three fields">
-						<input type="hidden" name="doctype" value="Outgoing"/>
-					
+					<div class="four fields">
+						
 						<!-- SEARCH BOX -->
 						<div class="field">
 							<div class="ui icon input">
-								<input type="text" placeholder="Seach Document.."/>
 								<i class="search icon"></i>
+								<input type="text" placeholder="Seach Document" id="personal_search"/>
+							</div>
+						</div>
+							
+						<!-- UPLOAD FROM DATE BOX -->
+						<div class="field">
+							<div class="ui calendar" id="personal_uploadfrom_calendar">
+								<div class="ui icon input">
+									<input type="text" placeholder="Upload From" id="personal_uploadfrom"/>
+									<i class="calendar icon"></i>
+								</div>
 							</div>
 						</div>
 						
-						<!-- UPLOAD TIMESTAMP RANGE BOX -->
+						<!-- UPLOAD TO DATE BOX -->
 						<div class="field">
-							<input type="text" placeholder="Upload Timestamp"/>
+							<div class="ui calendar" id="personal_uploadto_calendar">
+								<div class="ui icon input">
+									<input type="text" placeholder="Upload To" id="personal_uploadto"/>
+									<i class="calendar icon"></i>
+								</div>
+							</div>
 						</div>
-						
+							
 						<!-- CATEGORY DROPDOWN -->
 						<div class="field">
-							<select class="ui fluid dropdown" name="category">
+							<select class="ui fluid dropdown" id="personal_category">
 								<option value="">Category</option>
-								<option value="memo">Memo</option>
-								<option value="letter">Letter</option>
+								<option value="Course Grades">Course Grades</option>
+								<option value="Course Syllabus">Course Syllabus</option>
+								<option value="Research">Research</option>
 							</select>
 						</div>
-						
+							
 						<!-- SEARCH BUTTON -->
 						<div class="field">
-							<button class="ui grey button" type="button">
-								Search
+							<button class="ui grey button" type="button" id="personal_clear">
+								Clear Search
 							</button>
-						</div>
-					</div>
-				</form>
-				
-				<!-- TABLE AREA -->
-				<table class="ui compact selectable sortable table">
-					<thead>
-						<tr>
-							<th>Document Title</th>
-							<th>Recipient</th>
-							<th>Upload Timestamp</th>
-							<th>Category</th>
-						</tr>
-					</thead>
-					<tr>
-						<td class="selectable"><a href="../index.jsp">
-							<i class="file icon"></i>
-							A Princess' Diary
-							</a>
-						</td>
-						<td>Princess Daisy</td>
-						<td>12-12-2018 12:00:00</td>
-						<td>Werpa point</td>
-					</tr>
-									
-				</table>
-				
-			</div>
-	
-		<!-- AREA FOR ARCHIVED DOCUMENTS -->
-			<div id="archiveddocs_table">
-				<h2 class="ui dividing header">
-					<i class="archive icon"></i>
-					<div class="content">
-						Archived Documents
-						<div class="sub header">
-							Here lists past documents which are now archived and enabled by the administrator.
-						</div>
-					</div>
-				</h2>
-			
-				<!-- SEARCH AREA -->
-				<form class="ui form">
-					<div class="five fields">
-					
-						<!-- SEARCH BOX -->
-						<div class="field">
-							<div class="ui icon input">
-								<input type="text" placeholder="Seach Document.."/>
-								<i class="search icon"></i>
 							</div>
 						</div>
-						
-						<!-- UPLOAD TIMESTAMP RANGE BOX -->
-						<div class="field">
-							<input type="text" placeholder="Upload Timestamp"/>
-						</div>
-						
-						<!-- DOCUMENT TYPE DROPDOWN -->
-						<div class="field">
-							<select class="ui fluid dropdown">
-					  			<option value="">Select Document Type</option>
-					  			<option value="Personal">Personal</option>
-					  			<option value="Incoming">Incoming</option>
-					  			<option value="Outgoing">Outgoing</option>
-							</select>
-						</div>
-						
-						<!-- CATEGORY DROPDOWN -->
-						<div class="field">
-							<select class="ui fluid dropdown" name="category">
-								<option value="">Select Category..</option>
-								<option value="memo">Memo</option>
-								<option value="letter">Letter</option>
-							</select>
-						</div>
-						
-						<!-- SEARCH BUTTON -->
-						<div class="field">
-							<button class="ui grey button" type="button">
-								Search
-							</button>
-						</div>
-					</div>
 				</form>
-				
-				<!-- TABLE AREA -->
-				<table class="ui compact selectable sortable table">
-					<thead>
-						<tr>
-							<th>Document Title</th>
-							<th>Uploader</th>
-							<th>Upload Timestamp</th>
-							<th>Document Type</th>
-							<th>Category</th>
-						</tr>
-					</thead>
-					<tr>
-						<td class="selectable"><a href="../index.jsp">
-							<i class="file icon"></i>
-							A Princess' Diary
-							</a>
-						</td>
-						<td>Mario</td>
-						<td>12-12-2018 12:00:00</td>
-						<td>Incoming</td>
-						<td>Werpa point</td>
-					</tr>
-									
-				</table>
-				
-			</div>
-			
-		<!-- AREA FOR ALL DOCUMENTS -->
-			<div id="alldocs_table">
-				<h2 class="ui dividing header">
-					<i class="server icon"></i>
-					<div class="content">
-						All Documents
-						<div class="sub header">
-							Here lists all document types except for archived documents.
-						</div>
-					</div>
-
-				</h2>
-			
-				<!-- SEARCH AREA -->
-				<form class="ui form">
-					<div class="five fields">
 					
-						<!-- SEARCH BOX -->
-						<div class="field">
-							<div class="ui icon input">
-								<input type="text" placeholder="Seach Document.."/>
-								<i class="search icon"></i>
-							</div>
-						</div>
-						
-						<!-- UPLOAD TIMESTAMP RANGE BOX -->
-						<div class="field">
-							<input type="text" placeholder="Upload Timestamp"/>
-						</div>
-						
-						<!-- DOCUMENT TYPE DROPDOWN -->
-						<div class="field">
-							<select class="ui fluid dropdown">
-					  			<option value="">Select Document Type</option>
-					  			<option value="Personal">Personal</option>
-					  			<option value="Incoming">Incoming</option>
-					  			<option value="Outgoing">Outgoing</option>
-							</select>
-						</div>
-						
-						<!-- CATEGORY DROPDOWN -->
-						<div class="field">
-							<select class="ui fluid dropdown" name="category">
-								<option value="">Select Category..</option>
-								<option value="memo">Memo</option>
-								<option value="letter">Letter</option>
-							</select>
-						</div>
-						
-						<!-- SEARCH BUTTON -->
-						<div class="field">
-							<button class="ui grey button" type="button">
-								Search
-							</button>
-						</div>
-					</div>
-				</form>
-				
 				<!-- TABLE AREA -->
-				<table class="ui compact selectable sortable table">
+				<table class="ui compact selectable table" id="personal_table">
 					<thead>
 						<tr>
 							<th>Document Title</th>
-							<th>Uploader</th>
 							<th>Upload Timestamp</th>
-							<th>Document Type</th>
 							<th>Category</th>
 						</tr>
 					</thead>
-					<tr>
-						<td class="selectable"><a href="../index.jsp">
-							<i class="file icon"></i>
-							A Princess' Diary
-							</a>
-						</td>
-						<td>Mario</td>
-						<td>12-12-2018 12:00:00</td>
-						<td>Incoming</td>
-						<td>Werpa point</td>
-					</tr>
-									
+					<tbody id="personal_tablebody"></tbody>			
 				</table>
-			</div>
-		<% } %>	
-	
+			</div>		
+		</div>
+			
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
 		
@@ -611,16 +276,14 @@
 				<p class="element-rmb"><b>Upload Date: </b><span id="viewpersonal_uploaddate"></span></p>
 				<p class="element-rmb"><b>Category: </b><span id="viewpersonal_category"></span></p>
 				<p class="element-rmb"><b>Document Type: </b><span id="viewpersonal_type"></span></p>
-				
-				<p class="element-rmb"><b>File: </b><span id="viewpersonal_file"></span>
-					<form method="GET" action="${pageContext.request.contextPath}/FileDownload">
-						<input type="hidden" name="id" id="viewpersonal_download_id">
-						<input type="hidden" name="type" id="viewpersonal_download_type">
-						<button class="ui small button" type="submit">View File</button>
-					</form>
-				</p>
-				
+				<p class="element-rmb"><b>File Name: </b><span id="viewpersonal_file"></span></p>
 				<p><b>Description: </b><span id="viewpersonal_description"></span></p>
+				
+				<form method="GET" action="${pageContext.request.contextPath}/FileDownload">
+					<input type="hidden" name="id" id="viewpersonal_download_id">
+					<input type="hidden" name="type" id="viewpersonal_download_type">
+					<button class="ui small fluid button" type="submit">View File</button>
+				</form>
 
 			</div>
 			<div class="actions center-text">
@@ -689,5 +352,5 @@
 	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/documents.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/documents/view_personal_documents.js"></script>
 </html>

@@ -4,6 +4,19 @@
 <%
 	Account acc = (Account) session.getAttribute("currentCredentials");
 	String userType = acc.getUserType();
+	
+	boolean restrictionCase1 = false;
+	boolean restrictionCase2 = false;
+	
+	// Restriction Case 1 - not allowed for Faculty, Supervisor and Staff
+	if(userType.equalsIgnoreCase("Faculty") || userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) { 
+		restrictionCase1 = true;
+	}
+	
+	// Restriction Case 2 - not allowed for Supervisor and Staff
+	if(userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) {
+		restrictionCase2 = true;
+	}
 %>
 <!DOCTYPE html>
 <html>
@@ -52,7 +65,7 @@
 		    <div class="item">
 		   		Mail
 		   		<div class="menu">
-	<% if(!userType.equalsIgnoreCase("Staff")) { %>
+	<% if(!restrictionCase2) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/newmail.jsp">
 			    		<i class="large write icon side"></i>Create Mail
 			    	</a>
@@ -60,12 +73,10 @@
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/inbox.jsp">
 			    		<i class="large inbox icon side"></i>Inbox
 			    	</a>
-	<% if(!userType.equalsIgnoreCase("Faculty") && !userType.equalsIgnoreCase("Staff")) { %>
+	<% if(!restrictionCase2) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
-	<%  } %>
-	<% if(!userType.equalsIgnoreCase("Staff")) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
 			    		<i class="large exchange icon side"></i>Requests
 			    	</a>
@@ -75,7 +86,7 @@
 	<%  } %>
 		    	</div>
 		    </div>
-	<% if(!userType.equalsIgnoreCase("Faculty") && !userType.equalsIgnoreCase("Staff")) { %>
+	<% if(!restrictionCase1) { %>
 			<div class="item">
 		   		Reports
 		   		<div class="menu">

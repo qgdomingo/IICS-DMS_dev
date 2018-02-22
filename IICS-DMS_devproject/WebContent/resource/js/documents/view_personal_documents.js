@@ -1,22 +1,20 @@
 /**
- * 
+ *  personal_view.js
+ *    - javascript used for scripting in viewing personal documents on documents.jsp
  */
 
-	$(document).ready(() => {	
-		//changeDocumentsTable('Personal');
-		changeDocumentsTable($('#doctype_select').val());
-	})
-	
+	$(document).ready(() => {
+		getPersonalDocuments();
+	});
+
 /*
  *  VARIABLES
  */
 	// For checking
-	var isNewlyLoadedPersonalDocs = true;
 	var isPersonalDocsTableEmpty = false;
 	
 	// Table References
 	var personalDocsTable;
-	var currentTableView;
 	
 	// Local Data
 	var localPersonalDocsData;
@@ -24,116 +22,15 @@
 	// For Search Functions
 	var minimumDate_personal;
 	var maximumDate_personal;
-	var minimumDate_incoming;
-	var maximumDate_incoming;
-	var minimumDate_outgoing;
-	var maximumDate_outgoing;
-	var minimumDate_archived;
-	var maximumDate_archived;
-	var minimumDate_all;
-	var maximumDate_all;
-/*
- *  FUNCTIONS AND EVENTS
- */
-	/* MOBILE MENU - Change Table Event */
-	$('#doctype_select').change(() => {
-		changeDocumentsTable($('#doctype_select').val());
-	});
-	
-	/* NON-MOBILE MENU - Change Table Event */
-	//$('.ui.secondary.pointing.menu > a').click(() => {
-		//removeCSSClass('.ui.secondary.pointing.menu > a.active > i', 'open');
-		//removeCSSClass('.ui.secondary.pointing.menu > a.active', 'active');
-		
-		//addCSSClass('.ui.secondary.pointing.menu > a.active > i', 'open');
-	//});
-	
-	/* SHOW TABLE */
-	function changeDocumentsTable(doctype) {
-		currentTableView = doctype;
-		if (doctype == 'Personal') {
-			if(isNewlyLoadedPersonalDocs) getPersonalDocuments();
-			$('#personaldocs_table').show();
-			$('#incomingdocs_table').hide();
-			$('#outgoingdocs_table').hide();
-			$('#archiveddocs_table').hide();
-			$('#alldocs_table').hide();
-		} else if(doctype == 'Incoming') {
-			$('#personaldocs_table').hide();
-			$('#incomingdocs_table').show();
-			$('#outgoingdocs_table').hide();
-			$('#archiveddocs_table').hide();
-			$('#alldocs_table').hide();
-		} else if(doctype == 'Outgoing') {
-			$('#personaldocs_table').hide();
-			$('#incomingdocs_table').hide();
-			$('#outgoingdocs_table').show();
-			$('#archiveddocs_table').hide();
-			$('#alldocs_table').hide();
-		} else if(doctype == 'Archived') {
-			$('#personaldocs_table').hide();
-			$('#incomingdocs_table').hide();
-			$('#outgoingdocs_table').hide();
-			$('#archiveddocs_table').show();
-			$('#alldocs_table').hide();
-		} else if(doctype == 'All') {
-			$('#personaldocs_table').hide();
-			$('#incomingdocs_table').hide();
-			$('#outgoingdocs_table').hide();
-			$('#archiveddocs_table').hide();
-			$('#alldocs_table').show();
-		}
-	}
 
 /*
- *  CALENDAR INPUT INITIALIZATIONS
-*/
-		
-	/* DATE FORMAT FOR yyyy/MM/dd */
-	var dateFormat = {
-		date: function (date, settings) {
-			return changeToDateFormat(date);
-		}
-	};
-	
-	/* CHANGE DATE FORMAT TO yyyy/MM/dd */ 
-	function changeToDateFormat(date) {
-		if (!date) return '';
-		var day = date.getDate() + '';
-		if (day.length < 2) {
-		   day = '0' + day;
-		}
-		var month = (date.getMonth() + 1) + '';
-		if (month.length < 2) {
-		   month = '0' + month;
-		}
-		var year = date.getFullYear();
-		return year + '-' + month + '-' + day;
-	}
-
-/*
- *  DATE RANGE SEARCH INPUT FITLER
+ * FUNCTIONS
  */
-	$.fn.dataTable.ext.search.push(
-		function(settings, data, dataIndex) {
-			if(currentTableView == 'Personal') 
-				return filterDateRange(data, minimumDate_personal, maximumDate_personal);
-			else if(currentTableView == 'Incoming')
-				return filterDateRange(data, minimumDate_personal, maximumDate_personal);
-			else if(currentTableView == 'Outgoing')
-				return filterDateRange(data, minimumDate_personal, maximumDate_personal);
-			else if(currentTableView == 'Archived')
-				return filterDateRange(data, minimumDate_personal, maximumDate_personal);
-			else if(currentTableView == 'All')
-				return filterDateRange(data, minimumDate_personal, maximumDate_personal);
-			
-			return true
-		}
-	);
-	
+	 
+	/* CUSTOM SEARCH FILTER */
 	function filterDateRange(data, min, max) {
 		var dateData = new Date( data[1] ).getTime(); 
-		
+			
 		if ( ( isNaN(min) && isNaN(max) ) ||
 		     ( isNaN(min) && dateData <= max ) ||
 		     ( min <= dateData && isNaN(max) ) ||
@@ -143,13 +40,18 @@
 		}
 		return false;
 	}
-/*
- *  PERSONAL DOCUMENTS
- */
+	
+	/* APPLY - Custom search filter: Date Range */
+	$.fn.dataTable.ext.search.push(
+		function(settings, data, dataIndex) {
+			return filterDateRange(data, minimumDate_personal, maximumDate_personal);
+		}
+	);
+	
 	/* GET - Personal Documents*/
 	function getPersonalDocuments() {
 		addCSSClass('#personal_loading', 'active');
-		
+			
 		$.get(getContextPath() + '/PersonalDocuments', (responseJson) => {
 			$('#personal_tablebody').empty();
 			if(!responseJson.length == 0) 
@@ -157,12 +59,11 @@
 				localPersonalDocsData = responseJson;
 				$.each(responseJson, (index, personalDocs) => {
 					$('<tr id="'+index+'">').appendTo('#personal_tablebody')
-						// add icon on title docs <i class="file icon"></i>
 						.append($('<td>').text(personalDocs.title))
 						.append($('<td>').text(personalDocs.timeCreated))
 						.append($('<td>').text(personalDocs.category))
 				});
-				
+					
 				// bind events and classes to the table after all data received
 				personalDocsTable = $('#personal_table').DataTable({
 					'order': [[0, 'asc'], [1, 'asc']]
@@ -194,23 +95,22 @@
 			removeCSSClass('#personal_loading', 'active');
 			callFailRequestModal();
 		});
-		isNewlyLoadedPersonalDocs = false;
 	}
-	
+		
 	/* SELECT ROW - Personal Documents */
 	function selectPersonalDocsRow() {
-	    $('#personal_table tbody').on('dblclick', 'tr', function () {
-	    	getPersonalDocumentsData($(this).attr('id'));
-	    	$(this).toggleClass('active');
-	    	$('#viewpersonal_dialog').modal({
+		$('#personal_table tbody').on('dblclick', 'tr', function () {
+			getPersonalDocumentsData($(this).attr('id'));
+		   	$(this).toggleClass('active');
+		    $('#viewpersonal_dialog').modal({
 				closable: false,
 				onHidden: () => {
 					$(this).toggleClass('active');
 				}
 			}).modal('show');
-	    });
+		});
 	}
-	
+		
 	/* GET - Populate Dialog For View File */
 	function getPersonalDocumentsData(id) {
 		var selectedData = localPersonalDocsData[id];
@@ -224,12 +124,12 @@
 		$('#viewpersonal_download_type').val(selectedData['type']);
 		$('#viewpersonal_description').text(selectedData['title']);
 	}
-	
+		
 	/* SEARCH - Personal Documents */
 	$('#personal_search').on('input', () => {
 		if(!isPersonalDocsTableEmpty) personalDocsTable.search( $(this).val() ).draw();
 	});
-	
+		
 	/* SEARCH - Personal Documents Upload From */
 	$('#personal_uploadfrom_calendar').calendar({
 		type: 'date',
@@ -244,7 +144,7 @@
 			}
 		}) 
 	});
-	
+		
 	/* SEARCH - Personal Documents Upload To */
 	$('#personal_uploadto_calendar').calendar({
 		type: 'date',
@@ -264,12 +164,12 @@
 	$('#personal_category').on('change', function() {
 		if(!isPersonalDocsTableEmpty) personalDocsTable.column(2).search( $(this).val() ).draw();
 	});
-	
+		
 	/* CLEAR SEARCH - Personal Documents Category */
 	$('#personal_clear').click(() => {
 		clearPersonalDocsSearch();
 	});
-	
+		
 	function clearPersonalDocsSearch() {
 		$('#personal_search').val('');
 		$('#personal_upload').val('');

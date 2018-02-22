@@ -83,9 +83,6 @@
 			<p class="microcopy-hint">The academic year will be used in the auto-generation of ISO numbers for the memo and letters.</p>
 			<p id="current_acadyear"></p>
 			
-			<h3>Current Academic Month:</h3> 
-			<p id="current_acadmonth"></p>
-			
 			<hr>
 			
 			<h3 class="ui header">
@@ -94,58 +91,13 @@
 			</h3>
 			
 			<form class="ui form element-mb" id="acadyear_form">
-				
-				<div class="fields">
-					<div class="four wide required field" id="start_year_field">
-						<label>Start Year:</label>
-						<select class="ui fluid dropdown" id="start_year" required>
-							<option value="">Select Start Year</option>
-						</select>
-					</div>
-					<div class="four wide field" id="end_year_field">
-						<label>End Year:</label>
-						<input type="text" placeholder="End Year" id="end_year" readonly=""/>
-					</div>
-					
+				<div class="required five wide field" id="start_year_field">
+					<label>Start Year:</label>
+					<input type="text" id="start_year" readonly="" required/> 
 				</div>
-				
-				<div class="fields">
-				<div class="four wide required field" id="start_month_field">
-					<label>Start Month:</label>
-					<select class="ui fluid dropdown" id="start_month" required>
-						<option value="">Select Start Month</option>
-						<option value="January">January</option>
-						<option value="February">February</option>
-						<option value="March">March</option>
-						<option value="April">April</option>
-						<option value="May">May</option>
-						<option value="June">June</option>
-						<option value="July">July</option>
-						<option value="August">August</option>
-						<option value="September">September</option>
-						<option value="October">October</option>
-						<option value="November">November</option>
-						<option value="December">December</option>
-					</select>
-				</div>
-				<div class="four wide required field" id="end_month_field">
-					<label>End Month:</label>
-					<select class="ui fluid dropdown" id="end_month" required>
-						<option value="">Select End Month</option>
-						<option value="January">January</option>
-						<option value="February">February</option>
-						<option value="March">March</option>
-						<option value="April">April</option>
-						<option value="May">May</option>
-						<option value="June">June</option>
-						<option value="July">July</option>
-						<option value="August">August</option>
-						<option value="September">September</option>
-						<option value="October">October</option>
-						<option value="November">November</option>
-						<option value="December">December</option>
-					</select>
-				</div>
+				<div class="required five wide field" id="end_year_field">
+					<label>End Year:</label>
+					<input type="text" id="end_year" readonly="" required/>
 				</div>
 			</form>
 			
@@ -214,5 +166,5 @@
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/admin/acadyear.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/acadyear.js"></script>
 </html>

@@ -35,8 +35,6 @@ public class GetAcadYear extends HttpServlet {
 			{
 				 acadyearConfig.add(Integer.toString(rs.getInt("start_year")));
 				 acadyearConfig.add(Integer.toString(rs.getInt("end_year")));
-				 acadyearConfig.add(rs.getString("start_month"));
-				 acadyearConfig.add(rs.getString("end_month"));
 			}
 			String json = new Gson().toJson(acadyearConfig);
 

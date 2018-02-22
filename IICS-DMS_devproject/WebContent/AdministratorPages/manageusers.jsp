@@ -220,6 +220,7 @@
 									<option value="Faculty Secretary">Faculty Secretary</option>
 									<option value="Department Head">Department Head</option>
 									<option value="Faculty">Faculty</option>
+									<option value="Supervisor">Supervisor</option>
 									<option value="Staff">Staff</option>
 								</select>
 							</div>
@@ -291,6 +292,7 @@
 									<option value="Faculty Secretary">Faculty Secretary</option>
 									<option value="Department Head">Department Head</option>
 									<option value="Faculty">Faculty</option>
+									<option value="Supervisor">Supervisor</option>
 									<option value="Staff">Staff</option>
 								</select>
 							</div>
@@ -423,5 +425,8 @@
 	<script src="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/admin/manage_users.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/manageusers/manage_users.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/manageusers/add_user.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/manageusers/edit_user.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/manageusers/enable_disable_user.js"></script>
 </html>
