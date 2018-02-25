@@ -46,9 +46,9 @@ public class RetrieveRequestMail extends HttpServlet {
 					mail.add(new Mail(
 							inboxInfo.getString("id"),
 							inboxInfo.getString("type"),
+							inboxInfo.getString("iso_number"),
 							inboxInfo.getString("external_recipient"),
 							inboxInfo.getString("subject"),
-							inboxInfo.getString("message"),
 							inboxInfo.getString("sender_name"),
 							inboxInfo.getString("sent_by"),
 							inboxInfo.getString("date_created")

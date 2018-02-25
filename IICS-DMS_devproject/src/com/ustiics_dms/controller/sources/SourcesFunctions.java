@@ -21,12 +21,41 @@ public class SourcesFunctions {
 	
 	public static void addSource(String source) throws SQLException
 	{
+		String defaultReference = "EXT:"+ appendZeroes(getIncrement()) + getIncrement() + "-";
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("INSERT INTO external_list (sources_name, default_reference) VALUES (?,?)");
+		
+		prep.setString(1, source);
+		prep.setString(2, defaultReference);
+		
+		prep.executeUpdate();
+		
+
+	}
+	
+	public static int getIncrement() throws SQLException
+	{
+			int rows = 1;
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("INSERT INTO sources_list (sources_name) VALUES (?)");
-			prep.setString(1, source);
-
+			PreparedStatement prep = con.prepareStatement("SELECT COUNT(sources_name) FROM external_list");
 			
-			prep.executeUpdate();
 
+			ResultSet rs = prep.executeQuery();
+			rs.next();
+			rows += rs.getInt("COUNT(sources_name)");
+			
+			return rows;
+	}
+	
+	public static String appendZeroes(int word)
+	{
+			int zeroes = 4 - String.valueOf(word).length();
+			String append = "";
+			for(int ct = 0 ; ct < zeroes ; ct ++)
+			{
+				append += "0";
+			}
+			
+			return append;
 	}
 }

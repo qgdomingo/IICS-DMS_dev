@@ -4,21 +4,21 @@ public class Mail {
 
 	private String id;
 	private String type;
+	private String isoNumber;
 	private String externalRecipient;
 	private String subject;
-	private String message;
 	private String senderName;
 	private String senderEmail;
 	private String dateCreated;
 	
-	public Mail(String id, String type, String externalRecipient, String subject, String message, String senderName,
+	public Mail(String id, String type, String isoNumber, String externalRecipient, String subject, String senderName,
 			String senderEmail, String dateCreated) {
 		super();
 		this.id = id;
 		this.type = type;
+		this.isoNumber = isoNumber;
 		this.externalRecipient = externalRecipient;
 		this.subject = subject;
-		this.message = message;
 		this.senderName = senderName;
 		this.senderEmail = senderEmail;
 		this.dateCreated = dateCreated;
@@ -39,6 +39,14 @@ public class Mail {
 	public void setType(String type) {
 		this.type = type;
 	}
+	
+	public String getIsoNumber() {
+		return isoNumber;
+	}
+
+	public void setIsoNumber(String isoNumber) {
+		this.isoNumber = isoNumber;
+	}
 
 	public String getExternalRecipient() {
 		return externalRecipient;
@@ -54,14 +62,6 @@ public class Mail {
 
 	public void setSubject(String subject) {
 		this.subject = subject;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
 	}
 
 	public String getSenderName() {

@@ -1,34 +1,90 @@
 package com.ustiics_dms.controller.mail;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.ustiics_dms.databaseconnection.DBConnect;
+import com.ustiics_dms.model.File;
 
 
 public class MailFunctions {
 	
-	public static void saveMailInformation(String type, String recipient, String externalRecipient, String  subject, String  message, String  name, String  sentBy) throws SQLException
+	public static void saveMailInformation(String type, String recipient, String externalRecipient, String  subject, String message, String  name, String  sentBy, String department) throws SQLException, IOException, DocumentException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("INSERT INTO mail (type, external_recipient, subject, message, sender_name, sent_by) VALUES (?,?,?,?,?,?)");
-			prep.setString(1, type);
-			prep.setString(2, externalRecipient);
-			prep.setString(3, subject);
-			prep.setString(4, message);
-			prep.setString(5, name);
-			prep.setString(6, sentBy);
+			InputStream pdf = createPdf(recipient, subject, name, message);
+			PreparedStatement prep = con.prepareStatement("INSERT INTO mail (iso_number, type, external_recipient, subject, file_data, sender_name, sent_by) VALUES (?,?,?,?,?,?,?)");
+			String isoNumber = getISONumber(department, type);
+			prep.setString(1, isoNumber);
+			prep.setString(2, type);
+			prep.setString(3, externalRecipient);
+			prep.setString(4, subject);
+			prep.setBinaryStream(5, pdf, pdf.available() );
+			prep.setString(6, name);
+			prep.setString(7, sentBy);
 			
 			prep.executeUpdate();
 			
 			sendInternalMail(recipient);
+			ExternalMail.send(externalRecipient, subject, getIncrement(), "jlteoh23@gmail.com", "jed231096");
 	}
+	
+	public static String getISONumber(String department, String type) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		String getDepartment = "SELECT counter, iso_number FROM iso_counter WHERE department_name = ? AND type = ?";
+		PreparedStatement prep = con.prepareStatement(getDepartment);
+		prep.setString(1, department);
+		prep.setString(2, type);
+		
+		ResultSet counter = prep.executeQuery();
+		counter.next();
+
+		int updatedCounter = counter.getInt("counter") + 1 ;
+		String updateCounter = "UPDATE iso_counter SET counter = ? WHERE department_name = ? AND type = ?";
+		prep = con.prepareStatement(updateCounter);
+		prep.setInt(1, updatedCounter);
+		prep.setString(2, department);
+		prep.setString(3, type);
+		prep.executeUpdate();
+	
+		String isoNumber = counter.getString("iso_number") + appendZeroes(updatedCounter) + updatedCounter;
+		
+		return isoNumber;
+		
+	}
+	
+	public static String appendZeroes(int word)
+	{
+			int zeroes = 2 - String.valueOf(word).length();
+			String append = "";
+			for(int ct = 0 ; ct < zeroes ; ct ++)
+			{
+				append += "0";
+			}
+			
+			return append;
+	}
+	
 	
 	public static void sendInternalMail(String recipient) throws SQLException
 	{
@@ -46,8 +102,6 @@ public class MailFunctions {
 				prep.executeUpdate();
 			}
 	}
-	
-
 	
 	public static int getIncrement() throws SQLException
 	{
@@ -138,7 +192,7 @@ public class MailFunctions {
 			return rs;
 	}
 	
-	public static void approveRequestMail(String id) throws SQLException
+	public static void approveRequestMail(String id) throws SQLException, IOException, DocumentException
 	{
 			
 			ResultSet requestInfo = getRequestInformation(id);
@@ -150,10 +204,11 @@ public class MailFunctions {
 			String externalRecipient = requestInfo.getString("external_recipient");
 			String subject = requestInfo.getString("subject");
 			String message = requestInfo.getString("message");
-			String senderName = requestInfo.getString("sender_name");
+			String name = requestInfo.getString("sender_name");
 			String sentBy = requestInfo.getString("sent_by");
-
-			saveMailInformation(type, recipient, externalRecipient, subject, message, senderName, sentBy);
+			String department = requestInfo.getString("department");
+			
+			saveMailInformation(type, recipient, externalRecipient, subject, message, name, sentBy, department);
 			
 			deleteRequest(id);
 
@@ -264,4 +319,90 @@ public class MailFunctions {
 			
 			return result;
 	}
+	public static InputStream createPdf(String recipient, String subject, String name, String message) throws IOException, DocumentException {
+	    Document doc = new Document(PageSize.A4, 50, 50, 50, 50);
+	       
+	    Image img = Image.getInstance("C:\\ros\\tt.jpg");
+	    ByteArrayOutputStream out = new ByteArrayOutputStream();            
+	    PdfWriter writer;
+	    
+	    writer = PdfWriter.getInstance(doc, out);
+	            
+	    doc.open();
+	    writer.setStrictImageSequence(true);
+	    doc.add(img);
+	    
+	    
+	    Paragraph subjectParagraph = new Paragraph(subject);
+		doc.add(subjectParagraph);
+		Paragraph messageParagraph = new Paragraph(message);
+		doc.add(messageParagraph);
+	    doc.close();
+	        
+	    return new ByteArrayInputStream(out.toByteArray());
+	}
+	
+	public static File getPdf (int id) throws SQLException 
+	{
+			Connection con = DBConnect.getConnection();
+			
+	       PreparedStatement prep = con.prepareStatement("SELECT * FROM mail WHERE id = ?");
+	       prep.setInt(1, id);
+	       
+	       ResultSet rs = prep.executeQuery();
+	       
+	       if (rs.next()) 
+	       {
+	           String fileName = rs.getString("iso_number") + ".pdf";
+	           Blob fileData = rs.getBlob("file_data");
+	           String description = "";
+
+	           return new File(id, fileName, fileData, description);
+	       }
+	       return null;
+	}
+
+	public static void addExportedMail (int id) throws SQLException 
+	{
+			Connection con = DBConnect.getConnection();
+			
+	       PreparedStatement prep = con.prepareStatement("INSERT INTO exported_mail (id) VALUES (?)");
+	       prep.setInt(1, id);
+	       
+	       prep.executeUpdate();
+	       
+	     
+	}
+	
+	public static List <String> getExportedMailID (String email) throws SQLException 
+	{
+		   Connection con = DBConnect.getConnection();
+			
+	       PreparedStatement prep = con.prepareStatement("SELECT * FROM exported_mail");
+	       
+	       ResultSet rs = prep.executeQuery();
+	       
+	      
+	       List <String> idValues = new ArrayList <String> ();
+	       while(rs.next())
+	       {
+	    	   idValues.add(rs.getString("id"));
+	    	   
+	       }
+	       
+	       return idValues;
+	}
+	
+	public static ResultSet getExportedMail (String email, String id) throws SQLException 
+	{
+		   Connection con = DBConnect.getConnection();
+			
+	       PreparedStatement prep = con.prepareStatement("SELECT * FROM mail WHERE sent_by = ? AND id = ?");
+	       prep.setString(1, email);
+	       prep.setString(2, id);
+	       ResultSet rs = prep.executeQuery();
+	       
+	       return rs;
+	}
+
 }

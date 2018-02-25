@@ -1,6 +1,8 @@
 package com.ustiics_dms.controller.mail;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -10,9 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.ustiics_dms.controller.login.LoginFunctions;
+import com.itextpdf.text.DocumentException;
 import com.ustiics_dms.model.Account;
-import com.ustiics_dms.utility.SendMail;
+import com.ustiics_dms.model.File;
 
 
 @WebServlet("/ForwardMail")
@@ -32,8 +34,8 @@ public class ForwardMail extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		 try {
 		
-		try {
 			HttpSession session = request.getSession();
 			Account acc = (Account) session.getAttribute("currentCredentials");
 			
@@ -47,27 +49,53 @@ public class ForwardMail extends HttpServlet {
 			if(button.equalsIgnoreCase("Send Mail"))
 			{
 				
-					MailFunctions.saveMailInformation(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail());
-					ExternalMail.send(externalRecipient, subject, message, "jlteoh23@gmail.com", "jed231096");
+				
+					MailFunctions.saveMailInformation(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment());
+				
 			}
 			else if(button.equalsIgnoreCase("Mail Request") && acc.getUserType().equals("Faculty") || acc.getUserType().equals("Faculty Secretary"))
 			{
 				MailFunctions.forwardRequestMail(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getUserType(), acc.getDepartment());
 				
 			}
-			else if(button.equalsIgnoreCase("Save Mail"))
+			else if(button.equalsIgnoreCase("Save and Export"))
 			{
-				//MailFunctions.forwardRequest(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail());
-			}
-			else if(button.equalsIgnoreCase("Save And Export"))
-			{
-				//MailFunctions.forwardRequest(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail());
-			}
-				
-			} catch (SQLException e) {
-				
+				 MailFunctions.saveMailInformation(type, "", "", subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment());
+				 int latestID = MailFunctions.getIncrement();
+				 File file = MailFunctions.getPdf(latestID);
+				 MailFunctions.addExportedMail (latestID);
+				 
+				 String contentType = this.getServletContext().getMimeType(file.getFileName());
+				 
+				 response.setHeader("Content-Type", contentType);
+				 
+		         response.setHeader("Content-Length", String.valueOf(file.getFileData().length()));
+		 
+		         response.setHeader("Content-Disposition", "inline; filename=\"" + file.getFileName() + "\"");
+			
+			
+				 Blob fileData = file.getFileData();
+		         InputStream is = fileData.getBinaryStream();
+		
+		         byte[] bytes = new byte[1024];
+		         int bytesRead;
+		
+		         while ((bytesRead = is.read(bytes)) != -1) 
+		         {
+		        	 // Write image data to Response.
+		            response.getOutputStream().write(bytes, 0, bytesRead);
+		         }
+		       
+		}
+		 } catch (SQLException | DocumentException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}		
+		         
+			
+
+	
+			
 			//insert redirection back to page 
 	}
 
