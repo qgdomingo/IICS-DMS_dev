@@ -16,7 +16,7 @@
         	  if(response) {
         		  callSuccessModal('Task Updated', 'This task has been updated. The page will now refresh.');
         		  
-        		  // auto page refresh in 5 seconds
+        		  setTimeout(function(){  window.location.reload(); }, 5000);
         	  }
         	  else {
         		  callFailModal('Fail to Update Task', 'We are unable to update this task. Please Try Again.');

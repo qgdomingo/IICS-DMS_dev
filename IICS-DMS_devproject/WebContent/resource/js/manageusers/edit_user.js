@@ -42,6 +42,7 @@
 	$('#edituser_btn').click(() => {		
 		$('#edituser_dia').modal({
 			closable: false,
+			observeChanges: true,
 			onShow: () => {
 				checkUserTypeDepartment('#edit_usertype', '#edit_department_field'); 
 				retrieveUserForEdit();

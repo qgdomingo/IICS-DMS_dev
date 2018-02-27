@@ -53,23 +53,23 @@
 		      <i class="large home icon side"></i>Home
 		    </a>
 		    <a class="item" href="${pageContext.request.contextPath}/files/fileupload.jsp">
-		      <i class="large cloud upload icon side"></i>Upload Document
+		      <i class="large cloud upload alternate icon side"></i>Upload Document
 		    </a>
-		    <a class="item active" href="${pageContext.request.contextPath}/files/documents.jsp">
+		    <a class="item active" href="${pageContext.request.contextPath}/files/personaldocs.jsp">
 		      <i class="large file icon side"></i>Documents
 		    </a>
 		    <a class="item" href="${pageContext.request.contextPath}/task/viewtasks.jsp">
-		      <i class="large folder open icon side"></i>Task Folders
+		      <i class="large tasks icon side"></i>Tasks
 		    </a>
 		    <a class="item" href="${pageContext.request.contextPath}/calendar/viewcalendar.jsp">
-		      <i class="large calendar icon side"></i>Calendar
+		      <i class="large calendar alternate outline icon side"></i>Calendar
 		    </a>
 		    <div class="item">
 		   		Mail
 		   		<div class="menu">
 	<% if(!restrictionCase2) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/newmail.jsp">
-			    		<i class="large write icon side"></i>Create Mail
+			    		<i class="large pencil alternate icon side"></i>Create Mail
 			    	</a>
 	<%  } %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/inbox.jsp">
@@ -80,10 +80,10 @@
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
-			    		<i class="large exchange icon side"></i>Requests
+			    		<i class="large envelope square icon side"></i>Mail Requests
 			    	</a>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/viewmemoletter.jsp">
-			    		<i class="large open envelope icon side"></i>View All Memos/Letters
+			    		<i class="large external link square alternate icon side"></i>Exported Mail
 			    	</a>
 	<%  } %>
 		    	</div>
@@ -139,8 +139,8 @@
 		<!-- DOCUMENT TYPE SELECTOR FOR NON-MOBILE -->
 		<div class="mobile hidden">
 			<div class="ui secondary pointing menu">
-				<a class="item" href="${pageContext.request.contextPath}/files/documents.jsp">
-					<i class="folder open icon"></i>
+				<a class="item" href="${pageContext.request.contextPath}/files/personaldocs.jsp">
+					<i class="folder icon"></i>
 					Personal
 				</a>
 				<% if(!userType.equalsIgnoreCase("Faculty")) { %>
@@ -168,7 +168,7 @@
 			
 		<!-- AREA FOR OUTGOING DOCUMENTS -->
 		<div id="outgoingdocs_table">
-			<h2 class="ui dividing header">
+			<h3 class="ui dividing header">
 				<i class="sign out icon"></i>
 				<div class="content">
 					Outgoing Documents
@@ -176,7 +176,7 @@
 						Here lists all documents which have concerns outside the institution.
 					</div>
 				</div>
-			</h2>
+			</h3>
 		
 			<div class="ui segment">
 				<div class="ui dimmer" id="outgoing_loading">

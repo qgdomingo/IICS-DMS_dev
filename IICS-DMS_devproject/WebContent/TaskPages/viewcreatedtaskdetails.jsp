@@ -21,7 +21,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Task Folders | IICS DMS</title>
+		<title>Tasks | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
@@ -53,23 +53,23 @@
 		      <i class="large home icon side"></i>Home
 		    </a>
 		    <a class="item" href="${pageContext.request.contextPath}/files/fileupload.jsp">
-		      <i class="large cloud upload icon side"></i>Upload Document
+		      <i class="large cloud upload alternate icon side"></i>Upload Document
 		    </a>
-		    <a class="item" href="${pageContext.request.contextPath}/files/documents.jsp">
+		    <a class="item" href="${pageContext.request.contextPath}/files/personaldocs.jsp">
 		      <i class="large file icon side"></i>Documents
 		    </a>
 		    <a class="item active" href="${pageContext.request.contextPath}/task/viewtasks.jsp">
-		      <i class="large folder open icon side"></i>Task Folders
+		      <i class="large tasks icon side"></i>Tasks
 		    </a>
 		    <a class="item" href="${pageContext.request.contextPath}/calendar/viewcalendar.jsp">
-		      <i class="large calendar icon side"></i>Calendar
+		      <i class="large calendar alternate outline icon side"></i>Calendar
 		    </a>
 		    <div class="item">
 		   		Mail
 		   		<div class="menu">
 	<% if(!restrictionCase2) { %>
-			    	<a class="item active" href="${pageContext.request.contextPath}/mail/newmail.jsp">
-			    		<i class="large write icon side"></i>Create Mail
+			    	<a class="item" href="${pageContext.request.contextPath}/mail/newmail.jsp">
+			    		<i class="large pencil alternate icon side"></i>Create Mail
 			    	</a>
 	<%  } %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/inbox.jsp">
@@ -80,10 +80,10 @@
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
-			    		<i class="large exchange icon side"></i>Requests
+			    		<i class="large envelope square icon side"></i>Mail Requests
 			    	</a>
-			    	<a class="item" href="${pageContext.request.contextPath}/mail/viewmemoletter.jsp">
-			    		<i class="large open envelope icon side"></i>View All Memos/Letters
+			    	<a class="item" href="${pageContext.request.contextPath}/mail/exportedmail.jsp">
+			    		<i class="large external link square alternate icon side"></i>Exported Mail
 			    	</a>
 	<%  } %>
 		    	</div>
@@ -112,8 +112,8 @@
 					<i class="large sidebar icon"></i>
 				</a>
 				<div class="item">
-					<i class="large folder open icon"></i>
-					Task Folders
+					<i class="large tasks icon side"></i>
+					Tasks
 				</div>
 				<div class="right menu">
 					<a class="item user-account-bgcolor mobile hidden" href="${pageContext.request.contextPath}/userprofile.jsp">
@@ -162,7 +162,7 @@
 			</h3>
 			
 			<button class="ui icon labeled orange button element-mb" type="button" id="edittask_btn">
-				<i class="pencil icon"></i>
+				<i class="edit icon"></i>
 				Edit Task
 			</button>
 			
@@ -232,7 +232,7 @@
 		<div class="ui small modal" id="edittask_dialog">
 			<div class="header edit-modal">
 				<h3 class="ui header edit-modal">
-					<i class="pencil icon"></i>
+					<i class="edit icon"></i>
 					<div class="content">Edit Task</div>
 				</h3>
 			</div>

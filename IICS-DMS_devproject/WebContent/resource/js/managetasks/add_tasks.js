@@ -20,6 +20,7 @@
 		$('#addtask_dialog').modal({
 			closable: false,
 			observeChanges: true,
+			centered: false,
 			onShow: () => {
 				$('#addtask_deadline_calendar').calendar({
 					minDate: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
@@ -127,6 +128,7 @@
 	
 	/* CLEAR - Add Task Fields */
 	function clearAddTaskFields() {
+		removeCSSClass('#add_task_form', 'error');
 		$('#add_task_form').form('reset');
 		$('#addtask_deadline_calendar').calendar('clear');
 		$('#addtask_category').dropdown('restore defaults');

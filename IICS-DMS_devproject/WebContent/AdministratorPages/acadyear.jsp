@@ -102,7 +102,7 @@
 			</form>
 			
 			<button class="ui labeled icon orange button element-mt" id="acadyear_submit">
-				<i class="pencil icon"></i>
+				<i class="edit icon"></i>
 				Apply Changes
 			</button>
 <!-- END OF ACTUAL PAGE CONTENTS -->

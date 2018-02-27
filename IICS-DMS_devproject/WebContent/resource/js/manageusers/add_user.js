@@ -45,6 +45,7 @@
 	$('#adduser_btn').click(() => {
 		$('#adduser_dia').modal({
 			closable: false,
+			observeChanges: true,
 			onShow: () => {
 				checkUserTypeDepartment('#add_usertype', '#add_department_field'); 
 			},

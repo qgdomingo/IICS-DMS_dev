@@ -140,7 +140,7 @@
 			</button>
 				
 			<button class="ui labeled icon orange button element-mb" id="edituser_btn">
-				<i class="write square icon"></i>
+				<i class="edit icon"></i>
 				Edit User
 			</button>
 				
@@ -255,7 +255,7 @@
 		<!-- EDIT USER MODAL -->
 		<div class="ui modal" id="edituser_dia">
 			<div class="ui header edit-modal">
-				<i class="write icon"></i>
+				<i class="edit icon"></i>
 				<div class="content">Edit User</div>
 			</div>
 			<div class="modal-content">

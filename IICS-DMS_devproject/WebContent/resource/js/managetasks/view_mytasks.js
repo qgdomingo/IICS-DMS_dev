@@ -87,6 +87,7 @@
 	    	$('#mytask_dialog').modal({
 				closable: false,
 				observeChanges: true,
+				centered: false,
 				onHidden: () => {
 					removeCSSClass('#mytask_form', 'error');
 					removeCSSClass('#mytask_form', 'loading');

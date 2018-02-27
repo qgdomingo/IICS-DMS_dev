@@ -227,6 +227,7 @@
 		$('#edittask_dialog').modal({
 			closable: false,
 			observeChanges: true,
+			centered: false,
 			onShow: () => {
 				$('#edittask_deadline_calendar').calendar({
 					minDate: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
