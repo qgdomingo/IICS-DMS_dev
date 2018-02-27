@@ -108,10 +108,33 @@
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
 		
+		<!-- CHANGE SETTINGS CONFIRMATION MODAL -->
+		<div class="ui tiny modal" id="confirmchange_dia">
+			<div class="ui header delete-modal">
+				<i class="exclamation icon"></i>
+				<div class="content">Change Academic Year</div>
+			</div>
+			<div class="modal-content">
+				<h4 class="element-rmb">Are you sure you want to change the academic year settings?</h4>
+				<p>This would reset the ISO number count of the Memos, Letters, and Notice of Meetings. </p>
+				<p style="color: red;">THIS CHANGE WILL BE IRREVERSIBLE. </p>
+			</div>
+			<div class="actions">
+				<button class="ui cancel grey button">
+					<i class="remove icon"></i>
+					Cancel
+				</button>
+				<button class="ui ok orange button">
+					<i class="checkmark icon"></i>
+					Confirm Change
+				</button>
+			</div>
+		</div>
+		
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header add-modal">
+				<h3 class="ui header add-modal">
 					<i class="checkmark icon"></i>
 					<div class="content" id="successdia_header"></div>
 				</h3>
@@ -126,8 +149,8 @@
 		
 		<!-- FAIL MESSAGE MODAL -->
 		<div class="ui tiny modal" id="faildia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header delete-modal">
+				<h3 class="ui header delete-modal">
 					<i class="remove icon"></i>
 					<div class="content" id="faildia_header"></div>
 				</h3>

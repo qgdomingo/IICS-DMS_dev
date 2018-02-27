@@ -43,7 +43,7 @@
 	}
 		
 	/* SUBMIT - New Academic Year Configurations */
-	$('#acadyear_submit').click(() => {
+	function submitAcademicYearChanges() {
 		
 		if(checkEmptyFields(inputFields)) 
 		{
@@ -61,9 +61,8 @@
 					var startacadyear = parseInt(newAcadYearData['year_from']);
 					$(inputFields[0]).val(startacadyear + 1);
 					$(inputFields[1]).val(startacadyear + 2);
-					cleanAcademicYearForm();
-					callSuccessModal('Success', 'Successfully updated academic year configurations! ');
 					getAcademicYearConfigurations();
+					callSuccessModal('Success', 'Successfully updated academic year configurations! ');
 				}
 				else
 				{
@@ -77,12 +76,15 @@
 				callFailRequestModal();
 			});
 		}
-	});
+	};
 	
-	/* CLEAN - Academic Year Form */
-	function cleanAcademicYearForm() {
-		$(inputFields[0]).dropdown('restore defaults');
-		$(inputFields[1]).val('');
-		$(inputFields[2]).dropdown('restore defaults');
-		$(inputFields[3]).dropdown('restore defaults');
-	}
+	/* OPEN MODAL - Change Confirmation */
+	$('#acadyear_submit').click(() => {
+		$('#confirmchange_dia').modal({
+			closeable: false,
+			onApprove: () => {
+				submitAcademicYearChanges();
+			}
+		}).modal('show');
+	});
+

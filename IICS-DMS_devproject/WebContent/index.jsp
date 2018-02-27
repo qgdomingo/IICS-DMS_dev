@@ -174,8 +174,8 @@
 		
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header add-modal">
+				<h3 class="ui header add-modal">
 					<i class="checkmark icon"></i>
 					<div class="content" id="successdia_header"></div>
 				</h3>
@@ -190,8 +190,8 @@
 		
 		<!-- FAIL MESSAGE MODAL -->
 		<div class="ui tiny modal" id="faildia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header delete-modal">
+				<h3 class="ui header delete-modal">
 					<i class="remove icon"></i>
 					<div class="content" id="faildia_header"></div>
 				</h3>
