@@ -167,21 +167,15 @@ public class ManageTasksFunctions {
 	public static String compareTime (String currentTime, String deadline) throws SQLException, ParseException 
 	{
 		   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		   //deadline = deadline.substring(0, deadline.length() - 2);
-		   System.out.println("Deadline: " + deadline);
 		   Date deadlineDate = sdf.parse(deadline);
 	       Date submitDate = sdf.parse(currentTime);
-	       System.out.println("Deadline Date: " + deadlineDate);
-	       System.out.println("Submit Date: " + submitDate);
 	       String result = "";
 	       if(submitDate.after(deadlineDate))
 	       {
-	    	   System.out.println("Late Submission");
 	    	   result = "Late Submission";
 	       }
 	       else
 	       {
-	    	   System.out.println("On-time Submission");
 	    	   result = "On-time Submission";
 	       }
 	       
@@ -244,6 +238,17 @@ public class ManageTasksFunctions {
 			
 	}
 	
+	public static ResultSet getSpecificCreatedTask(String id) throws SQLException 
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT title, deadline, category, instructions, status, date_created FROM tasks WHERE id = ?");
+		prep.setString(1, id);
+		
+		ResultSet rs = prep.executeQuery();
+		
+		return rs;
+		
+	}
 
 	
 

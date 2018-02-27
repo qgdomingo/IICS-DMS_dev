@@ -1,7 +1,10 @@
 package com.ustiics_dms.controller.managetasks;
 
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,7 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.Gson;
 import com.ustiics_dms.model.Account;
+import com.ustiics_dms.model.Task;
 
 @WebServlet("/AddTask")
 public class AddTask extends HttpServlet {
@@ -25,6 +30,7 @@ public class AddTask extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		List<String> task = new ArrayList<String>();
 		response.setCharacterEncoding("UTF-8");
 		
 		try {
@@ -41,14 +47,28 @@ public class AddTask extends HttpServlet {
 			String assignedBy = acc.getEmail();
 		
 			ManageTasksFunctions.addTask(title, deadline, category, instructions, email, assignedBy);
+			String id = Integer.toString( ManageTasksFunctions.getIncrement() );
 			
-			//TODO: return new task data to update new row
-			response.setContentType("text/plain");
+			ResultSet specificCreatedTask = (ResultSet) ManageTasksFunctions.getSpecificCreatedTask(id);
+			
+			if(specificCreatedTask.next()) {
+				task.add(id);	
+				task.add(specificCreatedTask.getString("title"));
+				task.add(specificCreatedTask.getString("date_created"));	
+				task.add(specificCreatedTask.getString("deadline"));
+				task.add(specificCreatedTask.getString("category"));	
+				task.add(specificCreatedTask.getString("status"));		
+			 }	
+			 
+			String json = new Gson().toJson(task);
+				
+			response.setContentType("application/json");
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write("success");
+			response.getWriter().write(json);
 		} 
 		catch (SQLException e) {
 			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 
 	}

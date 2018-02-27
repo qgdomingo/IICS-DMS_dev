@@ -52,7 +52,7 @@ public class AssignedTask extends HttpServlet {
 							tasksInfo.getString("category"),
 							tasksInfo.getString("instructions"),
 							getTasks.getString("status"),
-							tasksInfo.getString("assigned_by"),
+							ManageTasksFunctions.getFullName(tasksInfo.getString("assigned_by")),
 							tasksInfo.getString("date_created")
 							 ));	
 				}

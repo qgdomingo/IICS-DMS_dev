@@ -138,56 +138,66 @@
 
 		<!-- MENU -->
 		<div class="ui secondary pointing menu ">
-			<a class="item active" href="${pageContext.request.contextPath}/task/viewtasks.jsp">
-				<i class="folder open icon"></i>
+			<a class="item" href="${pageContext.request.contextPath}/task/viewtasks.jsp">
+				<i class="folder icon"></i>
 				My Tasks
 			</a>
-	<% if(!restrictionCase1) { %>
-			<a class="item" href="${pageContext.request.contextPath}/task/viewcreatedtasks.jsp">
-				<i class="folder icon"></i>
+			<a class="item active" href="${pageContext.request.contextPath}/task/viewcreatedtasks.jsp">
+				<i class="folder open icon"></i>
 				Tasks Created
 			</a>
-	<% } %>
 		</div>
-		
-		<!-- MY TASKS SEGMENT -->
-		<div class="ui segment" id="mytasks_segment">
-			<div class="ui dimmer" id="mytasks_loading">
-				<div class="ui text loader">Retrieving Tasks</div>
+
+		<!-- ASSIGNED CREATED SEGMENT -->
+		<div class="ui segment" id="createdtaskdetails_segment">
+			<div class="ui dimmer" id="createdtaskdetails_loading">
+				<div class="ui text loader">Retrieving Task Details</div>
 			</div>
 			
-			<!-- SEARCH ROW -->
+			<h3 class="ui dividing header element-rmt">
+				<a href="${pageContext.request.contextPath}/task/viewcreatedtasks.jsp">
+					<i class="black chevron left icon"></i>
+				</a> 
+				<span id="createdtask_title"></span>
+			</h3>
+			
+			<button class="ui icon labeled orange button element-mb" type="button" id="edittask_btn">
+				<i class="pencil icon"></i>
+				Edit Task
+			</button>
+			
+			<p class="element-rmb"><b>Category: </b><span id="createdtask_category"></span></p>
+			<p class="element-rmb"><b>Date Created: </b><span id="createdtask_datecreated"></span></p>
+			<p class="element-rmb"><b>Status: </b><span id="createdtask_status"></span></p>
+			<p class="element-rmb"><b>Deadline: </b><span id="createdtask_deadline"></span></p>
+			<p class="element-rmb"><b>Instructions: </b><span id="createdtask_instructions"></span></p>
+			
+			<h4 class="ui horizontal divider header">
+				<i class="users icon"></i>
+				Task Assignments
+			</h4>
+			
+			<!-- TABLE FILTER -->
 			<form class="ui form">
-				<div class="five fields">
-				
-					<!-- SEARCH BOX -->
+				<div class="four fields">
 					<div class="field">
 						<div class="ui icon input">
-							<input type="text" placeholder="Seach Task" id="mytask_search"/>
+							<input type="text" placeholder="Search Submissions" id="search_filter"/>
 							<i class="search icon"></i>
 						</div>
 					</div>
 					
-					<!-- DEADLINE BOX -->
 					<div class="field">
-						<div class="ui calendar" id="mytask_deadline_calendar">
+						<div class="ui calendar" id="upload_date_filter_calendar">
 							<div class="ui icon input">
-								<input type="text" placeholder="Deadline" id="mytask_deadline"/>
+								<input type="text" placeholder="Upload Date" id="upload_date_filter"/>
 								<i class="calendar icon"></i>
 							</div>
 						</div>
 					</div>
 					
-					<!-- CATEGORY DROPDOWN -->
 					<div class="field">
-						<select class="ui fluid dropdown" id="mytask_category">
-							<option value="">Category</option>
-						</select>
-					</div>
-					
-					<!-- STATUS DROPDOWN -->
-					<div class="field">
-						<select class="ui fluid dropdown" id="mytask_status">
+						<select class="ui dropdown" id="status_filter">
 							<option value="">Status</option>
 							<option value="On-time Submission">On-time Submission</option>
 							<option value="Late Submission">Late Submission</option>
@@ -195,101 +205,137 @@
 						</select>
 					</div>
 					
-					<!-- SEARCH BUTTON -->
 					<div class="field">
-						<button class="ui grey button" type="button" id="mytask_clear">
+						<button type="button" class="ui grey button" id="clear_filter">
 							Clear Search
 						</button>
 					</div>
-	
 				</div>
 			</form>
-			
-			<table class="ui compact selectable table" id="mytasks_table">
+
+			<table class="ui compact selectable table" id="assignedtask_table">
 				<thead>
 					<tr>
-						<th>Task</th>
-						<th>Assigned By</th>
-						<th>Deadline Set</th>
-						<th>Category</th>
+						<th>Assigned To</th>
+						<th>Document Title</th>
+						<th>Upload Date</th>
 						<th>Status</th>
 					</tr>
 				</thead>
-				<tbody id="mytasks_tablebody"></tbody>		
-			</table>	
-		</div>
-	
+				<tbody id="assignedtask_tablebody"></tbody>		
+			</table>
+		
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
-		
-		<!-- VIEW MY TASK MODAL -->
-		<div class="ui tiny modal" id="mytask_dialog">
-			<div class="header neutral-modal">
-				<h3 class="ui header neutral-modal">
-					<i class="tasks icon"></i>
-					<div class="content" id="mytask_title"></div>
+
+		<!-- EDIT TASK MODAL -->
+		<div class="ui small modal" id="edittask_dialog">
+			<div class="header edit-modal">
+				<h3 class="ui header edit-modal">
+					<i class="pencil icon"></i>
+					<div class="content">Edit Task</div>
 				</h3>
 			</div>
 			<div class="modal-content">
-				<p class="element-rmb"><b>Category: </b><span id="mytask_viewcategory"></span></p>
-				<p class="element-rmb"><b>Assigned by: </b><span id="mytask_assignedby"></span></p>
-				<p class="element-rmb"><b>Date Created: </b><span id="mytask_datecreated"></span></p>
-				<p class="element-rmb"><b>Deadline: </b><span id="mytask_viewdeadline"></span></p>
-				<p><b>Instructions: </b><span id="mytask_instructions"></span></p>
-				
-				<form class="ui form" method="post" action="${pageContext.request.contextPath}/SubmitTask" 
-						enctype="multipart/form-data" id="mytask_form">
+				<form class="ui form" method="POST" action="${pageContext.request.contextPath}/EditTask" id="edit_task_form">
+					<input type="hidden" name="id" id="edittask_id"/>
+					
 					<div class="required field">
-						<label>Document Title:</label>
-						<input type="text" name="document_title"/>
+						<label>Task Title:</label>
+						<input type="text" name="title" id="edittask_title"/>
 					</div>
 					
-					<div class="required inline field">
-						<label>Attachment:</label>
-						<input type="file" name="file"/>
+					<div class="required field">
+						<label>Task Deadline:</label>
+						<div class="ui calendar" id="edittask_deadline_calendar">
+							<div class="ui icon input">
+								<input type="text" name="deadline" id="edittask_deadline"/>
+								<i class="calendar icon"></i>
+							</div>
+						</div>
 					</div>
 					
-					<div class="field">
-						<label>Description:</label>
-						<textarea rows="2" name="description"></textarea>
+					<div class="required field">
+						<label>Category:</label>
+						<select class="ui fluid dropdown" name="category" id="edittask_category">
+							<option value="">Select Category</option>
+						</select>
 					</div>
 					
-					<input type="hidden" name="id" id="mytask_submit_id">
-					<input type="hidden" name="deadline" id="mytask_submit_deadline">
+					<div class="required field">
+						<label>Instructions:</label>
+						<textarea rows="3" name="instructions" id="edittask_instructions"></textarea>
+					</div>
+					
+					<div class="required field">
+						<label>Assign To:</label>
+						<select class="ui fluid search selection dropdown" multiple="" name="assigned_to" id="edittask_assignto">
+							<option value="">Select Users</option>
+						</select>
+					</div>
 					
 					<div class="ui error message"></div>
-					
-					<button class="ui labeled icon green button" type="submit">
-						<i class="upload icon"></i>
-						Upload File
-					</button>
 				</form>
-				
-				<div id="mytask_submissiondetails">
-					<div class="ui dimmer" id="mytask_submissiondetails_loading">
-						<div class="ui text loader">Retrieving Submission Details</div>
-					</div>
-					<h3 class="ui dividing header">
-						<div class="content">My Submission</div>
-					</h3>
-					<p class="element-rmb"><b>Document Title: </b><span id="mytask_sub_title"></span></p>
-					<p class="element-rmb"><b>Submission Date: </b><span id="mytask_submissiondate"></span></p>
-					<p class="element-rmb"><b>Status: </b><span id="mytask_viewstatus"></span></p>
-					<p class="element-rmb"><b>Attachment: </b><span id="mytask_file"></span></p>
-					<p><b>Description: </b><span id="mytask_description"></span></p>
-					<form method="POST" action="${pageContext.request.contextPath}/DownloadTask">
-						<input type="hidden" name="id" id="mytask_download_id">
-						<input type="hidden" name="email" id="mytask_download_email">
-						<button class="ui small fluid button" type="submit">View File</button>
-					</form>
+			</div>
+			<div class="actions">
+				<button class="ui cancel grey button" id="edittask_cancel">
+					<i class="remove icon"></i>
+					Cancel
+				</button>				
+				<button class="ui green button" type="submit" form="edit_task_form" id="edittask_submit">
+					<i class="checkmark icon"></i>
+					Create Task
+				</button>
+			</div>
+		</div>
+		
+		<!-- VIEW ASSIGNED TASK SUBMISSION MODAL -->
+		<div class="ui tiny modal" id="submission_dialog">
+			<div class="header neutral-modal">
+				<h3 class="ui header neutral-modal">
+					<i class="file icon"></i>
+					<div class="content" id="submission_title"></div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<div class="ui dimmer" id="submissiondetails_loading">
+					<div class="ui text loader">Retrieving Submission Details</div>
 				</div>
+			
+				<p class="element-rmb"><b>Submitted by: </b><span id="submission_uploadedby"></span></p>
+				<p class="element-rmb"><b>Upload Date: </b><span id="submission_submissiondate"></span></p>
+				<p class="element-rmb"><b>Status: </b><span id="submission_viewstatus"></span></p>
+				<p class="element-rmb"><b>File Name: </b><span id="submission_file"></span></p>
+				<p><b>Description: </b><span id="submission_description"></span></p>
+				
+				<form method="POST" action="${pageContext.request.contextPath}/DownloadTask">
+					<input type="hidden" name="id" id="submission_download_id">
+					<input type="hidden" name="email" id="submission_download_email">
+					<button class="ui small fluid button" type="submit">View File</button>
+				</form>
 				
 			</div>
 			<div class="actions center-text">
 				<button class="ui ok secondary button" id="viewmytask_close">Close</button>
 			</div>
 		</div>
-
+		
+		<!-- VIEW ASSIGNED TASK MODAL -->
+		<div class="ui tiny modal" id="nosubmission_dialog">
+			<div class="header neutral-modal">
+				<h3 class="ui header neutral-modal">
+					<i class="file icon"></i>
+					<div class="content">No Submission Yet</div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p>This user has not yet accomplished his / her task.</p>
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button">Close</button>
+			</div>
+		</div>
+	
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">
 			<div class="header add-modal">
@@ -353,5 +399,7 @@
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/categories.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/managetasks/view_mytasks.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/directory.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/managetasks/view_createdtasks_details.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/managetasks/edit_task.js"></script>
 </html>

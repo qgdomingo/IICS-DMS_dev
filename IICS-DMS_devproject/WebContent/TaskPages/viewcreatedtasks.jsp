@@ -1,5 +1,5 @@
 <%@page import="com.ustiics_dms.model.Account"%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
 	Account acc = (Account) session.getAttribute("currentCredentials");
@@ -22,7 +22,7 @@
 <html>
 	<head>
 		<title>Task Folders | IICS DMS</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.css">
@@ -139,7 +139,7 @@
 		<!-- MENU -->
 		<div class="ui secondary pointing menu ">
 			<a class="item" href="${pageContext.request.contextPath}/task/viewtasks.jsp">
-				<i class="folder open icon"></i>
+				<i class="folder icon"></i>
 				My Tasks
 			</a>
 			<a class="item active" href="${pageContext.request.contextPath}/task/viewcreatedtasks.jsp">
@@ -238,7 +238,7 @@
 		</div>
 
 		<!-- ADD TASK MODAL -->
-		<div class="ui tiny modal" id="addtask_dialog">
+		<div class="ui small modal" id="addtask_dialog">
 			<div class="header add-modal">
 				<h3 class="ui header add-modal">
 					<i class="plus icon"></i>
@@ -246,141 +246,63 @@
 				</h3>
 			</div>
 			<div class="modal-content">
-				<form class="ui form">
-					<div class="required field" id="addtask_title_field">
+				<form class="ui form" method="POST" action="${pageContext.request.contextPath}/AddTask" id="add_task_form">
+					<div class="required field">
 						<label>Task Title:</label>
-						<input type="text" id="addtask_title"/>
+						<input type="text" name="title" id="addtask_title"/>
 					</div>
 					
-					<div class="required field" id="addtask_deadline_field">
+					<div class="required field">
 						<label>Task Deadline:</label>
 						<div class="ui calendar" id="addtask_deadline_calendar">
 							<div class="ui icon input">
-								<input type="text" id="addtask_deadline"/>
+								<input type="text" name="deadline" id="addtask_deadline"/>
 								<i class="calendar icon"></i>
 							</div>
 						</div>
 					</div>
 					
-					<div class="required field" id="addtask_category_field">
+					<div class="required field">
 						<label>Category:</label>
-						<select class="ui fluid dropdown" id="addtask_category">
-							<option value="">Category</option>
+						<select class="ui fluid dropdown" name="category" id="addtask_category">
+							<option value="">Select Category</option>
 						</select>
 					</div>
 					
-					<div class="required field" id="addtask_instructions_field">
+					<div class="required field">
 						<label>Instructions:</label>
-						<textarea rows="3" id="addtask_instructions"></textarea>
+						<textarea rows="3" name="instructions" id="addtask_instructions"></textarea>
 					</div>
 					
-					<div class="required field" id="addtask_assignto_field">
+					<div class="required field">
 						<label>Assign To:</label>
-						<div class="inline two fields">
-							<div class="twelve wide field">
-								<input type="text" id="addtask_assignto"/>
-							</div>
-							<div class="four wide field">
-								<button class="ui inverted orange button" type="button" id="addtask_directory">
-									Directory 
-								</button>
-							</div>
-						</div>
-						
+						<select class="ui fluid search selection dropdown" multiple="" name="assigned_to" id="addtask_assignto">
+							<option value="">Select Users</option>
+						</select>
 					</div>
+					
+					<div class="ui error message"></div>
 				</form>
 			</div>
 			<div class="actions">
+				<button class="ui button" id="addtask_clear">
+					Clear Fields
+				</button>
 				<button class="ui cancel grey button" id="addtask_cancel">
 					<i class="remove icon"></i>
 					Cancel
-				</button>
-				<button class="ui green button" id="addtask_submit">
+				</button>				
+				<button class="ui green button" type="submit" form="add_task_form" id="addtask_submit">
 					<i class="checkmark icon"></i>
 					Create Task
 				</button>
 			</div>
 		</div>
 		
-		<!-- DIRECTORY MODAL -->
-		<div class="ui modal" id="directory_dialog">
-			<div class="header edit-modal">
-				<h3 class="ui header edit-modal">
-					<i class="pencil icon"></i>
-					<div class="content">Directory</div>
-				</h3>
-			</div>
-			<div class="modal-content">
-				<p><b>No. of Selected Users: </b><span id="directory_usercount">0</span></p>
-				
-				<div class="dimmable">
-					<div class="ui dimmer" id="directory_table_loading">
-						<div class="ui text loader">Retrieving Users</div>
-					</div>
-				
-					<table class="ui compact selectable table" id="directory_table">
-						<thead>
-							<tr>
-								<th>Faculty No.</th>
-								<th>Full Name</th>
-								<th>Email</th>
-								<th>User Type</th>
-								<th>Department</th>
-							</tr>
-						</thead>
-						<tbody id="directory_tablebody"></tbody>		
-					</table>	
-				</div>
-			</div>
-			<div class="actions center-text">
-				<button class="ui ok secondary button">Close</button>
-			</div>
-		</div>
-		
-		<!-- VIEW TASK CREATED MODAL -->
-		<div class="ui modal" id="taskscreated_dialog">
-			<div class="header neutral-modal">
-				<h3 class="ui header neutral-modal">
-					<i class="tasks icon"></i>
-					<div class="content" id="taskscreated_title"></div>
-				</h3>
-			</div>
-			<div class="modal-content">
-				<p class="element-rmb"><b>Status: </b><span id="taskscreated_viewstatus"></span></p>
-				<p class="element-rmb"><b>Category: </b><span id="taskscreated_viewcategory"></span></p>
-				<p class="element-rmb"><b>Created by: </b><%= acc.getFullName() %></p>
-				<p class="element-rmb"><b>Date Created: </b><span id="taskscreated_datecreated"></span></p>
-				<p class="element-rmb"><b>Deadline: </b><span id="taskscreated_viewdeadline"></span></p>
-				<p><b>Instructions: </b><span id="taskscreated_instructions"></span></p>
-			
-			<div class="dimmable">
-				<div class="ui dimmer" id="viewcreatedtask_table_loading">
-					<div class="ui text loader">Retrieving Users</div>
-				</div>
-									
-				<table class="ui compact selectable table" id="viewcreatedtask_table">
-					<thead>
-						<tr>
-							<th>Assigned To</th>
-							<th>Document Title</th>
-							<th>Upload Date</th>
-							<th>Status</th>
-						</tr>
-					</thead>
-					<tbody id="viewcreatedtask_tablebody"></tbody>		
-				</table>	
-			</div>	
-				
-			</div>
-			<div class="actions center-text">
-				<button class="ui ok secondary button">Close</button>
-			</div>
-		</div>
-	
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header add-modal">
+				<h3 class="ui header add-modal">
 					<i class="checkmark icon"></i>
 					<div class="content" id="successdia_header"></div>
 				</h3>
@@ -395,8 +317,8 @@
 		
 		<!-- FAIL MESSAGE MODAL -->
 		<div class="ui tiny modal" id="faildia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header delete-modal">
+				<h3 class="ui header delete-modal">
 					<i class="remove icon"></i>
 					<div class="content" id="faildia_header"></div>
 				</h3>
@@ -439,5 +361,8 @@
 	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/managetasks.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/categories.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/directory.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/managetasks/view_createdtasks.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/managetasks/add_tasks.js"></script>
 </html>

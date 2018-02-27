@@ -39,7 +39,6 @@ public class TasksCreated extends HttpServlet {
 		    HttpSession session = request.getSession();
 		    Account acc = (Account) session.getAttribute("currentCredentials");
 			
-			//ResultSet getTasks = (ResultSet) ManageTasksFunctions.getTaskAssigned(acc.getEmail());
 			ResultSet tasksCreated = (ResultSet) ManageTasksFunctions.getTasksCreated(acc.getEmail());
 			
 			while(tasksCreated.next())

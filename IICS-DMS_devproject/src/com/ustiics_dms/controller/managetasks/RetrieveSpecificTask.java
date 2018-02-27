@@ -35,8 +35,16 @@ public class RetrieveSpecificTask extends HttpServlet {
 		    HttpSession session = request.getSession();
 		    Account acc = (Account) session.getAttribute("currentCredentials");
 		    String id = request.getParameter("id");
-			
-			ResultSet specificTask = (ResultSet) ManageTasksFunctions.getSpecificTask(acc.getEmail(), id);
+			String email = "";
+		    
+		    if(!(request.getParameter("email") == null)) {
+		    	email = request.getParameter("email");
+		    }
+		    else {
+		    	email = acc.getEmail();
+		    }
+		    
+			ResultSet specificTask = (ResultSet) ManageTasksFunctions.getSpecificTask(email, id);
 			
 			if(specificTask.next())
 			{ 
@@ -47,7 +55,8 @@ public class RetrieveSpecificTask extends HttpServlet {
 				task.add(specificTask.getString("description"));
 				task.add(specificTask.getString("id"));	
 				task.add(specificTask.getString("email"));	
-			}
+				task.add( ManageTasksFunctions.getFullName(specificTask.getString("email")) );
+			}	
 			
 			String json = new Gson().toJson(task);
 			

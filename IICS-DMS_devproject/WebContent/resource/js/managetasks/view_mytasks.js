@@ -3,22 +3,30 @@
  *   - javascript used for the viewtasks.jsp in retrieving tasks 
  */
 
+/*
+ * DOCUMENT ON LOAD 
+ */
 	$(document).ready(() => {
-		$('#taskscreated_segment').hide();
 		retrieveCategory('#mytask_category');
 		retrieveMyTasks();
 		
+		// Initialize Task Submission Form
 		submitMyTask();
+		validateMyTaskForm();
 	});
 
 /*
  * VARIABLES
  */
-	
+	var localMyTasksData;
+	var myTasksTable;
+	var isMyTasksTableEmpty = true;
+	var today = new Date();
+	var selectedDataID;
 /*
  * FUNCTIONS
  */
-	
+	 
 	/* GET - My Tasks */
 	function retrieveMyTasks() {
 		addCSSClass('#mytasks_loading', 'active');	
@@ -26,7 +34,7 @@
 		$.get(getContextPath() + '/AssignedTask', (responseData) => {
 			if(!responseData.length == 0) 
 			{
-				localMyTasksData = responseData;
+				localMyTasksData = responseData; 
 				$.each(responseData, (index, mytask) => {
 					$('<tr id="'+index+'">').appendTo('#mytasks_tablebody')		
 						.append($('<td>').text(mytask.title))
@@ -41,6 +49,7 @@
 					'order': [[0, 'asc'], [2, 'asc'], [1, 'asc']]
 				});
 				selectMyTaskRow();
+				isMyTasksTableEmpty = false;
 				removeCSSClass('#mytasks_loading', 'active');	
 			} 
 			else if(responseData.length == 0)
@@ -66,21 +75,23 @@
 			removeCSSClass('#mytasks_loading', 'active');
 			callFailRequestModal();
 		});
-		isNewlyLoadedPageMT = false;
 	}
+
 	
 	/* SELECT ROW - MY TASK TABLE */
 	function selectMyTaskRow() {
 	    $('#mytasks_table tbody').on('dblclick', 'tr', function () {
-	    	getMyTaskData($(this).attr('id'));
 	    	$(this).toggleClass('active');
+	    	selectedDataID = $(this).attr('id');
+	    	getMyTaskData($(this).attr('id'));
 	    	$('#mytask_dialog').modal({
 				closable: false,
 				observeChanges: true,
 				onHidden: () => {
+					removeCSSClass('#mytask_form', 'error');
 					removeCSSClass('#mytask_form', 'loading');
 					$('#viewmytask_close').prop("disabled", "");
-					$('#mytask_form').trigger('reset');
+					$('#mytask_form').form('reset');
 					$(this).toggleClass('active');
 				}
 			}).modal('show');
@@ -118,7 +129,7 @@
 		$('#mytask_instructions').text(data['instructions']);
 	}
 	
-	/* GET - Submission of My Task */
+	/* GET - Submission Data of Task */
 	function getMyTaskSubmission(id) {
 		addCSSClass('#mytask_submissiondetails_loading', 'active');
 		
@@ -150,18 +161,30 @@
 		});
 	}
 	
-	/* SUBMIT - My Task */
-	function submitMyTask() {
-		 $('#mytask_form').submit(() => {
-			 addCSSClass('#mytask_form', 'loading');
-			 $('#viewmytask_close').prop("disabled", "disabled");
-		 });
+	/* UPDATE - Add Row Data */
+	function addRowData(updatedData, index) {
+		var rowString = '<tr id="'+index+'">'
+			+ '<td>' + updatedData.title + '</td>'
+			+ '<td>' + updatedData.assignedBy + '</td>'
+			+ '<td>' + updatedData.deadline + '</td>'
+			+ '<td>' + updatedData.category + '</td>'
+			+ '<td>' + updatedData.status + '</td>'
+		+ '</tr>';
 		
+		return rowString;
+	}
+	
+	/* SUBMIT - Task */
+	function submitMyTask() {		
 		 $('#mytask_form').ajaxForm({
+			  beforeSubmit: isFormValid,
 	          success: function(response) {    
 	              if(response)
 	              {
-	            	  //TODO: update selected row	
+	            	  localMyTasksData[selectedDataID]['status'] = response;
+	            	  myTasksTable.row('.active').remove();
+	            	  myTasksTable.row.add( $(addRowData(localMyTasksData[selectedDataID], selectedDataID))[0] ).draw();	
+	            	  
 	            	  callSuccessModal('Task Upload Success', 'Your task has been successfully submitted.');
 	              }
 	              else
@@ -176,11 +199,51 @@
 	}
 	
 	
+	/* MY TASK - FORM VALIDATION */
+	function validateMyTaskForm() {
+		$('#mytask_form').form({
+		    fields: {
+		    	document_title: {
+		          identifier: 'document_title',
+		          rules: [
+		            {
+		              type   : 'empty',
+		              prompt : 'Please enter the document title'
+		            }
+		          ]
+		        },
+		        file: {
+		          identifier: 'file',
+			      rules: [
+			        {
+			          type   : 'empty',
+			          prompt : 'Please upload choose a file to upload'
+			        }
+			       ]
+			     }
+		       }
+		    })
+		  ;
+	}
+	
+	/* MY TASK - BOOLEAN VALID FORM */
+	function isFormValid() {
+		if( $('#mytask_form').form('is valid') ) {
+			 addCSSClass('#mytask_form', 'loading');
+			 $('#viewmytask_close').prop("disabled", "disabled");
+			return true;
+		} 
+		else {
+			return false;
+		}
+	}
+	
+	
 /*
  * SEARCH FUNCTIONS - MY TASKS
  */
 	$('#mytask_search').on('input', function() {
-		myTasksTable.search( $(this).val() ).draw();
+		if(!isMyTasksTableEmpty) myTasksTable.search( $(this).val() ).draw();
 	});
 		
 	$('#mytask_deadline_calendar').calendar({
@@ -188,16 +251,16 @@
 		formatter: dateFormat,
 		today: true,
 		onChange: ((date, text, mode) => {
-			myTasksTable.column(2).search( text ).draw();
+			if(!isMyTasksTableEmpty) myTasksTable.column(2).search( text ).draw();
 		}) 
 	});
 		
 	$('#mytask_category').on('change', function() {
-		myTasksTable.column(3).search( $(this).val() ).draw();
+		if(!isMyTasksTableEmpty) myTasksTable.column(3).search( $(this).val() ).draw();
 	});
 		
 	$('#mytask_status').on('change', function() {
-		myTasksTable.column(4).search( $(this).val() ).draw();
+		if(!isMyTasksTableEmpty) myTasksTable.column(4).search( $(this).val() ).draw();
 	});
 		
 	$('#mytask_clear').click(() => {
@@ -206,52 +269,8 @@
 		
 	function resetMyTasksSearchFields() {
 		$('#mytask_search').val('');
-		$('#mytask_deadline').val('');
-			myTasksTable.column(2).search('').draw();
+		$('#mytask_deadline_calendar').calendar('clear');
 		$('#mytask_category').dropdown('restore defaults');
 		$('#mytask_status').dropdown('restore defaults');
 	}
 
-/*
- *  CATEGORY FUNCTIONS
- */
-	/* GET CATEGORIES */
-	function retrieveCategory(categoryDropdown) {
-		$.get(getContextPath() + '/RetrieveCategory', (responseList) => {
-			if(!responseList.length == 0)
-			{
-				localCategoriesData = responseList;
-				isCategoryNotEmpty = true;
-				populateCategory(categoryDropdown);
-			}
-			else if(responseList.length == 0)
-			{
-				localCategoriesData = ['Category List Empty.'];
-				populateCategory(categoryDropdown);
-			}
-			else
-			{
-				callFailModal('Retrieve Category List Error', 'We are unable to retrieve the category list. ');
-			}
-		})
-		.fail((response) => {
-			callFailModal('Retrieve Category List Error', 'We are unable to retrieve the category list. ');
-		});
-	}
-			
-	/* POPULATE CATEGORY */
-	function populateCategory(categoryDropdown) {
-		if(isCategoryNotEmpty) {
-			$(categoryDropdown).empty();
-			$(categoryDropdown).append($('<option value="">').text('Category'));
-			$.each(localCategoriesData, (index, stringData) => {
-				$(categoryDropdown).append($('<option value="'+stringData+'">').text(stringData));
-			});
-		}
-		else {
-			$(categoryDropdown).empty();
-			$(categoryDropdown).append($('<option value="">').text(localCategoriesData[0]));
-		}
-		$(categoryDropdown).dropdown();
-	}
-			

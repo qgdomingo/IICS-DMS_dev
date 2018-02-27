@@ -60,6 +60,7 @@ public class DownloadTask extends HttpServlet {
 		catch (Exception e) 
 		{
 			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}		
 	}
 }

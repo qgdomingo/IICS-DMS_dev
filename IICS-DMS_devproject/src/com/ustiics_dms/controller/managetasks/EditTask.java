@@ -19,37 +19,35 @@ public class EditTask extends HttpServlet {
 
     public EditTask() {
         super();
-
     }
 
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		doPost(request, response);
 	}
 
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		HttpSession session = request.getSession();
-		
-		Account acc = (Account) session.getAttribute("currentCredentials");
-		
-		String id = request.getParameter("id");
-		String userEmail = acc.getEmail();
-		String title = request.getParameter("title");
-		String deadline = request.getParameter("deadline");
-		String category = request.getParameter("category");
-		String instructions = request.getParameter("instructions");
-		String email [] = request.getParameterValues("assigned_to");
-		
+
 		try {
-			ManageTasksFunctions.editTask(id, userEmail, title, deadline, category, instructions, email);
-		} catch (Exception e) {
+			HttpSession session = request.getSession();
+			Account acc = (Account) session.getAttribute("currentCredentials");
 			
+			String id = request.getParameter("id");
+			String userEmail = acc.getEmail();
+			String title = request.getParameter("title");
+			String deadline = request.getParameter("deadline");
+			String category = request.getParameter("category");
+			String instructions = request.getParameter("instructions");
+			String email [] = request.getParameterValues("assigned_to");
+			
+			ManageTasksFunctions.editTask(id, userEmail, title, deadline, category, instructions, email);
+			
+			response.setContentType("text/plain");
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write("success");
+		} catch (Exception e) {
 			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
-		//edit task
 		
 	}
 

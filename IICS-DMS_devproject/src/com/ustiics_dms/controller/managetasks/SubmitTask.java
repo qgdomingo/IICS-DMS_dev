@@ -2,7 +2,9 @@ package com.ustiics_dms.controller.managetasks;
 
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -70,16 +72,15 @@ public class SubmitTask extends HttpServlet {
 			
 			ManageTasksFunctions.submitTask(documentTitle,  fileData, documentDescription, acc.getEmail(), id, deadline);
 			
-			//TODO: return new submitted task data to update row
-			//ResultSet rsUpdatedTask = ManageTasksFunctions.getSpecificTask(acc.getEmail(), id);
-			//List<String> updatedTask = new ArrayList<String>();
+			String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 			
 			response.setContentType("text/plain");
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write("success");
+			response.getWriter().write(ManageTasksFunctions.compareTime(timeStamp, deadline));
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 
