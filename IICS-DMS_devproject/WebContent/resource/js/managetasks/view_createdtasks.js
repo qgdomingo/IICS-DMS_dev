@@ -1,5 +1,6 @@
 /**
- * 
+ *  view_createdtasks.js
+ *    - javascript code used to retrieve tasks created by a user
  */
 
 /*

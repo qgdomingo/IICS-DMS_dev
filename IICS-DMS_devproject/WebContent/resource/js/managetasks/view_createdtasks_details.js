@@ -1,5 +1,6 @@
 /**
- * 
+ *  view_createdtasks_details.js
+ *    - javascript used to retrieve and populate data on the details of a created task
  */
 
 /*

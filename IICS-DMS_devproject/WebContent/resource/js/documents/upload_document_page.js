@@ -8,7 +8,7 @@
 		submitPersonalDocsForm();
 		submitIncomingDocsForm();
 		submitOutgoingDocsForm();
-	})
+	});
 	
 /*
  *  VARIABLES
@@ -59,34 +59,7 @@
 		}
 	}
 	
-	/* SUBMIT - Personal Form */
-	function submitPersonalDocsForm() {
-		 $('#personaldocs_form').submit(() => {
-			 //TODO: form validation 
-			 activatePageLoading('Uploading Personal Document');
-		 });
-		
-		 $('#personaldocs_form').ajaxForm({
-	          success: function(response) {    
-	              if(response)
-	              {
-	            	  $('#personaldocs_form').trigger('reset')
-	            	  $('#personal_category').dropdown('restore defaults');
-	            	  deactivatePageLoading();
-	            	  callSuccessModal('Personal Document Upload Success', 'Your document has been successfully uploaded.');
-	              }
-	              else
-	              {
-	            	  callFailModal('Personal Document Upload Failed', 'We are unable to upload your document, please try again.');
-	            	  deactivatePageLoading();
-	              }
-	          },
-	          error: function(response) {
-	        	  callFailRequestModal();
-	        	  deactivatePageLoading();
-	          }
-	     });
-	}
+	
 	
 	/* SUBMIT - Incoming Form */
 	function submitIncomingDocsForm() {
@@ -148,13 +121,7 @@
 	          }
 	     });
 	}	
-	
-	/* CLEAR FORM - Personal Documents */
-	$('#personal_clear').click(() => {
-		$('#personaldocs_form').trigger('reset')
-		$('#personal_category').dropdown('restore defaults');
-	});
-	
+		
 	/* CLEAR FORM - Incoming Documents */
 	$('#incoming_clear').click(() => {
 	  	$('#incomingdocs_form').trigger('reset')

@@ -1,6 +1,6 @@
 /**
  *  view_mytasks.js
- *   - javascript used for the viewtasks.jsp in retrieving tasks 
+ *   - javascript used for the viewtasks.jsp in retrieving tasks assigned to the user 
  */
 
 /*

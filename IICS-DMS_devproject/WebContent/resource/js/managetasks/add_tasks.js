@@ -1,5 +1,6 @@
 /**
- * 
+ *  add_tasks.js
+ *    - javascript used for the Add Task functionality 
  */
 
 	$(document).ready( () => {

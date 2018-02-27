@@ -1,5 +1,6 @@
 /**
- * 
+ *  edit_task.js
+ *   - javascript used for the Edit Task functionality 
  */
 	$(document).ready(() => {
 		editTaskFormValidation();

@@ -155,24 +155,22 @@
 			
 		<!-- FORM FOR PERSONAL DOCUMENTS -->
 			<form class="ui form" action="${pageContext.request.contextPath}/FileUpload"
-					method="post" enctype="multipart/form-data" id="personaldocs_form">
+					method="POST" enctype="multipart/form-data" id="personaldocs_form">
 					
 				<input type="hidden" name="document_type" value="Personal"/>
 				
 				<div class="required field">
 					<label>Category:</label>
-					<div class="inline two fields">
-						<div class="field">
-						<select class="ui fluid dropdown" name="category" id="personal_category" required>
-							<option value="">Select Category..</option>
-						</select>
-						</div>
-						<div class="field">
+					<div class="field">
+						<div class="ui action input">
+							<select class="ui fluid dropdown" name="category" id="personal_category">
+								<option value="">Select Category</option>
+							</select>
 				<% if(!userType.equalsIgnoreCase("Faculty")) { %>	
-						<button class="ui inverted orange button" type="button" id="personal_category_add">
-							<i class="pencil icon"></i>
-							Add Category
-						</button>
+							<button class="ui inverted orange button" type="button" id="personal_category_add">
+								<i class="pencil alternate icon"></i>
+								Add Category
+							</button>
 				<% } %>
 						</div>
 					</div>
@@ -180,7 +178,12 @@
 				
 				<div class="required field">
 					<label>Document Title:</label>
-					<input type="text" name="document_title" placeholder="e.g. ICS 111 Grades" required/>
+					<input type="text" name="document_title" />
+				</div>
+			
+				<div class="required inline field">
+					<label>File to Upload:</label>
+					<input type="file" name="file" required/>
 				</div>
 			
 				<div class="field">
@@ -191,11 +194,7 @@
 					<textarea name="description"></textarea>
 				</div>
 				
-				
-				<div class="required inline field">
-					<label>File to Upload:</label>
-					<input type="file" name="file" required/>
-				</div>
+				<div class="ui error message"></div>
 				
 				<button class="ui labeled icon green button" type="submit">
 					<i class="upload icon"></i>
@@ -439,8 +438,8 @@
 		
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header add-modal">
+				<h3 class="ui header add-modal">
 					<i class="checkmark icon"></i>
 					<div class="content" id="successdia_header"></div>
 				</h3>
@@ -455,8 +454,8 @@
 		
 		<!-- FAIL MESSAGE MODAL -->
 		<div class="ui tiny modal" id="faildia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header delete-modal">
+				<h3 class="ui header delete-modal">
 					<i class="remove icon"></i>
 					<div class="content" id="faildia_header"></div>
 				</h3>
@@ -496,5 +495,6 @@
 	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/documents/upload_documents.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/documents/upload_document_page.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/documents/upload_personal.js"></script>
 </html>
