@@ -183,9 +183,10 @@ public class MailFunctions {
 	public static ResultSet getRequesterMail(String email) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM request WHERE sent_by = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT * FROM request WHERE sent_by = ? UNION SELECT * FROM approved_request WHERE sent_by = ? ");
 			
 			prep.setString(1, email);
+			prep.setString(2, email);
 			ResultSet rs = prep.executeQuery();
 		
 
@@ -208,8 +209,7 @@ public class MailFunctions {
 			String sentBy = requestInfo.getString("sent_by");
 			String department = requestInfo.getString("department");
 			
-			saveMailInformation(type, recipient, externalRecipient, subject, message, name, sentBy, department);
-			
+			approveRequest(type, recipient, externalRecipient, subject, message, name, sentBy, department);
 			deleteRequest(id);
 
 	}
@@ -362,13 +362,13 @@ public class MailFunctions {
 	       return null;
 	}
 
-	public static void addExportedMail (int id) throws SQLException 
+	public static void addExportedMail (int id, String email) throws SQLException 
 	{
 			Connection con = DBConnect.getConnection();
 			
-	       PreparedStatement prep = con.prepareStatement("INSERT INTO exported_mail (id) VALUES (?)");
+	       PreparedStatement prep = con.prepareStatement("INSERT INTO exported_mail (id, owner) VALUES (?,?)");
 	       prep.setInt(1, id);
-	       
+	       prep.setString(2, email);
 	       prep.executeUpdate();
 	       
 	     
@@ -403,6 +403,24 @@ public class MailFunctions {
 	       ResultSet rs = prep.executeQuery();
 	       
 	       return rs;
+	}
+	
+	public static void approveRequest(String type, String recipient, String externalRecipient, String  subject, String message, String  name, String  sentBy, String department) throws SQLException, IOException, DocumentException
+	{
+			Connection con = DBConnect.getConnection();
+			InputStream pdf = createPdf(recipient, subject, name, message);
+			PreparedStatement prep = con.prepareStatement("INSERT INTO approved_request (iso_number, type, external_recipient, subject, file_data, sender_name, sent_by) VALUES (?,?,?,?,?,?,?)");
+			String isoNumber = getISONumber(department, type);
+			prep.setString(1, isoNumber);
+			prep.setString(2, type);
+			prep.setString(3, externalRecipient);
+			prep.setString(4, subject);
+			prep.setBinaryStream(5, pdf, pdf.available() );
+			prep.setString(6, name);
+			prep.setString(7, sentBy);
+			
+			prep.executeUpdate();
+			
 	}
 
 }

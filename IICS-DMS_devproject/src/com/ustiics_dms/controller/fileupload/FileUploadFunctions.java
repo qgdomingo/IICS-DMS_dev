@@ -30,10 +30,10 @@ public class FileUploadFunctions {
 			prep.executeUpdate();
 	}
 	
-	public static void uploadIncomingDocument(String referenceNo, String source, String documentTitle, String category, String actionRequired, FileItem item, String description, String fullName, String email, String department) throws SQLException, IOException
+	public static void uploadIncomingDocument(String referenceNo, String source, String documentTitle, String category, String actionRequired, FileItem item, String description, String fullName, String email, String department, String actionDue) throws SQLException, IOException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("INSERT INTO incoming_documents (reference_no, source_recipient, title, category, action_required, file_name, file_data, description, created_by, email, department) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+			PreparedStatement prep = con.prepareStatement("INSERT INTO incoming_documents (reference_no, source_recipient, title, category, action_required, file_name, file_data, description, created_by, email, department, due_on) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
 			
 			prep.setString(1, getReferenceNo(source) + referenceNo);
 			prep.setString(2, source);
@@ -46,7 +46,7 @@ public class FileUploadFunctions {
 			prep.setString(9, fullName);
 			prep.setString(10, email);
 			prep.setString(11, department);
-			
+			prep.setString(12, actionDue);
 			prep.executeUpdate();
 	}
 	

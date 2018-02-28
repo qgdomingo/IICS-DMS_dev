@@ -63,7 +63,7 @@ public class ForwardMail extends HttpServlet {
 				 MailFunctions.saveMailInformation(type, "", "", subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment());
 				 int latestID = MailFunctions.getIncrement();
 				 File file = MailFunctions.getPdf(latestID);
-				 MailFunctions.addExportedMail (latestID);
+				 MailFunctions.addExportedMail (latestID, acc.getEmail());
 				 
 				 String contentType = this.getServletContext().getMimeType(file.getFileName());
 				 

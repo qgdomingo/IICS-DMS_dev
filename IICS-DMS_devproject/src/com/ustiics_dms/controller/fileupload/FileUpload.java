@@ -75,7 +75,7 @@ public class FileUpload extends HttpServlet {
 			String documentSource = null;
 			String referenceNo = null;
 			String actionRequired = null;
-			
+			String actionDue = null;
 			//used by outgoing documents
 			String documentRecipient = null;
 			
@@ -95,8 +95,8 @@ public class FileUpload extends HttpServlet {
 				description = tempStorage[4];
 				actionRequired = tempStorage[5];
 				referenceNo = tempStorage[6];
-				
-				FileUploadFunctions.uploadIncomingDocument(referenceNo, documentSource, documentTitle, category, actionRequired, fileData, description, fullName, acc.getEmail(),acc.getDepartment());
+				actionDue = tempStorage[7];
+				FileUploadFunctions.uploadIncomingDocument(referenceNo, documentSource, documentTitle, category, actionRequired, fileData, description, fullName, acc.getEmail(),acc.getDepartment(), actionDue);
 			}
 			else if(documentType.equalsIgnoreCase("Outgoing"))
 			{
