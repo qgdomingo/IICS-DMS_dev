@@ -257,7 +257,7 @@
 					
 					<div class="required field">
 						<label>Category:</label>
-						<select class="ui fluid dropdown" name="category" id="edittask_category">
+						<select class="ui fluid search selection dropdown" name="category" id="edittask_category">
 							<option value="">Select Category</option>
 						</select>
 					</div>

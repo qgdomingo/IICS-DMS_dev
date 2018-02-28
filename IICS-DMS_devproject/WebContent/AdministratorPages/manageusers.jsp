@@ -100,6 +100,7 @@
 							<option value="Faculty Secretary">Faculty Secretary</option>
 							<option value="Department Head">Department Head</option>
 							<option value="Faculty">Faculty</option>
+							<option value="Supervisor">Supervisor</option>
 							<option value="Staff">Staff</option>
 						</select>
 					</div>

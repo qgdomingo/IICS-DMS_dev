@@ -188,7 +188,7 @@
 					
 					<!-- CATEGORY DROPDOWN -->
 					<div class="field">
-						<select class="ui fluid dropdown" id="taskscreated_category">
+						<select class="ui fluid search selection dropdown" id="taskscreated_category">
 							<option value="">Category</option>
 							<option value="Course Grades">Course Grades</option>
 							<option value="Course Syllabus">Course Syllabus</option>
@@ -264,7 +264,7 @@
 					
 					<div class="required field">
 						<label>Category:</label>
-						<select class="ui fluid dropdown" name="category" id="addtask_category">
+						<select class="ui fluid search selection dropdown" name="category" id="addtask_category">
 							<option value="">Select Category</option>
 						</select>
 					</div>

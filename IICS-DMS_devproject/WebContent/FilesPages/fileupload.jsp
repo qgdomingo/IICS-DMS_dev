@@ -1,5 +1,5 @@
 <%@page import="com.ustiics_dms.model.Account"%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
 	Account acc = (Account) session.getAttribute("currentCredentials");
@@ -22,9 +22,10 @@
 <html>
 	<head>
 		<title>Upload Document | IICS DMS</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 	</head>
@@ -151,7 +152,7 @@
 			
 			<br>
 			
-			<div class="ten wide computer ten wide tablet sixteen wide mobile column">
+			<div class="ten wide computer eleven wide tablet sixteen wide mobile column">
 			
 		<!-- FORM FOR PERSONAL DOCUMENTS -->
 			<form class="ui form" action="${pageContext.request.contextPath}/FileUpload"
@@ -163,10 +164,10 @@
 					<label>Category:</label>
 					<div class="field">
 						<div class="ui action input">
-							<select class="ui fluid dropdown" name="category" id="personal_category">
+							<select class="ui fluid search selection dropdown" name="category" id="personal_category">
 								<option value="">Select Category</option>
 							</select>
-				<% if(!userType.equalsIgnoreCase("Faculty")) { %>	
+				<% if(!userType.equalsIgnoreCase("Faculty") && !userType.equalsIgnoreCase("Staff") ) { %>	
 							<button class="ui inverted orange button" type="button" id="personal_category_add">
 								<i class="pencil alternate icon"></i>
 								Add Category
@@ -183,7 +184,7 @@
 			
 				<div class="required inline field">
 					<label>File to Upload:</label>
-					<input type="file" name="file" required/>
+					<input type="file" name="file"/>
 				</div>
 			
 				<div class="field">
@@ -196,12 +197,12 @@
 				
 				<div class="ui error message"></div>
 				
-				<button class="ui labeled icon green button" type="submit">
+				<button class="ui labeled icon green button element-mb" type="submit">
 					<i class="upload icon"></i>
-					Upload Personal File
+					Upload Personal Document
 				</button>
 				
-				<button class="ui grey button" type="button" id="personal_clear">
+				<button class="ui grey button element-mb" type="button" id="personal_clear">
 					Clear Fields
 				</button>
 				
@@ -217,18 +218,16 @@
 				
 				<div class="required field">
 					<label>Category:</label>
-					<div class="inline two fields">
-						<div class="field">
-						<select class="ui fluid dropdown" name="category" id="incoming_category" required>
+					<div class="ui action input">
+						<select class="ui fluid search selection dropdown" name="category" id="incoming_category">
 							<option value="">Select Category</option>
 						</select>
-						</div>
-						<div class="field">	
+					<% if(!userType.equalsIgnoreCase("Staff")) { %>
 						<button class="ui inverted orange button" type="button" id="incoming_category_add">
-							<i class="pencil icon"></i>
+							<i class="pencil alternate icon"></i>
 							Add Category
 						</button>
-						</div>
+					<% } %>
 					</div>
 				</div>
 				
@@ -237,24 +236,27 @@
 					<p class="microcopy-hint">
 						This indicates from whom the document was received.
 					</p>
-					<div class="inline two fields">
-						<div class="field">
-						<select class="ui fluid dropdown" name="document_source" id="incoming_source" required>
+					<div class="ui action input">
+						<select class="ui fluid search selection dropdown" name="document_source" id="incoming_source">
 							<option value="">Select Document Source</option>
 						</select>
-						</div>
-						<div class="field">	
+				<% if(!userType.equalsIgnoreCase("Staff")) { %>
 						<button class="ui inverted orange button" type="button" id="incoming_source_add">
-							<i class="pencil icon"></i>
+							<i class="pencil alternate icon"></i>
 							Add Source 
 						</button>
-						</div>
+				<% } %>
 					</div>
 				</div>
 				
 				<div class="required field">
 					<label>Document Title:</label>
-					<input type="text" name="document_title" placeholder="e.g. Announcement from the Dean of Eng'g" required/>
+					<input type="text" name="document_title"/>
+				</div>
+					
+				<div class="required inline field">
+					<label>File to Upload:</label>
+					<input type="file" name="file"/>
 				</div>
 			
 				<div class="field">
@@ -265,35 +267,54 @@
 					<textarea name="description"></textarea>
 				</div>
 				
-				<div class="two fields">
-					<div class="required field">
+				<div class="three fields">
+					<div class="five wide required field">
 						<label>Action Required:</label>
 						<select class="ui fluid dropdown" name="action_required" id="incoming_action">
-							<option value="">Select Action..</option>
+							<option value="">Select Action</option>
 							<option value="None">None</option>
 							<option value="Approval">Approval</option>
 							<option value="Endorsement">Endorsement</option>
 							<option value="Response">Response</option>
 						</select>
 					</div>
-					<div class="field">
-						<label>Reference No.</label>
-						<input type="text" placeholder="IN0000"  name="reference_no"/>
-						<p class="microcopy-hint">This is used for linking incoming documents.</p>
+					<div class="five wide field">
+						<label>Action Due:</label>
+						<div class="ui calendar" id="incoming_due_calendar">
+							<div class="ui icon input">
+								<input type="text" name="action_due" id="incoming_due"/>
+								<i class="calendar icon"></i>
+							</div>
+						</div>
+					</div>
+					<div class="six wide field">
+						<label>Reference No:</label>
+						<div class="ui labeled input">
+						  <div class="ui label">
+						    <span id="reference_no_start">UST:0000-</span>
+						  </div>
+						  <input type="text" placeholder="00-XX00" name="reference_no"/>
+						</div>
+						<p class="microcopy-hint">This is used to uniquely identify documents.</p>
 					</div>
 				</div>
-				
-				<div class="required inline field">
-					<label>File to Upload:</label>
-					<input type="file" name="file" required/>
+
+				<div class="field">
+					<label>Existing Documents Thread</label>
+					<select class="ui fluid search selection dropdown" name="thread_no" id="incoming_thread">
+						<option value="">Select Thread</option>
+					</select>
+					<p class="microcopy-hint">This is used for linking related documents.</p>
 				</div>
 				
-				<button class="ui labeled icon green button" type="submit">
+				<div class="ui error message"></div>
+				
+				<button class="ui labeled icon green button element-mb" type="submit">
 					<i class="upload icon"></i>
-					Upload Incoming File
+					Upload Incoming Document
 				</button>
 				
-				<button class="ui grey button" type="button" id="incoming_clear">
+				<button class="ui grey button element-mb" type="button" id="incoming_clear">
 					Clear Fields
 				</button>
 				
@@ -307,18 +328,16 @@
 				
 				<div class="required field">
 					<label>Category:</label>
-					<div class="inline two fields">
-						<div class="field">
-						<select class="ui fluid dropdown" name="category" id="outgoing_category">
-							<option value="">Select Category..</option>
+					<div class="ui action input">
+						<select class="ui fluid search selection dropdown" name="category" id="outgoing_category">
+							<option value="">Select Category</option>
 						</select>
-						</div>
-						<div class="field">
+				<% if(!userType.equalsIgnoreCase("Staff")) { %>
 						<button class="ui inverted orange button" type="button" id="outgoing_category_add">
 							<i class="pencil icon"></i>
 							Add Category
 						</button>
-						</div>
+				<% } %>
 					</div>
 				</div>
 				
@@ -327,26 +346,29 @@
 					<p class="microcopy-hint">
 						This indicates to whom the document is for.
 					</p>
-					<div class="inline two fields">
-						<div class="field">
-						<select class="ui fluid dropdown" name="document_recipient" id="outgoing_recipient" required>
+					<div class="ui action input">
+						<select class="ui fluid search selection dropdown" name="document_recipient" id="outgoing_recipient">
 							<option value="">Select Document Recipient</option>
 						</select>
-						</div>
-						<div class="field">	
+				<% if(!userType.equalsIgnoreCase("Staff")) { %>
 						<button class="ui inverted orange button" type="button" id="outgoing_recipient_add">
 							<i class="pencil icon"></i>
 							Add Source 
 						</button>
-						</div>
+				<% } %>
 					</div>
 				</div>
 				
 				<div class="required field">
 					<label>Document Title:</label>
-					<input type="text" name="document_title" placeholder="e.g. Announcement from the Director of IICS" required/>
+					<input type="text" name="document_title"/>
 				</div>
-			
+				
+				<div class="required inline field">
+					<label>File to Upload:</label>
+					<input type="file" name="file"/>
+				</div>
+				
 				<div class="field">
 					<label>Document Description:</label>
 					<p class="microcopy-hint">
@@ -355,17 +377,22 @@
 					<textarea name="description"></textarea>
 				</div>
 				
-				<div class="required inline field">
-					<label>File to Upload:</label>
-					<input type="file" name="file" required/>
+				<div class="field">
+					<label>Existing Documents Thread</label>
+					<select class="ui fluid search selection dropdown" name="thread_no" id="outgoing_thread">
+						<option value="">Select Thread</option>
+					</select>
+					<p class="microcopy-hint">This is used for linking related documents.</p>
 				</div>
 				
-				<button class="ui labeled icon green button" type="submit">
+				<div class="ui error message"></div>
+				
+				<button class="ui labeled icon green button element-mb" type="submit">
 					<i class="upload icon"></i>
-					Upload Outgoing File
+					Upload Outgoing Document
 				</button>
 				
-				<button class="ui grey button" type="button" id="outgoing_clear">
+				<button class="ui grey button element-mb" type="button" id="outgoing_clear">
 					Clear Fields
 				</button>
 				
@@ -383,7 +410,7 @@
 		<div class="ui tiny modal" id="category_dia">
 			<div class="header edit-modal">
 				<h3 class="ui header edit-modal">
-					<i class="pencil icon"></i>
+					<i class="pencil alternate icon"></i>
 					<div class="content">Add New Category</div>
 				</h3>
 			</div>
@@ -411,7 +438,7 @@
 		<div class="ui tiny modal" id="source_dia">
 			<div class="header edit-modal">
 				<h3 class="ui header edit-modal">
-					<i class="pencil icon"></i>
+					<i class="pencil alternate icon"></i>
 					<div class="content">Add New Document Source/Recipient</div>
 				</h3>
 			</div>
@@ -493,8 +520,11 @@
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/documents/upload_document_page.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/documents/upload_personal.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/documents/upload_incoming.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/documents/upload_outgoing.js"></script>
 </html>

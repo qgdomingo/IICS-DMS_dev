@@ -81,16 +81,13 @@ public class FileUploadFunctions {
 
 			ResultSet rs = prep.executeQuery();
 			
-					
 			//if source does not exist in column sources_name, generates a row and labeled as external
-
 			if (!rs.isBeforeFirst())
 			{
 				referenceNo += addExternalSource(source);
 			}
 			else
-			{
-				
+			{	
 				rs.next();
 				int updatedCounter = rs.getInt("null") + 1;
 				

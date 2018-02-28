@@ -180,7 +180,7 @@
 					
 					<!-- CATEGORY DROPDOWN -->
 					<div class="field">
-						<select class="ui fluid dropdown" id="mytask_category">
+						<select class="ui fluid search selection dropdown" id="mytask_category">
 							<option value="">Category</option>
 						</select>
 					</div>

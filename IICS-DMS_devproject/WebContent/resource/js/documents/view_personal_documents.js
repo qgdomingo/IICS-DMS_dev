@@ -122,7 +122,7 @@
 		$('#viewpersonal_file').text(selectedData['fileName']);
 		$('#viewpersonal_download_id').val(parseInt(selectedData['id']));
 		$('#viewpersonal_download_type').val(selectedData['type']);
-		$('#viewpersonal_description').text(selectedData['title']);
+		$('#viewpersonal_description').text(selectedData['description']);
 	}
 		
 	/* SEARCH - Personal Documents */
