@@ -94,8 +94,9 @@ public class FileUpload extends HttpServlet {
 				documentTitle = tempStorage[3];
 				description = tempStorage[4];
 				actionRequired = tempStorage[5];
-				referenceNo = tempStorage[6];
-				actionDue = tempStorage[7];
+				actionDue = tempStorage[6];
+				referenceNo = tempStorage[7];
+				
 				FileUploadFunctions.uploadIncomingDocument(referenceNo, documentSource, documentTitle, category, actionRequired, fileData, description, fullName, acc.getEmail(),acc.getDepartment(), actionDue);
 			}
 			else if(documentType.equalsIgnoreCase("Outgoing"))
