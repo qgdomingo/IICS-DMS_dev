@@ -5,13 +5,14 @@
 
 	$(document).ready(() => {
 		getPersonalDocuments();
+		retrieveCategory('#personal_category');	
 	});
 
 /*
  *  VARIABLES
  */
 	// For checking
-	var isPersonalDocsTableEmpty = false;
+	var isPersonalDocsTableEmpty = true;
 	
 	// Table References
 	var personalDocsTable;
@@ -24,23 +25,16 @@
 	var maximumDate_personal;
 
 /*
+ * NAVIGATE FUNCTION
+ */
+	$('#doctype_select').on('change', function() {
+		window.location.href = getContextPath() + '/files/' + $(this).dropdown('get value');
+	});
+	
+/*
  * FUNCTIONS
  */
 	 
-	/* CUSTOM SEARCH FILTER */
-	function filterDateRange(data, min, max) {
-		var dateData = new Date( data[1] ).getTime(); 
-			
-		if ( ( isNaN(min) && isNaN(max) ) ||
-		     ( isNaN(min) && dateData <= max ) ||
-		     ( min <= dateData && isNaN(max) ) ||
-		     ( min <= dateData && dateData <= max ) )
-		{
-			return true;
-		}
-		return false;
-	}
-	
 	/* APPLY - Custom search filter: Date Range */
 	$.fn.dataTable.ext.search.push(
 		function(settings, data, dataIndex) {
@@ -69,6 +63,7 @@
 					'order': [[0, 'asc'], [1, 'asc']]
 				});
 				selectPersonalDocsRow();
+				isPersonalDocsTableEmpty = false;
 				removeCSSClass('#personal_loading', 'active');
 			} 
 			else if(responseJson.length == 0)
@@ -77,7 +72,6 @@
 					.append($('<td class="center-text" colspan="3">')
 							.text("You do not have any personal documents. Go to Upload Documents page to upload one."));
 				removeCSSClass('#personal_loading', 'active');
-				isPersonalDocsTableEmpty = true;
 			}
 			else
 			{
@@ -86,6 +80,7 @@
 						.text("Unable to retrieve list of your personal documents. Please refresh page. :("));
 				removeCSSClass('#personal_loading', 'active');
 				callFailRequestModal();
+				
 			}
 		})
 		.fail((response) => {
@@ -102,12 +97,13 @@
 		$('#personal_table tbody').on('dblclick', 'tr', function () {
 			getPersonalDocumentsData($(this).attr('id'));
 		   	$(this).toggleClass('active');
+		   	
 		    $('#viewpersonal_dialog').modal({
 				closable: false,
-				onHidden: () => {
-					$(this).toggleClass('active');
-				}
+				observeChanges: true
 			}).modal('show');
+		    
+		    $(this).toggleClass('active');
 		});
 	}
 		
@@ -125,8 +121,11 @@
 		$('#viewpersonal_description').text(selectedData['description']);
 	}
 		
+/*
+ * SEARCH FUNCTIONALITY
+ */
 	/* SEARCH - Personal Documents */
-	$('#personal_search').on('input', () => {
+	$('#personal_search').on('input', function() {
 		if(!isPersonalDocsTableEmpty) personalDocsTable.search( $(this).val() ).draw();
 	});
 		
@@ -165,14 +164,14 @@
 		if(!isPersonalDocsTableEmpty) personalDocsTable.column(2).search( $(this).val() ).draw();
 	});
 		
-	/* CLEAR SEARCH - Personal Documents Category */
+	/* CLEAR SEARCH EVENT - Personal Documents Category */
 	$('#personal_clear').click(() => {
 		clearPersonalDocsSearch();
 	});
 		
+	/* CLEAR SEARCH - Personal Documents */
 	function clearPersonalDocsSearch() {
 		$('#personal_search').val('');
-		$('#personal_upload').val('');
 		$('#personal_uploadfrom_calendar').calendar('clear');
 		$('#personal_uploadto_calendar').calendar('clear');
 		$('#personal_category').dropdown('restore defaults');

@@ -10,24 +10,29 @@
 	/* SUBMIT - Personal Form */
 	$('#personaldocs_form').ajaxForm({
 		 beforeSubmit: isPersonalDocFormValid,
-	     success: function(response) {    
+		 uploadProgress: function(event, position, total, percentComplete) {
+			 updateUploadProgress(percentComplete);
+	     },
+	     success: function(response) { 
+	    	closeUploadProgress();
+
 	        if(response)
 	        {
 	        	clearPersonalDocsForm();
-	            deactivatePageLoading();
 	            callSuccessModal('Personal Document Upload Success', 'Your document has been successfully uploaded.');
 	        }
 	        else
 	        {
-	        	deactivatePageLoading();
 	        	callFailModal('Personal Document Upload Failed', 'We are unable to upload your document, please try again.');
-	            
 	        }
+	        
+	        deactivatePageLoading();
 	     },
 	     error: function(response) {
-		   deactivatePageLoading();
-	       callFailRequestModal();
-	    }
+	    	 closeUploadProgress();
+	    	 deactivatePageLoading();
+	    	 callFailRequestModal();
+	     }
 	});
 
 	/* FORM VALIDATION - Personal Document Form */
@@ -67,6 +72,7 @@
 	function isPersonalDocFormValid() {
 		if( $('#personaldocs_form').form('is valid') ) {
 			activatePageLoading('Uploading Personal Document');
+			openAndInitializeUploadProgress();
 			return true;
 		} 
 		else {

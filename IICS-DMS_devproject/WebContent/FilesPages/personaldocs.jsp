@@ -136,22 +136,22 @@
 		
 <!-- ACTUAL PAGE CONTENTS -->
 		
-		<!-- DOCUMENT TYPE SELECTOR FOR MOBILE // mobile only-->
-		<!-- <div class="">
+		<!-- DOCUMENT TYPE SELECTOR FOR MOBILE -->
+		<div class="ui form mobile only">
 			<div class="field">
 				<label>View Document Type:</label>
 				<select class="ui fluid dropdown" id="doctype_select">
-				  	<option value="Personal">Personal</option>
-				<% //if(!userType.equalsIgnoreCase("Faculty")) { %>
-				  	<option value="Incoming">Incoming</option>
-				  	<option value="Outgoing">Outgoing</option>
-				  	<option value="Archived">Archived</option>
-				  	<option value="All">All Documents</option>
-				<% //} %>
+					<option value="">Navigate to</option>
+				  	<option value="personaldocs.jsp">Personal</option>
+				<% if(!userType.equalsIgnoreCase("Faculty")) { %>
+				  	<option value="incomingdocs.jsp">Incoming</option>
+				  	<option value="outgoingdocs.jsp">Outgoing</option>
+				  	<option value="archivedocs.jsp">Archived</option>
+				  	<option value="alldocs.jsp">All Documents</option>
+				<% } %>
 				</select>
 			</div>
-		</div>  -->
-		
+		</div> 
 		
 		<!-- DOCUMENT TYPE SELECTOR FOR NON-MOBILE -->
 		<div class="mobile hidden">
@@ -192,7 +192,7 @@
 			
 			<div class="ui segment">
 				<div class="ui dimmer" id="personal_loading">
-					<div class="ui text loader" >Retrieving Personal Documents</div>
+					<div class="ui text loader">Retrieving Personal Documents</div>
 				</div>
 				
 				<!-- SEARCH AREA -->
@@ -229,7 +229,7 @@
 							
 						<!-- CATEGORY DROPDOWN -->
 						<div class="field">
-							<select class="ui fluid dropdown" id="personal_category">
+							<select class="ui fluid search selection dropdown" id="personal_category">
 								<option value="">Category</option>
 								<option value="Course Grades">Course Grades</option>
 								<option value="Course Syllabus">Course Syllabus</option>
@@ -293,8 +293,8 @@
 		
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header add-modal">
+				<h3 class="ui header add-modal">
 					<i class="checkmark icon"></i>
 					<div class="content" id="successdia_header"></div>
 				</h3>
@@ -309,8 +309,8 @@
 		
 		<!-- FAIL MESSAGE MODAL -->
 		<div class="ui tiny modal" id="faildia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header delete-modal">
+				<h3 class="ui header delete-modal">
 					<i class="remove icon"></i>
 					<div class="content" id="faildia_header"></div>
 				</h3>
@@ -352,5 +352,6 @@
 	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/categories.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/documents/view_personal_documents.js"></script>
 </html>

@@ -5,18 +5,24 @@
 	/* SUBMIT - Outgoing Document Form */
 	$('#outgoingdocs_form').ajaxForm({
 		beforeSubmit: isOutgoingDocFormValid,
-		success: function(response) {    
+		uploadProgress: function(event, position, total, percentComplete) {
+			 updateUploadProgress(percentComplete);
+	    },
+		success: function(response) {   
+			closeUploadProgress();
+			
 			if(response) {
 				clearOutgoingDocsForm();
-				deactivatePageLoading();
 				callSuccessModal('Outgoing Document Upload Success', 'Your document has been successfully uploaded.');
 			}
 			else {
-				 callFailModal('Outgoing Document Upload Failed', 'We are unable to upload your document, please try again.');
-				deactivatePageLoading();
+				callFailModal('Outgoing Document Upload Failed', 'We are unable to upload your document, please try again.');
 			}
+			
+			deactivatePageLoading();
 		},
 		error: function(response) {
+			
 			callFailRequestModal();
 			deactivatePageLoading();
 		}
@@ -69,6 +75,7 @@
 	function isOutgoingDocFormValid() {
 		if( $('#outgoingdocs_form').form('is valid') ) {
 			activatePageLoading('Uploading Outgoing Document');
+			openAndInitializeUploadProgress();
 			return true;
 		} 
 		else {

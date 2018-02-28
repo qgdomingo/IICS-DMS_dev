@@ -17,7 +17,7 @@
         	  if(response) {
         		  callSuccessModal('Task Updated', 'This task has been updated. The page will now refresh.');
         		  
-        		  setTimeout(function(){  window.location.reload(); }, 5000);
+        		  setTimeout(function(){  window.location.reload(); }, 2000);
         	  }
         	  else {
         		  callFailModal('Fail to Update Task', 'We are unable to update this task. Please Try Again.');

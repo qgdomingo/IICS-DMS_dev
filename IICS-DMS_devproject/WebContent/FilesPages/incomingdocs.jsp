@@ -136,6 +136,23 @@
 		
 <!-- ACTUAL PAGE CONTENTS -->
 		
+		<!-- DOCUMENT TYPE SELECTOR FOR MOBILE -->
+		<div class="ui form mobile only">
+			<div class="field">
+				<label>View Document Type:</label>
+				<select class="ui fluid dropdown" id="doctype_select">
+					<option value="">Navigate to</option>
+				  	<option value="personaldocs.jsp">Personal</option>
+				<% if(!userType.equalsIgnoreCase("Faculty")) { %>
+				  	<option value="incomingdocs.jsp">Incoming</option>
+				  	<option value="outgoingdocs.jsp">Outgoing</option>
+				  	<option value="archivedocs.jsp">Archived</option>
+				  	<option value="alldocs.jsp">All Documents</option>
+				<% } %>
+				</select>
+			</div>
+		</div> 
+		
 		<!-- DOCUMENT TYPE SELECTOR FOR NON-MOBILE -->
 		<div class="mobile hidden">
 			<div class="ui secondary pointing menu">

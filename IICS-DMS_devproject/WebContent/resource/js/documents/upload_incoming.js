@@ -2,10 +2,19 @@
  *  upload_incoming.js
  *   - javascript used for upload of incoming document which includes form validation
  */
-	var today = new Date();
 
+/*
+ * VARIABLES
+ */
+	var today = new Date();
+	var firstThreeLetters = '';
+	var selectedAction = '';
+	var tempDueValue = '';
+	
 	$(document).ready(() => {
-		
+		$('#reference_no_field').hide();
+		$('#incoming_due_field').hide();
+
 		// Calendar Input Initialization
 		$('#incoming_due_calendar').calendar({
 			minDate: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
@@ -13,23 +22,93 @@
 			formatter: dateFormat
 		});
 	});
-
-
+	
+/*
+ * FUNCTIONS and EVENTS
+ */
+	/* CHANGE - Set Incoming Document Reference No. Label and Field */
+	$('#incoming_source').on('change', function() {
+		$('#reference_no').val('');
+		$('#reference_no_field').hide();
+		
+		var selectedSource = $('#incoming_source').dropdown('get value');
+		var startingReference = '';
+		
+		$.each(localSourceRecipientData, (index, data) => {
+			if(data.sourcesName == selectedSource) {
+				startingReference = data.defaultReference;
+				return;
+			}
+		});
+		
+		firstThreeLetters = startingReference.substring(0, 3);
+		
+		if(firstThreeLetters == 'UST') {
+			$('#reference_no_field').show();
+			$('#reference_no_start').text(startingReference);
+		} 
+		else {
+			$('#reference_no_field').hide();
+		}
+	});
+	
+	/* CHANGE - Set Incoming Document Action Due */
+	$('#incoming_action').on('change', function() {
+		$('#incoming_due_calendar').calendar('clear');
+		$('#incoming_due_field').hide();
+		
+		selectedAction = $('#incoming_action').dropdown('get value');
+		
+		if(!(selectedAction == 'None') ) {
+			$('#incoming_due_field').show();
+		}
+	});
+	
+	/* CUSTOM FORM RULE - If Needed a Reference No */
+	$.fn.form.settings.rules.referenceNo = function(value) {
+		if( (firstThreeLetters == '') ||
+			(firstThreeLetters == 'EXT' && value == '') ||
+		    (firstThreeLetters == 'UST' && !(value == '')) ) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	};
+	
+	/* CUSTOM FORM RULE - If Needed an Action Due */
+	$.fn.form.settings.rules.actionDue = function(value) {
+		if( (selectedAction == '') ||
+		    (!(selectedAction == 'None')  && !(value == ''))  || 
+		    (selectedAction == 'None' && value == '')) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	};
+	
 	/* SUBMIT - Incoming Document Form */
 	$('#incomingdocs_form').ajaxForm({
 		beforeSubmit: isIncomingDocFormValid,
-		success: function(response) {    
+		uploadProgress: function(event, position, total, percentComplete) {
+			 updateUploadProgress(percentComplete);
+	    },
+		success: function(response) {  
+			closeUploadProgress();
+			
 			if(response) {
 				clearIncomingDocsForm();
-				deactivatePageLoading();
 				callSuccessModal('Incoming Document Upload Success', 'Your document has been successfully uploaded.');
 			}
 			else {
 				callFailModal('Incoming Document Upload Failed', 'We are unable to upload your document, please try again.');
-				deactivatePageLoading();
 			}
+			
+			deactivatePageLoading();
 		},
 		error: function(response) {
+			closeUploadProgress();
 			callFailRequestModal();
 			deactivatePageLoading();
 		}
@@ -83,7 +162,26 @@
 						prompt : 'Please select an action needed for the document'
 					}
 				]
+			},
+			incoming_due: {
+				identifier: 'incoming_due',
+				rules: [
+					{
+						type   : 'actionDue[]',
+						prompt : 'Please enter a due date for the incoming document'
+					}
+				]
+			},
+			reference_no: {
+				identifier: 'reference_no',
+				rules: [
+					{
+						type   : 'referenceNo[]',
+						prompt : 'Please enter a reference number of the document'
+					}
+				]
 			}
+			
 		}
 	});
 	
@@ -91,6 +189,7 @@
 	function isIncomingDocFormValid() {
 		if( $('#incomingdocs_form').form('is valid') ) {
 			activatePageLoading('Uploading Incoming Document');
+			openAndInitializeUploadProgress();
 			return true;
 		} 
 		else {

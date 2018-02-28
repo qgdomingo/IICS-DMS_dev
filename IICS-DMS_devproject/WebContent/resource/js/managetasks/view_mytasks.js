@@ -23,6 +23,7 @@
 	var isMyTasksTableEmpty = true;
 	var today = new Date();
 	var selectedDataID;
+	var selectedRowReference;
 /*
  * FUNCTIONS
  */
@@ -84,6 +85,7 @@
 	    	$(this).toggleClass('active');
 	    	selectedDataID = $(this).attr('id');
 	    	getMyTaskData($(this).attr('id'));
+	    	selectedRowReference = $(this);
 	    	$('#mytask_dialog').modal({
 				closable: false,
 				observeChanges: true,
@@ -93,11 +95,15 @@
 					removeCSSClass('#mytask_form', 'loading');
 					$('#viewmytask_close').prop("disabled", "");
 					$('#mytask_form').form('reset');
-					$(this).toggleClass('active');
 				}
 			}).modal('show');
 	    });
 	}
+	
+	/* CLOSE MODAL - MY TASK */
+	$('#viewmytask_close').click(() => {
+		selectedRowReference.toggleClass('active');
+	});
 	
 	/* GET - Individual My Task Data for Viewing */
 	function getMyTaskData(id) {
@@ -179,11 +185,17 @@
 	function submitMyTask() {		
 		 $('#mytask_form').ajaxForm({
 			  beforeSubmit: isFormValid,
-	          success: function(response) {    
+			  uploadProgress: function(event, position, total, percentComplete) {
+					 updateUploadProgress(percentComplete);
+			  },
+	          success: function(response) {  
+	        	  closeUploadProgress();
+	        	  
 	              if(response)
 	              {
 	            	  localMyTasksData[selectedDataID]['status'] = response;
 	            	  myTasksTable.row('.active').remove();
+	            	  selectedRowReference.toggleClass('active');
 	            	  myTasksTable.row.add( $(addRowData(localMyTasksData[selectedDataID], selectedDataID))[0] ).draw();	
 	            	  
 	            	  callSuccessModal('Task Upload Success', 'Your task has been successfully submitted.');
@@ -194,6 +206,7 @@
 	              }
 	          },
 	          error: function(response) {
+	        	  closeUploadProgress();
 	        	  callFailRequestModal();
 	          }
 	     });
@@ -232,6 +245,8 @@
 		if( $('#mytask_form').form('is valid') ) {
 			 addCSSClass('#mytask_form', 'loading');
 			 $('#viewmytask_close').prop("disabled", "disabled");
+			 $('#mytask_dialog').modal('hide');
+			 openAndInitializeUploadProgress();
 			return true;
 		} 
 		else {

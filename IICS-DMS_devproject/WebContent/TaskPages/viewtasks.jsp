@@ -290,6 +290,16 @@
 			</div>
 		</div>
 
+		<!-- PROGRESS MODAL -->
+		<div class="ui small modal" id="progressbar_modal">
+			<div class="ui indicating progress" data-percent="0" id="upload_progress_bar">
+			  <div class="bar">
+			  	<div class="progress"></div>
+			  </div>
+			  <div class="label">Uploading Document</div>
+			</div>
+		</div>
+
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">
 			<div class="header add-modal">

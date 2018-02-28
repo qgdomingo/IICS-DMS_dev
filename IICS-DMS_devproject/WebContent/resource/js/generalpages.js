@@ -85,7 +85,47 @@
 			$(item).prop("disabled", "disabled");
 		});
 	}
-
+	
+	/* CUSTOM SEARCH FILTER: Date Range */
+	function filterDateRange(data, min, max) {
+		var dateData = new Date( data[1] ).getTime(); 
+			
+		if ( ( isNaN(min) && isNaN(max) ) ||
+		     ( isNaN(min) && dateData <= max ) ||
+		     ( min <= dateData && isNaN(max) ) ||
+		     ( min <= dateData && dateData <= max ) )
+		{
+			return true;
+		}
+		return false;
+	}
+/*
+ * UPLOAD DOCUMENT PROGRESS BAR
+ */	
+	/* Open and Initialize Progress Bar */
+	function openAndInitializeUploadProgress() {
+		$('#upload_progress_bar').progress({
+		    percent: 0
+		}).progress();
+		
+		$('#progressbar_modal').modal({
+			closeable: false,
+			observeChanges: true,
+			duration: 0
+		}).modal('show');
+	}
+	
+	/* Update Progress Bar */
+	function updateUploadProgress(percent) {
+		$('#upload_progress_bar').progress('set percent', percent);
+	}
+	
+	/* Close Progress Bar on Complete */
+	function closeUploadProgress() {
+    	$('#progressbar_modal').modal('hide');
+	}
+	
+	
 /*
  * CALENDAR INITIALIZATION
  */

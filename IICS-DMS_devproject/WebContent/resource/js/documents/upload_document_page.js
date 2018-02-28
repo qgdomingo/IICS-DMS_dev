@@ -6,8 +6,7 @@
 	$(document).ready(() => {	
 		retrieveCategory();
 		changeUploadForm($('#doctype_select').val());
-
-		submitOutgoingDocsForm();
+		
 	});
 	
 /*
@@ -28,6 +27,10 @@
 	var incomingSourceUpdated = false;
 	var outgoingCategoryUpdated = false;
 	var outgoingRecipientUpdated = false;
+	
+	// for progress bar
+    var bar = $('.bar');
+    var percent = $('.label');
 	
 /* 
  *  FUNCTIONS AND EVENTS
@@ -252,8 +255,8 @@
 				$(categoryDropdown).append($('<option value="">').text('Select Document Recipient'));
 
 			
-			$.each(localSourceRecipientData, (index, stringData) => {
-				$(categoryDropdown).append($('<option value="'+stringData+'">').text(stringData));
+			$.each(localSourceRecipientData, (index, data) => {
+				$(categoryDropdown).append($('<option value="'+data.sourcesName+'">').text(data.sourcesName));
 			});
 		}
 		else {

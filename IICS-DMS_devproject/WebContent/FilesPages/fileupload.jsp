@@ -278,7 +278,7 @@
 							<option value="Response">Response</option>
 						</select>
 					</div>
-					<div class="five wide field">
+					<div class="five wide required field" id="incoming_due_field">
 						<label>Action Due:</label>
 						<div class="ui calendar" id="incoming_due_calendar">
 							<div class="ui icon input">
@@ -287,13 +287,13 @@
 							</div>
 						</div>
 					</div>
-					<div class="six wide field">
+					<div class="six wide required field" id="reference_no_field">
 						<label>Reference No:</label>
 						<div class="ui labeled input">
 						  <div class="ui label">
 						    <span id="reference_no_start">UST:0000-</span>
 						  </div>
-						  <input type="text" placeholder="00-XX00" name="reference_no"/>
+						  <input type="text" placeholder="00-XX00" name="reference_no" id="reference_no"/>
 						</div>
 						<p class="microcopy-hint">This is used to uniquely identify documents.</p>
 					</div>
@@ -462,6 +462,16 @@
 			</div>
 		</div>
 	<% } %>
+		
+		<!-- PROGRESS MODAL -->
+		<div class="ui small modal" id="progressbar_modal">
+			<div class="ui indicating progress" data-percent="0" id="upload_progress_bar">
+			  <div class="bar">
+			  	<div class="progress"></div>
+			  </div>
+			  <div class="label">Uploading Document</div>
+			</div>
+		</div>
 		
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">
