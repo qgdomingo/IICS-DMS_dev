@@ -76,7 +76,26 @@ public class RetrieveDocumentFunctions {
 			return result;
 	}
 	
+	public static ResultSet retrieveIncomingThread(String source) throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("SELECT * FROM incoming_documents where source_recipient = ?");
+			prep.setString(1, source);
+			ResultSet result = prep.executeQuery();
+
+			return result;
+	}
 	
 
+
+	public static ResultSet retrieveOutgoingThread(String source) throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("SELECT * FROM outgoing_documents where source_recipient = ?");
+			prep.setString(1, source);
+			ResultSet result = prep.executeQuery();
+
+			return result;
+	}
 
 }
