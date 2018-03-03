@@ -46,6 +46,13 @@ public class RetrieveUserDirectory extends HttpServlet {
 									  accounts.getString("department"),
 									  accounts.getString("status"))
 						 );	
+				System.out.println(accounts.getString("time_created"));
+				System.out.println(accounts.getString("first_name"));
+				System.out.println(accounts.getString("last_name"));
+				System.out.println(accounts.getString("email"));
+				System.out.println(accounts.getString("user_type"));
+				System.out.println(accounts.getString("department"));
+				System.out.println(accounts.getString("status"));
 			}
 			String json = new Gson().toJson(users);
 			

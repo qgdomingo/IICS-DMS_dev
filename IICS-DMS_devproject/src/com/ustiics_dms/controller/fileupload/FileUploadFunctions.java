@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 import org.apache.commons.fileupload.FileItem;
 
@@ -30,40 +31,65 @@ public class FileUploadFunctions {
 			prep.executeUpdate();
 	}
 	
-	public static void uploadIncomingDocument(String referenceNo, String source, String documentTitle, String category, String actionRequired, FileItem item, String description, String fullName, String email, String department, String actionDue) throws SQLException, IOException
+	public static void uploadIncomingDocument(String threadNumber, String referenceNo, String source, String documentTitle, String category, String actionRequired, FileItem item, String description, String fullName, String email, String department, String actionDue) throws SQLException, IOException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("INSERT INTO incoming_documents (reference_no, source_recipient, title, category, action_required, file_name, file_data, description, created_by, email, department, due_on) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+
+			String statement = "INSERT INTO incoming_documents (thread_number, reference_no, source_recipient, title, category, action_required, file_name, file_data, description, created_by, email, department, due_on) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			
-			prep.setString(1, getReferenceNo(source) + referenceNo);
-			prep.setString(2, source);
-			prep.setString(3, documentTitle);
-			prep.setString(4, category);
-			prep.setString(5, actionRequired);
-			prep.setString(6, item.getName());//file name
-			prep.setBinaryStream(7, item.getInputStream(),(int) item.getSize());//file data 
-			prep.setString(8, description);
-			prep.setString(9, fullName);
-			prep.setString(10, email);
-			prep.setString(11, department);
-			prep.setString(12, actionDue);
+			if(actionRequired.equalsIgnoreCase("None"))
+			{
+				statement = "INSERT INTO incoming_documents (thread_number, reference_no, source_recipient, title, category, action_required, file_name, file_data, description, created_by, email, department) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+						
+			}
+			
+			if(threadNumber.isEmpty())
+			{
+				threadNumber = Integer.toString(getThreadCounter());
+			}
+			
+			PreparedStatement prep = con.prepareStatement(statement);
+			prep.setString(1, threadNumber);
+			prep.setString(2, getReferenceNo(source) + referenceNo);
+			prep.setString(3, source);
+			prep.setString(4, documentTitle);
+			prep.setString(5, category);
+			prep.setString(6, actionRequired);
+			prep.setString(7, item.getName());//file name
+			prep.setBinaryStream(8, item.getInputStream(),(int) item.getSize());//file data 
+			prep.setString(9, description);
+			prep.setString(10, fullName);
+			prep.setString(11, email);
+			prep.setString(12, department);
+			
+			if(!actionRequired.equalsIgnoreCase("None"))
+			{
+				prep.setString(13, actionDue);
+			}
+			
 			prep.executeUpdate();
 	}
 	
-	public static void uploadOutgoingDocument(String recipient, String documentTitle, String category, FileItem item, String description, String fullName, String email, String department) throws SQLException, IOException
+	public static void uploadOutgoingDocument(String threadNumber, String recipient, String documentTitle, String category, FileItem item, String description, String fullName, String email, String department) throws SQLException, IOException
 	{
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("INSERT INTO outgoing_documents (source_recipient, title, category, file_name, file_data, description, created_by, email, department) VALUES (?,?,?,?,?,?,?,?,?)");
 			
-			prep.setString(1, recipient);
-			prep.setString(2, documentTitle);
-			prep.setString(3, category);
-			prep.setString(4, item.getName());//file name
-			prep.setBinaryStream(5, item.getInputStream(),(int) item.getSize());//file data 
-			prep.setString(6, description);
-			prep.setString(7, fullName);
-			prep.setString(8, email);
-			prep.setString(9, department);
+			if(threadNumber.isEmpty())
+			{
+				threadNumber = Integer.toString(getThreadCounter());
+			}
+			
+			prep.setString(1, threadNumber);
+			prep.setString(2, recipient);
+			prep.setString(3, documentTitle);
+			prep.setString(4, category);
+			prep.setString(5, item.getName());//file name
+			prep.setBinaryStream(6, item.getInputStream(),(int) item.getSize());//file data 
+			prep.setString(7, description);
+			prep.setString(8, fullName);
+			prep.setString(9, email);
+			prep.setString(10, department);
 			
 			prep.executeUpdate();
 	}
@@ -108,6 +134,7 @@ public class FileUploadFunctions {
 		
 		prep.executeUpdate();
 	}
+	
 	public static String addExternalSource(String source) throws SQLException
 	{
 			String defaultReference = "EXT:"+ appendZeroes(getIncrement()) + getIncrement() + "-";
@@ -150,6 +177,32 @@ public class FileUploadFunctions {
 			String end = rs.getString("end_year").substring(2);
 			String year = start + "-" + end + "-";
 			return year;
+	}
+	
+	public static int getThreadCounter() throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("SELECT counter FROM thread_number");
+			
+
+			ResultSet rs = prep.executeQuery();
+			
+			rs.next();
+			
+			int counter = rs.getInt("counter") + 1;
+			incrementThreadCounter(counter);
+			return counter;
+	}
+	
+	public static void incrementThreadCounter(int counter) throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("UPDATE thread_number SET counter = ?");
+			
+			prep.setInt(1, counter);
+
+			prep.executeUpdate();
+
 	}
 	
 	public static String appendZeroes(int word)

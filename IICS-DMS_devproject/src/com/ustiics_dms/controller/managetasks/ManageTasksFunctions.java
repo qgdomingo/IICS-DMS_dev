@@ -227,6 +227,8 @@ public class ManageTasksFunctions {
 			
 			for(String mail: email)
 			{
+				if(checkExists(id,mail))
+				{
 				PreparedStatement prep = con.prepareStatement("INSERT INTO tasks_assigned_to (id, name, email) VALUES (?,?,?)");
 				
 				String fullName = getFullName(mail);
@@ -234,8 +236,27 @@ public class ManageTasksFunctions {
 				prep.setString(2, fullName);
 				prep.setString(3, mail);
 				prep.executeUpdate();
+				}
 			}
 			
+	}
+	
+	public static boolean checkExists(String id, String email) throws SQLException 
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT id FROM tasks_assigned_to WHERE id = ? AND email = ?");
+		prep.setString(1, id);
+		prep.setString(2, email);
+		ResultSet rs = prep.executeQuery();
+		
+		boolean flag = true;
+		
+		if (rs.isBeforeFirst())
+		{
+			flag = false;
+		}
+		return flag;
+		
 	}
 	
 	public static ResultSet getSpecificCreatedTask(String id) throws SQLException 

@@ -67,10 +67,26 @@ public class MailFunctions {
 		prep.setString(3, type);
 		prep.executeUpdate();
 	
-		String isoNumber = counter.getString("iso_number") + appendZeroes(updatedCounter) + updatedCounter;
+		String isoNumber = getAcadYear() + counter.getString("iso_number") + appendZeroes(updatedCounter) + updatedCounter;
 		
 		return isoNumber;
 		
+	}
+	
+	public static String getAcadYear() throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("SELECT start_year, end_year FROM academic_year");
+			
+
+			ResultSet rs = prep.executeQuery();
+			
+			rs.next();
+			
+			String start = rs.getString("start_year").substring(2);
+			String end = rs.getString("end_year").substring(2);
+			String year = start + "-" + end + "-";
+			return year;
 	}
 	
 	public static String appendZeroes(int word)

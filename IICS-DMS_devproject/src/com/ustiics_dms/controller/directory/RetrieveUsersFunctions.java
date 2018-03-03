@@ -14,10 +14,12 @@ public class RetrieveUsersFunctions {
 			Connection con = DBConnect.getConnection();
 			String sqlStatement = null ;
 			boolean trigger = false;
+			PreparedStatement prep;
+			
 			if(userType.equalsIgnoreCase("Director") || userType.equalsIgnoreCase("Faculty Secretary"))
 			{
 				sqlStatement = "SELECT faculty_number, first_name, last_name, full_name, email, user_type, department, time_created, status"
-						+ " FROM accounts WHERE NOT user_type = ? AND NOT email = ?";
+						+ " FROM accounts";
 			}
 			else if(userType.equalsIgnoreCase("Department Head"))
 			{
@@ -25,13 +27,12 @@ public class RetrieveUsersFunctions {
 						+ " FROM accounts WHERE NOT user_type = ? AND NOT email = ? AND department = ?";
 				trigger = true;
 			}
-			
-			PreparedStatement prep = con.prepareStatement(sqlStatement);
-			prep.setString(1, "Administrator");
-			prep.setString(2, email);
-			
+				prep = con.prepareStatement(sqlStatement);
+
 			if(trigger)
 			{
+				prep.setString(1, "Administrator");
+				prep.setString(2, email);
 				prep.setString(3,  department);
 			}
 			

@@ -32,13 +32,14 @@ public class Thread extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		String source = request.getParameter("source");
 		List<Document> files = new ArrayList<Document>();
 	    response.setCharacterEncoding("UTF-8");
 		
 	    HttpSession session = request.getSession();
 	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
-			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveThread("1");
+			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveThread(source);
 			while(documentFiles.next()) 
 			{ 
 				files.add(new Document(

@@ -70,12 +70,14 @@ public class FileUpload extends HttpServlet {
 			String category = null;
 			String description = null;
 			String fullName = acc.getFullName();
-			
+			//used by incoming and outgoing
+			String threadNo = null;
 			//used by incoming documents
 			String documentSource = null;
 			String referenceNo = null;
 			String actionRequired = null;
 			String actionDue = null;
+			
 			//used by outgoing documents
 			String documentRecipient = null;
 			
@@ -96,8 +98,8 @@ public class FileUpload extends HttpServlet {
 				actionRequired = tempStorage[5];
 				actionDue = tempStorage[6];
 				referenceNo = tempStorage[7];
-				
-				FileUploadFunctions.uploadIncomingDocument(referenceNo, documentSource, documentTitle, category, actionRequired, fileData, description, fullName, acc.getEmail(),acc.getDepartment(), actionDue);
+				threadNo = tempStorage[8];
+				FileUploadFunctions.uploadIncomingDocument(threadNo, referenceNo, documentSource, documentTitle, category, actionRequired, fileData, description, fullName, acc.getEmail(),acc.getDepartment(), actionDue);
 			}
 			else if(documentType.equalsIgnoreCase("Outgoing"))
 			{
@@ -105,8 +107,8 @@ public class FileUpload extends HttpServlet {
 				documentRecipient = tempStorage[2];
 				documentTitle = tempStorage[3];
 				description = tempStorage[4];
-				
-				FileUploadFunctions.uploadOutgoingDocument(documentRecipient, documentTitle, category, fileData, description, fullName, acc.getEmail(),acc.getDepartment());
+				threadNo = tempStorage[5];
+				FileUploadFunctions.uploadOutgoingDocument(threadNo, documentRecipient, documentTitle, category, fileData, description, fullName, acc.getEmail(),acc.getDepartment());
 			}
 				
 			response.setContentType("text/plain");
