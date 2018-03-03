@@ -166,7 +166,8 @@
 	/* CLOSE MODAL - Logout */
 	$('#logout_btn').click(() => {
 		$('#logout_dia').modal({
-			closable: false
+			closable: false,
+			observeChanges: true
 		})
 		.modal('show');
 	});

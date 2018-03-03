@@ -16,6 +16,7 @@ public class IncomingDocument {
 	private String status;
 	private String timeCreated;
 	private String department;
+	
 	public IncomingDocument(String type, String threadNumber, String referenceNo, String sourceRecipient, String title,
 			String category, String actionRequired, String file_name, String description, String createdBy,
 			String email, String status, String timeCreated, String department) {
@@ -35,6 +36,14 @@ public class IncomingDocument {
 		this.timeCreated = timeCreated;
 		this.department = department;
 	}
+	
+	public IncomingDocument(String threadNumber, String title, String category, String timeCreated) {
+		this.threadNumber = threadNumber;
+		this.title = title;
+		this.category = category;
+		this.timeCreated = timeCreated;
+	}
+	
 	public String getType() {
 		return type;
 	}

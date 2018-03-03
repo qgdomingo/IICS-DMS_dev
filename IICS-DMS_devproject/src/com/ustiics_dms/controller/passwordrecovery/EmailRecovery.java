@@ -38,7 +38,6 @@ public class EmailRecovery extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		
 		try {
-			//TODO: HOW ABOUT PREVIOUS RESET CODES? WHAT IF IT IS EXISTING. RESEND CODE INSTEAD?
 			if(PasswordRecoveryFunctions.checkEmailExists(recipient))
 			{
 				PasswordRecoveryFunctions.deleteExistingRecoveryCode(recipient);
@@ -50,7 +49,7 @@ public class EmailRecovery extends HttpServlet {
 				message += "your security code is: " + code;
 				/************************ End of E-Mail Message **********************/
 				
-				String userName = "2014069493@ust-ics.mygbiz.com";
+				String userName = "iics2014dmsystem@gmail.com";
 				String password = "bluespace09";
 				
 				SendMail.send(recipient, subject, message, userName, password); //send email
@@ -67,6 +66,7 @@ public class EmailRecovery extends HttpServlet {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 

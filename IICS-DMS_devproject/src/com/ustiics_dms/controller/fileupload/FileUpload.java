@@ -114,11 +114,10 @@ public class FileUpload extends HttpServlet {
 			response.setContentType("text/plain");
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write("success upload");
-		} catch (FileUploadException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		} 
 	}
 
 }

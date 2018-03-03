@@ -1,10 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
 <html>
 	<head>
 		<title>Login | IICS DMS</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="resource/semanticui/semantic.min.css">
 		<link rel="stylesheet" href="resource/css/master.css">
@@ -67,22 +67,31 @@
 						Let us help you with that by sending you an email! 
 						But first we're going to need the email address of your registered account.
 					</p>
-					<form class="ui form" id="forgotpass_form">
-						<div class="field" id="forgotpass_emailfield">
+					
+					<form class="ui form" method="POST" action="${pageContext.request.contextPath}/sendemail" 
+							id="forgotpass_form">
+						
+						<div class="field element-rmb">
 							<label>Email Address</label>
-							<input id="forgotpass_email" type="email" placeholder="Email Address">
+							<div class="ui left icon input">
+								<i class="envelope icon"></i>
+								<input type="email" name="email" id="forgotpass_email" placeholder="Email Address">
+							</div>
 						</div>
+						<p class="microcopy-hint">
+							Pst! Cant remember your email? It's your gbiz account.
+						</p>
+						
+						<div class="ui error message"></div>
 					</form>
-					<p class="microcopy-hint">
-						Pst! Cant remember your email? It's your gbiz account.
-					</p>
+
 				</div>
 				<div class="actions">
 					<button class="ui cancel grey button" id="cancelforgot_btn">
 						<i class="remove icon"></i>
 						Cancel
 					</button>
-					<button class="ui green button" id="submitforgot_btn" disabled="disabled">
+					<button class="ui green button" type="submit" id="submitforgot_btn" form="forgotpass_form">
 						<i class="checkmark icon"></i>
 						Submit
 					</button>
@@ -106,22 +115,28 @@
 						<b>NOTE:</b> You won't be receiving any email if the address you entered is not
 						registered.
 					</p>
-					<form class="ui form" id="resetcode_form">
-						<div class="field" id="resetcode_field">
+					<form class="ui form" method="POST" action="${pageContext.request.contextPath}/InputRecoveryCode" 
+							id="resetcode_form">
+							
+						<input type="hidden" name="email" id="resetcode_email">
+						<div class="field">
 							<label>Reset Code</label>
-							<input id="resetcode" type="text" placeholder="00000">
+							<input type="text" name="code" id="resetcode" placeholder="00000">
 						</div>
-						<div class="ui error message">
-						    <p>The reset code you entered is incorrect.</p>
-						</div>
+						
+						<div class="ui error message"></div>
 					</form>
+					<div class="ui message" id="invalid_code_msg">
+						<p>You have entered an incorrect reset code.</p>
+					</div>
+					
 				</div>
 				<div class="actions">
 					<button class="ui cancel grey button" id="cancelreset_btn">
 						<i class="remove icon"></i>
 						Cancel
 					</button>
-					<button class="ui green button" id="submitreset_btn" disabled="disabled">
+					<button class="ui green button" id="submitreset_btn" form="resetcode_form">
 						<i class="checkmark icon"></i>
 						Submit
 					</button>
@@ -141,23 +156,29 @@
 						This is the last step! Please enter your new password below. 
 						If you cancel, you will have to repeat the whole process. 	
 					</p>
-					<div class="ui message microcopy-hint">
-						<p> The submit button will be disabled until: </p>
-						<ul>
-							<li>your passwords have a minimum of six (6) characters</li>
-							<li>both of the password fields match</li>
+					<div class="ui message">
+						<div class="header">
+							Password Rules
+						</div>
+						<ul class="list">
+							<li>Your password must be at least 6 characters in length</li>
 						</ul>
 					</div>
-					<form class="ui form" id="newpass_form">
-						<div class="field" id="newpass_field">
+					<form class="ui form" method="POST" action="${pageContext.request.contextPath}/PasswordChange"  
+							id="newpass_form">
+						<input type="hidden" name="email" id="newpass_email">
+						<input type="hidden" name="code" id="newpass_code">
+						
+						<div class="field">
 							<label>New Password</label>
-							<input id="new_password" type="password" placeholder="New Password">
+							<input name="new_password" type="password" placeholder="New Password">
 						</div>
-						<div class="field" id="confnewpass_field">
+						<div class="field">
 							<label>Repeat New Password</label>
-							<input id="confirm_password" type="password" placeholder="Repeat New Password">
+							<input name="confirm_password" type="password" placeholder="Repeat New Password">
 						</div>
-		
+						
+						<div class="ui error message"></div>
 					</form>
 				</div>
 				<div class="actions">
@@ -165,7 +186,7 @@
 						<i class="remove icon"></i>
 						Cancel
 					</button>
-					<button class="ui green button" id="submitnewpass_btn" disabled="disabled">
+					<button class="ui green button" id="submitnewpass_btn" form="newpass_form">
 						<i class="checkmark icon"></i>
 						Submit
 					</button>

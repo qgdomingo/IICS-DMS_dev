@@ -40,21 +40,14 @@ public class OutgoingDocumentsThread extends HttpServlet {
 	    HttpSession session = request.getSession();
 	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
-			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveOutgoingThread(source);
+			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveOutgoingThread(source, acc.getEmail());
 			while(documentFiles.next()) 
 			{ 
 				outgoingFiles.add(new OutgoingDocument(
-						documentFiles.getString("type"),
 						documentFiles.getString("thread_number"),
-						documentFiles.getString("source_recipient"),
 						documentFiles.getString("title"),
 						documentFiles.getString("category"),
-						documentFiles.getString("file_name"),
-						documentFiles.getString("description"),
-						documentFiles.getString("created_by"),
-						documentFiles.getString("email"),
-						documentFiles.getString("time_created"),
-						documentFiles.getString("department")
+						documentFiles.getString("time_created")
 						 ));	
 				
 			}

@@ -203,15 +203,15 @@
 						<div class="field">
 							<div class="ui icon input">
 								<i class="search icon"></i>
-								<input type="text" placeholder="Seach Document" id="personal_search"/>
+								<input type="text" placeholder="Seach Document" id="search_personal"/>
 							</div>
 						</div>
 							
 						<!-- UPLOAD FROM DATE BOX -->
 						<div class="field">
-							<div class="ui calendar" id="personal_uploadfrom_calendar">
+							<div class="ui calendar" id="search_uploadfrom_calendar">
 								<div class="ui icon input">
-									<input type="text" placeholder="Upload From" id="personal_uploadfrom"/>
+									<input type="text" placeholder="Upload From" id="search_uploadfrom"/>
 									<i class="calendar icon"></i>
 								</div>
 							</div>
@@ -219,9 +219,9 @@
 						
 						<!-- UPLOAD TO DATE BOX -->
 						<div class="field">
-							<div class="ui calendar" id="personal_uploadto_calendar">
+							<div class="ui calendar" id="search_uploadto_calendar">
 								<div class="ui icon input">
-									<input type="text" placeholder="Upload To" id="personal_uploadto"/>
+									<input type="text" placeholder="Upload To" id="search_uploadto"/>
 									<i class="calendar icon"></i>
 								</div>
 							</div>
@@ -229,21 +229,19 @@
 							
 						<!-- CATEGORY DROPDOWN -->
 						<div class="field">
-							<select class="ui fluid search selection dropdown" id="personal_category">
+							<select class="ui fluid search selection dropdown" id="search_category">
 								<option value="">Category</option>
-								<option value="Course Grades">Course Grades</option>
-								<option value="Course Syllabus">Course Syllabus</option>
-								<option value="Research">Research</option>
 							</select>
 						</div>
 							
-						<!-- SEARCH BUTTON -->
+						<!-- CLEAR SEARCH BUTTON -->
 						<div class="field">
-							<button class="ui grey button" type="button" id="personal_clear">
+							<button class="ui grey button" type="button" id="search_clear">
 								Clear Search
 							</button>
-							</div>
 						</div>
+						
+					</div>
 				</form>
 					
 				<!-- TABLE AREA -->
@@ -284,7 +282,6 @@
 					<input type="hidden" name="type" id="viewpersonal_download_type">
 					<button class="ui small fluid button" type="submit">View File</button>
 				</form>
-
 			</div>
 			<div class="actions center-text">
 				<button class="ui ok secondary button" id="viewpersonal_close">Close</button>

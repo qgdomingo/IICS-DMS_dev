@@ -205,9 +205,58 @@
 	  	$('#incoming_source').dropdown('restore defaults');
 	  	$('#incoming_action').dropdown('restore defaults');
 	  	$('#incoming_thread').dropdown('restore defaults');
+	  	$('#incoming_due_field').hide();
 	}
 	
 	/* CLICK EVENT - Incoming Document Clear Fields Button */
 	$('#incoming_clear').click(() => {
 		clearIncomingDocsForm();
 	});
+	
+/*
+ *  DOCUMENT THREAD
+ */
+	$('#incoming_source').on('change', function() {
+		var tempSource = $('#incoming_source').dropdown('get value');
+		
+		if(!tempSource == '') {
+			retrieveIncomingDocumentThread(tempSource);
+		}
+	});
+	
+	/* GET - FOR INCOMING: DOCUMENT THREAD LIST */
+	function retrieveIncomingDocumentThread(incomingSource) {
+		$('#incoming_thread').empty();
+
+		var sourceData = {
+			source: incomingSource
+		}
+		
+		$.post(getContextPath() + '/IncomingDocumentsThread', $.param(sourceData), (responseList) => {
+			$('#incoming_thread').dropdown('clear');
+			$('#incoming_thread').empty();
+			
+			if(!responseList.length == 0)
+			{				
+				$('#incoming_thread').append($('<option value="">').text("Select Thread"));
+				$.each(responseList, (index, data) => {
+					$('#incoming_thread').append($('<option value="'+data.threadNumber+'">')
+							.text(data.title + ' (' + data.category + ') ' + data.timeCreated));
+				});
+				$('#incoming_thread').dropdown().dropdown('refresh');
+			}
+			else if(responseList.length == 0)
+			{
+				$('#incoming_thread').append($('<option value="">').text("No Existing Thread for this Source"));
+				$('#incoming_thread').dropdown().dropdown('refresh');
+			}
+			else
+			{
+				callFailModal('Retrieve Thread Error', 'We are unable to retrieve the document thread list for Incoming Documents.');
+			}
+		})
+		.fail((response) => {
+			callFailRequestModal();
+		});
+	}
+	

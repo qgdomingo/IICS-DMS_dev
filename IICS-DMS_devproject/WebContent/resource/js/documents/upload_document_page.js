@@ -324,3 +324,4 @@
 			addCSSClass('#source_input_field', 'error');
 		}
 	});
+	

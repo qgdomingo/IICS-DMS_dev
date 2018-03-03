@@ -30,6 +30,14 @@ public class Account  {
 		this.department = department;
 		this.status = status;
 	}
+	
+	public Account(String fullName, String email, String userType, String department) {
+		super();
+		this.fullName = fullName;
+		this.email = email;
+		this.userType = userType;
+		this.department = department;
+	}
 
 	public String getCreationTimestamp() {
 		return creationTimestamp;

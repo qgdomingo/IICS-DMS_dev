@@ -76,11 +76,13 @@ public class RetrieveDocumentFunctions {
 			return result;
 	}
 	
-	public static ResultSet retrieveIncomingThread(String source) throws SQLException
+	public static ResultSet retrieveIncomingThread(String source, String department) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM incoming_documents where source_recipient = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT thread_number, title, category, time_created FROM outgoing_documents "
+					+ "WHERE source_recipient = ? AND department = ? ");
 			prep.setString(1, source);
+			prep.setString(2, department);
 			ResultSet result = prep.executeQuery();
 
 			return result;
@@ -88,11 +90,13 @@ public class RetrieveDocumentFunctions {
 	
 
 
-	public static ResultSet retrieveOutgoingThread(String source) throws SQLException
+	public static ResultSet retrieveOutgoingThread(String source, String department) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM outgoing_documents where source_recipient = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT thread_number, title, category, time_created FROM incoming_documents "
+					+ "WHERE source_recipient = ? AND department = ?");
 			prep.setString(1, source);
+			prep.setString(2, department);
 			ResultSet result = prep.executeQuery();
 
 			return result;

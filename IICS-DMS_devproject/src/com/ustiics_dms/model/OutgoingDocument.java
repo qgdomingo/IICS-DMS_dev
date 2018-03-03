@@ -31,6 +31,13 @@ public class OutgoingDocument {
 		this.department = department;
 	}
 
+	public OutgoingDocument(String threadNumber, String title, String category, String timeCreated) {
+		this.threadNumber = threadNumber;
+		this.title = title;
+		this.category = category;
+		this.timeCreated = timeCreated;
+	}
+	
 	public String getType() {
 		return type;
 	}

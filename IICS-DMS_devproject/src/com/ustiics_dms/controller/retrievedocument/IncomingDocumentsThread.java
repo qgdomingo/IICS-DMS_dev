@@ -17,52 +17,33 @@ import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.IncomingDocument;
 
-/**
- * Servlet implementation class IncomingDocumentsThread
- */
 @WebServlet("/IncomingDocumentsThread")
 public class IncomingDocumentsThread extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public IncomingDocumentsThread() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		String source = request.getParameter("source");
 
 		List<IncomingDocument> incomingFiles = new ArrayList<IncomingDocument>();
 	    response.setCharacterEncoding("UTF-8");
 		
 	    HttpSession session = request.getSession();
 	    Account acc = (Account) session.getAttribute("currentCredentials");
+	    
 		try {
-			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveIncomingThread(source);
+			String source = request.getParameter("source");
+			
+			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveIncomingThread(source, acc.getEmail());
 			while(documentFiles.next()) 
 			{ 
 				incomingFiles.add(new IncomingDocument(
-						documentFiles.getString("type"),
 						documentFiles.getString("thread_number"),
-						documentFiles.getString("reference_no"),
-						documentFiles.getString("source_recipient"),
 						documentFiles.getString("title"),
 						documentFiles.getString("category"),
-						documentFiles.getString("action_required"),
-						documentFiles.getString("file_name"),
-						documentFiles.getString("description"),
-						documentFiles.getString("created_by"),
-						documentFiles.getString("email"),
-						documentFiles.getString("status"),
-						documentFiles.getString("time_created"),
-						documentFiles.getString("department")
+						documentFiles.getString("time_created")
 						 ));	
 			}
 			String json = new Gson().toJson(incomingFiles);
@@ -77,9 +58,6 @@ public class IncomingDocumentsThread extends HttpServlet {
 		}
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
