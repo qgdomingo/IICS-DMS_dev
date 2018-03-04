@@ -40,15 +40,15 @@ public class Thread extends HttpServlet {
 		try {
 			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveThread(threadNumber);
 			while(documentFiles.next()) 
-			{ 
+			{ //id and category
 				files.add(new Document(
-						documentFiles.getString("type"),
+						documentFiles.getString("id"),
 						documentFiles.getString("thread_number"),
 						documentFiles.getString("reference_no"),
 						documentFiles.getString("source_recipient"),
 						documentFiles.getString("title"),
-						documentFiles.getString("action_required"),
 						documentFiles.getString("category"),
+						documentFiles.getString("action_required"),
 						documentFiles.getString("file_name"),
 						documentFiles.getString("description"),
 						documentFiles.getString("created_by"),
