@@ -140,4 +140,28 @@ public class ExternalMailFunctions {
 	       }
 	       return null;
 	}
+	
+	public static int getIncrement() throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("SHOW TABLE STATUS WHERE `Name` = 'sent_mail_to'");
+			ResultSet rs = prep.executeQuery();
+			rs.next();
+
+			return rs.getInt("Auto_increment")-1;
+	}
+	
+	public static void saveSentExternalMail(String recipient, String subject, String message, FileItem fileData) throws SQLException, IOException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("INSERT INTO external_mail (first_name, last_name, email, contact_number, affiliation, subject, message, file_name, file_data) VALUES (?,?,?,?,?,?,?,?,?)");
+		
+		prep.setString(1, recipient);
+		prep.setString(2, subject);
+		prep.setString(3, message);
+		prep.setString(4, fileData.getName());
+		prep.setBinaryStream(5, fileData.getInputStream(), (int) fileData.getSize());
+
+		prep.executeUpdate();
+	}
 }

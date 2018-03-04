@@ -14,6 +14,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import com.ustiics_dms.controller.mail.ExternalMail;
 import com.ustiics_dms.model.Account;
 
 
@@ -65,8 +66,9 @@ public class RespondToExternalMail extends HttpServlet {
 			String recipient = tempStorage[0];
 			String subject = tempStorage[1];
 			String message = tempStorage[2];
-			
-			ExternalMailFunctions.send(recipient, subject, id, user, pass);
+			ExternalMailFunctions.saveExternalMail(recipient, subject, message);
+			ExternalMailFunctions.send(recipient, subject, ExternalMailFunctions.getIncrement(), "iics2014dmsystem@gmail.com", "bluespace09");
+
 			
 		}catch(Exception e) {}
 		

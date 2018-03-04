@@ -54,7 +54,7 @@ public class RetrieveDocumentFunctions {
 					"UNION" + 
 					" SELECT type, id, reference_no, source_recipient, title, category, null, file_name, description, created_by, email, null, time_created, department  FROM outgoing_documents WHERE email = ? " + 
 					"UNION" + 
-					" SELECT type, id, null, null, title, category, null,  file_name, description, created_by, email, null, time_created , null FROM personal_documents WHERE email = ? ORDER BY time_created DESC");
+					" SELECT type, id, null, null, title, category, null,  file_name, description, created_by, email, null, time_created , null FROM personal_documents WHERE email = ? ORDER BY time_created ASC");
 			
 			prep.setString(1,  email);
 			prep.setString(2,  email);
@@ -69,7 +69,7 @@ public class RetrieveDocumentFunctions {
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("SELECT id, type, thread_number, reference_no, source_recipient, title, category, action_required, file_name, description, created_by, email, status,  time_created, department, due_on  FROM incoming_documents WHERE thread_number = ?" + 
 					" UNION " + 
-					"SELECT id, type, thread_number, null, source_recipient, title, category, null, file_name, description, created_by, email, null, time_created, department, null  FROM outgoing_documents WHERE thread_number = ? ORDER BY time_created DESC");
+					"SELECT id, type, thread_number, null, source_recipient, title, category, null, file_name, description, created_by, email, null, time_created, department, null  FROM outgoing_documents WHERE thread_number = ? ORDER BY time_created ASC");
 			
 			prep.setString(1,  threadNumber);
 			prep.setString(2,  threadNumber);
