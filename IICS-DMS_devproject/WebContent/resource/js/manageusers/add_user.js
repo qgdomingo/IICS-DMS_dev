@@ -89,6 +89,7 @@
 					if(!isUsersTableEmpty)
 					{
 						table.row.add( $(addNewRowData(responseJson[0]))[0] ).draw();
+						table.order( [7, 'desc'] ).draw();
 					}
 					else
 					{

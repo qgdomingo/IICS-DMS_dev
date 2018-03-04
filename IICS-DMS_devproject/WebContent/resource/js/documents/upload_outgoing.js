@@ -1,6 +1,10 @@
 /**
  * 
  */
+	/* CLEAR - Thread Selection */
+	$('#clear_outgoing_thread').click(function() {
+		$('#outgoing_thread').dropdown('restore defaults');
+	});
 
 	/* SUBMIT - Outgoing Document Form */
 	$('#outgoingdocs_form').ajaxForm({

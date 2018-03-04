@@ -14,7 +14,7 @@ public class RetrieveDocumentFunctions {
 			String sqlStatement = null;
 			if(type.equalsIgnoreCase("Incoming"))
 			{
-				sqlStatement = "SELECT type, thread_number, reference_no, source_recipient, title, category, action_required, file_name, description, created_by,"
+				sqlStatement = "SELECT id, type, thread_number, reference_no, source_recipient, title, category, action_required, file_name, description, created_by,"
 						+ " email, status, time_created, due_on, department FROM incoming_documents WHERE department = ?";
 			}
 			else if(type.equalsIgnoreCase("Outgoing"))

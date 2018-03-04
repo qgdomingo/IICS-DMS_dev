@@ -40,7 +40,7 @@ public class OutgoingDocumentsThread extends HttpServlet {
 	    HttpSession session = request.getSession();
 	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
-			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveOutgoingThread(source, acc.getEmail());
+			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveOutgoingThread(source, acc.getDepartment());
 			while(documentFiles.next()) 
 			{ 
 				outgoingFiles.add(new OutgoingDocument(

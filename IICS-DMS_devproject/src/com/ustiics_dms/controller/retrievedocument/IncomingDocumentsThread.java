@@ -36,7 +36,7 @@ public class IncomingDocumentsThread extends HttpServlet {
 		try {
 			String source = request.getParameter("source");
 			
-			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveIncomingThread(source, acc.getEmail());
+			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveIncomingThread(source, acc.getDepartment());
 			while(documentFiles.next()) 
 			{ 
 				incomingFiles.add(new IncomingDocument(

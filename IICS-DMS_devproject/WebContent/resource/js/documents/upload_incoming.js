@@ -26,6 +26,11 @@
 /*
  * FUNCTIONS and EVENTS
  */
+	/* CLEAR - Thread Selection */
+	$('#clear_incoming_thread').click(function() {
+		$('#incoming_thread').dropdown('restore defaults');
+	});
+	
 	/* CHANGE - Set Incoming Document Reference No. Label and Field */
 	$('#incoming_source').on('change', function() {
 		$('#reference_no').val('');
