@@ -34,7 +34,7 @@
 
 /* DATATABLE SEARCH FIELD */
 	#userstable_filter, #mytasks_table_filter, #taskscreated_table_filter,
-	#personal_table_filter, #assignedtask_table_filter
+	#personal_table_filter, #assignedtask_table_filter, #incoming_table_filter
 	{
 		display: none !important;
 	}

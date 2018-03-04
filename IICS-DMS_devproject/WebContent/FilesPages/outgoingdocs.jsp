@@ -202,42 +202,54 @@
 		
 			<!-- SEARCH AREA -->
 			<form class="ui form">
-				<div class="three fields">
-					<input type="hidden" name="doctype" value="Outgoing"/>
+				<div class="five fields">
 				
 					<!-- SEARCH BOX -->
 					<div class="field">
 						<div class="ui icon input">
-							<input type="text" placeholder="Seach Document.."/>
+							<input type="text" placeholder="Seach Document" id="search_outgoing"/>
 							<i class="search icon"></i>
 						</div>
 					</div>
 					
-					<!-- UPLOAD TIMESTAMP RANGE BOX -->
+					<!-- UPLOAD FROM DATE BOX -->
 					<div class="field">
-						<input type="text" placeholder="Upload Timestamp"/>
+						<div class="ui calendar" id="search_uploadfrom_calendar">
+							<div class="ui icon input">
+								<input type="text" placeholder="Upload From" id="search_uploadfrom"/>
+								<i class="calendar icon"></i>
+							</div>
+						</div>
+					</div>
+					
+					<!-- UPLOAD TO DATE BOX -->
+					<div class="field">
+						<div class="ui calendar" id="search_uploadto_calendar">
+							<div class="ui icon input">
+								<input type="text" placeholder="Upload To" id="search_uploadto"/>
+								<i class="calendar icon"></i>
+							</div>
+						</div>
 					</div>
 					
 					<!-- CATEGORY DROPDOWN -->
 					<div class="field">
-						<select class="ui fluid dropdown" name="category">
+						<select class="ui fluid dropdown" id="search_category">
 							<option value="">Category</option>
-							<option value="memo">Memo</option>
-							<option value="letter">Letter</option>
 						</select>
 					</div>
 						
 					<!-- SEARCH BUTTON -->
 					<div class="field">
-						<button class="ui grey button" type="button">
-							Search
+						<button class="ui grey button" type="button" id="search_clear">
+							Clear Search
 						</button>
 					</div>
 				</div>
 			</form>
 				
 				<!-- TABLE AREA -->
-				<table class="ui compact selectable sortable table">
+				<table class="ui compact selectable table" id="outgoing_table">
 					<thead>
 						<tr>
 							<th>Document Title</th>
@@ -246,7 +258,7 @@
 							<th>Category</th>
 						</tr>
 					</thead>
-					<tbody></tbody>		
+					<tbody id="outgoing_tablebody"></tbody>		
 				</table>
 				
 			</div>
@@ -254,10 +266,52 @@
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
 		
+		<!-- VIEW - OUTGOING DOCUMENT -->
+		<div class="ui tiny modal" id="viewoutgoing_dialog">
+			<div class="header neutral-modal">
+				<h3 class="ui header neutral-modal">
+					<i class="file icon"></i>
+					<div class="content" id="viewoutgoing_title"></div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p class="element-rmb"><b>Document Recipient: </b><span id="viewoutgoing_recipient"></span></p>
+				<br>
+				<h5 class="ui horizontal header divider element-rmb element-rmt">
+				  <i class="info circle icon"></i>
+				  File Details
+				</h5>
+				<p class="element-rmb"><b>Uploaded By: </b><span id="viewoutgoing_uploadedby"></span></p>
+				<p class="element-rmb"><b>Upload Date: </b><span id="viewoutgoing_uploaddate"></span></p>
+				<p class="element-rmb"><b>Category: </b><span id="viewoutgoing_category"></span></p>
+				<p class="element-rmb"><b>Document Type: </b><span id="viewoutgoing_type"></span></p>
+				<p class="element-rmb"><b>File Name: </b><span id="viewoutgoing_file"></span></p>
+				<p><b>Description: </b><span id="viewoutgoing_description"></span></p>
+				
+				<form method="GET" action="${pageContext.request.contextPath}/FileDownload">
+					<input type="hidden" name="id" id="viewoutgoing_download_id">
+					<input type="hidden" name="type" id="viewoutgoing_download_type">
+					<input type="hidden" id="viewoutgoing_threadno">
+					<div class="two ui buttons">
+						<button class="ui small button" type="submit">
+							<i class="file icon"></i>View File
+						</button>
+						<button class="ui small blue button" type="button" id="viewoutgoing_view_thread">
+							<i class="folder icon"></i>View Thread
+						</button>
+					</div>
+				</form>
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button" id="viewoutgoing_close">Close</button>
+				
+			</div>
+		</div>
+		
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header add-modal">
+				<h3 class="ui header add-modal">
 					<i class="checkmark icon"></i>
 					<div class="content" id="successdia_header"></div>
 				</h3>
@@ -272,8 +326,8 @@
 		
 		<!-- FAIL MESSAGE MODAL -->
 		<div class="ui tiny modal" id="faildia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header delete-modal">
+				<h3 class="ui header delete-modal">
 					<i class="remove icon"></i>
 					<div class="content" id="faildia_header"></div>
 				</h3>
@@ -315,4 +369,6 @@
 	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/categories.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/documents/view_outgoing_documents.js"></script>
 </html>

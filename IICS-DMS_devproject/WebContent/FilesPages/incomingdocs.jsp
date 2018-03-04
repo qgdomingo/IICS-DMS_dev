@@ -244,6 +244,7 @@
 							<select class="ui fluid dropdown" id="search_action">
 								<option value="">Action</option>
 								<option value="None">None</option>
+								<option value="For Dissemination">For Dissemination</option>
 								<option value="Approval">Approval</option>
 								<option value="Endorsement">Endorsement</option>
 								<option value="Response">Response</option>
@@ -255,14 +256,14 @@
 							<div class="ui calendar" id="search_action_due_calendar">
 								<div class="ui icon input">
 									<input type="text" placeholder="Action Due" id="search_action_due"/>
-									<i class="calendar icon"></i>
+									<i class="calendar outline icon"></i>
 								</div>
 							</div>
 						</div>
 						
 						<!-- STATUS DROPDOWN -->
 						<div class="field">
-							<select class="ui fluid dropdown" name="search_status">
+							<select class="ui fluid dropdown" id="search_status">
 								<option value="">Status</option>
 								<option value="Received">Received</option>
 								<option value="Done">Done</option>
@@ -271,7 +272,7 @@
 							
 						<!-- CLEAR SEARCH BUTTON -->
 						<div class="field">
-							<button class="ui grey button" type="button" id="incoming_clear">
+							<button class="ui grey button" type="button" id="search_clear">
 								Clear Search
 							</button>
 						</div>
@@ -330,7 +331,7 @@
 				<form method="GET" action="${pageContext.request.contextPath}/FileDownload">
 					<input type="hidden" name="id" id="viewincoming_download_id">
 					<input type="hidden" name="type" id="viewincoming_download_type">
-					<input type="hidden" name="thread" id="viewincoming_threadno">
+					<input type="hidden" id="viewincoming_threadno">
 					<div class="two ui buttons">
 						<button class="ui small button" type="submit">
 							<i class="file icon"></i>View File
@@ -342,7 +343,7 @@
 				</form>
 			</div>
 			<div class="actions center-text">
-				<button class="ui ok secondary button" id="viewpersonal_close">Close</button>
+				<button class="ui ok secondary button" id="viewincoming_close">Close</button>
 				
 			</div>
 		</div>

@@ -20,7 +20,7 @@ public class IncomingDocument {
 	
 	public IncomingDocument(String type, String threadNumber, String referenceNo, String sourceRecipient, String title,
 			String category, String actionRequired, String file_name, String description, String createdBy,
-			String email, String status, String timeCreated, String department, String dueOn) {
+			String email, String status, String timeCreated, String dueOn, String department) {
 		super();
 		this.type = type;
 		this.threadNumber = threadNumber;

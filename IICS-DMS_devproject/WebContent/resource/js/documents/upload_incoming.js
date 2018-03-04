@@ -59,7 +59,7 @@
 		
 		selectedAction = $('#incoming_action').dropdown('get value');
 		
-		if(!(selectedAction == 'None') ) {
+		if( !((selectedAction == 'None') || (selectedAction == 'For Dissemination')) ) {
 			$('#incoming_due_field').show();
 		}
 	});
@@ -79,8 +79,8 @@
 	/* CUSTOM FORM RULE - If Needed an Action Due */
 	$.fn.form.settings.rules.actionDue = function(value) {
 		if( (selectedAction == '') ||
-		    (!(selectedAction == 'None')  && !(value == ''))  || 
-		    (selectedAction == 'None' && value == '')) {
+		    (!((selectedAction == 'None') || (selectedAction == 'For Dissemination')) && !(value == ''))  || 
+		    (((selectedAction == 'None') || (selectedAction == 'For Dissemination')) && value == '')) {
 			return true;
 		}
 		else {

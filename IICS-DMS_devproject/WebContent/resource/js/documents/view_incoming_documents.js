@@ -66,6 +66,7 @@
 			{
 				localIncomingDocsData = responseJson;
 				$.each(responseJson, (index, incomingDocs) => {
+					console.log(incomingDocs);
 					$('<tr id="'+index+'">').appendTo('#incoming_tablebody')
 						.append($('<td>').text(incomingDocs.title))
 						.append($('<td>').text(incomingDocs.sourceRecipient))
@@ -141,6 +142,7 @@
 		$('#viewincoming_category').text(selectedData['category']);
 		$('#viewincoming_type').text(selectedData['type']);
 		$('#viewincoming_file').text(selectedData['file_name']);
+		$('#viewincoming_description').text(selectedData['description']);
 		$('#viewincoming_download_id').val(parseInt(selectedData['referenceNo']));
 		$('#viewincoming_download_type').val(selectedData['type']);
 		$('#viewincoming_threadno').text(selectedData['threadNumber']);
@@ -178,20 +180,38 @@
 		onChange: ((date, text, mode) => {
 			if(!isIncomingDocsTableEmpty) 
 			{
-				minimumDate_incoming = new Date(text + ' 23:59:59').getTime();
+				maximumDate_incoming = new Date(text + ' 23:59:59').getTime();
 				incomingDocsTable.draw();
 			}
 		}) 
 	});
 	
 	/* SEARCH - Incoming Documents Category */
-	$('#search_action').on('change', function() {
-		if(!isIncomingDocsTableEmpty) incomingDocsTable.column(2).search( $(this).val() ).draw();
+	$('#search_category').on('change', function() {
+		if(!isIncomingDocsTableEmpty) incomingDocsTable.column(3).search( $(this).val() ).draw();
 	});
 		
 	/* SEARCH - Incoming Documents Action Required */
-	$('#search_category').on('change', function() {
-		if(!isIncomingDocsTableEmpty) incomingDocsTable.column(2).search( $(this).val() ).draw();
+	$('#search_action').on('change', function() {
+		if(!isIncomingDocsTableEmpty) incomingDocsTable.column(4).search( $(this).val() ).draw();
+	});
+	
+	/* SEARCH - Incoming Documents Action Due */
+	$('#search_action_due_calendar').calendar({
+		type: 'date',
+		formatter: dateFormat,
+		today: true,
+		onChange: ((date, text, mode) => {
+			if(!isIncomingDocsTableEmpty) 
+			{
+				incomingDocsTable.column(5).search( text ).draw();
+			}
+		}) 
+	});
+	
+	/* SEARCH - Incoming Documents Status */
+	$('#search_status').on('change', function() {
+		if(!isIncomingDocsTableEmpty) incomingDocsTable.column(6).search( $(this).val() ).draw();
 	});
 	
 	/* CLEAR SEARCH EVENT - Incoming Documents Category */
@@ -205,4 +225,7 @@
 		$('#search_uploadfrom_calendar').calendar('clear');
 		$('#search_uploadto_calendar').calendar('clear');
 		$('#search_category').dropdown('restore defaults');
+		$('#search_action').dropdown('restore defaults');
+		$('#search_action_due_calendar').calendar('clear');
+		$('#search_status').dropdown('restore defaults');
 	}
