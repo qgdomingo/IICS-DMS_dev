@@ -17,7 +17,7 @@
 	    }
 	    
 	    setBackButtonLink(data.origin);
-	    getDocumentsThread(data.id);
+	    getDocumentsThread( decodeURIComponent(data.id) );
 	});
 	
 	
@@ -67,11 +67,13 @@
 			}
 			else {
 				$('#fail_request_message').show();
+				$('#load_more_data_btn').hide();
 				removeCSSClass('#thread_loading', 'active');
 			}
 		}) 
 		.fail(function(response) {
 			$('#fail_request_message').show();
+			$('#load_more_data_btn').hide();
 			removeCSSClass('#thread_loading', 'active');
 		});
 	}

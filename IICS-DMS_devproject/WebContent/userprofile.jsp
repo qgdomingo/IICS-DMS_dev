@@ -164,7 +164,7 @@
 					</div><br>
 					
 					<div class="actions">
-						<button class="ui labeled icon orange button element-mb">
+						<button class="ui labeled icon orange button element-mb" id="edit_user_profile">
 							<i class="edit icon"></i>
 							Edit User Profile
 						</button>
@@ -182,18 +182,30 @@
 		</div>
 		
 		<!-- EDIT USER PROFILE MODAL -->
-		<div class="ui modal" id="edit_profile_dialog">
+		<div class="ui tiny modal" id="edit_profile_dialog">
 			<div class="header edit-modal">
 				<h3 class="ui header edit-modal">
 					<i class="edit icon"></i>
 					Edit User Profile
-				</h3>
+				</h3> 
 			</div>
 			<div class="modal-content">
 				<form class="ui form" method="POST" id="edit_profile_form">
 					<div class="required field">
 						<label>Faculty No.</label>
-						<input type="type" 
+						<input type="text" name="faculty_no"/>
+					</div>
+					<div class="required field">
+						<label>First Name</label>
+						<input type="text" name="faculty_no"/>
+					</div>
+					<div class="required field">
+						<label>Last Name</label>
+						<input type="text" name="faculty_no"/>
+					</div>
+					<div class="required field">
+						<label>Email</label>
+						<input type="text" name="faculty_no"/>
 					</div>
 				</form>
 			</div>
@@ -208,7 +220,6 @@
 				</button>
 			</div>
 		</div>
-		
 		
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">
@@ -268,4 +279,5 @@
 	<script src="resource/semanticui/semantic.min.js"></script>
 	<script src="resource/js/master.js"></script>
 	<script src="resource/js/generalpages.js"></script>
+	<script src="resource/js/profile/regular_user.js"></script>
 </html>

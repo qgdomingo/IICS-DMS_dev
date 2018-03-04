@@ -29,7 +29,7 @@
 	         tmp = params[i].split('=');
 	         data[tmp[0]] = tmp[1];
 	    }
-	    taskDataID = data.id;
+	    taskDataID = decodeURIComponent(data.id);
 	    
 	    retrieveCreatedTaskDetails(data.id);
 	    retrieveAssignedTasks(data.id);
