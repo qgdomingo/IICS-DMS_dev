@@ -262,7 +262,7 @@
 						
 						<!-- STATUS DROPDOWN -->
 						<div class="field">
-							<select class="ui fluid dropdown" name="status">
+							<select class="ui fluid dropdown" name="search_status">
 								<option value="">Status</option>
 								<option value="Received">Received</option>
 								<option value="Done">Done</option>
@@ -310,28 +310,47 @@
 				</h3>
 			</div>
 			<div class="modal-content">
-				<p class="element-rmb"><b>Uploaded By: </b><span id="viewpersonal_uploadedby"></span></p>
-				<p class="element-rmb"><b>Upload Date: </b><span id="viewpersonal_uploaddate"></span></p>
-				<p class="element-rmb"><b>Category: </b><span id="viewpersonal_category"></span></p>
-				<p class="element-rmb"><b>Document Type: </b><span id="viewpersonal_type"></span></p>
-				<p class="element-rmb"><b>File Name: </b><span id="viewpersonal_file"></span></p>
-				<p><b>Description: </b><span id="viewpersonal_description"></span></p>
+				<p class="element-rmb"><b>Document Source: </b><span id="viewincoming_source"></span></p>
+				<p class="element-rmb"><b>Reference No.: </b><span id="viewincoming_refno"></span></p>
+				<p class="element-rmb"><b>Action Required: </b><span id="viewincoming_action"></span></p>
+				<p class="element-rmb"><b>Action Due: </b><span id="viewincoming_due"></span></p>
+				<p class="element-rmb"><b>Status: </b><span id="viewincoming_status"></span></p>
+				<br>
+				<h5 class="ui horizontal header divider element-rmb element-rmt">
+				  <i class="info circle icon"></i>
+				  File Details
+				</h5>
+				<p class="element-rmb"><b>Uploaded By: </b><span id="viewincoming_uploadedby"></span></p>
+				<p class="element-rmb"><b>Upload Date: </b><span id="viewincoming_uploaddate"></span></p>
+				<p class="element-rmb"><b>Category: </b><span id="viewincoming_category"></span></p>
+				<p class="element-rmb"><b>Document Type: </b><span id="viewincoming_type"></span></p>
+				<p class="element-rmb"><b>File Name: </b><span id="viewincoming_file"></span></p>
+				<p><b>Description: </b><span id="viewincoming_description"></span></p>
 				
 				<form method="GET" action="${pageContext.request.contextPath}/FileDownload">
-					<input type="hidden" name="id" id="viewpersonal_download_id">
-					<input type="hidden" name="type" id="viewpersonal_download_type">
-					<button class="ui small fluid button" type="submit">View File</button>
+					<input type="hidden" name="id" id="viewincoming_download_id">
+					<input type="hidden" name="type" id="viewincoming_download_type">
+					<input type="hidden" name="thread" id="viewincoming_threadno">
+					<div class="two ui buttons">
+						<button class="ui small button" type="submit">
+							<i class="file icon"></i>View File
+						</button>
+						<button class="ui small blue button" type="button" id="viewincoming_view_thread">
+							<i class="folder icon"></i>View Thread
+						</button>
+					</div>
 				</form>
 			</div>
 			<div class="actions center-text">
 				<button class="ui ok secondary button" id="viewpersonal_close">Close</button>
+				
 			</div>
 		</div>
 		
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header add-modal">
+				<h3 class="ui header add-modal">
 					<i class="checkmark icon"></i>
 					<div class="content" id="successdia_header"></div>
 				</h3>
@@ -346,8 +365,8 @@
 		
 		<!-- FAIL MESSAGE MODAL -->
 		<div class="ui tiny modal" id="faildia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header delete-modal">
+				<h3 class="ui header delete-modal">
 					<i class="remove icon"></i>
 					<div class="content" id="faildia_header"></div>
 				</h3>
@@ -389,5 +408,6 @@
 	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
-	
+	<script src="${pageContext.request.contextPath}/resource/js/categories.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/documents/view_incoming_documents.js"></script>
 </html>

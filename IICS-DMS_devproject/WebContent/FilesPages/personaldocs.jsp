@@ -280,7 +280,9 @@
 				<form method="GET" action="${pageContext.request.contextPath}/FileDownload">
 					<input type="hidden" name="id" id="viewpersonal_download_id">
 					<input type="hidden" name="type" id="viewpersonal_download_type">
-					<button class="ui small fluid button" type="submit">View File</button>
+					<button class="ui small button" type="submit">
+						<i class="file icon"></i>View File
+					</button>
 				</form>
 			</div>
 			<div class="actions center-text">

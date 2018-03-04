@@ -1,10 +1,10 @@
 /**
- *  view_personal_documents.js
- *    - javascript used for scripting in viewing personal documents on personaldocs.jsp
+ *  view_incoming_documents.js
+ *    - javascript used for scripting in viewing incoming documents on incomingdocs.jsp
  */
 
 	$(document).ready(() => {
-		getPersonalDocuments();
+		getIncomingDocuments();
 		retrieveCategory('#search_category');	
 	});
 
@@ -12,17 +12,17 @@
  *  VARIABLES
  */
 	// For checking
-	var isPersonalDocsTableEmpty = true;
+	var isIncomingDocsTableEmpty = true;
 	
 	// Table References
-	var personalDocsTable;
+	var incomingDocsTable;
 	
 	// Local Data
-	var localPersonalDocsData;
+	var localIncomingDocsData;
 	
 	// For Search Functions
-	var minimumDate_personal;
-	var maximumDate_personal;
+	var minimumDate_incoming;
+	var maximumDate_incoming;
 
 /*
  * NAVIGATE FUNCTION
@@ -34,71 +34,90 @@
 /*
  * FUNCTIONS
  */
-	 
+	
+	/* CUSTOM SEARCH FILTER: Date Range */
+	function filterDateRange(data, min, max) {
+		var dateData = new Date( data[2] ).getTime(); 
+			
+		if ( ( isNaN(min) && isNaN(max) ) ||
+		     ( isNaN(min) && dateData <= max ) ||
+		     ( min <= dateData && isNaN(max) ) ||
+		     ( min <= dateData && dateData <= max ) )
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	/* APPLY - Custom search filter: Date Range */
 	$.fn.dataTable.ext.search.push(
 		function(settings, data, dataIndex) {
-			return filterDateRange(data, minimumDate_personal, maximumDate_personal);
+			return filterDateRange(data, minimumDate_incoming, maximumDate_incoming);
 		}
 	);
 	
-	/* GET - Personal Documents*/
-	function getPersonalDocuments() {
-		addCSSClass('#personal_loading', 'active');
+	/* GET - Incoming Documents */
+	function getIncomingDocuments() {
+		addCSSClass('#incoming_loading', 'active');
 			
-		$.get(getContextPath() + '/PersonalDocuments', (responseJson) => {
-			$('#personal_tablebody').empty();
+		$.get(getContextPath() + '/IncomingDocument', (responseJson) => {
+			$('#incoming_tablebody').empty();
 			if(!responseJson.length == 0) 
 			{
-				localPersonalDocsData = responseJson;
-				$.each(responseJson, (index, personalDocs) => {
-					$('<tr id="'+index+'">').appendTo('#personal_tablebody')
-						.append($('<td>').text(personalDocs.title))
-						.append($('<td>').text(personalDocs.timeCreated))
-						.append($('<td>').text(personalDocs.category))
+				localIncomingDocsData = responseJson;
+				$.each(responseJson, (index, incomingDocs) => {
+					$('<tr id="'+index+'">').appendTo('#incoming_tablebody')
+						.append($('<td>').text(incomingDocs.title))
+						.append($('<td>').text(incomingDocs.sourceRecipient))
+						.append($('<td>').text(incomingDocs.timeCreated))
+						.append($('<td>').text(incomingDocs.category))
+						.append($('<td>').text(incomingDocs.actionRequired))
+						.append($('<td>').text(incomingDocs.dueOn))
+						.append($('<td>').text(incomingDocs.status))
+						.append($('<td>').text(incomingDocs.referenceNo))
 				});
 					
 				// bind events and classes to the table after all data received
-				personalDocsTable = $('#personal_table').DataTable({
-					'order': [[0, 'asc'], [1, 'asc']]
+				incomingDocsTable = $('#incoming_table').DataTable({
+					'order': [[0, 'asc'], [1, 'asc'], [2, 'asc']]
 				});
-				selectPersonalDocsRow();
-				isPersonalDocsTableEmpty = false;
-				removeCSSClass('#personal_loading', 'active');
+				selectIncomingDocsRow();
+				isIncomingDocsTableEmpty = false;
+				removeCSSClass('#incoming_loading', 'active');
 			} 
 			else if(responseJson.length == 0)
 			{
-				$('<tr>').appendTo('#personal_tablebody')
-					.append($('<td class="center-text" colspan="3">')
-							.text("You do not have any personal documents. Go to Upload Documents page to upload one."));
-				removeCSSClass('#personal_loading', 'active');
+				$('<tr>').appendTo('#incoming_tablebody')
+					.append($('<td class="center-text" colspan="8">')
+							.text("You do not have any incoming documents. Go to Upload Documents page to upload one."));
+				removeCSSClass('#incoming_loading', 'active');
 			}
 			else
 			{
-				$('<tr>').appendTo('#personal_tablebody')
-				.append($('<td class="center-text error" colspan="3">')
-						.text("Unable to retrieve list of your personal documents. Please refresh page. :("));
-				removeCSSClass('#personal_loading', 'active');
+				$('<tr>').appendTo('#incoming_tablebody')
+				.append($('<td class="center-text error" colspan="8">')
+						.text("Unable to retrieve list of your incoming documents. Please refresh page. :("));
+				removeCSSClass('#incoming_loading', 'active');
 				callFailRequestModal();
 				
 			}
 		})
 		.fail((response) => {
-			$('<tr>').appendTo('#personal_tablebody')
-			.append($('<td class="center-text error" colspan="3">')
-					.text("Unable to retrieve list of your personal documents. Please refresh page. :("));
-			removeCSSClass('#personal_loading', 'active');
+			$('<tr>').appendTo('#incoming_tablebody')
+			.append($('<td class="center-text error" colspan="8">')
+					.text("Unable to retrieve list of your incoming documents. Please refresh page. :("));
+			removeCSSClass('#incoming_loading', 'active');
 			callFailRequestModal();
 		});
 	}
 		
-	/* SELECT ROW - Personal Documents */
-	function selectPersonalDocsRow() {
-		$('#personal_table tbody').on('dblclick', 'tr', function () {
-			getPersonalDocumentsData($(this).attr('id'));
+	/* SELECT ROW - Incoming Documents */
+	function selectIncomingDocsRow() {
+		$('#incoming_table tbody').on('dblclick', 'tr', function () {
+			getIncomingDocumentsData($(this).attr('id'));
 		   	$(this).toggleClass('active');
 		   	
-		    $('#viewpersonal_dialog').modal({
+		    $('#viewincoming_dialog').modal({
 				closable: false,
 				observeChanges: true
 			}).modal('show');
@@ -108,70 +127,81 @@
 	}
 		
 	/* GET - Populate Dialog For View File */
-	function getPersonalDocumentsData(id) {
-		var selectedData = localPersonalDocsData[id];
-		$('#viewpersonal_title').text(selectedData['title']);
-		$('#viewpersonal_uploadedby').text(selectedData['createdBy']);
-		$('#viewpersonal_uploaddate').text(selectedData['timeCreated']);
-		$('#viewpersonal_category').text(selectedData['category']);
-		$('#viewpersonal_type').text(selectedData['type']);
-		$('#viewpersonal_file').text(selectedData['fileName']);
-		$('#viewpersonal_download_id').val(parseInt(selectedData['id']));
-		$('#viewpersonal_download_type').val(selectedData['type']);
-		$('#viewpersonal_description').text(selectedData['description']);
+	function getIncomingDocumentsData(id) {
+		var selectedData = localIncomingDocsData[id];
+		$('#viewincoming_title').text(selectedData['title']);
+		$('#viewincoming_source').text(selectedData['sourceRecipient']);
+		$('#viewincoming_refno').text(selectedData['referenceNo']);
+		$('#viewincoming_action').text(selectedData['actionRequired']);
+		$('#viewincoming_due').text(selectedData['dueOn']);
+		$('#viewincoming_status').text(selectedData['status']);
+		$('#viewincoming_uploadedby')
+			.text(selectedData['createdBy'] + ' <' + selectedData['email'] + '>');
+		$('#viewincoming_uploaddate').text(selectedData['timeCreated']);
+		$('#viewincoming_category').text(selectedData['category']);
+		$('#viewincoming_type').text(selectedData['type']);
+		$('#viewincoming_file').text(selectedData['file_name']);
+		$('#viewincoming_download_id').val(parseInt(selectedData['referenceNo']));
+		$('#viewincoming_download_type').val(selectedData['type']);
+		$('#viewincoming_threadno').text(selectedData['threadNumber']);
 	}
 		
 /*
  * SEARCH FUNCTIONALITY
  */
-	/* SEARCH - Personal Documents */
-	$('#search_personal').on('input', function() {
-		if(!isPersonalDocsTableEmpty) personalDocsTable.search( $(this).val() ).draw();
+	/* SEARCH - Incoming Documents */
+	$('#search_incoming').on('input', function() {
+		if(!isIncomingDocsTableEmpty) incomingDocsTable.search( $(this).val() ).draw();
 	});
 		
-	/* SEARCH - Personal Documents Upload From */
+	/* SEARCH - Incoming Documents Upload From */
 	$('#search_uploadfrom_calendar').calendar({
 		type: 'date',
 		endCalendar: $('#search_uploadto_calendar'),
 		formatter: dateFormat,
 		today: true,
 		onChange: ((date, text, mode) => {
-			if(!isPersonalDocsTableEmpty) 
+			if(!isIncomingDocsTableEmpty) 
 			{
-				minimumDate_personal = new Date(text + ' 00:00:00').getTime();
-				personalDocsTable.draw();
+				minimumDate_incoming = new Date(text + ' 00:00:00').getTime();
+				incomingDocsTable.draw();
 			}
 		}) 
 	});
 		
-	/* SEARCH - Personal Documents Upload To */
+	/* SEARCH - Incoming Documents Upload To */
 	$('#search_uploadto_calendar').calendar({
 		type: 'date',
 		startCalendar: $('#search_uploadfrom_calendar'),
 		formatter: dateFormat,
 		today: true,
 		onChange: ((date, text, mode) => {
-			if(!isPersonalDocsTableEmpty) 
+			if(!isIncomingDocsTableEmpty) 
 			{
-				maximumDate_personal = new Date(text + ' 23:59:59').getTime();
-				personalDocsTable.draw();
+				minimumDate_incoming = new Date(text + ' 23:59:59').getTime();
+				incomingDocsTable.draw();
 			}
 		}) 
 	});
 	
-	/* SEARCH - Personal Documents Category */
+	/* SEARCH - Incoming Documents Category */
+	$('#search_action').on('change', function() {
+		if(!isIncomingDocsTableEmpty) incomingDocsTable.column(2).search( $(this).val() ).draw();
+	});
+		
+	/* SEARCH - Incoming Documents Action Required */
 	$('#search_category').on('change', function() {
-		if(!isPersonalDocsTableEmpty) personalDocsTable.column(2).search( $(this).val() ).draw();
+		if(!isIncomingDocsTableEmpty) incomingDocsTable.column(2).search( $(this).val() ).draw();
 	});
-		
-	/* CLEAR SEARCH EVENT - Personal Documents Category */
+	
+	/* CLEAR SEARCH EVENT - Incoming Documents Category */
 	$('#search_clear').click(() => {
-		clearPersonalDocsSearch();
+		clearIncomingDocsSearch();
 	});
 		
-	/* CLEAR SEARCH - Personal Documents */
-	function clearPersonalDocsSearch() {
-		$('#search_personal').val('');
+	/* CLEAR SEARCH - Incoming Documents */
+	function clearIncomingDocsSearch() {
+		$('#search_incoming').val('');
 		$('#search_uploadfrom_calendar').calendar('clear');
 		$('#search_uploadto_calendar').calendar('clear');
 		$('#search_category').dropdown('restore defaults');

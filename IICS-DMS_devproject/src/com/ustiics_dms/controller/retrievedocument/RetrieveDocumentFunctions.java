@@ -9,25 +9,28 @@ import com.ustiics_dms.databaseconnection.DBConnect;
 
 public class RetrieveDocumentFunctions {
 	
-	public static ResultSet retrieveDocuments(String type, String department) throws SQLException
+	public static ResultSet retrieveDocuments(String type, String departmentORemail) throws SQLException
 	{
 			String sqlStatement = null;
 			if(type.equalsIgnoreCase("Incoming"))
 			{
-				sqlStatement = "SELECT * FROM incoming_documents WHERE department = ?";
+				sqlStatement = "SELECT type, thread_number, reference_no, source_recipient, title, category, action_required, file_name, description, created_by,"
+						+ " email, status, time_created, due_on, department FROM incoming_documents WHERE department = ?";
 			}
 			else if(type.equalsIgnoreCase("Outgoing"))
 			{
-				sqlStatement = "SELECT * FROM outgoing_documents WHERE department = ?";
+				sqlStatement = "SELECT type, id, thread_number, source_recipient, title, category, file_name, description, created_by, email, time_created, department"
+						+ " FROM outgoing_documents WHERE department = ?";
 			}
 			else if(type.equalsIgnoreCase("Personal"))
 			{
-				sqlStatement = "SELECT * FROM personal_documents WHERE email = ?";
+				sqlStatement = "SELECT type, id, title, category, file_name, description, created_by, email, time_created "
+						+ "FROM personal_documents WHERE email = ?";
 			}
 			
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement(sqlStatement);
-			prep.setString(1,  department);
+			prep.setString(1,  departmentORemail);
 			
 			ResultSet result = prep.executeQuery();
 			

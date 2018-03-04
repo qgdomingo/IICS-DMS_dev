@@ -35,6 +35,20 @@
  * FUNCTIONS
  */
 	 
+	/* CUSTOM SEARCH FILTER: Date Range */
+	function filterDateRange(data, min, max) {
+		var dateData = new Date( data[1] ).getTime(); 
+			
+		if ( ( isNaN(min) && isNaN(max) ) ||
+		     ( isNaN(min) && dateData <= max ) ||
+		     ( min <= dateData && isNaN(max) ) ||
+		     ( min <= dateData && dateData <= max ) )
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	/* APPLY - Custom search filter: Date Range */
 	$.fn.dataTable.ext.search.push(
 		function(settings, data, dataIndex) {
