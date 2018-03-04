@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * InputRecoveryCode.java 
  *  - a servlet controller that would check if the reset code entered is valid or not
- * 
  */
 @WebServlet("/InputRecoveryCode")
 public class InputRecoveryCode extends HttpServlet {
@@ -29,13 +28,13 @@ public class InputRecoveryCode extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String email = request.getParameter("email");
-		String code = request.getParameter("code");
-		
 		response.setContentType("text/plain");
 		response.setCharacterEncoding("UTF-8");
 
 		try {
+			String email = request.getParameter("email");
+			String code = request.getParameter("code");
+			
 			//checks if recovery code is valid
 			if(PasswordRecoveryFunctions.checkRecoveryCode(email, code)) {
 				response.setStatus(HttpServletResponse.SC_OK);
@@ -46,6 +45,7 @@ public class InputRecoveryCode extends HttpServlet {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		
 	}

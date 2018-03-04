@@ -26,15 +26,16 @@ public class PasswordChange extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {			
-		String email = request.getParameter("email");
-		String code = request.getParameter("code");
-        String newPassword = request.getParameter("new_password");
-        String confirmPassword = request.getParameter("confirm_password");
-        
+ 
 		response.setContentType("text/plain");
 		response.setCharacterEncoding("UTF-8");
         
         try {
+    		String email = request.getParameter("email");
+    		String code = request.getParameter("code");
+            String newPassword = request.getParameter("new_password");
+            String confirmPassword = request.getParameter("confirm_password");
+        	
 			if(PasswordRecoveryFunctions.updatePassword(email, newPassword, confirmPassword, code)) {
 				response.setStatus(HttpServletResponse.SC_OK);
 				response.getWriter().write("changed");
@@ -45,6 +46,7 @@ public class PasswordChange extends HttpServlet {
 			}
         } catch (SQLException e) {
 			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 
 	}

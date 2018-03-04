@@ -16,9 +16,11 @@ public class IncomingDocument {
 	private String status;
 	private String timeCreated;
 	private String department;
+	private String dueOn;
+	
 	public IncomingDocument(String type, String threadNumber, String referenceNo, String sourceRecipient, String title,
 			String category, String actionRequired, String file_name, String description, String createdBy,
-			String email, String status, String timeCreated, String department) {
+			String email, String status, String timeCreated, String department, String dueOn) {
 		super();
 		this.type = type;
 		this.threadNumber = threadNumber;
@@ -33,8 +35,17 @@ public class IncomingDocument {
 		this.email = email;
 		this.status = status;
 		this.timeCreated = timeCreated;
+		this.dueOn = dueOn;
 		this.department = department;
 	}
+	
+	public IncomingDocument(String threadNumber, String title, String category, String timeCreated) {
+		this.threadNumber = threadNumber;
+		this.title = title;
+		this.category = category;
+		this.timeCreated = timeCreated;
+	}
+	
 	public String getType() {
 		return type;
 	}
@@ -118,6 +129,14 @@ public class IncomingDocument {
 	}
 	public void setDepartment(String department) {
 		this.department = department;
+	}
+
+	public String getDueOn() {
+		return dueOn;
+	}
+
+	public void setDueOn(String dueOn) {
+		this.dueOn = dueOn;
 	}
 
 	

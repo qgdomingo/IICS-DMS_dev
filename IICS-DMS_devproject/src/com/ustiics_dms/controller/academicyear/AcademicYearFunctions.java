@@ -13,7 +13,7 @@ public class AcademicYearFunctions {
 	{
 		
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("update academic_year set start_year = ?, end_year = ?");
+			PreparedStatement prep = con.prepareStatement("UPDATE academic_year SET start_year = ?, end_year = ?");
 			
 			prep.setInt(1, yearStart);
 			prep.setInt(2, yearEnd);

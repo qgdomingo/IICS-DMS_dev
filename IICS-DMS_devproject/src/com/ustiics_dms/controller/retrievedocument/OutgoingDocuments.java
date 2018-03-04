@@ -41,6 +41,7 @@ public class OutgoingDocuments extends HttpServlet {
 			while(documentFiles.next()) 
 			{ 
 				outgoingFiles.add(new OutgoingDocument(
+						documentFiles.getString("id"),
 						documentFiles.getString("type"),
 						documentFiles.getString("thread_number"),
 						documentFiles.getString("source_recipient"),

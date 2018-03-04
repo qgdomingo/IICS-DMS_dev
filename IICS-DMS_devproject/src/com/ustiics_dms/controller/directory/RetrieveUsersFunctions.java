@@ -18,13 +18,13 @@ public class RetrieveUsersFunctions {
 			
 			if(userType.equalsIgnoreCase("Director") || userType.equalsIgnoreCase("Faculty Secretary"))
 			{
-				sqlStatement = "SELECT faculty_number, first_name, last_name, full_name, email, user_type, department, time_created, status"
-						+ " FROM accounts";
+				sqlStatement = "SELECT full_name, email, user_type, department"
+						+ " FROM accounts WHERE NOT statUs = 'inactive'";
 			}
 			else if(userType.equalsIgnoreCase("Department Head"))
 			{
-				sqlStatement = "SELECT faculty_number, first_name, last_name, full_name, email, user_type, department, time_created, status"
-						+ " FROM accounts WHERE NOT user_type = ? AND NOT email = ? AND department = ?";
+				sqlStatement = "SELECT full_name, email, user_type, department"
+						+ " FROM accounts WHERE NOT user_type = ? AND NOT email = ? AND department = ? AND NOT statUs = 'inactive'";
 				trigger = true;
 			}
 				prep = con.prepareStatement(sqlStatement);

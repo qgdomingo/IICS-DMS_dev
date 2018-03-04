@@ -39,8 +39,7 @@ public class FileUploadFunctions {
 			
 			if(actionRequired.equalsIgnoreCase("None"))
 			{
-				statement = "INSERT INTO incoming_documents (thread_number, reference_no, source_recipient, title, category, action_required, file_name, file_data, description, created_by, email, department) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-						
+				statement = "INSERT INTO incoming_documents (thread_number, reference_no, source_recipient, title, category, action_required, file_name, file_data, description, created_by, email, department) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";		
 			}
 			
 			if(threadNumber.isEmpty())
@@ -73,7 +72,7 @@ public class FileUploadFunctions {
 	public static void uploadOutgoingDocument(String threadNumber, String recipient, String documentTitle, String category, FileItem item, String description, String fullName, String email, String department) throws SQLException, IOException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("INSERT INTO outgoing_documents (source_recipient, title, category, file_name, file_data, description, created_by, email, department) VALUES (?,?,?,?,?,?,?,?,?)");
+			PreparedStatement prep = con.prepareStatement("INSERT INTO outgoing_documents (thread_number, source_recipient, title, category, file_name, file_data, description, created_by, email, department) VALUES (?,?,?,?,?,?,?,?,?,?)");
 			
 			if(threadNumber.isEmpty())
 			{

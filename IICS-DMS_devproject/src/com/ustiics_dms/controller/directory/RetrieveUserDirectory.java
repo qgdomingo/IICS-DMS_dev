@@ -36,23 +36,11 @@ public class RetrieveUserDirectory extends HttpServlet {
 		try {
 			ResultSet accounts = (ResultSet) RetrieveUsersFunctions.retrieveDepartmentUsers(acc.getEmail(), acc.getUserType(), acc.getDepartment());
 			while(accounts.next()) { 
-				users.add(new Account(accounts.getString("time_created"),
-									  Integer.parseInt(accounts.getString("faculty_number")),
-									  accounts.getString("first_name"),
-									  accounts.getString("last_name"),
-									  accounts.getString("full_name"),
+				users.add(new Account(accounts.getString("full_name"),
 									  accounts.getString("email"),
 									  accounts.getString("user_type"),
-									  accounts.getString("department"),
-									  accounts.getString("status"))
+									  accounts.getString("department"))
 						 );	
-				System.out.println(accounts.getString("time_created"));
-				System.out.println(accounts.getString("first_name"));
-				System.out.println(accounts.getString("last_name"));
-				System.out.println(accounts.getString("email"));
-				System.out.println(accounts.getString("user_type"));
-				System.out.println(accounts.getString("department"));
-				System.out.println(accounts.getString("status"));
 			}
 			String json = new Gson().toJson(users);
 			

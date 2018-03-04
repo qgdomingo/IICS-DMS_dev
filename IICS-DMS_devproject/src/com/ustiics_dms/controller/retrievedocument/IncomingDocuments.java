@@ -51,6 +51,7 @@ public class IncomingDocuments extends HttpServlet {
 						documentFiles.getString("email"),
 						documentFiles.getString("status"),
 						documentFiles.getString("time_created"),
+						documentFiles.getString("due_on"),
 						documentFiles.getString("department")
 						 ));	
 			}

@@ -95,3 +95,51 @@
 	$('#outgoing_clear').click(() => {
 		clearOutgoingDocsForm();
 	});
+	
+/*
+ *  DOCUMENT THREAD
+ */
+	$('#outgoing_recipient').on('change', function() {
+		var tempSource = $('#outgoing_recipient').dropdown('get value');
+		
+		if(!tempSource == '') {
+			retrieveOutgoingDocumentThread(tempSource);
+		}
+	});
+	
+	/* GET - FOR OUTGOING: DOCUMENT THREAD LIST */
+	function retrieveOutgoingDocumentThread(outgoingSource) {
+		$('#outgoing_thread').empty();
+
+		var sourceData = {
+			source: outgoingSource
+		}
+		
+		$.post(getContextPath() + '/OutgoingDocumentsThread', $.param(sourceData), (responseList) => {
+			$('#outgoing_thread').dropdown('clear');
+			$('#outgoing_thread').empty()
+			
+			if(!responseList.length == 0)
+			{
+				$('#outgoing_thread').append($('<option value="">').text("Select Thread"));
+				$.each(responseList, (index, data) => {
+					$('#outgoing_thread').append($('<option value="'+data.threadNumber+'">')
+							.text(data.title + ' (' + data.category + ') ' + data.timeCreated));
+				});
+				$('#outgoing_thread').dropdown().dropdown('refresh');
+			}
+			else if(responseList.length == 0)
+			{
+				$('#outgoing_thread').append($('<option value="">').text("No Existing Thread for this Recipient"));
+				$('#outgoing_thread').dropdown().dropdown('refresh');
+			}
+			else
+			{
+				callFailModal('Retrieve Thread Error', 'We are unable to retrieve the document thread list for Incoming Documents.');
+			}
+		})
+		.fail((response) => {
+			callFailRequestModal();
+		});
+	}
+	

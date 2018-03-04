@@ -1,5 +1,5 @@
 <%@page import="com.ustiics_dms.model.Account"%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
 	Account acc = (Account) session.getAttribute("currentCredentials");
@@ -22,7 +22,7 @@
 <html>
 	<head>
 		<title>Documents | IICS DMS</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.css">
@@ -197,80 +197,102 @@
 				
 			<div class="ui segment">
 				<div class="ui dimmer" id="incoming_loading">
-					<div class="ui text loader" >Retrieving Incoming Documents</div>
+					<div class="ui text loader">Retrieving Incoming Documents</div>
 				</div>
 				
 				<!-- SEARCH AREA -->
 				<form class="ui form">
 					<div class="five fields">
-						<input type="hidden" value="Incoming"/>
 						
 						<!-- SEARCH BOX -->
 						<div class="field">
 							<div class="ui icon input">
-								<input type="text" placeholder="Seach Document" id="incoming_search"/>
+								<input type="text" placeholder="Seach Document" id="search_incoming"/>
 								<i class="search icon"></i>
 							</div>
 						</div>
 						
-						<!-- UPLOAD TIMESTAMP RANGE BOX -->
+						<!-- UPLOAD FROM DATE BOX -->
 						<div class="field">
-							<input type="text" placeholder="Upload Date"/>
+							<div class="ui calendar" id="search_uploadfrom_calendar">
+								<div class="ui icon input">
+									<input type="text" placeholder="Upload From" id="search_uploadfrom"/>
+									<i class="calendar icon"></i>
+								</div>
+							</div>
+						</div>
+						
+						<!-- UPLOAD TO DATE BOX -->
+						<div class="field">
+							<div class="ui calendar" id="search_uploadto_calendar">
+								<div class="ui icon input">
+									<input type="text" placeholder="Upload To" id="search_uploadto"/>
+									<i class="calendar icon"></i>
+								</div>
+							</div>
 						</div>
 							
 						<!-- CATEGORY DROPDOWN -->
 						<div class="field">
-							<select class="ui fluid dropdown" name="category">
-								<option value="">Select Category..</option>
-								<option value="memo">Memo</option>
-								<option value="letter">Letter</option>
+							<select class="ui fluid dropdown" id="search_category">
+								<option value="">Category</option>
 							</select>
 						</div>
-							
+
 						<!-- ACTION REQUIRED DROPDOWN -->
 						<div class="field">
-							<select class="ui fluid dropdown">
-								<option value="">Select Action</option>
-								<option value="none">None</option>
-								<option value="appr">Approval</option>
-								<option value="endor">Endorsement</option>
-								<option value="resp">Response</option>
+							<select class="ui fluid dropdown" id="search_action">
+								<option value="">Action</option>
+								<option value="None">None</option>
+								<option value="Approval">Approval</option>
+								<option value="Endorsement">Endorsement</option>
+								<option value="Response">Response</option>
 							</select>
+						</div> 
+						
+						<!-- ACTION DUE BOX -->
+						<div class="field">
+							<div class="ui calendar" id="search_action_due_calendar">
+								<div class="ui icon input">
+									<input type="text" placeholder="Action Due" id="search_action_due"/>
+									<i class="calendar icon"></i>
+								</div>
+							</div>
 						</div>
-							
+						
 						<!-- STATUS DROPDOWN -->
 						<div class="field">
-							<select class="ui fluid dropdown" name="status">
-								<option value="">Select Status</option>
-								<option value="forwarded">Forwarded to Director</option>
-								<option value="received">Received by Director</option>
-								<option value="done">Done</option>
+							<select class="ui fluid dropdown" name="search_status">
+								<option value="">Status</option>
+								<option value="Received">Received</option>
+								<option value="Done">Done</option>
 							</select>
 						</div>
 							
-						<!-- SEARCH BUTTON -->
+						<!-- CLEAR SEARCH BUTTON -->
 						<div class="field">
-							<button class="ui grey button" type="button">
-								Search
+							<button class="ui grey button" type="button" id="incoming_clear">
+								Clear Search
 							</button>
 						</div>
 					</div>
 				</form>
 					
 				<!-- TABLE AREA -->
-				<table class="ui compact selectable table">
+				<table class="ui compact selectable table" id="incoming_table">
 					<thead>
 						<tr>
 							<th>Document Title</th>
 							<th>Document Source</th>
 							<th>Upload Timestamp</th>
 							<th>Category</th>
-							<th>Action Required</th>
+							<th>Action</th>
+							<th>Action Due</th>
 							<th>Status</th>
 							<th>Reference No.</th>
 						</tr>
 					</thead>
-					<tbody></tbody>
+					<tbody id="incoming_tablebody"></tbody>
 				</table>
 			</div>
 		</div>
@@ -279,10 +301,56 @@
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
 		
+		<!-- VIEW - INCOMING DOCUMENT -->
+		<div class="ui tiny modal" id="viewincoming_dialog">
+			<div class="header neutral-modal">
+				<h3 class="ui header neutral-modal">
+					<i class="file icon"></i>
+					<div class="content" id="viewincoming_title"></div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p class="element-rmb"><b>Document Source: </b><span id="viewincoming_source"></span></p>
+				<p class="element-rmb"><b>Reference No.: </b><span id="viewincoming_refno"></span></p>
+				<p class="element-rmb"><b>Action Required: </b><span id="viewincoming_action"></span></p>
+				<p class="element-rmb"><b>Action Due: </b><span id="viewincoming_due"></span></p>
+				<p class="element-rmb"><b>Status: </b><span id="viewincoming_status"></span></p>
+				<br>
+				<h5 class="ui horizontal header divider element-rmb element-rmt">
+				  <i class="info circle icon"></i>
+				  File Details
+				</h5>
+				<p class="element-rmb"><b>Uploaded By: </b><span id="viewincoming_uploadedby"></span></p>
+				<p class="element-rmb"><b>Upload Date: </b><span id="viewincoming_uploaddate"></span></p>
+				<p class="element-rmb"><b>Category: </b><span id="viewincoming_category"></span></p>
+				<p class="element-rmb"><b>Document Type: </b><span id="viewincoming_type"></span></p>
+				<p class="element-rmb"><b>File Name: </b><span id="viewincoming_file"></span></p>
+				<p><b>Description: </b><span id="viewincoming_description"></span></p>
+				
+				<form method="GET" action="${pageContext.request.contextPath}/FileDownload">
+					<input type="hidden" name="id" id="viewincoming_download_id">
+					<input type="hidden" name="type" id="viewincoming_download_type">
+					<input type="hidden" name="thread" id="viewincoming_threadno">
+					<div class="two ui buttons">
+						<button class="ui small button" type="submit">
+							<i class="file icon"></i>View File
+						</button>
+						<button class="ui small blue button" type="button" id="viewincoming_view_thread">
+							<i class="folder icon"></i>View Thread
+						</button>
+					</div>
+				</form>
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button" id="viewpersonal_close">Close</button>
+				
+			</div>
+		</div>
+		
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header add-modal">
+				<h3 class="ui header add-modal">
 					<i class="checkmark icon"></i>
 					<div class="content" id="successdia_header"></div>
 				</h3>
@@ -297,8 +365,8 @@
 		
 		<!-- FAIL MESSAGE MODAL -->
 		<div class="ui tiny modal" id="faildia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header delete-modal">
+				<h3 class="ui header delete-modal">
 					<i class="remove icon"></i>
 					<div class="content" id="faildia_header"></div>
 				</h3>
@@ -340,4 +408,6 @@
 	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/categories.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/documents/view_incoming_documents.js"></script>
 </html>

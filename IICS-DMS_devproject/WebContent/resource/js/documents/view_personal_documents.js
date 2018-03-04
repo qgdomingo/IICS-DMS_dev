@@ -1,11 +1,11 @@
 /**
- *  personal_view.js
- *    - javascript used for scripting in viewing personal documents on documents.jsp
+ *  view_personal_documents.js
+ *    - javascript used for scripting in viewing personal documents on personaldocs.jsp
  */
 
 	$(document).ready(() => {
 		getPersonalDocuments();
-		retrieveCategory('#personal_category');	
+		retrieveCategory('#search_category');	
 	});
 
 /*
@@ -35,6 +35,20 @@
  * FUNCTIONS
  */
 	 
+	/* CUSTOM SEARCH FILTER: Date Range */
+	function filterDateRange(data, min, max) {
+		var dateData = new Date( data[1] ).getTime(); 
+			
+		if ( ( isNaN(min) && isNaN(max) ) ||
+		     ( isNaN(min) && dateData <= max ) ||
+		     ( min <= dateData && isNaN(max) ) ||
+		     ( min <= dateData && dateData <= max ) )
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	/* APPLY - Custom search filter: Date Range */
 	$.fn.dataTable.ext.search.push(
 		function(settings, data, dataIndex) {
@@ -125,14 +139,14 @@
  * SEARCH FUNCTIONALITY
  */
 	/* SEARCH - Personal Documents */
-	$('#personal_search').on('input', function() {
+	$('#search_personal').on('input', function() {
 		if(!isPersonalDocsTableEmpty) personalDocsTable.search( $(this).val() ).draw();
 	});
 		
 	/* SEARCH - Personal Documents Upload From */
-	$('#personal_uploadfrom_calendar').calendar({
+	$('#search_uploadfrom_calendar').calendar({
 		type: 'date',
-		endCalendar: $('#personal_uploadto_calendar'),
+		endCalendar: $('#search_uploadto_calendar'),
 		formatter: dateFormat,
 		today: true,
 		onChange: ((date, text, mode) => {
@@ -145,9 +159,9 @@
 	});
 		
 	/* SEARCH - Personal Documents Upload To */
-	$('#personal_uploadto_calendar').calendar({
+	$('#search_uploadto_calendar').calendar({
 		type: 'date',
-		startCalendar: $('#personal_uploadfrom_calendar'),
+		startCalendar: $('#search_uploadfrom_calendar'),
 		formatter: dateFormat,
 		today: true,
 		onChange: ((date, text, mode) => {
@@ -160,19 +174,19 @@
 	});
 	
 	/* SEARCH - Personal Documents Category */
-	$('#personal_category').on('change', function() {
+	$('#search_category').on('change', function() {
 		if(!isPersonalDocsTableEmpty) personalDocsTable.column(2).search( $(this).val() ).draw();
 	});
 		
 	/* CLEAR SEARCH EVENT - Personal Documents Category */
-	$('#personal_clear').click(() => {
+	$('#search_clear').click(() => {
 		clearPersonalDocsSearch();
 	});
 		
 	/* CLEAR SEARCH - Personal Documents */
 	function clearPersonalDocsSearch() {
-		$('#personal_search').val('');
-		$('#personal_uploadfrom_calendar').calendar('clear');
-		$('#personal_uploadto_calendar').calendar('clear');
-		$('#personal_category').dropdown('restore defaults');
+		$('#search_personal').val('');
+		$('#search_uploadfrom_calendar').calendar('clear');
+		$('#search_uploadto_calendar').calendar('clear');
+		$('#search_category').dropdown('restore defaults');
 	}

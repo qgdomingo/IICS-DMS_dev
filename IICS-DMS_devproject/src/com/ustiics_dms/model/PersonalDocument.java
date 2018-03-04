@@ -28,7 +28,6 @@ public class PersonalDocument {
 		this.timeCreated = timeCreated;
 	}
 
-
 	public String getType() {
 		return type;
 	}
