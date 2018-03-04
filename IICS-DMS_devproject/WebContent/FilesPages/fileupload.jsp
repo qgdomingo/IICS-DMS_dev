@@ -302,9 +302,14 @@
 
 				<div class="field">
 					<label>Existing Documents Thread</label>
-					<select class="ui fluid search selection dropdown" name="thread_no" id="incoming_thread">
-						<option value="">Select Thread</option>
-					</select>
+					<div class="ui action input">
+						<select class="ui fluid search selection dropdown" name="thread_no" id="incoming_thread">
+							<option value="">Select Thread</option>
+						</select>
+					  	<div class="ui button" id="clear_incoming_thread">
+					  		Clear
+					  	</div>
+					</div>
 					<p class="microcopy-hint">This is used for linking related documents.</p>
 				</div>
 				
@@ -380,9 +385,15 @@
 				
 				<div class="field">
 					<label>Existing Documents Thread</label>
-					<select class="ui fluid search selection dropdown" name="thread_no" id="outgoing_thread">
-						<option value="">Select Thread</option>
-					</select>
+					<div class="ui action input">
+						<select class="ui fluid search selection dropdown" name="thread_no" id="outgoing_thread">
+							<option value="">Select Thread</option>
+						</select>
+					  	<div class="ui button" id="clear_outgoing_thread">
+					  		Clear
+					  	</div>
+					</div>
+
 					<p class="microcopy-hint">This is used for linking related documents.</p>
 				</div>
 				

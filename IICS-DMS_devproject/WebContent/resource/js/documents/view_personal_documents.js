@@ -74,7 +74,7 @@
 					
 				// bind events and classes to the table after all data received
 				personalDocsTable = $('#personal_table').DataTable({
-					'order': [[0, 'asc'], [1, 'asc']]
+					'order': [[1, 'asc']]
 				});
 				selectPersonalDocsRow();
 				isPersonalDocsTableEmpty = false;

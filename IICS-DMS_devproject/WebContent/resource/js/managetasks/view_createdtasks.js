@@ -40,7 +40,7 @@
 				
 				// bind events and classes to the table after all data received
 				createdTasksTable = $('#taskscreated_table').DataTable({
-					'order': [[0, 'asc'], [1, 'asc'], [2, 'asc']]
+					'order': [[1, 'asc']]
 				});
 				selectTaskCreatedRow();
 				isCreatedTasksTableEmpty = false;
@@ -87,6 +87,7 @@
 		if(!isCreatedTasksTableEmpty) 
 		{
 			createdTasksTable.row.add( $(addNewRowDataFormat(newData))[0] ).draw();
+			createdTasksTable.order([1, 'asc']).draw();
 			localCreatedTasksData.push(newData);
 		}
 		else

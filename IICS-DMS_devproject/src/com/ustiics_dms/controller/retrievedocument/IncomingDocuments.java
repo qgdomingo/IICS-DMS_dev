@@ -38,6 +38,7 @@ public class IncomingDocuments extends HttpServlet {
 			while(documentFiles.next()) 
 			{ 
 				incomingFiles.add(new IncomingDocument(
+						documentFiles.getString("id"),
 						documentFiles.getString("type"),
 						documentFiles.getString("thread_number"),
 						documentFiles.getString("reference_no"),

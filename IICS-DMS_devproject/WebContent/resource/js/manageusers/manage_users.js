@@ -43,7 +43,7 @@
 				
 				// bind events and classes to the table after all data received
 				table = $('#userstable').DataTable({
-					'order': [[2, 'asc'], [1, 'asc'], [0, 'asc']]
+					'order': [[7, 'desc']] 
 				});
 				selectRow();
 				

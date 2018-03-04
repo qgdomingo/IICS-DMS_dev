@@ -75,7 +75,7 @@
 					
 				// bind events and classes to the table after all data received
 				outgoingDocsTable = $('#outgoing_table').DataTable({
-					'order': [[0, 'asc'], [2, 'asc']]
+					'order': [[2, 'asc']]
 				});
 				selectOutgoingDocsRow();
 				isOutgoingDocsTableEmpty = false;
@@ -134,7 +134,7 @@
 		$('#viewoutgoing_type').text(selectedData['type']);
 		$('#viewoutgoing_file').text(selectedData['fileName']);
 		$('#viewoutgoing_description').text(selectedData['description']);
-		$('#viewoutgoing_download_id').val(parseInt(selectedData['referenceNo']));
+		$('#viewoutgoing_download_id').val(parseInt(selectedData['id']));
 		$('#viewoutgoing_download_type').val(selectedData['type']);
 		$('#viewoutgoing_threadno').text(selectedData['threadNumber']);
 	}

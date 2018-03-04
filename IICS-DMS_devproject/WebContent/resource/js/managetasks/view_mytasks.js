@@ -47,7 +47,7 @@
 				
 				// bind events and classes to the table after all data received
 				myTasksTable = $('#mytasks_table').DataTable({
-					'order': [[0, 'asc'], [2, 'asc'], [1, 'asc']]
+					'order': [[2, 'asc']]
 				});
 				selectMyTaskRow();
 				isMyTasksTableEmpty = false;

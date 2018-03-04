@@ -66,7 +66,6 @@
 			{
 				localIncomingDocsData = responseJson;
 				$.each(responseJson, (index, incomingDocs) => {
-					console.log(incomingDocs);
 					$('<tr id="'+index+'">').appendTo('#incoming_tablebody')
 						.append($('<td>').text(incomingDocs.title))
 						.append($('<td>').text(incomingDocs.sourceRecipient))
@@ -80,7 +79,7 @@
 					
 				// bind events and classes to the table after all data received
 				incomingDocsTable = $('#incoming_table').DataTable({
-					'order': [[0, 'asc'], [1, 'asc'], [2, 'asc']]
+					'order': [[2, 'asc']]
 				});
 				selectIncomingDocsRow();
 				isIncomingDocsTableEmpty = false;
@@ -143,7 +142,7 @@
 		$('#viewincoming_type').text(selectedData['type']);
 		$('#viewincoming_file').text(selectedData['file_name']);
 		$('#viewincoming_description').text(selectedData['description']);
-		$('#viewincoming_download_id').val(parseInt(selectedData['referenceNo']));
+		$('#viewincoming_download_id').val(parseInt(selectedData['id']));
 		$('#viewincoming_download_type').val(selectedData['type']);
 		$('#viewincoming_threadno').text(selectedData['threadNumber']);
 	}
