@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Document;
+import com.ustiics_dms.utility.AesEncryption;
 
 
 @WebServlet("/Thread")
@@ -30,19 +31,23 @@ public class Thread extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		String threadNumber = request.getParameter("thread_number");
-		List<Document> files = new ArrayList<Document>();
-	    response.setCharacterEncoding("UTF-8");
-		
-	    HttpSession session = request.getSession();
-	    Account acc = (Account) session.getAttribute("currentCredentials");
+	
 		try {
+			
+			String threadNumber = "9"; //AesEncryption.decrypt(request.getParameter("thread_number"));
+			System.out.println(request.getParameter("thread_number"));
+			List<Document> files = new ArrayList<Document>();
+		    response.setCharacterEncoding("UTF-8");
+			
+		    HttpSession session = request.getSession();
+		    Account acc = (Account) session.getAttribute("currentCredentials");
+		    
 			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveThread(threadNumber);
 			while(documentFiles.next()) 
 			{ //id and category
 				files.add(new Document(
-						documentFiles.getString("id"),
-						documentFiles.getString("type"),
+						AesEncryption.encrypt(documentFiles.getString("id")),
+						AesEncryption.encrypt(documentFiles.getString("type")),
 						documentFiles.getString("thread_number"),
 						documentFiles.getString("reference_no"),
 						documentFiles.getString("source_recipient"),

@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.PersonalDocument;
+import com.ustiics_dms.utility.AesEncryption;
 
 
 @WebServlet("/PersonalDocuments")
@@ -38,8 +39,8 @@ public class PersonalDocuments extends HttpServlet {
 			while(documentFiles.next()) 
 			{ 
 				personalFiles.add(new PersonalDocument(
-						documentFiles.getString("type"),
-						documentFiles.getString("id"),
+						AesEncryption.encrypt(documentFiles.getString("type")),
+						AesEncryption.encrypt(documentFiles.getString("id")),
 						documentFiles.getString("title"),
 						documentFiles.getString("category"),
 						documentFiles.getString("file_name"),
