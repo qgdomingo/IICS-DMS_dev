@@ -171,7 +171,7 @@
 			
 			<br>
 			
-			<div class="center-text element-mt">
+			<div class="center-text element-mt" id="load_more_data_btn">
 				<button class="ui grey button">
 					<i class="sync icon"></i>
 					Load More

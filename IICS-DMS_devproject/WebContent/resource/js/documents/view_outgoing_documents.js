@@ -75,7 +75,7 @@
 					
 				// bind events and classes to the table after all data received
 				outgoingDocsTable = $('#outgoing_table').DataTable({
-					'order': [[2, 'asc']]
+					'order': [[2, 'desc']]
 				});
 				selectOutgoingDocsRow();
 				isOutgoingDocsTableEmpty = false;

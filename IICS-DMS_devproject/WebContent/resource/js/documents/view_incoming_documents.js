@@ -79,7 +79,7 @@
 					
 				// bind events and classes to the table after all data received
 				incomingDocsTable = $('#incoming_table').DataTable({
-					'order': [[2, 'asc']]
+					'order': [[2, 'desc']]
 				});
 				selectIncomingDocsRow();
 				isIncomingDocsTableEmpty = false;

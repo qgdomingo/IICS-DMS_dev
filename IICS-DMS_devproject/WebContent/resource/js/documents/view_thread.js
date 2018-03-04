@@ -2,7 +2,9 @@
  * 
  */
 	var localDocumentsData = [];
-
+	var currentCursor = 0;
+	var maxCursor = 0;
+	
 	$(document).ready(function() {
 		$('#fail_request_message').hide();
 		
@@ -47,14 +49,18 @@
 				$('#thread_capacity').text(response.length);
 				
 				localDocumentsData = response;
-				$.each(response, function(index, documentData) {
-					if(documentData['type'] == 'Incoming') {
-						setIncomingDocumentSegment(documentData, index);
+				for(currentCursor = 0; (currentCursor < 5) && !(localDocumentsData[currentCursor] == undefined); currentCursor++) {
+					if(response[currentCursor]['type'] == 'Incoming') {
+						setIncomingDocumentSegment(response[currentCursor], currentCursor);
 					}
-					else if(documentData['type'] == 'Outgoing') {
-						setOutgoingDocumentSegment(documentData);
+					else if(response[currentCursor]['type'] == 'Outgoing') {
+						setOutgoingDocumentSegment(response[currentCursor]);
 					}
-				});
+				}
+				
+				if(!localDocumentsData[currentCursor]) {
+					$('#load_more_data_btn').hide();
+				} 
 				
 				bindViewIncomingDetailsClickEvent();
 				removeCSSClass('#thread_loading', 'active');
@@ -63,12 +69,34 @@
 				$('#fail_request_message').show();
 				removeCSSClass('#thread_loading', 'active');
 			}
-		})
+		}) 
 		.fail(function(response) {
 			$('#fail_request_message').show();
 			removeCSSClass('#thread_loading', 'active');
 		});
 	}
+	
+	/* GET - Load More Data */
+	$('#load_more_data_btn').click(function() {
+		maxCursor = currentCursor + 5;
+		
+		for(currentCursor; (currentCursor < maxCursor) && !(localDocumentsData[currentCursor] == undefined); currentCursor++) {
+			console.log('CURRENT CURSOR: ' + currentCursor);
+			console.log(localDocumentsData[currentCursor]);
+			if(localDocumentsData[currentCursor]['type'] == 'Incoming') {
+				setIncomingDocumentSegment(localDocumentsData[currentCursor], currentCursor);
+			}
+			else if(localDocumentsData[currentCursor]['type'] == 'Outgoing') {
+				setOutgoingDocumentSegment(localDocumentsData[currentCursor]);
+			}
+		}
+		 
+		if(!localDocumentsData[currentCursor]) {
+			$('#load_more_data_btn').hide();
+		} 
+		
+		bindViewIncomingDetailsClickEvent();
+	});
 	
 	/* SET - Incoming Document Segment (HTML) */
 	function setIncomingDocumentSegment(data, index) {
@@ -94,7 +122,8 @@
 									.append('<b>Action Required: </b>' + data.actionRequired)
 								)
 								.append($('<p class="element-rmb">')
-									.append('<b>Action Due: </b>' + data.dueOn)
+									.append('<b>Action Due: </b>')
+									.append(data.dueOn == undefined ? '' : data.dueOn)
 								)
 								.append($('<p class="element-rmb">')
 									.append('<b>Status: </b>' + data.status)
