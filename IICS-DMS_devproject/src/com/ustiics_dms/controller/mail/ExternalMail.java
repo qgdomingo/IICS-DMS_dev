@@ -80,7 +80,7 @@ public class ExternalMail {
 	        multipart.addBodyPart(messageBodyPart);
 
 	        message.setContent(multipart);
-	       Transport.send(message);
+	        Transport.send(message);
 		}
 	 
 	   }

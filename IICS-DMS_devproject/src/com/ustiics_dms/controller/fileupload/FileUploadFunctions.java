@@ -98,15 +98,21 @@ public class FileUploadFunctions {
 	{
 			String referenceNo = getAcadYear();
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT default_reference, null FROM sources_list WHERE sources_name = ?" +
-					" UNION " 
-					+ "SELECT default_reference, counter FROM external_list WHERE sources_name = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT default_reference FROM sources_list WHERE sources_name = ?");
+			prep.setString(1, source);	
 			
-			prep.setString(1, source);
-			prep.setString(2, source);
-
 			ResultSet rs = prep.executeQuery();
+
+			if (rs.isBeforeFirst())
+			{
+				referenceNo += rs.getString("default_reference");
+				return referenceNo;
+			}
 			
+			prep = con.prepareStatement("SELECT default_reference, counter FROM external_list WHERE sources_name = ?");
+			prep.setString(1, source);
+			rs = prep.executeQuery();
+
 			//if source does not exist in column sources_name, generates a row and labeled as external
 			if (!rs.isBeforeFirst())
 			{
@@ -115,8 +121,8 @@ public class FileUploadFunctions {
 			else
 			{	
 				rs.next();
-				int updatedCounter = rs.getInt("null") + 1;
-				
+				int updatedCounter = rs.getInt("counter") + 1;
+
 				referenceNo += rs.getString("default_reference");
 				referenceNo += appendZeroes(updatedCounter) + updatedCounter;
 				updateCounter(source, updatedCounter);
