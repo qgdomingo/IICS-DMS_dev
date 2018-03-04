@@ -69,7 +69,7 @@ public class RetrieveDocumentFunctions {
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("SELECT id, type, thread_number, reference_no, source_recipient, title, category, action_required, file_name, description, created_by, email, status,  time_created, department, due_on  FROM incoming_documents WHERE thread_number = ?" + 
 					" UNION " + 
-					"SELECT id, type, thread_number, null, source_recipient, title, category, null, file_name, description, created_by, email, null, time_created, department, null  FROM outgoing_documents WHERE thread_number = ? ORDER BY time_created ASC");
+					"SELECT id, type, thread_number, null, source_recipient, title, category, null, file_name, description, created_by, email, null, time_created, department, null  FROM outgoing_documents WHERE thread_number = ? ORDER BY time_created DESC");
 			
 			prep.setString(1,  threadNumber);
 			prep.setString(2,  threadNumber);
@@ -83,7 +83,7 @@ public class RetrieveDocumentFunctions {
 	{
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("SELECT thread_number, title, category, time_created FROM outgoing_documents "
-					+ "WHERE source_recipient = ? AND department = ? ");
+					+ "WHERE source_recipient = ? AND department = ? ORDER BY time_created DESC");
 			prep.setString(1, source);
 			prep.setString(2, department);
 			ResultSet result = prep.executeQuery();
@@ -97,7 +97,7 @@ public class RetrieveDocumentFunctions {
 	{
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("SELECT thread_number, title, category, time_created FROM incoming_documents "
-					+ "WHERE source_recipient = ? AND department = ?");
+					+ "WHERE source_recipient = ? AND department = ? ORDER BY time_created DESC");
 			prep.setString(1, source);
 			prep.setString(2, department);
 			ResultSet result = prep.executeQuery();

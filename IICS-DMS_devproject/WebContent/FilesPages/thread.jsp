@@ -136,34 +136,91 @@
 		
 <!-- ACTUAL PAGE CONTENTS -->
 		
+		<h2 class="ui dividing header element-rmt">
+			<a id="page_origin">
+				<i class="black chevron left icon"></i>
+			</a>
+			View Documents Thread
+		</h2>
 		
-			
-		<!-- SEGMENT FOR INCOMING DOCUMENTS -->
-		<div id="incomingdocs_table">
-			<h3 class="ui dividing header">
-				<i class="sign in icon"></i>
-				<div class="content">
-					Incoming Documents
-					<div class="sub header">
-						Here lists all documents which have concerns to the institution.
-					</div>
+		<h3 class="ui header">
+			<i class="user icon"></i>
+			<div class="content">
+				<span style="color: gray;">Document Source and Recipient: </span>
+				<span id="thread_source_recipient"></span>
+				<div class="sub header">
+					No. of Documents in this thread: <span id="thread_capacity"></span>
 				</div>
-			</h3>
-				
-			<div class="ui segment">
-				<div class="ui dimmer" id="incoming_loading">
-					<div class="ui text loader">Retrieving Incoming Documents</div>
-				</div>
-				
-				
 			</div>
-
-		</div>
-
-	
+		</h3>
+					
+		<div class="ui segment">
+			<div class="ui dimmer" id="thread_loading">
+				<div class="ui text loader">Retrieving Documents Thread</div>
+			</div>
+			
+			<div class="ui icon message" id="fail_request_message">
+				<i class="times icon"></i>
+  				<div class="content">
+      				We are unable to retrieve the documents thread. Please try refreshing the page.
+					If the problem persists, please contact your administrator.
+  				</div>
+			</div>
+			
+			<div class="ui centered grid" id="thread_area"></div>
+			
+			<br>
+			
+			<div class="center-text element-mt">
+				<button class="ui grey button">
+					<i class="sync icon"></i>
+					Load More
+				</button>
+			</div>
+		</div> 
+			
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
 
+		<!-- VIEW - INCOMING DOCUMENT -->
+		<div class="ui tiny modal" id="viewincoming_dialog">
+			<div class="header neutral-modal">
+				<h3 class="ui header neutral-modal">
+					<i class="file icon"></i>
+					<div class="content" id="viewincoming_title"></div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p class="element-rmb"><b>Document Source: </b><span id="viewincoming_source"></span></p>
+				<p class="element-rmb"><b>Reference No.: </b><span id="viewincoming_refno"></span></p>
+				<p class="element-rmb"><b>Action Required: </b><span id="viewincoming_action"></span></p>
+				<p class="element-rmb"><b>Action Due: </b><span id="viewincoming_due"></span></p>
+				<p class="element-rmb"><b>Status: </b><span id="viewincoming_status"></span></p>
+				<br>
+				<h5 class="ui horizontal header divider element-rmb element-rmt">
+				  <i class="info circle icon"></i>
+				  File Details
+				</h5>
+				<p class="element-rmb"><b>Uploaded By: </b><span id="viewincoming_uploadedby"></span></p>
+				<p class="element-rmb"><b>Upload Date: </b><span id="viewincoming_uploaddate"></span></p>
+				<p class="element-rmb"><b>Category: </b><span id="viewincoming_category"></span></p>
+				<p class="element-rmb"><b>Document Type: </b><span id="viewincoming_type"></span></p>
+				<p class="element-rmb"><b>File Name: </b><span id="viewincoming_file"></span></p>
+				<p><b>Description: </b><span id="viewincoming_description"></span></p>
+				
+				<form method="GET" action="${pageContext.request.contextPath}/FileDownload">
+					<input type="hidden" name="id" id="viewincoming_download_id">
+					<input type="hidden" name="type" id="viewincoming_download_type">
+					<input type="hidden" id="viewincoming_threadno">
+					<button class="ui fluid small button" type="submit">
+						<i class="file icon"></i>View File
+					</button>
+				</form>
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button" id="viewincoming_close">Close</button>
+			</div>
+		</div>
 		
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">
@@ -226,4 +283,5 @@
 	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/documents/view_thread.js"></script>
 </html>

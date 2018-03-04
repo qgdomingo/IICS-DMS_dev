@@ -119,7 +119,11 @@
 		   	
 		    $('#viewincoming_dialog').modal({
 				closable: false,
-				observeChanges: true
+				observeChanges: true,
+				autofocus: false,
+				onHidden: function() {
+					$('#viewincoming_due').text('');
+				}
 			}).modal('show');
 		    
 		    $(this).toggleClass('active');
@@ -144,9 +148,18 @@
 		$('#viewincoming_description').text(selectedData['description']);
 		$('#viewincoming_download_id').val(parseInt(selectedData['id']));
 		$('#viewincoming_download_type').val(selectedData['type']);
-		$('#viewincoming_threadno').text(selectedData['threadNumber']);
+		$('#viewincoming_threadno').val(selectedData['threadNumber']);
 	}
 		
+	/* VIEW THREAD */
+	$('#viewincoming_view_thread').click(function() {
+		var url = getContextPath() + '/files/thread.jsp?id=' 
+			+ encodeURIComponent($('#viewincoming_threadno').val())
+			+ '&origin=1';
+			
+		document.location.href = url;
+	});
+
 /*
  * SEARCH FUNCTIONALITY
  */

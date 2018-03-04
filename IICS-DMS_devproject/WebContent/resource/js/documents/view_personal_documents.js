@@ -114,6 +114,7 @@
 		   	
 		    $('#viewpersonal_dialog').modal({
 				closable: false,
+				autofocus: false,
 				observeChanges: true
 			}).modal('show');
 		    

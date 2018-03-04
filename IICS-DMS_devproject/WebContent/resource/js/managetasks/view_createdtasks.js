@@ -82,7 +82,7 @@
 	    });
 	}
 	
-	/*  */
+	/* NEW ROW - Newly Added Row */
 	function addNewRowData(newData) {
 		if(!isCreatedTasksTableEmpty) 
 		{

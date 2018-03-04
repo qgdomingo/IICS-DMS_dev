@@ -28,7 +28,6 @@ public class Thread extends HttpServlet {
 
     }
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String threadNumber = request.getParameter("thread_number");

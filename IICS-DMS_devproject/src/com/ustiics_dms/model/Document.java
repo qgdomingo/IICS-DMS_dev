@@ -19,8 +19,6 @@ public class Document {
 	private String department;
 	private String dueOn;
 	
-	
-
 	public Document(String id, String type, String threadNumber, String referenceNo, String sourceRecipient, String title,
 			String category, String actionRequired, String fileName, String description, String createdBy, String email,
 			String status, String timeCreated, String department, String dueOn) {
