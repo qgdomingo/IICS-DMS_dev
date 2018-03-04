@@ -129,9 +129,9 @@
 		$('#viewpersonal_uploadedby').text(selectedData['createdBy']);
 		$('#viewpersonal_uploaddate').text(selectedData['timeCreated']);
 		$('#viewpersonal_category').text(selectedData['category']);
-		$('#viewpersonal_type').text(selectedData['type']);
+		$('#viewpersonal_type').text('Personal');
 		$('#viewpersonal_file').text(selectedData['fileName']);
-		$('#viewpersonal_download_id').val(parseInt(selectedData['id']));
+		$('#viewpersonal_download_id').val(selectedData['id']);
 		$('#viewpersonal_download_type').val(selectedData['type']);
 		$('#viewpersonal_description').text(selectedData['description']);
 	}

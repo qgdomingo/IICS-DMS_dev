@@ -141,28 +141,29 @@
 					<option value="">Select Mail Type</option>
 					<option value="Memo">Memo</option>
 					<option value="Letter">Letter</option>
+					<option value="Notice">Notice</option>
 				</select>
 			</div>
 			</div>
 			
-			<div class="required field">
+			<div class="field">
 				<label>To:</label>
-				<div class="inline two fields">
-					<div class="fourteen wide field">
-						<input class="fluid" type="text" name="recipient" required/>
-					</div>
-					<div class="two wide field">
-					<button class="ui inverted orange button" type="button">
-						<i class="users icon"></i>
-						Directory
-					</button>
-					</div>
+				<div class="ui action input">
+				  	<select class="ui fluid search selection dropdown" multiple="" name="assigned_to">
+						<option value="">Select Users</option>
+					</select>
+				  	<button class="ui inverted orange button">
+				  		<i class="address book outline icon"></i>
+				  		Options
+				  	</button>
 				</div>
 			</div>
-		
+				
 			<div class="field">
 				<label>External To:</label>
-				<input type="text" name="external_recipient" />
+				<select class="ui fluid search selection dropdown" multiple="" name="assigned_to">
+					<option value="">Select Users</option>
+				</select>
 			</div>
 			
 			<div class="required field">
@@ -176,27 +177,29 @@
 			</div>
 			
 			<!-- SENDING MAIL BUTTONS -->
-			<button name="submit" value="send mail" class="ui labeled icon green button element-mb">
-				<i class="send icon"></i>
-				Send Mail
-			</button>
-			
-			<%if(acc.getUserType().equals("Faculty Secretary") || acc.getUserType().equals("Faculty")){%>
+			<% if(acc.getUserType().equals("Faculty Secretary") || acc.getUserType().equals("Faculty")) { %>
 			<button name="submit" value="mail request" class="ui labeled icon orange button element-mb">
 				<i class="exchange icon"></i>
 				Send Mail as Request
 			</button>	
-			<%} %>
-			<button name="submit" value="save mail" class="ui labeled icon blue button element-mb">
-				<i class="save icon"></i>
-				Save Mail
+			<% } %>
+			
+			<% if(!acc.getUserType().equals("Faculty")) { %>
+			<button name="submit" value="send mail" class="ui labeled icon green button element-mb">
+				<i class="send icon"></i>
+				Send Mail
 			</button>
-				
+
 			<button name="submit" value="save and export" class="ui labeled icon blue button element-mb">
 				<i class="download icon"></i>
-				Save and Export as PDF
+				Export Mail as PDF
 			</button>
-						
+			<% } %>
+			
+			<button type="button" class="ui grey button element-mb">
+				Clear Fields
+			</button>
+			
 		</form>
 				
 <!-- END OF ACTUAL PAGE CONTENTS -->

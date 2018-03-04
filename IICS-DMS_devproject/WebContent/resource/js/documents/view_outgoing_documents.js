@@ -132,10 +132,10 @@
 			.text(selectedData['createdBy'] + ' <' + selectedData['email'] + '>');
 		$('#viewoutgoing_uploaddate').text(selectedData['timeCreated']);
 		$('#viewoutgoing_category').text(selectedData['category']);
-		$('#viewoutgoing_type').text(selectedData['type']);
+		$('#viewoutgoing_type').text('Outgoing');
 		$('#viewoutgoing_file').text(selectedData['fileName']);
 		$('#viewoutgoing_description').text(selectedData['description']);
-		$('#viewoutgoing_download_id').val(parseInt(selectedData['id']));
+		$('#viewoutgoing_download_id').val(selectedData['id']);
 		$('#viewoutgoing_download_type').val(selectedData['type']);
 		$('#viewoutgoing_threadno').val(selectedData['threadNumber']);
 	}

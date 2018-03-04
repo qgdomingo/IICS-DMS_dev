@@ -155,7 +155,7 @@
 					</div><br>
 					
 					<div class="ui red mini statistic">
-						<div class="value">
+						<div class="value" style="text-transform: none;">
 							<%= acc.getEmail() %>
 						</div>
 						<div class="label">
@@ -165,7 +165,7 @@
 					
 					<div class="actions">
 						<button class="ui labeled icon orange button element-mb">
-							<i class="pencil icon"></i>
+							<i class="edit icon"></i>
 							Edit User Profile
 						</button>
 						<button class="ui labeled icon grey button element-mb">
@@ -179,6 +179,67 @@
 			</div>
 		
 <!-- END OF ACTUAL PAGE CONTENTS -->
+		</div>
+		
+		<!-- EDIT USER PROFILE MODAL -->
+		<div class="ui modal" id="edit_profile_dialog">
+			<div class="header edit-modal">
+				<h3 class="ui header edit-modal">
+					<i class="edit icon"></i>
+					Edit User Profile
+				</h3>
+			</div>
+			<div class="modal-content">
+				<form class="ui form" method="POST" id="edit_profile_form">
+					<div class="required field">
+						<label>Faculty No.</label>
+						<input type="type" 
+					</div>
+				</form>
+			</div>
+			<div class="actions">
+				<button class="ui cancel grey button" id="addtask_cancel">
+					<i class="remove icon"></i>
+					Cancel
+				</button>				
+				<button class="ui green button" type="submit" form="edit_profile_form" id="addtask_submit">
+					<i class="checkmark icon"></i>
+					Confirm Edit
+				</button>
+			</div>
+		</div>
+		
+		
+		<!-- SUCCESS MESSAGE MODAL -->
+		<div class="ui tiny modal" id="successdia">
+			<div class="header add-modal">
+				<h3 class="ui header add-modal">
+					<i class="checkmark icon"></i>
+					<div class="content" id="successdia_header"></div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p id="successdia_content"></p>
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button">Okay</button>
+			</div>
+		</div>
+		
+		<!-- FAIL MESSAGE MODAL -->
+		<div class="ui tiny modal" id="faildia">
+			<div class="header delete-modal">
+				<h3 class="ui header delete-modal">
+					<i class="remove icon"></i>
+					<div class="content" id="faildia_header"></div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p id="faildia_content"></p>
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button">Okay</button>
+			</div>
 		</div>
 		
 		<!-- LOGOUT MODAL -->
