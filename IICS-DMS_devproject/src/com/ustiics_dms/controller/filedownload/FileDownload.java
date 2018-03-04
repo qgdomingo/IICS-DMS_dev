@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ustiics_dms.model.File;
+import com.ustiics_dms.utility.AesEncryption;
 
 
 @WebServlet("/FileDownload")
@@ -27,31 +28,31 @@ public class FileDownload extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		try {
-			int id = Integer.parseInt(request.getParameter("id"));
-			String type = request.getParameter("type");
+			int id = Integer.parseInt(AesEncryption.decrypt(request.getParameter("id")));
+			String type = AesEncryption.decrypt(request.getParameter("type"));
 			
-			 File file = FileDownloadFunctions.getFile(id, type);
+			File file = FileDownloadFunctions.getFile(id, type);
 			 
-			 String contentType = this.getServletContext().getMimeType(file.getFileName());
+			String contentType = this.getServletContext().getMimeType(file.getFileName());
 			 
-			 response.setHeader("Content-Type", contentType);
+			response.setHeader("Content-Type", contentType);
 			 
-	         response.setHeader("Content-Length", String.valueOf(file.getFileData().length()));
+	        response.setHeader("Content-Length", String.valueOf(file.getFileData().length()));
 	 
-	         response.setHeader("Content-Disposition", "inline; filename=\"" + file.getFileName() + "\"");
+	        response.setHeader("Content-Disposition", "inline; filename=\"" + file.getFileName() + "\"");
 		
 		
-			 Blob fileData = file.getFileData();
-	         InputStream is = fileData.getBinaryStream();
+			Blob fileData = file.getFileData();
+	        InputStream is = fileData.getBinaryStream();
 	
-	         byte[] bytes = new byte[1024];
-	         int bytesRead;
+	        byte[] bytes = new byte[1024];
+	        int bytesRead;
 	
-	         while ((bytesRead = is.read(bytes)) != -1) 
-	         {
+	        while ((bytesRead = is.read(bytes)) != -1) 
+	        {
 	        	 // Write image data to Response.
 	            response.getOutputStream().write(bytes, 0, bytesRead);
-	         }
+	        }
 	         
 			} catch (Exception e) {
 				e.printStackTrace();

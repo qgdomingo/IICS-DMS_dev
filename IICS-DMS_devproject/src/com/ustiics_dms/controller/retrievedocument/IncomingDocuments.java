@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.IncomingDocument;
+import com.ustiics_dms.utility.AesEncryption;
 
 
 @WebServlet("/IncomingDocument")
@@ -38,8 +39,8 @@ public class IncomingDocuments extends HttpServlet {
 			while(documentFiles.next()) 
 			{ 
 				incomingFiles.add(new IncomingDocument(
-						documentFiles.getString("id"),
-						documentFiles.getString("type"),
+						AesEncryption.encrypt(documentFiles.getString("id")),
+						AesEncryption.encrypt(documentFiles.getString("type")),
 						documentFiles.getString("thread_number"),
 						documentFiles.getString("reference_no"),
 						documentFiles.getString("source_recipient"),

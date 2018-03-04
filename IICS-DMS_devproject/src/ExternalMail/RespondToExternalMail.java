@@ -62,15 +62,19 @@ public class RespondToExternalMail extends HttpServlet {
 	                fileData = item;
 	            }
             }
-			
-			String recipient = tempStorage[0];
-			String subject = tempStorage[1];
-			String message = tempStorage[2];
-			ExternalMailFunctions.saveExternalMail(recipient, subject, message);
-			ExternalMailFunctions.send(recipient, subject, ExternalMailFunctions.getIncrement(), "iics2014dmsystem@gmail.com", "bluespace09");
+			String threadNumber = tempStorage[0];
+			String recipient = tempStorage[1];
+			String subject = tempStorage[2];
+			String message = tempStorage[3];
 
+			ExternalMailFunctions.saveSentExternalMail(threadNumber, recipient, subject, message, fileData, acc.getEmail());
 			
-		}catch(Exception e) {}
+			System.out.println(ExternalMailFunctions.getIncrement());
+			ExternalMailFunctions.send(recipient, subject, message, ExternalMailFunctions.getIncrement(), "iics2014dmsystem@gmail.com", "bluespace09");
+
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 

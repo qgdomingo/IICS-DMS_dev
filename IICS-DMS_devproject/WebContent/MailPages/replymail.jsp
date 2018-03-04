@@ -8,13 +8,18 @@
 </head>
 <body>
 
-	<form  method="post" action="RespondToExternalMail" enctype="multipart/form-data">
+	<form  method="post" action="${pageContext.request.contextPath}/RespondToExternalMail" enctype="multipart/form-data">
 				
 				<!-- SENDER'S INFORMATION --> 
 					<h3 class="ui dividing header">
 						<i class="user icon"></i>
 						<div class="content">Sender's Information</div>
 					</h3>
+					<div class="fields">
+						<div class="required field">
+							<label>Thread Number:</label>
+							<input name="thread_number" type="text" placeholder="e.g. 1" />
+						</div>
 					<div class="fields">
 						<div class="required field">
 							<label>To Email:</label>
