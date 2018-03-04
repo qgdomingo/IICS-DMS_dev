@@ -19,6 +19,7 @@ import com.ustiics_dms.controller.retrievedocument.RetrieveDocumentFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Document;
 import com.ustiics_dms.model.Task;
+import com.ustiics_dms.utility.AesEncryption;
 
 
 @WebServlet("/TasksCreated")
@@ -44,7 +45,7 @@ public class TasksCreated extends HttpServlet {
 			while(tasksCreated.next())
 			{ 
 				task.add(new Task(
-						tasksCreated.getString("id"),
+						AesEncryption.encrypt(tasksCreated.getString("id")),
 						tasksCreated.getString("title"),
 						tasksCreated.getString("deadline"),
 						tasksCreated.getString("category"),

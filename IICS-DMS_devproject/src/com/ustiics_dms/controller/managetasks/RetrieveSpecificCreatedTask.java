@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.ustiics_dms.utility.AesEncryption;
 
 @WebServlet("/RetrieveSpecificCreatedTask")
 public class RetrieveSpecificCreatedTask extends HttpServlet {
@@ -30,7 +31,7 @@ public class RetrieveSpecificCreatedTask extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		
 		try {
-			 String id = request.getParameter("id");
+			 String id = AesEncryption.decrypt(request.getParameter("id"));
 			 ResultSet specificCreatedTask = (ResultSet) ManageTasksFunctions.getSpecificCreatedTask(id);
 			 
 			 if(specificCreatedTask.next()) {

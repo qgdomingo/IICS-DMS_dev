@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.File;
+import com.ustiics_dms.utility.AesEncryption;
 import com.ustiics_dms.utility.SessionChecking;
 
 
@@ -34,7 +35,7 @@ public class DownloadTask extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			 int id = Integer.parseInt(request.getParameter("id"));
+			 int id = Integer.parseInt(AesEncryption.decrypt(request.getParameter("id")));
 			 String email = request.getParameter("email");
 			 
 			 File file = ManageTasksFunctions.getFile(id, email);

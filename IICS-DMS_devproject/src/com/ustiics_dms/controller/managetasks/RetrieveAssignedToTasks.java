@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.model.AssignedToTask;
+import com.ustiics_dms.utility.AesEncryption;
 
 @WebServlet("/RetrieveAssignedToTasks")
 public class RetrieveAssignedToTasks extends HttpServlet {
@@ -31,13 +32,13 @@ public class RetrieveAssignedToTasks extends HttpServlet {
 	    response.setCharacterEncoding("UTF-8");
 		
 		try {
-			String id = request.getParameter("id");
+			String id = AesEncryption.decrypt(request.getParameter("id"));
 			ResultSet getTasks = (ResultSet) ManageTasksFunctions.getTask(id);
 			
 			while(getTasks.next())
 			{
 				task.add(new AssignedToTask(
-						getTasks.getString("id"),
+						AesEncryption.encrypt(getTasks.getString("id")),
 						getTasks.getString("name"),
 						getTasks.getString("email"),
 						getTasks.getString("title"),
