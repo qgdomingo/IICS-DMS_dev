@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.ustiics_dms.model.Account;
+import com.ustiics_dms.utility.AesEncryption;
 
 
 @WebServlet("/EditTask")
@@ -31,7 +32,7 @@ public class EditTask extends HttpServlet {
 			HttpSession session = request.getSession();
 			Account acc = (Account) session.getAttribute("currentCredentials");
 			
-			String id = request.getParameter("id");
+			String id = AesEncryption.decrypt(request.getParameter("id"));
 			String userEmail = acc.getEmail();
 			String title = request.getParameter("title");
 			String deadline = request.getParameter("deadline");
