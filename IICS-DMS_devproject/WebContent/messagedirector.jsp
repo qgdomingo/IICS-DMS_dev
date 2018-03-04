@@ -25,9 +25,9 @@
 				<br>
 				
 			<!-- START OF MESSAGE FORM -->
-				<form class="ui equal width form" enctype="multipart/form-data">
+				<form class="ui equal width form" method="post" action="SendMailToDirector" enctype="multipart/form-data">
 				
-				<!-- SENDER'S INFORMATION -->
+				<!-- SENDER'S INFORMATION --> 
 					<h3 class="ui dividing header">
 						<i class="user icon"></i>
 						<div class="content">Sender's Information</div>

@@ -16,7 +16,6 @@ import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Document;
-import com.ustiics_dms.model.OutgoingDocument;
 
 
 @WebServlet("/Thread")
@@ -56,7 +55,8 @@ public class Thread extends HttpServlet {
 						documentFiles.getString("email"),
 						documentFiles.getString("status"),
 						documentFiles.getString("time_created"),
-						documentFiles.getString("department")
+						documentFiles.getString("department"),
+						documentFiles.getString("due_on")
 						 ));	
 				
 			}
