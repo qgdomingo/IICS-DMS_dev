@@ -8,6 +8,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="resource/semanticui/semantic.min.css">
 		<link rel="stylesheet" href="resource/css/master.css">
+		<link rel="stylesheet" href="resource/css/generalpages.css">
 		<link rel="stylesheet" href="resource/css/login.css">
 	</head>
 	<body class="login-background">
@@ -33,15 +34,16 @@
 				
 				<!-- LOGIN FORM -->
 				<h1 class="ui grey header">Login</h1>
-				<form class="ui form element-mb" method="post" action="Login" id="login_form">
+				<form class="ui form element-mb" method="POST" action="Login" id="login_form">
 					<div class="field" id="user_email_field">
 						<label>Username</label>
-						<input placeholder="Username" name="user_email" id="user_email" type="text" required/>
+						<input placeholder="Username" name="user_email" type="text" />
 					</div>
 					<div class="field" id="user_password_field">
 						<label>Password</label>
-						<input placeholder="Password" name="user_password" id="user_password" type="password" required/>
+						<input placeholder="Password" name="user_password" type="password" />
 					</div>
+					<div class="ui error message"></div>
 					<button class="fluid medium ui green button" id="login_submit">
 						Login
 					</button>

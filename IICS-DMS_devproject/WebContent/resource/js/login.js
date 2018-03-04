@@ -17,53 +17,60 @@
 /* 
  * LOGIN FUNCTIONALITY  
  */
-
 	/* SUBMIT - Login Form */
-	$('#login_form').submit((event) => {
-		event.preventDefault();
-		
-		if(checkEmailField('#user_email', '#user_email_field'))
-		{
-			removeCSSClass('#user_email_field', 'error');
-			removeCSSClass('#user_password_field', 'error');
-			addCSSClass('#login_form', 'loading');
-			loginParams = {
-				user_email: $('#user_email').val(),
-				user_password: $('#user_password').val()
+	$('#login_form').ajaxForm({
+		 beforeSubmit: isLoginFormValid,
+	     success: function(response) { 
+	        if(response == 'invalid') {
+	        	callFailModal('Invalid Login Credentials',  'Check your login credentials and try logging in again.');
+	        }
+	        else if(response) {
+	        	window.location = getContextPath() + response.redirect;
+	        }
+	        else {
+	        	callFailModal('Unable to Login', 'Please try logging in again later. ' +
+					'If the problem persists, please contact your administrator.');
+	        }
+	        removeCSSClass('#login_form', 'loading');
+	     },
+	     error: function(response) {
+	    	 console.log('THIS WAS CALLED 2');
+	    	 removeCSSClass('#login_form', 'loading');
+	    	 callFailRequestModal();
+	     }
+	});
+
+	/* FORM VALIDATION - Login Form */
+	$('#login_form').form({
+		fields: {
+			user_email: {
+				identifier: 'user_email',
+				rules: [
+					{
+						type   : 'email',
+						prompt : 'Please enter a valid email address'
+					}
+				]
+			},
+			user_password: {
+				identifier: 'user_password',
+				rules: [
+					{
+						type   : 'empty',
+			            prompt : 'Please enter your password'
+					}
+				]
 			}
-			
-			$.post('Login', $.param(loginParams), (response) => {
-				if(response == 'invalid')
-				{
-					removeCSSClass('#login_form', 'loading');
-					addCSSClass('#user_email_field', 'error');
-					addCSSClass('#user_password_field', 'error');
-					callFailModal('Invalid Login Credentials',  'Please try logging in again.')
-				}
-				else if(response)
-				{
-					window.location = getContextPath() + response.redirect;
-				}
-			})
-			 .fail((response) => {
-				removeCSSClass('#login_form', 'loading');
-				callFailModal('Unable to Login', 'Please try logging in again later. ' +
-							'If the problem persists, please contact your administrator.');
-			 });
-		}	
+		}
 	});
 	
-	/* VALIDATOR - Email Field */
-	function checkEmailField(email, emailField) {
-		var emailTest = $(email).val();
-		if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailTest)) 
-		{
-			removeCSSClass(emailField, 'error');
+	/* BOOLEAN VALIDATION - Login Form */
+	function isLoginFormValid() {
+		if( $('#login_form').form('is valid') ) {
+			addCSSClass('#login_form', 'loading');
 			return true;
 		} 
-		else 
-		{
-			addCSSClass(emailField, 'error');
+		else {
 			return false;
 		}
 	}

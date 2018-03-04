@@ -33,14 +33,14 @@ public class Login extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		String email = request.getParameter("user_email");
-		String password = request.getParameter("user_password");
-		String redirectURL = "";
-		
+				
 		response.setCharacterEncoding("UTF-8");
 		
 		try {
+			String email = request.getParameter("user_email");
+			String password = request.getParameter("user_password");
+			String redirectURL = "";
+			
 			if(LoginFunctions.authenticate(email, password) == true)//authenticates if username and password is valid
 			{
 				HttpSession session = request.getSession();
