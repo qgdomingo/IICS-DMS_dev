@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 
 import org.apache.commons.fileupload.FileItem;
 
@@ -104,6 +103,8 @@ public class FileUploadFunctions {
 
 			if (rs.isBeforeFirst())
 			{
+				prep = con.prepareStatement("SELECT default_reference FROM sources_list WHERE sources_name = ?");
+				rs.next();
 				referenceNo += rs.getString("default_reference");
 				return referenceNo;
 			}

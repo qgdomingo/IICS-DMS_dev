@@ -66,11 +66,13 @@ public class SendMailToDirector extends HttpServlet {
 		String lastName = tempStorage[1];
 		String emailAddress = tempStorage[2];
 		String contactNumber = tempStorage[3];
-		String affilitation = tempStorage[4];
+		String affiliation = tempStorage[4];
 		String subject = tempStorage[5];
 		String message = tempStorage[6];
 		
-		SendMail.send(emailAddress, subject, message, "jlteoh23@gmail.com", "jed231096");
+		FileItem item;
+		ExternalMailFunctions.SendMailToDirector(firstName, lastName, emailAddress, contactNumber, affiliation ,subject, message, fileData);
+
 		}catch(Exception e) {
 			
 		}

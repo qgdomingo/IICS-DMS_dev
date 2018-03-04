@@ -25,7 +25,7 @@
 				<br>
 				
 			<!-- START OF MESSAGE FORM -->
-				<form class="ui equal width form">
+				<form class="ui equal width form" enctype="multipart/form-data">
 				
 				<!-- SENDER'S INFORMATION -->
 					<h3 class="ui dividing header">
@@ -35,29 +35,29 @@
 					<div class="fields">
 						<div class="required field">
 							<label>First Name:</label>
-							<input type="text" placeholder="e.g. James" required/>
+							<input name="first_name" type="text" placeholder="e.g. James" required/>
 						</div>
 						<div class="required field">
 							<label>Last Name:</label>
-							<input type="text" placeholder="e.g. Gosling" required/>
+							<input name="last_name" type="text" placeholder="e.g. Gosling" required/>
 						</div>
 					</div>
 					<div class="fields">
 						<div class="required field">
 							<label>Email Address:</label>
-							<input type="text" placeholder="e.g. jamesgosling@java.com" required/>
+							<input name="email_address" type="text" placeholder="e.g. jamesgosling@java.com" required/>
 							<p class="microcopy-hint">
 								We will use your email to send the Director's response. We won't send spam, promise!
 							</p>
 						</div>
 						<div class="required field">
 							<label>Contact Number:</label>
-							<input type="text" placeholder="e.g. 09171234567" required/>
+							<input name="contact_number" type="text" placeholder="e.g. 09171234567" required/>
 						</div>
 					</div>
 					<div class="required field">
 						<label>Affiliation:</label>
-						<input type="text" placeholder="e.g. Dean of the Faculty of Java" required/>
+						<input name="affiliation" type="text" placeholder="e.g. Dean of the Faculty of Java" required/>
 					</div>
 					
 				<!-- MESSAGE BODY -->
@@ -67,11 +67,11 @@
 					</h3>
 					<div class="required field">
 						<label>Subject:</label>
-						<input type="text" required/>
+						<input name="subject" type="text" required/>
 					</div>
 					<div class="required field">
 						<label>Message:</label>
-						<textarea></textarea>
+						<textarea name="message"></textarea>
 					</div>
 					<div class="inline field">
 						<label>Attachment:</label>
