@@ -62,6 +62,11 @@ public class RespondToExternalMail extends HttpServlet {
 	            }
             }
 			
+			String recipient = tempStorage[0];
+			String subject = tempStorage[1];
+			String message = tempStorage[2];
+			
+			ExternalMailFunctions.send(recipient, subject, id, user, pass);
 			
 		}catch(Exception e) {}
 		

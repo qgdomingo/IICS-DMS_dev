@@ -67,9 +67,9 @@ public class RetrieveDocumentFunctions {
 	public static ResultSet retrieveThread(String threadNumber) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT type, thread_number, reference_no, source_recipient, title, category, action_required, file_name, description, created_by, email, status,  time_created, department, due_on  FROM incoming_documents WHERE thread_number = ?" + 
+			PreparedStatement prep = con.prepareStatement("SELECT id, type, thread_number, reference_no, source_recipient, title, category, action_required, file_name, description, created_by, email, status,  time_created, department, due_on  FROM incoming_documents WHERE thread_number = ?" + 
 					" UNION " + 
-					"SELECT type, thread_number, null, source_recipient, title, category, null, file_name, description, created_by, email, null, time_created, department, null  FROM outgoing_documents WHERE thread_number = ? ORDER BY time_created DESC");
+					"SELECT id, type, thread_number, null, source_recipient, title, category, null, file_name, description, created_by, email, null, time_created, department, null  FROM outgoing_documents WHERE thread_number = ? ORDER BY time_created DESC");
 			
 			prep.setString(1,  threadNumber);
 			prep.setString(2,  threadNumber);

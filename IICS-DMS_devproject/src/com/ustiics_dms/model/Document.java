@@ -2,6 +2,7 @@ package com.ustiics_dms.model;
 
 public class Document {
 
+	private String id;
 	private String type;
 	private String threadNumber;
 	private String referenceNo;
@@ -20,10 +21,11 @@ public class Document {
 	
 	
 
-	public Document(String type, String threadNumber, String referenceNo, String sourceRecipient, String title,
+	public Document(String id, String type, String threadNumber, String referenceNo, String sourceRecipient, String title,
 			String category, String actionRequired, String fileName, String description, String createdBy, String email,
 			String status, String timeCreated, String department, String dueOn) {
 		super();
+		this.id = id;
 		this.type = type;
 		this.threadNumber = threadNumber;
 		this.referenceNo = referenceNo;
@@ -41,7 +43,13 @@ public class Document {
 		this.dueOn = dueOn;
 	}
 
+	public String getId() {
+		return id;
+	}
 
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String getType() {
 		return type;

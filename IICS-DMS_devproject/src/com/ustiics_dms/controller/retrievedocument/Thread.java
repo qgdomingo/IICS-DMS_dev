@@ -43,6 +43,7 @@ public class Thread extends HttpServlet {
 			{ //id and category
 				files.add(new Document(
 						documentFiles.getString("id"),
+						documentFiles.getString("type"),
 						documentFiles.getString("thread_number"),
 						documentFiles.getString("reference_no"),
 						documentFiles.getString("source_recipient"),
