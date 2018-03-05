@@ -54,11 +54,7 @@ public class RetrieveSpecificTask extends HttpServlet {
 				task.add(specificTask.getString("status"));	
 				task.add(specificTask.getString("file_name"));	
 				task.add(specificTask.getString("description"));
-<<<<<<< HEAD
-				task.add(AesEncryption.decrypt(specificTask.getString("id")));	
-=======
 				task.add(AesEncryption.encrypt(specificTask.getString("id")));	
->>>>>>> parent of 277c747... Merge branch 'master' of https://github.com/qgdomingo/IICS-DMS_dev
 				task.add(specificTask.getString("email"));	
 				task.add( ManageTasksFunctions.getFullName(specificTask.getString("email")) );
 			}	
