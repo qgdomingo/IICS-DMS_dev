@@ -21,20 +21,23 @@
 	$('#login_form').ajaxForm({
 		 beforeSubmit: isLoginFormValid,
 	     success: function(response) { 
-	        if(response == 'invalid') {
-	        	callFailModal('Invalid Login Credentials',  'Check your login credentials and try logging in again.');
+	        if(response) {
+	        	setTimeout( function(){  
+	        			window.location = getContextPath() + response.redirect; 
+	        			removeCSSClass('#login_form', 'loading');
+	        		}, 1000);
 	        }
-	        else if(response) {
-	        	window.location = getContextPath() + response.redirect;
+	        else if(response == 'invalid') {
+	        	callFailModal('Invalid Login Credentials',  'Check your login credentials and try logging in again.');
+	        	removeCSSClass('#login_form', 'loading');
 	        }
 	        else {
 	        	callFailModal('Unable to Login', 'Please try logging in again later. ' +
 					'If the problem persists, please contact your administrator.');
+	        	removeCSSClass('#login_form', 'loading');
 	        }
-	        removeCSSClass('#login_form', 'loading');
 	     },
 	     error: function(response) {
-	    	 console.log('THIS WAS CALLED 2');
 	    	 removeCSSClass('#login_form', 'loading');
 	    	 callFailRequestModal();
 	     }
