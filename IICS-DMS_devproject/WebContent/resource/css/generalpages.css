@@ -3,7 +3,7 @@
 /* PAGE BACKGROUNDS */
 	
 	.page-background {
-		background-image: url("../images/page_bg.png");
+		background-image: url("../images/page_bg2a.png");
 	    height: 100%;
 	    background-position: center;
 	    background-repeat: no-repeat;
@@ -12,7 +12,7 @@
 	}
 	
 	body.pushable>.pusher {
-	  background-image: url("../images/page_bg.png");
+	  background-image: url("../images/page_bg2a.png");
 	  background-position: center;
 	  background-repeat: no-repeat;
 	  background-size: cover; 
@@ -88,3 +88,7 @@
 		color: white !important;
 	}
 	
+	.grey-modal {
+		background-color: #767676 !important;
+		color: white !important;
+	}

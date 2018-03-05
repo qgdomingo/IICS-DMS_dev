@@ -35,7 +35,7 @@ public class RetrieveSpecificTask extends HttpServlet {
 		try {
 		    HttpSession session = request.getSession();
 		    Account acc = (Account) session.getAttribute("currentCredentials");
-		    String id = request.getParameter("id");
+		    String id = AesEncryption.decrypt(request.getParameter("id"));
 			String email = "";
 		    
 		    if(!(request.getParameter("email") == null)) {
@@ -55,7 +55,7 @@ public class RetrieveSpecificTask extends HttpServlet {
 				task.add(specificTask.getString("file_name"));	
 				task.add(specificTask.getString("description"));
 				task.add(AesEncryption.encrypt(specificTask.getString("id")));	
-				task.add(specificTask.getString("email"));	
+				task.add(AesEncryption.encrypt(specificTask.getString("email")));	
 				task.add( ManageTasksFunctions.getFullName(specificTask.getString("email")) );
 			}	
 			

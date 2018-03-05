@@ -1,4 +1,4 @@
-package ExternalMail;
+package com.ustiics_dms.externalmail;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -6,6 +6,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ustiics_dms.utility.AesEncryption;
 
 
 @WebServlet("/ReplyMailFromExternal")
@@ -15,18 +17,14 @@ public class ReplyMailFromExternal extends HttpServlet {
 
     public ReplyMailFromExternal() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		String id
+		String threadNumber = AesEncryption.decrypt(request.getParameter("thread_number"));
 	}
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		doGet(request, response);
 	}
 

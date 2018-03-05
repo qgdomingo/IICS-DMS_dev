@@ -308,7 +308,7 @@
 				<p class="element-rmb"><b>File Name: </b><span id="submission_file"></span></p>
 				<p><b>Description: </b><span id="submission_description"></span></p>
 				
-				<form method="POST" action="${pageContext.request.contextPath}/DownloadTask">
+				<form method="GET" action="${pageContext.request.contextPath}/DownloadTask">
 					<input type="hidden" name="id" id="submission_download_id">
 					<input type="hidden" name="email" id="submission_download_email">
 					<button class="ui small fluid button" type="submit">View File</button>
