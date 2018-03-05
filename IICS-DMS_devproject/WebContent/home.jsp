@@ -123,10 +123,9 @@
 						  </div>
 						</h5>
 					</a>
-					<a class="item" id="notification_button">
+					<a class="item">
 						<i class="large alarm icon"></i>
-						<div class="ui circular teal label element-rml" id="notification_count">0</div>
-					</a> 
+					</a>
 					<a class="item mobile hidden" id="logout_btn">
 						<i class="large power icon"></i>
 					</a>
@@ -134,121 +133,11 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
-		<h1 class="ui header element-rmt">
+		<h1 class="ui header">
 			Hello, <%= acc.getFirstName() %>!
 		</h1>
 		
-		<div class="ui stackable grid">
-			<div class="row">
-				<div class="two wide computer three wide tablet sixteen wide mobile column"> 
-					<h3 class="element-rmb">Today is</h3>
-					<div class="ui orange inverted center aligned segment element-rmt">
-						<div class="mobile hidden">
-							<h4 class="element-rmt element-rmb" id="today_month"></h4>
-							<h1 class="element-rmt element-rmb" style="font-size: 60px !important;" id="today_day"></h1>
-							<h4 class="element-rmt element-rmb" id="today_year"></h4>
-						</div>
-						<div class="mobile only">
-							<h4 class="element-rmt element-rmb" id="today_mobile"></h4>
-						</div>
-					</div>
-				</div>
-			
-				<div class="ten wide computer nine wide tablet sixteen wide mobile column">
-					<h3 class="element-rmb">Upcoming Events</h3>
-					<div class="ui segment element-rmt">
-						<table class="ui very basic table">
-							<tbody>
-								<tr>
-									<td>12/09/1997 7:00 AM - 12/09/2018 8:00 PM</td>
-									<td>Gio's 21st Birthday</td>
-									<td>Sofitel</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					
-					<h3 class="element-rmb">Tasks</h3>
-					<div class="ui segment element-rmt">
-						<table class="ui very basic table">
-							<tbody>
-								<tr>
-									<td>12/09/1997 7:00 AM</td>
-									<td>Task Title</td>
-									<td>Category</td>
-									<td>Assigned By</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-				
-				<div class="four wide computer four wide tablet sixteen wide mobile column">
-					<h3 class="element-rmb">Attendance</h3>
-					<div class="ui blue inverted segment element-rmt">
-						<h4 class="ui header">
- 							<i class="calendar check icon"></i>
-  							<div class="content">
-    							Attendance Monitoring System 
-  							</div>
-						</h4>
-					</div>
-				</div>
-			</div>
-		
-		</div>
-		
 <!-- END OF ACTUAL PAGE CONTENTS -->
-		</div>
-		
-		<!-- NOTIFICATIONS MODAL -->
-		<div class="ui tiny modal" id="notification_dialog">
-			<div class="header center-text">
-				<i class="alarm icon"></i>
-				<div class="content">Notifications</div>
-			</div>
-			<div class="scrolling content">
-				<table class="ui very basic selectable compact table">
-					<tbody id="notification_body">
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>   
-					</tbody>
-				</table>
-				<br>
-		 	</div>					    	
-		    <div class="actions center-text">
-				<button class="ui ok small grey button">Close</button>
-			</div>
-		</div>
-		
-		<!-- FAIL MESSAGE MODAL -->
-		<div class="ui tiny modal" id="faildia">
-			<div class="header delete-modal">
-				<h3 class="ui header delete-modal">
-					<i class="remove icon"></i>
-					<div class="content" id="faildia_header"></div>
-				</h3>
-			</div>
-			<div class="modal-content">
-				<p id="faildia_content"></p>
-			</div>
-			<div class="actions center-text">
-				<button class="ui ok secondary button">Okay</button>
-			</div>
 		</div>
 		
 		<!-- LOGOUT MODAL -->	  
@@ -276,6 +165,4 @@
 	<script src="resource/semanticui/semantic.min.js"></script>
 	<script src="resource/js/master.js"></script>
 	<script src="resource/js/generalpages.js"></script>
-	<script src="resource/js/homepage.js"></script>
-	<script src="resource/js/notifications.js"></script>
 </html>

@@ -17,7 +17,6 @@ import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Task;
-import com.ustiics_dms.utility.AesEncryption;
 
 
 @WebServlet("/AssignedTask")
@@ -47,7 +46,7 @@ public class AssignedTask extends HttpServlet {
 				while(tasksInfo.next())
 				{
 					task.add(new Task(
-							AesEncryption.encrypt(tasksInfo.getString("id")),
+							tasksInfo.getString("id"),
 							tasksInfo.getString("title"),
 							tasksInfo.getString("deadline"),
 							tasksInfo.getString("category"),

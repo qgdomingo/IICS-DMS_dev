@@ -1,5 +1,5 @@
 <%@page import="com.ustiics_dms.model.Account"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8"%>
 
 <%
 	Account acc = (Account) session.getAttribute("currentCredentials");
@@ -8,7 +8,7 @@
 <html>
 	<head>
 		<title>User Profile | IICS DMS</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
@@ -83,12 +83,21 @@
 				<div class="ui center aligned eight wide computer eight wide table sixteen wide mobile column">
 					<h2 class="ui icon header">
 						<i class="circular user icon"></i>
-						<div class="content"><%= acc.getFullName() %></div>
-						<div class="sub header"><%= acc.getUserType() %></div>
+						<div class="content"><% acc.getFullName(); %></div>
+						<div class="sub header"><% acc.getUserType(); %></div>
 					</h2><br>
-										
+					
 					<div class="ui red mini statistic">
-						<div class="value" style="text-transform: none;">
+						<div class="value">
+							<%= acc.getFacultyNumber() %>
+						</div>
+						<div class="label">
+							Faculty No.
+						</div>
+					</div><br>
+					
+					<div class="ui red mini statistic">
+						<div class="value">
 							<%= acc.getEmail() %>
 						</div>
 						<div class="label">
@@ -97,11 +106,11 @@
 					</div><br>
 					
 					<div class="actions">
-						<button class="ui labeled icon orange button element-mb" id="edit_user_profile">
-							<i class="edit icon"></i>
+						<button class="ui labeled icon orange button element-mb">
+							<i class="pencil icon"></i>
 							Edit User Profile
 						</button>
-						<button class="ui labeled icon grey button element-mb" id="change_password">
+						<button class="ui labeled icon grey button element-mb">
 							<i class="lock icon"></i>
 							Change Password
 						</button>
@@ -112,120 +121,6 @@
 			</div>
 		
 <!-- END OF ACTUAL PAGE CONTENTS -->
-		</div>
-		
-		<!-- EDIT USER PROFILE MODAL -->
-		<div class="ui tiny modal" id="edit_profile_dialog">
-			<div class="header edit-modal">
-				<h3 class="ui header edit-modal">
-					<i class="edit icon"></i>
-					Edit User Profile
-				</h3> 
-			</div>
-			<div class="modal-content">
-				<form class="ui form" method="POST" id="edit_profile_form">
-					<div class="required field">
-						<label>Email:</label>
-						<input type="email" name="email" value="<%= acc.getEmail() %>"/>
-					</div>
-					
-					<p class="element-rmb">For authentication, please enter your account password.</p>
-					<div class="required field">
-						<label>Password:</label>
-						<input type="password" name="current_password"/>
-					</div>
-					
-					<div class="ui error message"></div>
-				</form>
-			</div>
-			<div class="actions">
-				<button class="ui cancel grey button" id="edit_profile_cancel">
-					<i class="remove icon"></i>
-					Cancel
-				</button>				
-				<button class="ui green button" type="submit" form="edit_profile_form" id="edit_profile_submit">
-					<i class="checkmark icon"></i>
-					Confirm Edit
-				</button>
-			</div>
-		</div>
-		
-		<!-- CHANGE PASSWORD MODAL -->
-		<div class="ui tiny modal" id="change_password_dialog">
-			<div class="header grey-modal">
-				<h3 class="ui header grey-modal">
-					<i class="lock icon"></i>
-					Change Password
-				</h3> 
-			</div>
-			<div class="modal-content">
-				<form class="ui form" method="POST" id="change_password_form">
-					<div class="ui message">
-						<div class="header">
-							Password Rules
-						</div>
-						<ul class="list">
-							<li>Your password must be at least 6 characters in length</li>
-						</ul>
-					</div>
-					<div class="required field">
-						<label>Current Password:</label>
-						<input type="password" name="current_password" />
-					</div>
-					<div class="required field">
-						<label>New Password:</label>
-						<input type="password" name="new_password" />
-					</div>
-					<div class="required field">
-						<label>Repeat New Password:</label>
-						<input type="password" name="repeat_password" />
-					</div>
-					
-					<div class="ui error message"></div>
-				</form>
-			</div>
-			<div class="actions">
-				<button class="ui cancel grey button" id="change_password_cancel">
-					<i class="remove icon"></i>
-					Cancel
-				</button>				
-				<button class="ui green button" type="submit" form="change_password_form" id="change_password_submit">
-					<i class="checkmark icon"></i>
-					Confirm Edit
-				</button>
-			</div>
-		</div>
-		
-		<!-- SUCCESS MESSAGE MODAL -->
-		<div class="ui tiny modal" id="successdia">
-			<div class="header add-modal">
-				<h3 class="ui header add-modal">
-					<i class="checkmark icon"></i>
-					<div class="content" id="successdia_header"></div>
-				</h3>
-			</div>
-			<div class="modal-content">
-				<p id="successdia_content"></p>
-			</div>
-			<div class="actions center-text">
-				<button class="ui ok secondary button">Okay</button>
-			</div>
-		</div>
-		
-		<!-- FAIL MESSAGE MODAL -->
-		<div class="ui tiny modal" id="faildia">
-			<div class="header delete-modal">
-				<h3 class="ui header delete-modal">
-					<i class="remove icon"></i>
-					<div class="content" id="faildia_header"></div>
-				</h3>
-			</div>
-			<div class="modal-content">
-				<p id="faildia_content"></p>
-			</div>
-			<div class="actions center-text">
-				<button class="ui ok secondary button">Okay</button>
-			</div>
 		</div>
 		
 		<!-- LOGOUT MODAL -->
@@ -252,9 +147,7 @@
 	</body>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/tablesort.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/profile/super_user.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/profile/changepass_user.js"></script>
 </html>

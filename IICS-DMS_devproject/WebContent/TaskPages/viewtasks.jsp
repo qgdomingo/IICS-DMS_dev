@@ -277,7 +277,7 @@
 					<p class="element-rmb"><b>Status: </b><span id="mytask_viewstatus"></span></p>
 					<p class="element-rmb"><b>Attachment: </b><span id="mytask_file"></span></p>
 					<p><b>Description: </b><span id="mytask_description"></span></p>
-					<form method="GET" action="${pageContext.request.contextPath}/DownloadTask">
+					<form method="POST" action="${pageContext.request.contextPath}/DownloadTask">
 						<input type="hidden" name="id" id="mytask_download_id">
 						<input type="hidden" name="email" id="mytask_download_email">
 						<button class="ui small fluid button" type="submit">View File</button>

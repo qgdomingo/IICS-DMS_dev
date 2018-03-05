@@ -31,8 +31,8 @@
 	    }
 	    taskDataID = decodeURIComponent(data.id);
 	    
-	    retrieveCreatedTaskDetails(taskDataID);
-	    retrieveAssignedTasks(taskDataID);
+	    retrieveCreatedTaskDetails(data.id);
+	    retrieveAssignedTasks(data.id);
 	    
 	    // Populate Edit Task Form
 	    getListOfUsers('#edittask_assignto');

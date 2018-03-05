@@ -30,9 +30,13 @@ public class DownloadTask extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doPost(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			 int id = Integer.parseInt(AesEncryption.decrypt(request.getParameter("id")));
-			 String email = AesEncryption.decrypt(request.getParameter("email"));
+			 String email = request.getParameter("email");
 			 
 			 File file = ManageTasksFunctions.getFile(id, email);
 			 
@@ -59,10 +63,5 @@ public class DownloadTask extends HttpServlet {
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}		
-		
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
 	}
 }
