@@ -54,7 +54,7 @@ public class RetrieveSpecificTask extends HttpServlet {
 				task.add(specificTask.getString("status"));	
 				task.add(specificTask.getString("file_name"));	
 				task.add(specificTask.getString("description"));
-				task.add(AesEncryption.decrypt(specificTask.getString("id")));	
+				task.add(AesEncryption.encrypt(specificTask.getString("id")));	
 				task.add(specificTask.getString("email"));	
 				task.add( ManageTasksFunctions.getFullName(specificTask.getString("email")) );
 			}	
