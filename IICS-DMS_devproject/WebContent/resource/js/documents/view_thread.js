@@ -83,8 +83,6 @@
 		maxCursor = currentCursor + 5;
 		
 		for(currentCursor; (currentCursor < maxCursor) && !(localDocumentsData[currentCursor] == undefined); currentCursor++) {
-			console.log('CURRENT CURSOR: ' + currentCursor);
-			console.log(localDocumentsData[currentCursor]);
 			if(localDocumentsData[currentCursor]['type'] == 'JfkL3LhppTMte3SuOtRe/A==') {
 				setIncomingDocumentSegment(localDocumentsData[currentCursor], currentCursor);
 			}
@@ -207,7 +205,6 @@
 	/* GET - Populate Dialog For View File */
 	function getIncomingDocumentsData(id) {
 		var selectedData = localDocumentsData[id];
-		console.log(selectedData);
 		$('#viewincoming_title').text(selectedData['title']);
 		$('#viewincoming_source').text(selectedData['sourceRecipient']);
 		$('#viewincoming_refno').text(selectedData['referenceNo']);

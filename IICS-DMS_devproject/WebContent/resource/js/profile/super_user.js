@@ -43,33 +43,6 @@
 	/* FORM VALIDATION - Edit User Profile Form */
 	$('#edit_profile_form').form({
 		fields: {
-			faculty_no: {
-				identifier: 'faculty_no',
-				rules: [
-					{
-						type   : 'empty',
-						prompt : 'Please enter your faculty number'
-					}
-				]
-			},
-			first_name: {
-				identifier: 'first_name',
-				rules: [
-					{
-						type   : 'empty',
-						prompt : 'Please enter your first name'
-					}
-				]
-			},
-			last_name: {
-				identifier: 'last_name',
-				rules: [
-					{
-						type   : 'empty',
-						prompt : 'Please enter your last name'
-					}
-				]
-			},
 			email: {
 				identifier: 'email',
 				rules: [

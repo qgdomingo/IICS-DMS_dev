@@ -1,5 +1,5 @@
 <%@page import="com.ustiics_dms.model.Account"%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
 	Account acc = (Account) session.getAttribute("currentCredentials");
@@ -22,7 +22,7 @@
 <html>
 	<head>
 		<title>User Profile | IICS DMS</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="resource/semanticui/semantic.min.css">
 		<link rel="stylesheet" href="resource/css/master.css">
@@ -140,7 +140,7 @@
 						<div class="content"><%= acc.getFullName() %></div>
 						<div class="sub header"><%= acc.getUserType() %></div>
 				<% if(!userType.equalsIgnoreCase("Director") && !userType.equalsIgnoreCase("Faculty Secretary") 
-					&& !userType.equalsIgnoreCase("Staff")) { %>	
+					&& !userType.equalsIgnoreCase("Staff") && !userType.equalsIgnoreCase("Supervisor")) { %>	
 						<div class="sub header"><%= acc.getDepartment() %> Department</div>
 				<% } %>
 					</h2><br>
@@ -168,7 +168,7 @@
 							<i class="edit icon"></i>
 							Edit User Profile
 						</button>
-						<button class="ui labeled icon grey button element-mb">
+						<button class="ui labeled icon grey button element-mb" id="change_password">
 							<i class="lock icon"></i>
 							Change Password
 						</button>
@@ -192,29 +192,83 @@
 			<div class="modal-content">
 				<form class="ui form" method="POST" id="edit_profile_form">
 					<div class="required field">
-						<label>Faculty No.</label>
-						<input type="text" name="faculty_no"/>
+						<label>Faculty No.:</label>
+						<input type="text" name="faculty_no" value="<%= acc.getFacultyNumber() %>"/>
 					</div>
 					<div class="required field">
-						<label>First Name</label>
-						<input type="text" name="faculty_no"/>
+						<label>First Name:</label>
+						<input type="text" name="first_name" value="<%= acc.getFirstName() %>"/>
 					</div>
 					<div class="required field">
-						<label>Last Name</label>
-						<input type="text" name="faculty_no"/>
+						<label>Last Name:</label>
+						<input type="text" name="last_name" value="<%= acc.getLastName() %>"/>
 					</div>
 					<div class="required field">
-						<label>Email</label>
-						<input type="text" name="faculty_no"/>
+						<label>Email:</label>
+						<input type="email" name="email" value="<%= acc.getEmail() %>"/>
 					</div>
+					
+					<p class="element-rmb">For authentication, please enter your account password.</p>
+					<div class="required field">
+						<label>Password:</label>
+						<input type="password" name="current_password"/>
+					</div>
+					
+					<div class="ui error message"></div>
 				</form>
 			</div>
 			<div class="actions">
-				<button class="ui cancel grey button" id="addtask_cancel">
+				<button class="ui cancel grey button" id="edit_profile_cancel">
 					<i class="remove icon"></i>
 					Cancel
 				</button>				
-				<button class="ui green button" type="submit" form="edit_profile_form" id="addtask_submit">
+				<button class="ui green button" type="submit" form="edit_profile_form" id="edit_profile_submit">
+					<i class="checkmark icon"></i>
+					Confirm Edit
+				</button>
+			</div>
+		</div>
+		
+		<!-- CHANGE PASSWORD MODAL -->
+		<div class="ui tiny modal" id="change_password_dialog">
+			<div class="header grey-modal">
+				<h3 class="ui header grey-modal">
+					<i class="lock icon"></i>
+					Change Password
+				</h3> 
+			</div>
+			<div class="modal-content">
+				<form class="ui form" method="POST" id="change_password_form">
+					<div class="ui message">
+						<div class="header">
+							Password Rules
+						</div>
+						<ul class="list">
+							<li>Your password must be at least 6 characters in length</li>
+						</ul>
+					</div>
+					<div class="required field">
+						<label>Current Password:</label>
+						<input type="password" name="current_password" />
+					</div>
+					<div class="required field">
+						<label>New Password:</label>
+						<input type="password" name="new_password" />
+					</div>
+					<div class="required field">
+						<label>Repeat New Password:</label>
+						<input type="password" name="repeat_password" />
+					</div>
+					
+					<div class="ui error message"></div>
+				</form>
+			</div>
+			<div class="actions">
+				<button class="ui cancel grey button" id="change_password_cancel">
+					<i class="remove icon"></i>
+					Cancel
+				</button>				
+				<button class="ui green button" type="submit" form="change_password_form" id="change_password_submit">
 					<i class="checkmark icon"></i>
 					Confirm Edit
 				</button>
@@ -277,7 +331,9 @@
 	</body>
 	<script src="resource/js/jquery-3.2.1.min.js"></script>
 	<script src="resource/semanticui/semantic.min.js"></script>
+	<script src="resource/js/jquery.form.min.js"></script>
 	<script src="resource/js/master.js"></script>
 	<script src="resource/js/generalpages.js"></script>
 	<script src="resource/js/profile/regular_user.js"></script>
+	<script src="resource/js/profile/changepass_user.js"></script>
 </html>

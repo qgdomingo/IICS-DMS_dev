@@ -34,8 +34,7 @@ public class Thread extends HttpServlet {
 	
 		try {
 			
-			String threadNumber = "9"; //AesEncryption.decrypt(request.getParameter("thread_number"));
-			System.out.println(request.getParameter("thread_number"));
+			String threadNumber = AesEncryption.decrypt(request.getParameter("thread_number"));
 			List<Document> files = new ArrayList<Document>();
 		    response.setCharacterEncoding("UTF-8");
 			
