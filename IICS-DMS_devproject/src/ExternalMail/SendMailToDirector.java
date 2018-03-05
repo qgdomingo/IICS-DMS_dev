@@ -68,10 +68,19 @@ public class SendMailToDirector extends HttpServlet {
 		String subject = tempStorage[5];
 		String message = tempStorage[6];
 		
+		System.out.println(firstName);
+		System.out.println(lastName);
+		System.out.println(emailAddress);
+		System.out.println(contactNumber);
+		System.out.println(affiliation);
+		System.out.println(subject);
+		System.out.println(message);
+		System.out.println(fileData);
+		
 		ExternalMailFunctions.SendMailToDirector(firstName, lastName, emailAddress, contactNumber, affiliation ,subject, message, fileData);
 
 		}catch(Exception e) {
-			e.printStackTrace();
+			
 		}
 	}
 
