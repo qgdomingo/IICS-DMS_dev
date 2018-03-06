@@ -218,7 +218,7 @@
 						</div>
 						<div class="field">
 							<label>Title:</label>
-							<input type="text" name="title" value=""/>
+							<input type="text" name="title" value="<%= acc.getTitle() %>"/>
 						</div>
 					</div>
 					<div class="two fields">
@@ -238,7 +238,7 @@
 						</div>
 						<div class="field">
 							<label>Cellphone Number:</label>
-							<input type="text" name="cellphone_number" placeholder="09000000000" value=""/>
+							<input type="text" name="cellphone_number" placeholder="09000000000" value="<%= acc.getContactNumber() %>"/>
 						</div>
 					</div>
 					<p class="element-rmb">For authentication, please enter your account password.</p>

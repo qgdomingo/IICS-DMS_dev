@@ -6,7 +6,6 @@ import com.ustiics_dms.databaseconnection.DBConnect;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.utility.AesEncryption;
 
-import com.ustiics_dms.databaseconnection.*;
 
 /*
  *  LoginFunctions.java
@@ -51,6 +50,8 @@ public class LoginFunctions {
 			acc = new Account(
 				result.getString("time_created"),
 				result.getInt("faculty_Number"),
+				result.getString("title"),
+				result.getString("contact_number"),
 				result.getString("first_Name"),
 				result.getString("last_Name"),
 				fullName,

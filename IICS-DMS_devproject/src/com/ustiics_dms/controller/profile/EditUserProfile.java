@@ -1,7 +1,6 @@
 package com.ustiics_dms.controller.profile;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -41,29 +40,38 @@ public class EditUserProfile extends HttpServlet {
 		    
 			String facultyNo = request.getParameter("faculty_no");
 			String title = request.getParameter("title");
-			String contactNumber = request.getParameter("contact_number");
+			String contactNumber = request.getParameter("cellphone_number");
 			String firstName = request.getParameter("first_name");
 			String lastName = request.getParameter("last_name");
 			String email = request.getParameter("email");
 			String password = request.getParameter("current_password");
 
 			boolean authenticate = LoginFunctions.authenticate(acc.getEmail(), password);;
-			if(authenticate && !ManageUserFunctions.checkMail("email"))
+			if(authenticate)
 			{
-				ManageUserFunctions.editUserProfile(facultyNo, title, contactNumber, firstName, lastName, email, acc.getEmail());
+				if(!ManageUserFunctions.checkMail("email"))
+				{
+				ProfileFunctions.editUserProfile(facultyNo, title, contactNumber, firstName, lastName, email, acc.getEmail());
 
 				session.setAttribute("currentCredentials", LoginFunctions.authorize(email));
 				acc = (Account) session.getAttribute("currentCredentials");
 				
 				response.setContentType("text/plain");
 				response.setStatus(HttpServletResponse.SC_OK);
-				response.getWriter().write("invalid");
+				response.getWriter().write("success");
+				}
+				else
+				{
+					response.setContentType("text/plain");
+					response.setStatus(HttpServletResponse.SC_OK);
+					response.getWriter().write("existing email");
+				}
 			}
 			else
 			{
 				response.setContentType("text/plain");
 				response.setStatus(HttpServletResponse.SC_OK);
-				response.getWriter().write("invalid");
+				response.getWriter().write("invalid password");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

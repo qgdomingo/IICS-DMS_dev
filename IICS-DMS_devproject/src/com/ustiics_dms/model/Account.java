@@ -8,6 +8,8 @@ public class Account  {
 	
 	private String creationTimestamp;
 	private int facultyNumber;
+	private String title;
+	private String contactNumber;
 	private String firstName;
 	private String lastName;
 	private String fullName;
@@ -17,6 +19,27 @@ public class Account  {
 	private String status;
 
 
+	public Account()
+	{
+		
+	}
+	
+	public Account(String creationTimestamp, int facultyNumber, String title, String contactNumber, String firstName,
+			String lastName, String fullName, String email, String userType, String department, String status) {
+		super();
+		this.creationTimestamp = creationTimestamp;
+		this.facultyNumber = facultyNumber;
+		this.title = title;
+		this.contactNumber = contactNumber;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.fullName = fullName;
+		this.email = email;
+		this.userType = userType;
+		this.department = department;
+		this.status = status;
+	}
+	// to be deleted line 40 to 52
 	public Account(String creationTimestamp, int facultyNumber, String firstName, String lastName, String fullName,
 			String email, String userType, String department, String status) {
 		super();
@@ -30,7 +53,7 @@ public class Account  {
 		this.department = department;
 		this.status = status;
 	}
-	
+
 	public Account(String fullName, String email, String userType, String department) {
 		super();
 		this.fullName = fullName;
@@ -38,8 +61,24 @@ public class Account  {
 		this.userType = userType;
 		this.department = department;
 	}
+
 	
-	public Account() { }
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getContactNumber() {
+		return contactNumber;
+	}
+
+	public void setContactNumber(String contactNumber) {
+		this.contactNumber = contactNumber;
+	}
 
 	public String getCreationTimestamp() {
 		return creationTimestamp;

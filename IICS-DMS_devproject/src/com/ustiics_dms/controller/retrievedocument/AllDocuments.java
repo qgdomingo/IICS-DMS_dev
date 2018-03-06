@@ -1,4 +1,4 @@
-	package com.ustiics_dms.controller.retrievedocument;
+package com.ustiics_dms.controller.retrievedocument;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -41,8 +41,9 @@ public class AllDocuments extends HttpServlet {
 			while(documentFiles.next()) 
 			{ 
 				files.add(new Document(
-						documentFiles.getString("type"),
 						documentFiles.getString("id"),
+						documentFiles.getString("type"),
+						documentFiles.getString("thread_number"),
 						documentFiles.getString("reference_no"),
 						documentFiles.getString("source_recipient"),
 						documentFiles.getString("title"),
@@ -54,7 +55,8 @@ public class AllDocuments extends HttpServlet {
 						documentFiles.getString("email"),
 						documentFiles.getString("status"),
 						documentFiles.getString("time_created"),
-						documentFiles.getString("department")
+						documentFiles.getString("department"),
+						documentFiles.getString("due_on")
 						 ));	
 			}
 			String json = new Gson().toJson(files);
