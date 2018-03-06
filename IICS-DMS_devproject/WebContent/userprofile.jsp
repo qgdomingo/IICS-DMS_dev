@@ -190,30 +190,49 @@
 				</h3> 
 			</div>
 			<div class="modal-content">
-				<form class="ui form" action="EditUserProfile" method="POST" id="edit_profile_form">
-					<div class="required field">
-						<label>Faculty No.:</label>
-						<input type="text" name="faculty_no" value="<%= acc.getFacultyNumber() %>"/>
+				<form class="ui form" method="POST" id="edit_profile_form">
+					<div class="two fields">
+						<div class="required field">
+							<label>Faculty No.:</label>
+							<input type="text" name="faculty_no" value="<%= acc.getFacultyNumber() %>"/>
+						</div>
+						<div class="field">
+							<label>Title:</label>
+							<input type="text" name="title" value=""/>
+						</div>
 					</div>
-					<div class="required field">
-						<label>First Name:</label>
-						<input type="text" name="first_name" value="<%= acc.getFirstName() %>"/>
+					<div class="two fields">
+						<div class="required field">
+							<label>First Name:</label>
+							<input type="text" name="first_name" value="<%= acc.getFirstName() %>"/>
+						</div>
+						<div class="required field">
+							<label>Last Name:</label>
+							<input type="text" name="last_name" value="<%= acc.getLastName() %>"/>
+						</div>
 					</div>
-					<div class="required field">
-						<label>Last Name:</label>
-						<input type="text" name="last_name" value="<%= acc.getLastName() %>"/>
+					<div class="two fields">
+						<div class="required field">
+							<label>Email:</label>
+							<input type="email" name="email" value="<%= acc.getEmail() %>"/>
+						</div>
+						<div class="field">
+							<label>Cellphone Number:</label>
+							<input type="text" name="cellphone_number" placeholder="09000000000" value=""/>
+						</div>
 					</div>
-					<div class="required field">
-						<label>Email:</label>
-						<input type="email" name="email" value="<%= acc.getEmail() %>"/>
-					</div>
-					
 					<p class="element-rmb">For authentication, please enter your account password.</p>
 					<div class="required field">
 						<label>Password:</label>
 						<input type="password" name="current_password"/>
 					</div>
 					
+					<div class="ui orange message" id="invalid_email_message">
+						The email address you entered already exists
+					</div>
+					<div class="ui orange message" id="invalid_password_message">
+						The password you entered is incorrect
+					</div>
 					<div class="ui error message"></div>
 				</form>
 			</div>
@@ -260,6 +279,9 @@
 						<input type="password" name="repeat_password" />
 					</div>
 					
+					<div class="ui orange message" id="invalid_change_password_message">
+						The password you entered is incorrect
+					</div>
 					<div class="ui error message"></div>
 				</form>
 			</div>

@@ -133,7 +133,7 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
-		<form class="ui form" method="post" action="${pageContext.request.contextPath}/ForwardMail">
+		<form class="ui form" method="post" action="${pageContext.request.contextPath}/ForwardMail" id="new_mail_form"> 
 			<div class="two fields">
 			<div class="three wide field">
 				<label>Mail Type:</label>
@@ -152,9 +152,9 @@
 				  	<select class="ui fluid search selection dropdown" multiple="" name="assigned_to">
 						<option value="">Select Users</option>
 					</select>
-				  	<button class="ui inverted orange button">
+				  	<button class="ui orange button" type="button">
 				  		<i class="address book outline icon"></i>
-				  		Options
+				  		Options 
 				  	</button>
 				</div>
 			</div>

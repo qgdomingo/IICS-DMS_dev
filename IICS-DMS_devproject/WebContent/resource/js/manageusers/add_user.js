@@ -3,20 +3,10 @@
  *   - javascript used for the manageusers.jsp for scripting functionalities in adding of users.
  */
 
-/* 
- * VARIABLES 
- */ 
+	$(document).ready( function() {
+		$('#add_invalid_email_message').hide();
+	});
 
-	var addUserModalInputs = 
-		[ 
-		  '#add_email', '#add_facultyno', '#add_firstname', 
-		  '#add_lastname', '#add_usertype'
-		];
-	var addUserModalButtons =
-		[
-			'#adduser_clear', '#adduser_cancel', '#adduser_submit'
-		];
-	
 /* 
  * FUNCTIONS 
  */
@@ -36,10 +26,6 @@
 		
 		return rowString;
 	}
-	
-/* 
- *  ADD USER MODAL 
- */
 		
 	/* OPEN MODAL - Add User */
 	$('#adduser_btn').click(() => {
@@ -50,103 +36,186 @@
 				checkUserTypeDepartment('#add_usertype', '#add_department_field'); 
 			},
 			onHidden: () => {
-				enableFormButtons(addUserModalButtons);
-				removeCSSClass('#adduser_form', 'loading');
+				enableAddUserForm();
 				if(!isUsersTableEmpty) selectedRowsTogglers();
 			}
 		}).modal('show');
 	});
 		
-	/* SUBMIT - Add User */
-	$('#adduser_submit').click(() => {
-		// check if the input requires a department field
-		if(checkUserTypeDepartment('#add_usertype', '#add_department_field'))
-		{
-			addUserModalInputs.push('#add_department');
-		}
-		
-		// checks if all the forms are filled up
-		if(checkEmptyFields(addUserModalInputs) 
-			&& checkEmailField('#add_email', '#add_email_field')
-			&& checkNumberField('#add_facultyno', '#add_facultyno_field')) 
-		{	
-			disableFormButtons(addUserModalButtons);
-			addCSSClass('#adduser_form', 'loading');
-				
-			var userAccountData = 
-			{
-				email: $('#add_email').val(),
-				faculty_no: $('#add_facultyno').val(),
-				first_name: $('#add_firstname').val(),
-				last_name: $('#add_lastname').val(),
-				user_type: $('#add_usertype').val(),
-				department: $('#add_department').val(),
-			};
-				
-			$.post(getContextPath() + '/AddUser', $.param(userAccountData), (responseJson) => {
-				if(responseJson) 
+	/* SUBMIT - Edit User Profile Form */
+	$('#adduser_form').ajaxForm({
+		 beforeSubmit: isAddUserFormValid,
+	     success: function(response) { 
+	        if(!response.length == 0) {
+	        	if(!isUsersTableEmpty)
 				{
-					if(!isUsersTableEmpty)
-					{
-						table.row.add( $(addNewRowData(responseJson[0]))[0] ).draw();
-						table.order( [7, 'desc'] ).draw();
-					}
-					else
-					{
-						isUsersTableEmpty = false;
-						retriveUserList();
-					}
-					clearAddUserModal();
-					callSuccessModal('Success', 'A new account has successfully been added.');
+					console.log(response);
+	        		table.row.add( $(addNewRowData(response[0]))[0] ).draw();
+					table.order( [7, 'desc'] ).draw();
 				}
 				else
 				{
-					callFailModal('Unable to Add New User', 'An error has occured when adding a new account. ' +
-						'Please try again. If the problem persists, please contact your administrator.');
+					isUsersTableEmpty = false;
+					retriveUserList();
 				}
-			})
-			.fail((response) => {
-				callFailRequestModal();
-			});
+	        	cleanAddUserForm();
+				callSuccessModal('Success', 'A new account has successfully been added.');
+	        }
+	        else if(response == 'existing email') {
+	        	$('#edit_invalid_email_message').show();
+	        	enableEditUserForm();
+	        }
+	        else {
+	        	callFailModal('Unable to Add New User', 'An error has occured when adding a new account. ' +
+					'Please try again. If the problem persists, please contact your administrator.');
+	        }
+	     },
+	     error: function(response) {
+	    	 callFailRequestModal();
+	     }
+	});
+
+	/* CUSTOM VALIDATION - Cellphone Number */
+	$.fn.form.settings.rules.cellphoneNumber = function(value) {
+		if(!value == '') {
+			var patt = new RegExp("^(09)\\d{9}$");
+			return (patt.test(value) && value.length == 11);
 		}
-			
-		// removes the '#add_department' from the array of Add Inputs if it exists
-		var pos = addUserModalInputs.indexOf('#add_department');
-		addUserModalInputs.splice(pos, pos);
+		else return true;
+	};
+	
+	/* CUSTOM VALIDATION - User Department */
+	$.fn.form.settings.rules.userDepartment = function(value) {
+		var userType = $('#add_usertype').dropdown('get value');
+
+		if( (!(userType == 'Department Head' || userType == 'Faculty') && (value == ''))
+			|| ((userType == 'Department Head' || userType == 'Faculty') && !(value == '')) ) {
+			return true
+		}
+		else {
+			return false;
+		}
+	};
+	
+	/* FORM VALIDATION - Add User Form */
+	$('#adduser_form').form({
+		fields: {
+			faculty_no: {
+				identifier: 'faculty_no',
+				rules: [
+					{
+						type   : 'empty',
+						prompt : 'Please enter the faculty number'
+					},
+					{
+						type   : 'integer',
+						prompt : 'Please enter a valid faculty number'
+					}
+				]
+			},
+			first_name: {
+				identifier: 'first_name',
+				rules: [
+					{
+						type   : 'empty',
+						prompt : 'Please enter the first name'
+					}
+				]
+			},
+			last_name: {
+				identifier: 'last_name',
+				rules: [
+					{
+						type   : 'empty',
+						prompt : 'Please enter the last name'
+					}
+				]
+			},
+			email: {
+				identifier: 'email',
+				rules: [
+					{
+						type   : 'email',
+						prompt : 'Please enter a valid email address'
+					}
+				]
+			},
+			cellphone_number: {
+				identifier: 'cellphone_number',
+				rules: [
+					{
+						type   : 'cellphoneNumber[]',
+						prompt : 'Please enter a valid cellphone number'
+					}
+				]
+			},
+			user_type: {
+				identifier: 'user_type',
+				rules: [
+					{
+						type   : 'empty',
+						prompt : 'Please select a user type'
+					}
+				]
+			},
+			department: {
+				identifier: 'department',
+				rules: [
+					{
+						type   : 'userDepartment[]',
+						prompt : 'Please select a department'
+					}
+				]
+			}
+		}
 	});
 	
-/* 
- * FORM CLEARNERS 
- */
-	
-	/* CLEAN - Clear Fields on Add User Modal */
-	function clearAddUserModal() {
-		addUserModalInputs.push('#add_department');
-		clearUserModal('#adduser_form', '#add_usertype', '#add_department', addUserModalInputs);
-		checkUserTypeDepartment('#add_usertype', '#add_department_field');
-		addUserModalInputs.pop();
+	/* BOOLEAN VALIDATION - Add User Form */
+	function isAddUserFormValid() {
+		if( $('#adduser_form').form('is valid') ) {
+			$('#add_invalid_email_message').hide();
+			
+			addCSSClass('#adduser_form', 'loading');
+			$('#adduser_clear').prop("disabled", false);
+			$('#adduser_cancel').prop("disabled", false);
+			$('#adduser_submit').prop("disabled", false);
+			return true;
+		} 
+		else {
+			return false;
+		}
 	}
 	
+	/* CLEAN - Add User Form */
+	function cleanAddUserForm() {
+		enableAddUserForm();
+		clearFieldsAddUserForm();
+	}
+
 	/* CLEAN - Clear Fields Button on Add User Modal Event */
 	$('#adduser_clear').on('click', () => {
 		clearAddUserModal();
 	});
 	
-/* 
- * FORM VALIDATORS
- */
+	/* CLEAR FIELDS - Add User Form */
+	function clearFieldsAddUserForm() {
+		$('#adduser_form').form('reset');
+		removeCSSClass('#adduser_form', 'error');
+		$('#add_invalid_email_message').hide();
+		$('#add_usertype').dropdown('restore defaults');
+		$('#add_department').dropdown('restore defaults');
+		checkUserTypeDepartment('#add_usertype', '#add_department_field');
+	}
 	
-	/* VALIDATOR - Add Faculty Number Event */
-	$('#add_facultyno').on('input', () => {
-		checkNumberField('#add_facultyno', '#add_facultyno_field');
-	});
+	/* Enable Add User Form */
+	function enableAddUserForm() {
+		removeCSSClass('#adduser_form', 'loading');
+		$('#adduser_clear').prop("disabled", false);
+		$('#adduser_cancel').prop("disabled", false);
+		$('#adduser_submit').prop("disabled", false);
+	}
 	
-	/* VALIDATOR - Add Email Event */
-	$('#add_email').on('input', () => {
-		checkEmailField('#add_email', '#add_email_field');
-	});
-	
-	/* VALIDATOR - Add User Type Event */
+	/* CHANGE - Add User Type Event */
 	$('#add_usertype').change(() => {
 		checkUserTypeDepartment('#add_usertype', '#add_department_field');
 	});

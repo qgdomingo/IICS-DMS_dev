@@ -1,7 +1,11 @@
 /**
  * 
  */
-
+	
+	$(document).ready( function() {
+		$('#invalid_email_message').hide();
+		$('#invalid_password_message').hide();
+	});
 /*
  * EDIT USER PROFILE
  */
@@ -26,10 +30,12 @@
 	            setTimeout(function(){  window.location.reload(); }, 5000);
 	        }
 	        else if(response == 'invalid password') {
-	        	callFailModal('Password Incorrect', 'The password you entered is incorrect, please try again.');
+	        	$('#invalid_password_message').show();
+	        	cleanEditUserProfileForm();
 	        }
 	        else if(response == 'existing email') {
-	        	callFailModal('Email Already Exists', 'The email address you entered already exists, please try again.');
+	        	$('#invalid_email_message').show();
+	        	cleanEditUserProfileForm();
 	        }
 	        else {
 	        	callFailModal('Profile Update Failed', 'We are unable to update your profile, please try again.');
@@ -40,6 +46,15 @@
 	     }
 	});
 
+	/* CUSTOM VALIDATION - Cellphone Number */
+	$.fn.form.settings.rules.cellphoneNumber = function(value) {
+		if(!value == '') {
+			var patt = new RegExp("^(09)\\d{9}$");
+			return (patt.test(value) && value.length == 11);
+		}
+		else return true;
+	};
+	
 	/* FORM VALIDATION - Edit User Profile Form */
 	$('#edit_profile_form').form({
 		fields: {
@@ -49,6 +64,10 @@
 					{
 						type   : 'empty',
 						prompt : 'Please enter your faculty number'
+					},
+					{
+						type   : 'integer',
+						prompt : 'Please enter a valid faculty number'
 					}
 				]
 			},
@@ -79,6 +98,15 @@
 					}
 				]
 			},
+			cellphone_number: {
+				identifier: 'cellphone_number',
+				rules: [
+					{
+						type   : 'cellphoneNumber[]',
+						prompt : 'Please enter a valid cellphone number'
+					}
+				]
+			},
 			current_password: {
 				identifier: 'current_password',
 				rules: [
@@ -94,6 +122,9 @@
 	/* BOOLEAN VALIDATION - Edit User Profile Form */
 	function isEditUserProfileFormValid() {
 		if( $('#edit_profile_form').form('is valid') ) {
+			$('#invalid_email_message').hide();
+			$('#invalid_password_message').hide();
+			
 			addCSSClass('#edit_profile_form', 'loading');
 			$('#edit_profile_cancel').prop('disabled', true);
 			$('#edit_profile_submit').prop('disabled', true);

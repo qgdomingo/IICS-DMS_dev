@@ -24,7 +24,6 @@
 	        if(response) {
 	        	setTimeout( function(){  
 	        			window.location = getContextPath() + response.redirect; 
-	        			removeCSSClass('#login_form', 'loading');
 	        		}, 1000);
 	        }
 	        else if(response == 'invalid') {

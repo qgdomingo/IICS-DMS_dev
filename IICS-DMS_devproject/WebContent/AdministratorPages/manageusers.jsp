@@ -1,5 +1,5 @@
 <%@page import="com.ustiics_dms.model.Account"%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
 	Account acc = (Account) session.getAttribute("currentCredentials");
@@ -8,7 +8,7 @@
 <html>
 	<head>
 		<title>User Management | IICS DMS</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.css">
@@ -182,60 +182,75 @@
 		</div>
 		
 		<!-- ADD USER MODAL -->
-		<div class="ui modal" id="adduser_dia">
+		<div class="ui small modal" id="adduser_dia">
 			<div class="ui header add-modal">
 				<i class="add user icon"></i>
 				<div class="content">Add User</div>
 			</div>
 			<div class="modal-content">
-				<form class="ui form" id="adduser_form">
-					<div class="fields">
-					<div class="four wide required field" id="add_facultyno_field">
-						<label>Faculty No.</label>
-						<input type="text" id="add_facultyno" />
-					</div>
+				<form class="ui form" method="POST" action="${pageContext.request.contextPath}/AddUser"
+					id="adduser_form">
+					<div class="two fields">
+						<div class="required field">
+							<label>Faculty No.</label>
+							<input type="text" name="faculty_no"/>
+						</div>
+						<div class="field">
+							<label>Title:</label>
+							<input type="text" name="title" placeholder="09000000000"/>
+						</div>
 					</div>
 					
 					<div class="two fields">
-						<div class="required field" id="add_firstname_field">
+						<div class="required field">
 							<label>First Name</label>
-							<input type="text" id="add_firstname" />
+							<input type="text" name="first_name"/>
 						</div>
-						<div class="required field" id="add_lastname_field">
+						<div class="required field">
 							<label>Last Name</label>
-							<input type="text" id="add_lastname" />
+							<input type="text" name="last_name"/>
 						</div>
 					</div>
 					
-					<div class="three fields">
-						<div class="eight wide required field" id="add_email_field">
+					<div class="two fields">
+						<div class="required field">
 							<label>Email Address</label>
-							<input type="email" id="add_email" />
+							<input type="email" name="email"/>
 						</div>
-						
-							<div class="four wide required field" id="add_usertype_field">
-								<label>User Type</label>
-								<select class="ui fluid dropdown" id="add_usertype">
-									<option value="">Select User Type</option>
-									<option value="Director">Director</option>
-									<option value="Faculty Secretary">Faculty Secretary</option>
-									<option value="Department Head">Department Head</option>
-									<option value="Faculty">Faculty</option>
-									<option value="Supervisor">Supervisor</option>
-									<option value="Staff">Staff</option>
-								</select>
-							</div>
-							<div class="four wide required field" id="add_department_field">
-								<label>Department</label>
-								<select class="ui fluid dropdown" id="add_department">
-									<option value="">Select Department</option>
-									<option value="Information Technology">Information Technology</option>
-									<option value="Computer Science">Computer Science</option>
-									<option value="Information Systems">Information Systems</option>
-								</select>
-							</div>
-			
+						<div class="field">
+							<label>Cellphone Number</label>
+							<input type="text" name="cellphone_number"/>
+						</div>
 					</div>
+					
+					<div class="two fields">
+						<div class="required field">
+							<label>User Type</label>
+							<select class="ui fluid dropdown" name="user_type" id="add_usertype">
+								<option value="">Select User Type</option>
+								<option value="Director">Director</option>
+								<option value="Faculty Secretary">Faculty Secretary</option>
+								<option value="Department Head">Department Head</option>
+								<option value="Faculty">Faculty</option>
+								<option value="Supervisor">Supervisor</option>
+								<option value="Staff">Staff</option>
+							</select>
+						</div>
+						<div class="required field" id="add_department_field">
+							<label>Department</label>
+							<select class="ui fluid dropdown" name="department" id="add_department">
+								<option value="">Select Department</option>
+								<option value="Information Technology">Information Technology</option>
+								<option value="Computer Science">Computer Science</option>
+								<option value="Information Systems">Information Systems</option>
+							</select>
+						</div>
+					</div>
+					
+					<div class="ui orange message" id="add_invalid_email_message">
+						The email address you entered already exists
+					</div>
+					<div class="ui error message"></div>
 				</form>
 			</div>
 			<div class="actions">
@@ -246,7 +261,7 @@
 					<i class="remove icon"></i>
 					Cancel
 				</button>
-				<button class="ui green button" id="adduser_submit">
+				<button class="ui green button" type="submit" form="adduser_form" id="adduser_submit">
 					<i class="checkmark icon"></i>
 					Submit
 				</button>
@@ -254,60 +269,77 @@
 		</div>
 		
 		<!-- EDIT USER MODAL -->
-		<div class="ui modal" id="edituser_dia">
+		<div class="ui small modal" id="edituser_dia">
 			<div class="ui header edit-modal">
 				<i class="edit icon"></i>
 				<div class="content">Edit User</div>
 			</div>
 			<div class="modal-content">
-				<form class="ui form" id="edituser_form">
-					<div class="fields">
-					<div class="four wide required field" id="edit_facultyno_field">
-						<label>Faculty No.</label>
-						<input type="text" id="edit_facultyno" required/>
-					</div>
+				<form class="ui form" method="POST" action="${pageContext.request.contextPath}/EditUser" 
+						id="edituser_form">
+					<input type="hidden" name="original_email" id="edit_original_email"/>
+				
+					<div class="two fields">
+						<div class="required field">
+							<label>Faculty No.</label>
+							<input type="text" name="faculty_no" id="edit_facultyno"/>
+						</div>
+						<div class="field">
+							<label>Title:</label>
+							<input type="text" name="title" id="edit_title" placeholder="09000000000"/>
+						</div>
 					</div>
 					
 					<div class="two fields">
-						<div class="required field" id="edit_firstname_field">
+						<div class="required field">
 							<label>First Name</label>
-							<input type="text" id="edit_firstname" required/>
+							<input type="text" name="first_name" id="edit_firstname"/>
 						</div>
-						<div class="required field" id="edit_lastname_field">
+						<div class="required field">
 							<label>Last Name</label>
-							<input type="text" id="edit_lastname" required/>
+							<input type="text" name="last_name" id="edit_lastname"/>
 						</div>
 					</div>
 					
-					<div class="three fields">
-						<div class="eight wide required field" id="edit_email_field">
+					<div class="two fields">
+						<div class="required field">
 							<label>Email Address</label>
-							<input type="email" id="edit_email" required/>
+							<input type="email" name="email" id="edit_email"/>
 						</div>
-						
-							<div class="four wide required field" id="edit_usertype_field">
-								<label>User Type</label>
-								<select class="ui fluid dropdown" id="edit_usertype">
-									<option value="">Select User Type</option>
-									<option value="Director">Director</option>
-									<option value="Faculty Secretary">Faculty Secretary</option>
-									<option value="Department Head">Department Head</option>
-									<option value="Faculty">Faculty</option>
-									<option value="Supervisor">Supervisor</option>
-									<option value="Staff">Staff</option>
-								</select>
-							</div>
-							<div class="four wide required field" id="edit_department_field">
-								<label>Department</label>
-								<select class="ui fluid dropdown" id="edit_department">
-									<option value="">Select Department</option>
-									<option value="Information Technology">Information Technology</option>
-									<option value="Computer Science">Computer Science</option>
-									<option value="Information Systems">Information Systems</option>
-								</select>
-							</div>
-			
+						<div class="field">
+							<label>Cellphone Number</label>
+							<input type="text" name="cellphone_number" id="edit_cellphone_number"/>
+						</div>
 					</div>
+					
+					<div class="two fields">
+						<div class="required field">
+							<label>User Type</label>
+							<select class="ui fluid dropdown" name="user_type" id="edit_usertype">
+								<option value="">Select User Type</option>
+								<option value="Director">Director</option>
+								<option value="Faculty Secretary">Faculty Secretary</option>
+								<option value="Department Head">Department Head</option>
+								<option value="Faculty">Faculty</option>
+								<option value="Supervisor">Supervisor</option>
+								<option value="Staff">Staff</option>
+							</select>
+						</div>
+						<div class="required field" id="edit_department_field">
+							<label>Department</label>
+							<select class="ui fluid dropdown" name="department" id="edit_department">
+								<option value="">Select Department</option>
+								<option value="Information Technology">Information Technology</option>
+								<option value="Computer Science">Computer Science</option>
+								<option value="Information Systems">Information Systems</option>
+							</select>
+						</div>
+					</div>
+					
+					<div class="ui orange message" id="edit_invalid_email_message">
+						The email address you entered already exists
+					</div>
+					<div class="ui error message"></div>
 				</form>
 			</div>
 			<div class="actions">
@@ -315,7 +347,7 @@
 					<i class="remove icon"></i>
 					Cancel
 				</button>
-				<button class="ui green button" id="edituser_submit">
+				<button class="ui green button" type="submit" form="edituser_form" id="edituser_submit">
 					<i class="checkmark icon"></i>
 					Confirm Edit
 				</button>
@@ -424,6 +456,7 @@
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/dataTable/jquery.dataTables.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/manageusers/manage_users.js"></script>

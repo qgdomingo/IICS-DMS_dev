@@ -1,7 +1,10 @@
 /**
  * 
  */
-
+	$(document).ready( function() {
+		$('#invalid_email_message').hide();
+		$('#invalid_password_message').hide();
+	});
 /*
  * EDIT USER PROFILE
  */
@@ -26,10 +29,12 @@
 	            setTimeout(function(){  window.location.reload(); }, 5000);
 	        }
 	        else if(response == 'invalid password') {
-	        	callFailModal('Password Incorrect', 'The password you entered is incorrect, please try again.');
+	        	$('#invalid_password_message').show();
+	        	cleanEditUserProfileForm();
 	        }
 	        else if(response == 'existing email') {
-	        	callFailModal('Email Already Exists', 'The email address you entered already exists, please try again.');
+	        	$('#invalid_email_message').show();
+	        	cleanEditUserProfileForm();
 	        }
 	        else {
 	        	callFailModal('Profile Update Failed', 'We are unable to update your profile, please try again.');
@@ -67,6 +72,9 @@
 	/* BOOLEAN VALIDATION - Edit User Profile Form */
 	function isEditUserProfileFormValid() {
 		if( $('#edit_profile_form').form('is valid') ) {
+			$('#invalid_email_message').hide();
+			$('#invalid_password_message').hide();
+			
 			addCSSClass('#edit_profile_form', 'loading');
 			$('#edit_profile_cancel').prop('disabled', true);
 			$('#edit_profile_submit').prop('disabled', true);

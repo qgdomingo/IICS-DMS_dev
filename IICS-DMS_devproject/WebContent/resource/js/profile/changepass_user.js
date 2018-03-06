@@ -1,6 +1,10 @@
 /**
  * 
  */
+	
+	$(document).ready(function() {
+		$('#invalid_change_password_message').hide();
+	});
 
 /*
  * CHANGE PASSWORD
@@ -25,7 +29,8 @@
 	            callSuccessModal('Password Changed Successfully', 'Your password has successfully changed.');
 	        }
 	        else if(response == 'invalid password') {
-	        	callFailModal('Password Incorrect', 'The password you entered is incorrect, please try again.');
+	        	$('#invalid_change_password_message').show();
+	        	cleanChangePasswordForm();
 	        }
 	        else {
 	        	callFailModal('Profile Change Failed', 'We are unable to change your password, please try again.');
@@ -72,6 +77,7 @@
 	/* BOOLEAN VALIDATION - Change Password Form */
 	function isChangePasswordFormValid() {
 		if( $('#change_password_form').form('is valid') ) {
+			$('#invalid_change_password_message').hide();
 			addCSSClass('#change_password_form', 'loading');
 			$('#change_password_cancel').prop('disabled', true);
 			$('#change_password_submit').prop('disabled', true);

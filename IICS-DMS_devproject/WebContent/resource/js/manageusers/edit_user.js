@@ -2,41 +2,27 @@
  *  edit_user.js
  *   - javascript used for the manageusers.jsp for scripting functionalities in editing of users.
  */
+	
+	$(document).ready( function() {
+		$('#edit_invalid_email_message').hide();
+	});
 
 /*
- * VARIABLES
- */
-	var originalEmail;
-	var editUserModalInputs = 
-		[ 
-		  '#edit_email', '#edit_facultyno', '#edit_firstname', 
-		  '#edit_lastname', '#edit_usertype'
-		];
-	var editUserModalButtons =
-		[
-			'#edituser_cancel', '#edituser_submit'
-		];
-
-/*
- * FUNCTIONS
+ * FUNCTIONS AND EVENTS
  */
 	
 	/* GET - Individual User for Edit */
 	function retrieveUserForEdit() {
 		var existingData = table.rows('.active').data()[0];
-		originalEmail = existingData[3];
 		
-		$('#edit_email').val(existingData[3]);
+		$('#edit_original_email').val(existingData[3]);		
 		$('#edit_facultyno').val(existingData[0]);
 		$('#edit_firstname').val(existingData[1]);
 		$('#edit_lastname').val(existingData[2]);
+		$('#edit_email').val(existingData[3]);
 		$('#edit_usertype').dropdown('set selected', existingData[4]);
 		$('#edit_department').dropdown('set selected', existingData[5]);
 	}
-	
-/* 
- * EDIT USER MODAL 
- */
 	
 	/* OPEN MODAL - Edit User */
 	$('#edituser_btn').click(() => {		
@@ -48,92 +34,165 @@
 				retrieveUserForEdit();
 			},
 			onHidden: () => {
-				clearEditUserModal();
-				enableFormButtons(editUserModalButtons);
-				removeCSSClass('#edituser_form', 'loading');
+				cleanEditUserForm();
 				selectedRowsTogglers();
 			}
 		}).modal('show');
 		
 	});
+		
+	/* SUBMIT - Edit User Profile Form */
+	$('#edituser_form').ajaxForm({
+		 beforeSubmit: isEditUserFormValid,
+	     success: function(response) { 
+	        if(!response.length == 0) {
+	        	table.row('.active').remove();
+				table.row.add( $(addNewRowData(response[0]))[0] ).draw();	
+				callSuccessModal('Success', 'The account has successfully been updated.');
+	        }
+	        else if(response == 'existing email') {
+	        	$('#edit_invalid_email_message').show();
+	        	enableEditUserForm();
+	        }
+	        else {
+	        	callFailModal('Unable to Edit User', 'An error has occured when updating an account. ' +
+					'Please try again. If the problem persists, please contact your administrator.');
+	        }
+	     },
+	     error: function(response) {
+	    	 callFailRequestModal();
+	     }
+	});
+
+	/* CUSTOM VALIDATION - Cellphone Number */
+	$.fn.form.settings.rules.cellphoneNumber = function(value) {
+		if(!value == '') {
+			var patt = new RegExp("^(09)\\d{9}$");
+			return (patt.test(value) && value.length == 11);
+		}
+		else return true;
+	};
 	
-	/* SUBMIT - Edit User */
-	$('#edituser_submit').click(() => {
-		// check if the input requires a department field
-		if(checkUserTypeDepartment('#edit_usertype', '#edit_department_field'))
-		{
-			addUserModalInputs.push('#edit_department');
+	/* CUSTOM VALIDATION - User Department */
+	$.fn.form.settings.rules.userDepartment = function(value) {
+		var userType = $('#edit_usertype').dropdown('get value');
+
+		if( (!(userType == 'Department Head' || userType == 'Faculty') && (value == ''))
+			|| ((userType == 'Department Head' || userType == 'Faculty') && !(value == '')) ) {
+			return true
 		}
-		
-		// checks if all the forms are filled up
-		if(checkEmptyFields(editUserModalInputs) 
-			&& checkEmailField('#edit_email', '#edit_email_field')
-			&& checkNumberField('#edit_facultyno', '#edit_facultyno_field')) 
-		{	
-			disableFormButtons(editUserModalButtons);
-			addCSSClass('#edituser_form', 'loading');
-						
-			var userAccountData = 
-			{
-				email: $('#edit_email').val(),
-				faculty_no: $('#edit_facultyno').val(),
-				first_name: $('#edit_firstname').val(),
-				last_name: $('#edit_lastname').val(),
-				user_type: $('#edit_usertype').val(),
-				department: $('#edit_department').val(),
-				original_email: originalEmail
-			};
-			
-			$.post(getContextPath() + '/EditUser', $.param(userAccountData), (responseJson) => {
-				if(responseJson)
-				{
-					table.row('.active').remove();
-					table.row.add( $(addNewRowData(responseJson[0]))[0] ).draw();	
-					callSuccessModal('Success', 'The account has successfully been updated.');
-				}
-				else
-				{
-					callFailModal('Unable to Edit User', 'An error has occured when updating an account. ' +
-						'Please try again. If the problem persists, please contact your administrator.');
-				}
-			})
-			.fail((response) => {
-				callFailRequestModal();
-			});
+		else {
+			return false;
 		}
-		
-		// removes the '#edit_department' from the array of Edit Inputs if it exists
-		var pos = editUserModalInputs.indexOf('#edit_department');
-		editUserModalInputs.splice(pos, pos);
+	};
+	
+	/* FORM VALIDATION - Edit User Form */
+	$('#edituser_form').form({
+		fields: {
+			faculty_no: {
+				identifier: 'faculty_no',
+				rules: [
+					{
+						type   : 'empty',
+						prompt : 'Please enter the faculty number'
+					},
+					{
+						type   : 'integer',
+						prompt : 'Please enter a valid faculty number'
+					}
+				]
+			},
+			first_name: {
+				identifier: 'first_name',
+				rules: [
+					{
+						type   : 'empty',
+						prompt : 'Please enter the first name'
+					}
+				]
+			},
+			last_name: {
+				identifier: 'last_name',
+				rules: [
+					{
+						type   : 'empty',
+						prompt : 'Please enter the last name'
+					}
+				]
+			},
+			email: {
+				identifier: 'email',
+				rules: [
+					{
+						type   : 'email',
+						prompt : 'Please enter a valid email address'
+					}
+				]
+			},
+			cellphone_number: {
+				identifier: 'cellphone_number',
+				rules: [
+					{
+						type   : 'cellphoneNumber[]',
+						prompt : 'Please enter a valid cellphone number'
+					}
+				]
+			},
+			user_type: {
+				identifier: 'user_type',
+				rules: [
+					{
+						type   : 'empty',
+						prompt : 'Please select a user type'
+					}
+				]
+			},
+			department: {
+				identifier: 'department',
+				rules: [
+					{
+						type   : 'userDepartment[]',
+						prompt : 'Please select a department'
+					}
+				]
+			}
+		}
 	});
 	
-/*
- * FORM CLEANERS
- */
+	/* BOOLEAN VALIDATION - Edit User Form */
+	function isEditUserFormValid() {
+		if( $('#edituser_form').form('is valid') ) {
+			$('#edit_invalid_email_message').hide();
+			
+			addCSSClass('#edituser_form', 'loading');
+			$('#edituser_cancel').prop('disabled', true);
+			$('#edituser_submit').prop('disabled', true);
+			return true;
+		} 
+		else {
+			return false;
+		}
+	}
 	
-	/* CLEAN - Clear Fields on Edit User Modal */
-	function clearEditUserModal() {
-		editUserModalInputs.push('#edit_department');
-		clearUserModal('#edituser_form', '#edit_usertype', '#edit_department', editUserModalInputs);
+	/* CLEAN - Edit User Form */
+	function cleanEditUserForm() {
+		enableEditUserForm();
+		
+		$('#edituser_form').form('reset');
+		removeCSSClass('#edituser_form', 'error');
+		$('#edit_usertype').dropdown('restore defaults');
+		$('#edit_department').dropdown('restore defaults');
 		checkUserTypeDepartment('#edit_usertype', '#edit_department_field');
-		editUserModalInputs.pop();
 	}
 
-/*
- * FORM VALIDATORS
- */
+	/* Enable Edit User Form */
+	function enableEditUserForm() {
+		removeCSSClass('#edituser_form', 'loading');
+		$('#edituser_cancel').prop("disabled", false);
+		$('#edituser_submit').prop("disabled", false);
+	}
 	
-	/* VALIDATOR - Edit Faculty Number Event */
-	$('#edit_facultyno').on('input', () => {
-		checkNumberField('#edit_facultyno', '#edit_facultyno_field');
-	});
-	
-	/* VALIDATOR - Edit Email Event */
-	$('#edit_email').on('input', () => {
-		checkEmailField('#edit_email', '#edit_email_field');
-	});
-	
-	/* VALIDATOR - Edit User Type Event */
+	/* CHANGE - Edit User Type Event */
 	$('#edit_usertype').change(() => {
 		checkUserTypeDepartment('#edit_usertype', '#edit_department_field');
 	});

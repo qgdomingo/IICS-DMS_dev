@@ -135,6 +135,12 @@
 						<input type="password" name="current_password"/>
 					</div>
 					
+					<div class="ui orange message" id="invalid_email_message">
+						The email address you entered already exists
+					</div>
+					<div class="ui orange message" id="invalid_password_message">
+						The password you entered is incorrect
+					</div>
 					<div class="ui error message"></div>
 				</form>
 			</div>
@@ -181,6 +187,9 @@
 						<input type="password" name="repeat_password" />
 					</div>
 					
+					<div class="ui orange message" id="invalid_change_password_message">
+						The password you entered is incorrect
+					</div>
 					<div class="ui error message"></div>
 				</form>
 			</div>

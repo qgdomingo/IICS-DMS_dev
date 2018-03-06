@@ -311,7 +311,10 @@
 				<form method="GET" action="${pageContext.request.contextPath}/DownloadTask">
 					<input type="hidden" name="id" id="submission_download_id">
 					<input type="hidden" name="email" id="submission_download_email">
-					<button class="ui small fluid button" type="submit">View File</button>
+					<button class="ui small fluid button" type="submit">
+						<i class="file icon"></i>
+						View File
+					</button>
 				</form>
 				
 			</div>
