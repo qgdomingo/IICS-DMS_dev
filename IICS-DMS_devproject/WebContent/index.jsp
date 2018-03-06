@@ -1,5 +1,17 @@
+<%@page import="com.ustiics_dms.model.Account"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+<%
+	if(request.getSession(false) != null && request.getSession(false).getAttribute("currentCredentials") != null) {
+		Account acc = (Account) session.getAttribute("currentCredentials");
+		
+		if( (acc.getUserType().equalsIgnoreCase("Administrator")) ) {
+			response.sendRedirect(request.getContextPath() + "/admin/manageusers.jsp");
+		} 
+		else {
+			response.sendRedirect(request.getContextPath() + "/home.jsp");
+		}
+	}
+%>
 <!DOCTYPE html>
 <html>
 	<head>

@@ -6,35 +6,41 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-/**
- * Servlet implementation class AdminSession
- */
+import com.ustiics_dms.model.Account;
+
 @WebServlet("/checkadminsession")
 public class AdminSession extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public AdminSession() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/plain");
+		
+		if(request.getSession(false) == null || request.getSession(false).getAttribute("currentCredentials") == null) {
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write("not logged in");
+		} else {
+			HttpSession session = request.getSession(false);
+			Account acc = (Account) session.getAttribute("currentCredentials");
+			
+			if( !(acc.getUserType().equalsIgnoreCase("Administrator")) ) {
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write("not admin");
+			} 
+			else {
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write("authorized");
+			}
+		}
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

@@ -38,6 +38,8 @@ public class Account  {
 		this.userType = userType;
 		this.department = department;
 	}
+	
+	public Account() { }
 
 	public String getCreationTimestamp() {
 		return creationTimestamp;

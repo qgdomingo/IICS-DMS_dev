@@ -2,8 +2,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
-	Account acc = (Account) session.getAttribute("currentCredentials");
-%> 
+	Account acc = new Account();
+
+	if(request.getSession(false) == null || request.getSession(false).getAttribute("currentCredentials") == null) {
+		response.sendRedirect(request.getContextPath() + "/index.jsp");
+	} else {
+		acc = (Account) session.getAttribute("currentCredentials");
+		
+		if( !(acc.getUserType().equalsIgnoreCase("Administrator")) ) {
+			response.sendRedirect(request.getContextPath() + "/home.jsp");
+		}
+	}
+%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -270,6 +280,7 @@
 	</body>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/session/admin_check.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
