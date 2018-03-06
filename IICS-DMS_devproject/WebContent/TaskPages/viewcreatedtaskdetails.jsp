@@ -2,20 +2,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
-	Account acc = (Account) session.getAttribute("currentCredentials");
-	String userType = acc.getUserType();
-	
-	boolean restrictionCase1 = false;
-	boolean restrictionCase2 = false;
-	
-	// Restriction Case 1 - not allowed for Faculty, Supervisor and Staff
-	if(userType.equalsIgnoreCase("Faculty") || userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) { 
-		restrictionCase1 = true;
-	}
-	
-	// Restriction Case 2 - not allowed for Supervisor and Staff
-	if(userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) {
-		restrictionCase2 = true;
+	Account acc = new Account();
+	String userType = "";
+
+	if(request.getSession(false) == null || request.getSession(false).getAttribute("currentCredentials") == null) {
+		response.sendRedirect(request.getContextPath() + "/index.jsp");
+	} else {
+		acc = (Account) session.getAttribute("currentCredentials");
+		userType = acc.getUserType();
+		
+		if( (userType.equalsIgnoreCase("Administrator")) ) {
+			response.sendRedirect(request.getContextPath() + "/admin/manageusers.jsp");
+		} 
+		else if (userType.equalsIgnoreCase("Faculty") || userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) {
+			response.sendRedirect(request.getContextPath() + "/home.jsp");
+		}
 	}
 %>
 <!DOCTYPE html>
@@ -76,15 +77,12 @@
 		    <div class="item">
 		   		Mail
 		   		<div class="menu">
-	<% if(!restrictionCase2) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/newmail.jsp">
 			    		<i class="large pencil alternate icon side"></i>Create Mail
 			    	</a>
-	<%  } %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/inbox.jsp">
 			    		<i class="large inbox icon side"></i>Inbox
 			    	</a>
-	<% if(!restrictionCase2) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
@@ -94,10 +92,8 @@
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/exportedmail.jsp">
 			    		<i class="large external link square alternate icon side"></i>Exported Mail
 			    	</a>
-	<%  } %>
 		    	</div>
 		    </div>
-	<% if(!restrictionCase1) { %>
 			<div class="item">
 		   		Reports
 		   		<div class="menu">
@@ -106,7 +102,6 @@
 			    	</a>
 		    	</div>
 		    </div>
-	<%  } %>
 		    <a class="item mobile only" id="logout_btn2">
 		      <i class="large power icon side"></i>Logout
 		    </a>

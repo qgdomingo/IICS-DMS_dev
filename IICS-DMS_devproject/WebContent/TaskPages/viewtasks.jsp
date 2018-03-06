@@ -2,20 +2,30 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
-	Account acc = (Account) session.getAttribute("currentCredentials");
-	String userType = acc.getUserType();
-	
+	Account acc = new Account();
+	String userType = "";
 	boolean restrictionCase1 = false;
-	boolean restrictionCase2 = false;
-	
-	// Restriction Case 1 - not allowed for Faculty, Supervisor and Staff
-	if(userType.equalsIgnoreCase("Faculty") || userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) { 
-		restrictionCase1 = true;
-	}
-	
-	// Restriction Case 2 - not allowed for Supervisor and Staff
-	if(userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) {
-		restrictionCase2 = true;
+	boolean restrictionCase2 = false;	
+
+	if(request.getSession(false) == null || request.getSession(false).getAttribute("currentCredentials") == null) {
+		response.sendRedirect(request.getContextPath() + "/index.jsp");
+	} else {
+		acc = (Account) session.getAttribute("currentCredentials");
+		userType = acc.getUserType();
+		
+		if( (userType.equalsIgnoreCase("Administrator")) ) {
+			response.sendRedirect(request.getContextPath() + "/admin/manageusers.jsp");
+		}
+		
+		// Restriction Case 1 - not allowed for Faculty, Supervisor and Staff
+		if(userType.equalsIgnoreCase("Faculty") || userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) { 
+			restrictionCase1 = true;
+		}
+		
+		// Restriction Case 2 - not allowed for Supervisor and Staff
+		if(userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) {
+			restrictionCase2 = true;
+		}
 	}
 %>
 <!DOCTYPE html>

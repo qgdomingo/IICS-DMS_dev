@@ -2,7 +2,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
-	Account acc = (Account) session.getAttribute("currentCredentials");
+	Account acc = new Account();
+	String userType = "";
+
+	if(request.getSession(false) == null || request.getSession(false).getAttribute("currentCredentials") == null) {
+		response.sendRedirect(request.getContextPath() + "/index.jsp");
+	} else {
+		acc = (Account) session.getAttribute("currentCredentials");
+		userType = acc.getUserType();
+		
+		if( (userType.equalsIgnoreCase("Administrator")) ) {
+			response.sendRedirect(request.getContextPath() + "/admin/manageusers.jsp");
+		} 
+		else if (userType.equalsIgnoreCase("Faculty") || userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) {
+			response.sendRedirect(request.getContextPath() + "/home.jsp");
+		}
+	}
 %>
 <!DOCTYPE html>
 <html>
