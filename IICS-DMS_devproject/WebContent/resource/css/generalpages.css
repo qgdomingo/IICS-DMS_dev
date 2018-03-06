@@ -1,0 +1,94 @@
+@charset "ISO-8859-1";
+
+/* PAGE BACKGROUNDS */
+	
+	.page-background {
+		background-image: url("../images/page_bg2a.png");
+	    height: 100%;
+	    background-position: center;
+	    background-repeat: no-repeat;
+	    background-size: cover;
+	
+	}
+	
+	body.pushable>.pusher {
+	  background-image: url("../images/page_bg2a.png");
+	  background-position: center;
+	  background-repeat: no-repeat;
+	  background-size: cover; 
+	  height: 100%;
+	  overflow-y: auto !important;
+	} 
+	
+/* PAGE LAYOUT */
+	
+	.page-content-spacing {
+		padding: 70px 20px 10px 20px;
+	}
+	
+	@media only screen and (max-width: 767px) {
+    	.page-content-spacing {
+			padding: 55px 10px 5px 10px;
+		}
+	}
+
+/* DATATABLE SEARCH FIELD */
+	#userstable_filter, #mytasks_table_filter, #taskscreated_table_filter,
+	#personal_table_filter, #assignedtask_table_filter, #incoming_table_filter,
+	#outgoing_table_filter
+	{
+		display: none !important;
+	}
+	
+/* MENU LAYOUT */
+	
+	.user-account-color {
+		color: rgba(255, 255, 255, 0.9) !important;
+	}
+	
+	.user-accountsub-color {
+		color: rgba(255, 255, 255, 0.7) !important;
+	}
+	
+	.user-account-bgcolor {
+		background-color: #be152f !important;
+	}
+	
+	.user-account-bgcolor:hover {
+		background-color: #bd2e44 !important;
+	}
+	
+	i.large.icon, i.large.icons {
+	    font-size: 1.3em;
+	}
+	
+	i.large.icon.side, i.large.icons.side {
+	    line-height: 0.7 !important;
+	}
+
+/* MODAL HEADER COLORS */
+
+	.add-modal {
+		background-color: #16ab39 !important;
+		color: white !important;
+	}
+	
+	.edit-modal {
+		background-color: #f2711c !important;
+		color: white !important;
+	}
+	
+	.neutral-modal {
+		background-color: #1678c2 !important;
+		color: white !important;
+	}
+	
+	.delete-modal {
+		background-color: #d01919 !important;
+		color: white !important;
+	}
+	
+	.grey-modal {
+		background-color: #767676 !important;
+		color: white !important;
+	}

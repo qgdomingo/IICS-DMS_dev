@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="IICS-DMS_devproject">
+        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <wb-resource deploy-path="/admin/" source-path="/WebContent/AdministratorPages"/>
+        <wb-resource deploy-path="/calendar/" source-path="/WebContent/CalendarPages"/>
+        <wb-resource deploy-path="/files/" source-path="/WebContent/FilesPages"/>
+        <wb-resource deploy-path="/mail/" source-path="/WebContent/MailPages"/>
+        <wb-resource deploy-path="/reports/" source-path="/WebContent/ReportsPages"/>
+        <wb-resource deploy-path="/task/" source-path="/WebContent/TaskPages"/>
+        <property name="context-root" value="IICS-DMS_devproject"/>
+        <property name="java-output-path" value="/IICS-DMS_devproject/build/classes"/>
+    </wb-module>
+</project-modules>

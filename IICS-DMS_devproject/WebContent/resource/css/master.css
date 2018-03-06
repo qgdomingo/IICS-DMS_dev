@@ -1,0 +1,80 @@
+@charset "ISO-8859-1";
+
+	.modal-content {
+		margin: 20px;
+	}
+
+	/* SPACING HELPERS */
+	
+	.element-mb {
+		margin-bottom: 20px !important;
+	}
+	
+	.element-rmb {
+		margin-bottom: 0px !important;
+	}
+	
+	.center-text {
+		text-align: center !important;
+	}
+	
+	.element-mt {
+		margin-top: 10px !important;
+	}
+	
+	.element-rmt {
+		margin-top: 0px !important;
+	}
+	
+	.element-rpt {
+		padding-top: 0px !important;
+	}
+	
+	.element-rml {
+		margin-left: 0px !important;
+	}
+	
+	/* MICROCOPY */
+	
+	.microcopy-hint {
+		color: gray;
+		font-size: 12px;
+	}
+	
+	/* ELEMENTS TOGGLE ON SPECIFIC DEVICES */
+
+	@media only screen and (max-width: 767px) {
+    .mobile.hidden,
+    .tablet.only,
+    .small.monitor.only,
+    .large.monitor.only {
+        display: none !important;
+    	}
+	}
+	
+	@media only screen and (min-width: 768px) and (max-width: 991px) {
+	    .mobile.only,
+	    .tablet.hidden,
+	    .small.monitor.only,
+	    .large.monitor.only {
+	        display: none !important;
+	    }
+	}
+	
+	@media only screen and (min-width: 992px) and (max-width: 1199px) {
+	    .mobile.only,
+	    .tablet.only,
+	    .small.monitor.hidden,
+	    .large.monitor.only {
+	        display: none !important;
+	    }
+	}
+	
+	@media only screen and (min-width: 1200px) {
+	    .mobile.only,
+	    .tablet.only,
+	    .small.monitor.only,
+	    .large.monitor.hidden {
+	        display: none !important;
+	    }
+	}
