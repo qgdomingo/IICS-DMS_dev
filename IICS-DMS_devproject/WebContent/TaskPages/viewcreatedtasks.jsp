@@ -359,6 +359,7 @@
 	</body>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/session/regular_user_check.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/dataTable/jquery.dataTables.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>

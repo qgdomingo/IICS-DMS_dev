@@ -4,11 +4,13 @@
 
 	$(document).ready( function() {
 	
-		$.get(getContextPath() + '/checkadminsession', function(response) {
+		$.get(getContextPath() + '/checknonfacultysession', function(response) {
 			if(response == 'authorized') {
 				console.log('authorized');
-			} else if (response == 'not admin') {
+			} else if (response == 'unauthorized') {
 				window.location.href = getContextPath() + '/home.jsp';
+			} else if (response == 'admin') {
+				window.location.href = getContextPath() + '/admin/manageusers.jsp';
 			} else if (response == 'not logged in') {
 				window.location.href = getContextPath() + '/index.jsp';
 			}
