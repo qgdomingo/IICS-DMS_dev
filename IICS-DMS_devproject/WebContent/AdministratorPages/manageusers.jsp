@@ -14,6 +14,15 @@
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
+		
+		<!-- SITE ICON CONFIGS -->
+		<link rel="apple-touch-icon" sizes="180x180" href="${pageContext.request.contextPath}/resource/siteicon/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="${pageContext.request.contextPath}/resource/siteicon/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="${pageContext.request.contextPath}/resource/siteicon/favicon-16x16.png">
+		<link rel="manifest" href="${pageContext.request.contextPath}/resource/siteicon/site.webmanifest">
+		<link rel="mask-icon" href="${pageContext.request.contextPath}/resource/siteicon/safari-pinned-tab.svg" color="#be152f">
+		<meta name="msapplication-TileColor" content="#ffffff">
+		<meta name="theme-color" content="#ffffff">
 	</head>
 	<body>
 		<!-- LOADING INDICATOR FOR THE WHOLE PAGE -->
@@ -360,16 +369,28 @@
 				<i class="check circle icon"></i>
 				<div class="content">Enable User/s</div>
 			</div>
-			<div class="modal-content" id="enableuser_form">
-				<p>Are you sure you want to enable the selected user/s?</p>
+			<div class="modal-content">
+				<p class="element-rmb">Are you sure you want to enable the selected user/s?</p>
 				<p class="microcopy-hint">Enabling users would make them able to login into the system.</p>
+				
+				<form class="ui form" method="POST" action="${pageContext.request.contextPath}/EnableUser" 
+						id="enableuser_form"> 
+					<input type="hidden" name="selected[]" id="enable_user_selected" />
+					
+					<div class="required field">
+						<label>Purpose of Enable Users</label>
+						<textarea rows="2" name="enable_user_purpose"></textarea>
+					</div>
+					
+					<div class="ui error message"></div>
+				</form>
 			</div>
 			<div class="actions">
 				<button class="ui cancel grey button" id="enableuser_cancel">
 					<i class="remove icon"></i>
 					Cancel
 				</button>
-				<button class="ui blue button" id="enableuser_submit">
+				<button class="ui blue button" type="submit" form="enableuser_form" id="enableuser_submit">
 					<i class="checkmark icon"></i>
 					Confirm Enable
 				</button>
@@ -382,16 +403,28 @@
 				<i class="remove circle icon"></i>
 				<div class="content">Disable User/s</div>
 			</div>
-			<div class="modal-content" id="disableuser_form">
-				<p>Are you sure you want to disable the selected user/s?</p>
+			<div class="modal-content">
+				<p class="element-rmb">Are you sure you want to disable the selected user/s?</p>
 				<p class="microcopy-hint">Disabling users would prevent them from logging into the system.</p>
+				
+				<form class="ui form" method="POST" action="${pageContext.request.contextPath}/DisableUser" 
+						id="disableuser_form"> 
+					<input type="hidden" name="selected[]" id="disable_user_selected" />
+					
+					<div class="required field">
+						<label>Purpose of Disabling Users</label>
+						<textarea rows="3" name="disable_user_purpose"></textarea>
+					</div>
+					
+					<div class="ui error message"></div>
+				</form>
 			</div>
 			<div class="actions">
 				<button class="ui cancel grey button" id="disableuser_cancel">
 					<i class="remove icon"></i>
 					Cancel
 				</button>
-				<button class="ui red button" id="disableuser_submit">
+				<button class="ui red button" type="submit" form="disableuser_form" id="disableuser_submit">
 					<i class="checkmark icon"></i>
 					Confirm Disable
 				</button>

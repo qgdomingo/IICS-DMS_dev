@@ -1,4 +1,4 @@
-package com.ustiics_dms.externalmail;
+package com.ustiics_dms.controller.externalmail;
 
 import java.io.IOException;
 import java.sql.SQLException;

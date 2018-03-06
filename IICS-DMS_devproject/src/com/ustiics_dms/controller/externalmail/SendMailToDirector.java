@@ -1,4 +1,4 @@
-package com.ustiics_dms.externalmail;
+package com.ustiics_dms.controller.externalmail;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,27 +14,22 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import com.ustiics_dms.controller.mail.ExternalMail;
 import com.ustiics_dms.model.Account;
-import com.ustiics_dms.utility.AesEncryption;
+import com.ustiics_dms.utility.SendMail;
 
 
-@WebServlet("/RespondToExternalMail")
-public class RespondToExternalMail extends HttpServlet {
+@WebServlet("/SendMailToDirector")
+public class SendMailToDirector extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 
-    public RespondToExternalMail() {
+    public SendMailToDirector() {
         super();
-
     }
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		doGet(request, response);
+		doPost(request, response);
 	}
-
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -42,8 +37,6 @@ public class RespondToExternalMail extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		
 		try {
-			HttpSession session = request.getSession();
-			Account acc = (Account)session.getAttribute("currentCredentials");
 			multifiles = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 
 			int counter = 0;
@@ -63,19 +56,20 @@ public class RespondToExternalMail extends HttpServlet {
 	                fileData = item;
 	            }
             }
-			String threadNumber = tempStorage[0];
-			String subject = tempStorage[1];
-			String message = tempStorage[2];
 			
-			ExternalMailFunctions.saveSentExternalMail(threadNumber, subject, message, fileData, acc.getEmail());
-			
-			threadNumber = AesEncryption.encrypt(threadNumber);
-			
-
-		}catch(Exception e) {
+			String firstName = tempStorage[0];
+			String lastName = tempStorage[1];
+			String emailAddress = tempStorage[2];
+			String contactNumber = tempStorage[3];
+			String affiliation = tempStorage[4];
+			String subject = tempStorage[5];
+			String message = tempStorage[6];
+		
+			ExternalMailFunctions.SendMailToDirector(firstName, lastName, emailAddress, contactNumber, affiliation ,subject, message, fileData);
+		} 
+		catch(Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 
 }

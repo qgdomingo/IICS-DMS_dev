@@ -29,6 +29,15 @@
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
+		
+		<!-- SITE ICON CONFIGS -->
+		<link rel="apple-touch-icon" sizes="180x180" href="${pageContext.request.contextPath}/resource/siteicon/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="${pageContext.request.contextPath}/resource/siteicon/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="${pageContext.request.contextPath}/resource/siteicon/favicon-16x16.png">
+		<link rel="manifest" href="${pageContext.request.contextPath}/resource/siteicon/site.webmanifest">
+		<link rel="mask-icon" href="${pageContext.request.contextPath}/resource/siteicon/safari-pinned-tab.svg" color="#be152f">
+		<meta name="msapplication-TileColor" content="#ffffff">
+		<meta name="theme-color" content="#ffffff">
 	</head>
 	<body>
 		<!-- LOADING INDICATOR FOR THE WHOLE PAGE -->
@@ -303,7 +312,7 @@
 		</div>
 		
 		<!-- VIEW - INCOMING DOCUMENT -->
-		<div class="ui tiny modal" id="viewincoming_dialog">
+		<div class="ui modal" id="viewincoming_dialog">
 			<div class="header neutral-modal">
 				<h3 class="ui header neutral-modal">
 					<i class="file icon"></i>
@@ -311,36 +320,81 @@
 				</h3>
 			</div>
 			<div class="modal-content">
-				<p class="element-rmb"><b>Document Source: </b><span id="viewincoming_source"></span></p>
-				<p class="element-rmb"><b>Reference No.: </b><span id="viewincoming_refno"></span></p>
-				<p class="element-rmb"><b>Action Required: </b><span id="viewincoming_action"></span></p>
-				<p class="element-rmb"><b>Action Due: </b><span id="viewincoming_due"></span></p>
-				<p class="element-rmb"><b>Status: </b><span id="viewincoming_status"></span></p>
-				<br>
-				<h5 class="ui horizontal header divider element-rmb element-rmt">
-				  <i class="info circle icon"></i>
-				  File Details
-				</h5>
-				<p class="element-rmb"><b>Uploaded By: </b><span id="viewincoming_uploadedby"></span></p>
-				<p class="element-rmb"><b>Upload Date: </b><span id="viewincoming_uploaddate"></span></p>
-				<p class="element-rmb"><b>Category: </b><span id="viewincoming_category"></span></p>
-				<p class="element-rmb"><b>Document Type: </b><span id="viewincoming_type"></span></p>
-				<p class="element-rmb"><b>File Name: </b><span id="viewincoming_file"></span></p>
-				<p><b>Description: </b><span id="viewincoming_description"></span></p>
-				
-				<form method="GET" action="${pageContext.request.contextPath}/FileDownload">
-					<input type="hidden" name="id" id="viewincoming_download_id">
-					<input type="hidden" name="type" id="viewincoming_download_type">
-					<input type="hidden" id="viewincoming_threadno">
-					<div class="two ui buttons">
-						<button class="ui small button" type="submit">
-							<i class="file icon"></i>View File
-						</button>
-						<button class="ui small blue button" type="button" id="viewincoming_view_thread">
-							<i class="folder icon"></i>View Thread
-						</button>
+				<div class="ui stackable grid">
+					<div class="eight wide column">
+						<p class="element-rmb"><b>Document Source: </b><span id="viewincoming_source"></span></p>
+						<p class="element-rmb"><b>Reference No.: </b><span id="viewincoming_refno"></span></p>
+						<p class="element-rmb"><b>Action Required: </b><span id="viewincoming_action"></span></p>
+						<p class="element-rmb"><b>Action Due: </b><span id="viewincoming_due"></span></p>
+						<p class="element-rmb"><b>Status: </b><span id="viewincoming_status"></span></p>
+						<br>
+						<h5 class="ui horizontal header divider element-rmb element-rmt">
+						  <i class="info circle icon"></i>
+						  File Details
+						</h5>
+						<p class="element-rmb"><b>Uploaded By: </b><span id="viewincoming_uploadedby"></span></p>
+						<p class="element-rmb"><b>Upload Date: </b><span id="viewincoming_uploaddate"></span></p>
+						<p class="element-rmb"><b>Category: </b><span id="viewincoming_category"></span></p>
+						<p class="element-rmb"><b>Document Type: </b><span id="viewincoming_type"></span></p>
+						<p class="element-rmb"><b>File Name: </b><span id="viewincoming_file"></span></p>
+						<p><b>Description: </b><span id="viewincoming_description"></span></p>
+						
+						<form method="GET" action="${pageContext.request.contextPath}/FileDownload">
+							<input type="hidden" name="id" id="viewincoming_download_id">
+							<input type="hidden" name="type" id="viewincoming_download_type">
+							<input type="hidden" id="viewincoming_threadno">
+							<div class="two ui buttons">
+								<button class="ui small button" type="submit">
+									<i class="file icon"></i>View File
+								</button>
+								<button class="ui small blue button" type="button" id="viewincoming_view_thread">
+									<i class="folder icon"></i>View Thread
+								</button>
+							</div>
+						</form>
 					</div>
-				</form>
+					
+					<div class="eight wide column">
+						<!-- NOTE FORM -->
+						<form class="ui form" id="edit_note_form">
+							<div class="field element-rmb">
+								<label>Note:</label>
+								<textarea rows="2"></textarea>
+							</div>
+							<button class="ui tiny fluid orange button">
+								<i class="pencil icon"></i>
+								Edit Note
+							</button>
+							
+							<div class="ui orange message" id="note_orange_message">
+								<i class="close icon"></i>
+							</div>
+							<div class="ui green message" id="note_green_message">
+								<i class="close icon"></i>
+							</div>
+						</form>
+						
+						<br>
+						
+						<!-- SET DOCUMENT AS DONE FORM -->
+						<form class="ui form" id="mark_as_done_form">
+							<button class="ui tiny fluid green button" type="button" id="mark_as_done_btn">
+								<i class="check icon"></i>
+								Mark as Done
+							</button>
+							<div class="ui compact segment element-rmt" id="mark_as_done_conf">
+								<h4>Are you sure you want to set this document as done?</h4>
+								<div class="ui buttons">
+							 		<button class="ui green button" type="submit">Yes</button>
+							  		<div class="or"></div>
+							  		<button class="ui button" type="button" id="mark_as_done_no">No</button>
+								</div>
+							</div>
+							
+						</form>
+					</div>
+				
+				</div>
 			</div>
 			<div class="actions center-text">
 				<button class="ui ok secondary button" id="viewincoming_close">Close</button>
@@ -407,6 +461,7 @@
 	<script src="${pageContext.request.contextPath}/resource/dataTable/jquery.dataTables.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/categories.js"></script>

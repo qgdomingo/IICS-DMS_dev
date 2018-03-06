@@ -2,18 +2,7 @@
  * 	login.js
  * 	- used by the Login page (index.jsp) for scripting functionalities in logging in
  */
-	
-/* 
- * VARIABLES 
- */ 
-	var emailRecoveryParams = 
-		{
-			email: '',
-			code: '',
-			new_password: '',
-			confirm_password: ''
-		}
-	
+		
 /* 
  * LOGIN FUNCTIONALITY  
  */

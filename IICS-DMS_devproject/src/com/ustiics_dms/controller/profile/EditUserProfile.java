@@ -1,4 +1,4 @@
-package com.ustiics_dms.profile;
+package com.ustiics_dms.controller.profile;
 
 import java.io.IOException;
 import java.sql.SQLException;
