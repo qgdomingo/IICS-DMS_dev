@@ -18,6 +18,11 @@
 	    
 	    setBackButtonLink(data.origin);
 	    getDocumentsThread( decodeURIComponent(data.id) );
+	    
+		$('#note_orange_message').hide();
+		$('#note_green_message').hide();
+		$('#mark_as_done_conf').hide();
+		$('#mark_as_done_form').hide();
 	});
 	
 	
@@ -197,6 +202,8 @@
 				autofocus: false,
 				onHidden: function() {
 					$('#viewincoming_due').text('');
+					reinitializeMarkAsDone();
+					hideNoteMessages();
 				}
 			}).modal('show');
 		});
@@ -221,4 +228,82 @@
 		$('#viewincoming_download_id').val(selectedData['id']);
 		$('#viewincoming_download_type').val(selectedData['type']);
 		$('#viewincoming_threadno').val(selectedData['threadNumber']);
+		
+		if(!(selectedData['status'] == 'Done')) {
+			$('#mark_as_done_form').show();
+		}
+	}
+	
+/*
+ * EDIT NOTE
+ */
+	
+	/* SUBMIT - Update Document Note */
+	$('#edit_note_form').ajaxForm({
+		success: function(response) {  
+			$('#note_green_message').show();
+		},
+		error: function(response) { 
+			$('#note_orange_message').show();
+		}
+	});
+	
+	/* CLICK - Hide the Orange Message */
+	$('#close_note_orange_message').on('click', function() {
+		$('#note_orange_message').hide();
+	});
+	
+	/* CLICK - Hide the Green Message */
+	$('#close_note_green_message').on('click', function() {
+		$('#note_green_message').hide();
+	});
+	
+	function hideNoteMessages() {
+		$('edit_note_form').form('reset');
+		$('#note_orange_message').hide();
+		$('#note_green_message').hide();
+	}
+	
+/*
+ * MARK AS DONE
+ */
+	/* CLICK - Mark as Done: Show Confirmation */
+	$('#mark_as_done_btn').click( function() {
+		$('#mark_as_done_conf').show();
+		$(this).prop("disabled", true);
+	});
+	
+	/* CLICK - Mark as Done: Cancel Confirmation */
+	$('#mark_as_done_no').click( function() {
+		$('#mark_as_done_conf').hide();
+		$('#mark_as_done_btn').prop("disabled", false);
+	});
+
+	/* SUBMIT - Mark Document as Done */
+	$('#mark_as_done_form').ajaxForm({
+		beforeSubmit: initializePageForMarkAsDone,
+		success: function(response) {  
+			deactivatePageLoading();
+			callSuccessModal('Document Status Update Success', 
+					'The incoming document has been updated to done. The page will refresh to update data.');
+			setTimeout(function(){  window.location.reload(); }, 2000);
+		},
+		error: function(response) { 
+			deactivatePageLoading();
+			callFailRequestModal();
+		}
+	});
+	
+	/* ON SUBMIT - Hide Modal and Activate Loading */
+	function initializePageForMarkAsDone() {
+		$('#viewincoming_dialog').modal('hide');
+		activatePageLoading('Updating Document Status');
+		return true;
+	}
+	
+	/* Fix Elements on Modal Hide */
+	function reinitializeMarkAsDone() {
+		$('#mark_as_done_form').hide();
+		$('#mark_as_done_conf').hide();
+		$('#mark_as_done_btn').prop("disabled", false);
 	}

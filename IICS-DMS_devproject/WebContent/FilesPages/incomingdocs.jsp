@@ -374,10 +374,12 @@
 							</button>
 							
 							<div class="ui orange message" id="note_orange_message">
-								<i class="close icon"></i>
+								<i class="close icon" id="close_note_orange_message"></i>
+								<div class="header">Note update failed.</div>
 							</div>
 							<div class="ui green message" id="note_green_message">
-								<i class="close icon"></i>
+								<i class="close icon" id="close_note_green_message"></i>
+								<div class="header">Note updated!</div>
 							</div>
 						</form>
 						
