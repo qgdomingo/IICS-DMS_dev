@@ -14,6 +14,7 @@ import org.apache.commons.fileupload.FileItem;
 
 import com.ustiics_dms.databaseconnection.DBConnect;
 import com.ustiics_dms.model.File;
+import com.ustiics_dms.utility.AesEncryption;
 
 public class ManageTasksFunctions {
 	
@@ -31,16 +32,30 @@ public class ManageTasksFunctions {
 	public static void addTask(String title, String deadline, String category, String instructions, String email [], String assignedBy) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("INSERT INTO tasks (title, deadline, category, instructions, assigned_by) VALUES (?,?,?,?,?)");
+			PreparedStatement prep = con.prepareStatement("INSERT INTO tasks (title, deadline, category, instructions, assigned_by, school_year) VALUES (?,?,?,?,?,?)");
 			prep.setString(1, title);
 			prep.setString(2, deadline);
 			prep.setString(3, category);
 			prep.setString(4, instructions);
 			prep.setString(5, assignedBy);
-			
+			prep.setString(6, getSchoolYear());
 			prep.executeUpdate();
 			
 			assignUsers(email);
+
+	}
+	
+	public static String getSchoolYear() throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("SELECT start_year, end_year FROM academic_year");
+
+			ResultSet rs = prep.executeQuery();
+			rs.next();
+			
+			String schoolYear = rs.getString("start_year") + "-" + rs.getString("end_year"); 
+			
+			return schoolYear;
 
 	}
 	
@@ -126,7 +141,7 @@ public class ManageTasksFunctions {
 			ResultSet rs;
 
 			PreparedStatement prep = con.prepareStatement("SELECT id, title, deadline, category, instructions,"
-					+ "status, assigned_by, date_created FROM tasks WHERE id = ?");
+					+ "status, assigned_by, date_created, school_year FROM tasks WHERE id = ?");
 			prep.setInt(1, taskID);
 			rs = prep.executeQuery();
 			
@@ -153,7 +168,7 @@ public class ManageTasksFunctions {
 			ResultSet rs;
 
 			PreparedStatement prep = con.prepareStatement("SELECT id, title, deadline, category, instructions, "
-					+ "status, assigned_by, date_created FROM tasks WHERE assigned_by = ?");
+					+ "status, assigned_by, date_created, school_year FROM tasks WHERE assigned_by = ?");
 			prep.setString(1, email);
 			rs = prep.executeQuery();
 			
@@ -173,6 +188,7 @@ public class ManageTasksFunctions {
 			prep.setString(5, timeStamp);
 			prep.setString(6, compareTime(timeStamp, deadline));
 			prep.setString(7, email);
+			id = AesEncryption.decrypt(id);
 			prep.setString(8, id);
 			prep.executeUpdate();
 	}

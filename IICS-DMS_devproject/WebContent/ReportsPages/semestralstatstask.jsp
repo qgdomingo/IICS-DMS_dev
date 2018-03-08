@@ -174,7 +174,8 @@
 					<div class="field" id="department_selection">
 						<select class="ui fluid dropdown" name="department_selection" id="department_selection_dropdown">
 							<option value="">Select Department</option>
-
+							<option value="Information Technology">Information Technology</option>
+							<option value="Computer Science">Computer Science</option>
 							<option value="Information Systems">Information Systems</option>
 						</select>
 					</div>

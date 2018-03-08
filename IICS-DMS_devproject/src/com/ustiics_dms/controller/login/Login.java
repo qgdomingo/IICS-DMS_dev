@@ -44,8 +44,9 @@ public class Login extends HttpServlet {
 			{
 				HttpSession session = request.getSession();
 				session.setAttribute("currentCredentials", LoginFunctions.authorize(email));
-				Account acc = (Account) session.getAttribute("currentCredentials");
 				
+				Account acc = (Account) session.getAttribute("currentCredentials");
+
 				if(acc.getUserType().equalsIgnoreCase("Administrator")) 
 				{
 					redirectURL = "/admin/manageusers.jsp";
