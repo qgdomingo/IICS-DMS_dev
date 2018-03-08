@@ -51,7 +51,8 @@ public class RetrieveSentMail extends HttpServlet {
 							inboxInfo.getString("subject"),
 							inboxInfo.getString("sender_name"),
 							inboxInfo.getString("sent_by"),
-							inboxInfo.getString("date_created")
+							inboxInfo.getString("date_created"),
+							inboxInfo.getString("school_year")
 							 ));	
 				}
 			

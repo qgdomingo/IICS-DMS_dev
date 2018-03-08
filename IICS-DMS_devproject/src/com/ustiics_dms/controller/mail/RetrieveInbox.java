@@ -1,7 +1,6 @@
 package com.ustiics_dms.controller.mail;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +54,8 @@ public class RetrieveInbox extends HttpServlet {
 							inboxInfo.getString("subject"),
 							inboxInfo.getString("sender_name"),
 							inboxInfo.getString("sent_by"),
-							inboxInfo.getString("date_created")
+							inboxInfo.getString("date_created"),
+							inboxInfo.getString("school_year")
 							 ));	
 				}
 			}

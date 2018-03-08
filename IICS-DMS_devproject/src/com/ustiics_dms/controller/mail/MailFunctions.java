@@ -22,6 +22,7 @@ import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
 import com.ustiics_dms.databaseconnection.DBConnect;
 import com.ustiics_dms.model.File;
 
@@ -32,7 +33,7 @@ public class MailFunctions {
 	{
 			Connection con = DBConnect.getConnection();
 			InputStream pdf = createPdf(recipient, subject, name, message);
-			PreparedStatement prep = con.prepareStatement("INSERT INTO mail (iso_number, type, external_recipient, subject, file_data, sender_name, sent_by) VALUES (?,?,?,?,?,?,?)");
+			PreparedStatement prep = con.prepareStatement("INSERT INTO mail (iso_number, type, external_recipient, subject, file_data, sender_name, sent_by, school_year) VALUES (?,?,?,?,?,?,?,?)");
 			String isoNumber = getISONumber(department, type);
 			prep.setString(1, isoNumber);
 			prep.setString(2, type);
@@ -41,7 +42,7 @@ public class MailFunctions {
 			prep.setBinaryStream(5, pdf, pdf.available() );
 			prep.setString(6, name);
 			prep.setString(7, sentBy);
-			
+			prep.setString(8, ManageTasksFunctions.getSchoolYear());
 			prep.executeUpdate();
 			
 			sendInternalMail(recipient);
@@ -50,6 +51,7 @@ public class MailFunctions {
 	
 	public static String getISONumber(String department, String type) throws SQLException
 	{
+
 		Connection con = DBConnect.getConnection();
 		String getDepartment = "SELECT counter, iso_number FROM iso_counter WHERE department_name = ? AND type = ?";
 		PreparedStatement prep = con.prepareStatement(getDepartment);
@@ -385,9 +387,7 @@ public class MailFunctions {
 	       PreparedStatement prep = con.prepareStatement("INSERT INTO exported_mail (id, owner) VALUES (?,?)");
 	       prep.setInt(1, id);
 	       prep.setString(2, email);
-	       prep.executeUpdate();
-	       
-	     
+	       prep.executeUpdate();  
 	}
 	
 	public static List <String> getExportedMailID (String email) throws SQLException 
@@ -435,8 +435,30 @@ public class MailFunctions {
 			prep.setString(6, name);
 			prep.setString(7, sentBy);
 			
-			prep.executeUpdate();
-			
+			prep.executeUpdate();	
 	}
+	
+	public static void addNote(String id, String note) throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("UPDATE incoming_documents SET note = ? WHERE id = ?");
+			
+			prep.setString(1, note);
+			prep.setString(2, id);
 
+			prep.executeUpdate();
+
+	}
+	
+	public static void markAsDone(String id) throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("UPDATE incoming_documents SET status = ? WHERE id = ?");
+			
+			prep.setString(1, "Done");
+			prep.setString(2, id);
+
+			prep.executeUpdate();
+	}
+	
 }

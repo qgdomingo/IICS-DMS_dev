@@ -11,9 +11,10 @@ public class Task {
 	private String assignedBy;
 	private String dateCreated;
 	private String fullName;
+	private String schoolYear;
 	
 	public Task(String id, String title, String deadline, String category, String instructions, String status,
-			String assignedBy, String dateCreated) {
+			String assignedBy, String dateCreated, String schoolYear) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -23,6 +24,7 @@ public class Task {
 		this.status = status;
 		this.assignedBy = assignedBy;
 		this.dateCreated = dateCreated;
+		this.schoolYear = schoolYear;
 	}
 	
 	public Task(String title, String deadline, String category, String fullName, String assignedBy) {
@@ -35,6 +37,15 @@ public class Task {
 		this.assignedBy = assignedBy;
 	}
 	
+	
+	public String getSchoolYear() {
+		return schoolYear;
+	}
+
+	public void setSchoolYear(String schoolYear) {
+		this.schoolYear = schoolYear;
+	}
+
 	public String getDateCreated() {
 		return dateCreated;
 	}

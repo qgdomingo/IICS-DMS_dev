@@ -10,9 +10,10 @@ public class Mail {
 	private String senderName;
 	private String senderEmail;
 	private String dateCreated;
+	private String schoolYear;
 	
 	public Mail(String id, String type, String isoNumber, String externalRecipient, String subject, String senderName,
-			String senderEmail, String dateCreated) {
+			String senderEmail, String dateCreated, String schoolYear) {
 		super();
 		this.id = id;
 		this.type = type;
@@ -22,7 +23,22 @@ public class Mail {
 		this.senderName = senderName;
 		this.senderEmail = senderEmail;
 		this.dateCreated = dateCreated;
+		this.schoolYear = schoolYear;
 	}
+	
+	
+
+	public String getSchoolYear() {
+		return schoolYear;
+	}
+
+
+
+	public void setSchoolYear(String schoolYear) {
+		this.schoolYear = schoolYear;
+	}
+
+
 
 	public String getId() {
 		return id;

@@ -52,7 +52,8 @@ public class TasksCreated extends HttpServlet {
 						tasksCreated.getString("instructions"),
 						tasksCreated.getString("status"),
 						tasksCreated.getString("assigned_by"),
-						tasksCreated.getString("date_created")
+						tasksCreated.getString("date_created"),
+						tasksCreated.getString("school_year")
 						 ));	
 			}
 			String json = new Gson().toJson(task);

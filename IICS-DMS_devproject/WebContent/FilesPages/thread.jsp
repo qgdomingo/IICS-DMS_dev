@@ -237,12 +237,13 @@
 					
 					<div class="eight wide column">
 						<!-- NOTE FORM -->
-						<form class="ui form" id="edit_note_form">
+						<form class="ui form" method="POST" action="${pageContext.request.contextPath}/UpdateStatus" id="edit_note_form">
+							<input type="hidden" name="id" value="<%=request.getParameter("id")%>">
 							<div class="field element-rmb">
 								<label>Note:</label>
-								<textarea rows="2"></textarea>
+								<textarea name="note" rows="2"></textarea>
 							</div>
-							<button class="ui tiny fluid orange button">
+							<button type="submit"  name="buttonChoice" value="Edit Note" class="ui tiny fluid orange button">
 								<i class="pencil icon"></i>
 								Edit Note
 							</button>
@@ -260,7 +261,7 @@
 						<br>
 						
 						<!-- SET DOCUMENT AS DONE FORM -->
-						<form class="ui form" id="mark_as_done_form">
+						<form class="ui form"  method="POST" action="${pageContext.request.contextPath}/UpdateStatus"  value="update status" id="mark_as_done_form">
 							<button class="ui tiny fluid green button" type="button" id="mark_as_done_btn">
 								<i class="check icon"></i>
 								Mark as Done
@@ -268,7 +269,7 @@
 							<div class="ui compact segment element-rmt" id="mark_as_done_conf">
 								<h4>Are you sure you want to set this document as done?</h4>
 								<div class="ui buttons">
-							 		<button class="ui green button" type="submit">Yes</button>
+							 		<button name="buttonChoice" value="Mark as Done" class="ui green button" type="submit">Yes</button>
 							  		<div class="or"></div>
 							  		<button class="ui button" type="button" id="mark_as_done_no">No</button>
 								</div>
