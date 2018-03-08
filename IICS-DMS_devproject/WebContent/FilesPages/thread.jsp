@@ -27,7 +27,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Documents | IICS DMS</title>
+		<title>Documents Thread | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
@@ -107,7 +107,7 @@
 			<div class="item">
 		   		Reports
 		   		<div class="menu">
-			    	<a class="item" href="${pageContext.request.contextPath}/reports/semestralstats.jsp">
+			    	<a class="item" href="${pageContext.request.contextPath}/reports/semestralstatstask.jsp">
 			    		<i class="large bar chart icon side"></i>Semestral Statistics
 			    	</a>
 		    	</div>
@@ -128,7 +128,7 @@
 				</a>
 				<div class="item">
 					<i class="large file icon"></i>
-					Documents
+					Documents Thread
 				</div>
 				<div class="right menu">
 					<a class="item user-account-bgcolor mobile hidden" href="${pageContext.request.contextPath}/userprofile.jsp">
@@ -238,6 +238,9 @@
 					<div class="eight wide column">
 						<!-- NOTE FORM -->
 						<form class="ui form" id="edit_note_form">
+							<input type="hidden" name="id" id="viewincoming_note_id">
+							<input type="hidden" name="type" id="viewincoming_note_type">
+						
 							<div class="field element-rmb">
 								<label>Note:</label>
 								<textarea rows="2"></textarea>
@@ -261,6 +264,9 @@
 						
 						<!-- SET DOCUMENT AS DONE FORM -->
 						<form class="ui form" id="mark_as_done_form">
+							<input type="hidden" name="id" id="viewincoming_done_id">
+							<input type="hidden" name="type" id="viewincoming_done_type">
+						
 							<button class="ui tiny fluid green button" type="button" id="mark_as_done_btn">
 								<i class="check icon"></i>
 								Mark as Done

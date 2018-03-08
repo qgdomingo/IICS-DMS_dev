@@ -111,7 +111,7 @@
 			<div class="item">
 		   		Reports
 		   		<div class="menu">
-			    	<a class="item" href="${pageContext.request.contextPath}/reports/semestralstats.jsp">
+			    	<a class="item" href="${pageContext.request.contextPath}/reports/semestralstatstask.jsp">
 			    		<i class="large bar chart icon side"></i>Semestral Statistics
 			    	</a>
 		    	</div>

@@ -22,7 +22,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Tasks | IICS DMS</title>
+		<title>Created Tasks | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
@@ -97,7 +97,7 @@
 			<div class="item">
 		   		Reports
 		   		<div class="menu">
-			    	<a class="item" href="${pageContext.request.contextPath}/reports/semestralstats.jsp">
+			    	<a class="item" href="${pageContext.request.contextPath}/reports/semestralstatstask.jsp">
 			    		<i class="large bar chart icon side"></i>Semestral Statistics
 			    	</a>
 		    	</div>
@@ -116,8 +116,8 @@
 					<i class="large sidebar icon"></i>
 				</a>
 				<div class="item">
-					<i class="large tasks icon side"></i>
-					Tasks
+					<i class="large tasks icon"></i>
+					Created Tasks
 				</div>
 				<div class="right menu">
 					<a class="item user-account-bgcolor mobile hidden" href="${pageContext.request.contextPath}/userprofile.jsp">
