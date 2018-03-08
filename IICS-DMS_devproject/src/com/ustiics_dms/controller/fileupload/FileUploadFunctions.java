@@ -36,7 +36,7 @@ public class FileUploadFunctions {
 
 			String statement = "INSERT INTO incoming_documents (thread_number, reference_no, source_recipient, title, category, action_required, file_name, file_data, description, created_by, email, department, due_on) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			
-			if(actionRequired.equalsIgnoreCase("None"))
+			if(actionRequired.equalsIgnoreCase("None")||actionRequired.equalsIgnoreCase("For Dissemination"))
 			{
 				statement = "INSERT INTO incoming_documents (thread_number, reference_no, source_recipient, title, category, action_required, file_name, file_data, description, created_by, email, department) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";		
 			}
@@ -60,7 +60,7 @@ public class FileUploadFunctions {
 			prep.setString(11, email);
 			prep.setString(12, department);
 			
-			if(!actionRequired.equalsIgnoreCase("None"))
+			if(!actionRequired.equalsIgnoreCase("None")&&!actionRequired.equalsIgnoreCase("For Dissemination"))
 			{
 				prep.setString(13, actionDue);
 			}
