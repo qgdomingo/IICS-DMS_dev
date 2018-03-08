@@ -29,16 +29,17 @@ public class ManageTasksFunctions {
 			return rs;
 	}
 	
-	public static void addTask(String title, String deadline, String category, String instructions, String email [], String assignedBy) throws SQLException
+	public static void addTask(String title, String deadline, String category, String instructions, String email [], String assignedBy, String department) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("INSERT INTO tasks (title, deadline, category, instructions, assigned_by, school_year) VALUES (?,?,?,?,?,?)");
+			PreparedStatement prep = con.prepareStatement("INSERT INTO tasks (title, deadline, category, instructions, assigned_by, school_year, department) VALUES (?,?,?,?,?,?,?)");
 			prep.setString(1, title);
 			prep.setString(2, deadline);
 			prep.setString(3, category);
 			prep.setString(4, instructions);
 			prep.setString(5, assignedBy);
 			prep.setString(6, getSchoolYear());
+			prep.setString(7, department);
 			prep.executeUpdate();
 			
 			assignUsers(email);

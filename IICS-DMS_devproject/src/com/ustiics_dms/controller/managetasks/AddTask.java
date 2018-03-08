@@ -46,7 +46,7 @@ public class AddTask extends HttpServlet {
 			String email [] = request.getParameterValues("assigned_to");
 			String assignedBy = acc.getEmail();
 		
-			ManageTasksFunctions.addTask(title, deadline, category, instructions, email, assignedBy);
+			ManageTasksFunctions.addTask(title, deadline, category, instructions, email, assignedBy, acc.getDepartment());
 			String id = Integer.toString( ManageTasksFunctions.getIncrement() );
 			
 			ResultSet specificCreatedTask = (ResultSet) ManageTasksFunctions.getSpecificCreatedTask(id);
