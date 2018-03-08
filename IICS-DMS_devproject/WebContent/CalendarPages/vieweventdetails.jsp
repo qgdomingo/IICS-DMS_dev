@@ -5,6 +5,7 @@
 	Account acc = new Account();
 	String userType = "";
 	
+	boolean restrictionCase1 = false;
 	boolean restrictionCase2 = false;
 
 	if(request.getSession(false) == null || request.getSession(false).getAttribute("currentCredentials") == null) {
@@ -15,8 +16,11 @@
 		
 		if( (userType.equalsIgnoreCase("Administrator")) ) {
 			response.sendRedirect(request.getContextPath() + "/admin/manageusers.jsp");
-		} else if (userType.equalsIgnoreCase("Faculty")) {
-			response.sendRedirect(request.getContextPath() + "/home.jsp");
+		} 
+		
+		// Restriction Case 1 - not allowed for Faculty, Supervisor and Staff
+		if(userType.equalsIgnoreCase("Faculty") || userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) { 
+			restrictionCase1 = true;
 		}
 		
 		// Restriction Case 2 - not allowed for Supervisor and Staff
@@ -28,12 +32,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Documents | IICS DMS</title>
+		<title>Event Details | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.css">
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 		
@@ -57,7 +59,7 @@
 		<!-- LEFT SIDE MENU -->
 		<div class="ui large left vertical menu sidebar" id="side_nav">
 			<a class="item mobile only user-account-bgcolor" href="${pageContext.request.contextPath}/userprofile.jsp">
-				<h5 class="ui header ">
+				<h5 class="ui header">
 					<i class="large user circle icon user-account-color"></i>
 					<div class="content user-account-color">
 						<%= acc.getFullName() %>
@@ -68,18 +70,19 @@
 			<a class="item" href="${pageContext.request.contextPath}/home.jsp">
 		      <i class="large home icon side"></i>Home
 		    </a>
-		    <a class="item" href="${pageContext.request.contextPath}/files/fileupload.jsp">
+		   	<a class="item" href="${pageContext.request.contextPath}/files/fileupload.jsp">
 		      <i class="large cloud upload alternate icon side"></i>Upload Document
 		    </a>
-		    <a class="item active" href="${pageContext.request.contextPath}/files/personaldocs.jsp">
+		    <a class="item" href="${pageContext.request.contextPath}/files/personaldocs.jsp">
 		      <i class="large file icon side"></i>Documents
 		    </a>
 		    <a class="item" href="${pageContext.request.contextPath}/task/viewtasks.jsp">
 		      <i class="large tasks icon side"></i>Tasks
 		    </a>
-		    <a class="item" href="${pageContext.request.contextPath}/calendar/viewcalendar.jsp">
+		    <a class="item active" href="${pageContext.request.contextPath}/calendar/viewcalendar.jsp">
 		      <i class="large calendar alternate outline icon side"></i>Calendar
 		    </a>
+	
 		    <div class="item">
 		   		Mail
 		   		<div class="menu">
@@ -98,13 +101,13 @@
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
 			    		<i class="large envelope square icon side"></i>Mail Requests
 			    	</a>
-			    	<a class="item" href=${pageContext.request.contextPath}/mail/exportedmail.jsp>
+			    	<a class="item" href="${pageContext.request.contextPath}/mail/exportedmail.jsp">
 			    		<i class="large external link square alternate icon side"></i>Exported Mail
 			    	</a>
 	<%  } %>
 		    	</div>
 		    </div>
-	<% if(!restrictionCase2) { %>
+	<% if(!restrictionCase1) { %>
 			<div class="item">
 		   		Reports
 		   		<div class="menu">
@@ -118,7 +121,7 @@
 		      <i class="large power icon side"></i>Logout
 		    </a>
 		</div>
-		
+				
 		<!-- PAGE CONTENTS -->
 		<div class="pusher page-content-spacing page-background">
 		
@@ -128,8 +131,8 @@
 					<i class="large sidebar icon"></i>
 				</a>
 				<div class="item">
-					<i class="large file icon"></i>
-					Documents
+					<i class="large calendar alternate outline icon"></i>
+					Event Details
 				</div>
 				<div class="right menu">
 					<a class="item user-account-bgcolor mobile hidden" href="${pageContext.request.contextPath}/userprofile.jsp">
@@ -151,140 +154,130 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
+		<h2 class="ui dividing header element-rmt">
+			<a href="${pageContext.request.contextPath}/calendar/vieweventlist.jsp">
+				<i class="black chevron left icon"></i>
+			</a> 
+			<span id="event_title"></span>
+		</h2>
 		
-		<!-- DOCUMENT TYPE SELECTOR FOR MOBILE -->
-		<div class="ui form mobile only">
-			<div class="field">
-				<label>View Document Type:</label>
-				<select class="ui fluid dropdown" id="doctype_select">
-					<option value="">Navigate to</option>
-				  	<option value="personaldocs.jsp">Personal</option>
-				<% if(!userType.equalsIgnoreCase("Faculty")) { %>
-				  	<option value="incomingdocs.jsp">Incoming</option>
-				  	<option value="outgoingdocs.jsp">Outgoing</option>
-				  	<option value="archivedocs.jsp">Archived</option>
-				  	<option value="alldocs.jsp">All Documents</option>
-				<% } %>
-				</select>
-			</div>
-		</div> 
+		<div class="ui segment">
+			<button class="ui labeled icon orange button">
+				<i class="cross icon"></i>
+				Edit Event
+			</button>
 		
-		<!-- DOCUMENT TYPE SELECTOR FOR NON-MOBILE -->
-		<div class="mobile hidden">
-			<div class="ui secondary pointing menu">
-				<a class="item" href="${pageContext.request.contextPath}/files/personaldocs.jsp">
-					<i class="folder icon"></i>
-					Personal
-				</a>
-				<% if(!userType.equalsIgnoreCase("Faculty")) { %>
-				<a class="item" href="${pageContext.request.contextPath}/files/incomingdocs.jsp">
-					<i class="folder icon"></i>
-					Incoming
-				</a>
-				<a class="item" href="${pageContext.request.contextPath}/files/outgoingdocs.jsp">
-					<i class="folder icon"></i>
-					Outgoing
-				</a>
-				<% } %>
-				<a class="item active" href="${pageContext.request.contextPath}/files/archivedocs.jsp">
-					<i class="folder open icon"></i>
-					Archived
-				</a>
-				<a class="item" href="${pageContext.request.contextPath}/files/alldocs.jsp">
-					<i class="folder icon"></i>
-					All Files
-				</a>
-			</div>		
+			<button class="ui labeled icon red button">
+				<i class="cross icon"></i>
+				Delete Event
+			</button>
+			
+			
+			
+		</div>
+
+		
+<!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
 		
-		<br>
-			
-		<!-- AREA FOR ARCHIVED DOCUMENTS -->
-		<div id="archiveddocs_table">
-			<h3 class="ui dividing header">
-				<i class="file archive icon"></i>
-				<div class="content">
-					Archived Documents
-					<div class="sub header">
-						Here lists past documents which are now archived and enabled by the administrator.
+		<!-- EDIT EVENT MODAL -->
+		<div class="ui small modal" id="edit_event_modal">
+			<div class="header edit-modal">
+				<h3 class="ui header edit-modal">
+					<i class="edit icon"></i>
+					Edit Event
+				</h3>
+			</div>
+			<div class="modal-content">
+				<form class="ui form" id="edit_event_form">
+					<div class="required field">
+						<label>Event Title:</label>
+						<input type="text" name="event_title" id="event_title"/>
 					</div>
-				</div>
-			</h3>
-			
-			<div class="ui segment">
-				<div class="ui dimmer" id="archive_loading">
-					<div class="ui text loader" >Retrieving Archived Documents</div>
-				</div>
-			
-			<!-- SEARCH AREA -->
-			<form class="ui form">
-				<div class="five fields">
-				
-					<!-- SEARCH BOX -->
+					<div class="required field">
+						<label>Location:</label>
+						<input type="text" name="event_location" id="event_location"/>
+					</div>
+					<div class="ui checkbox" id="event_all_day_toggle" style="margin-bottom: 14px;">
+						<label>All Day Event</label>
+  						<input type="checkbox" name="event_all_day" id="event_all_day"/>
+					</div>
+					<div class="two fields" id="event_datetime_input">
+						<div class="required field">
+							<label>Start Date and Time:</label>
+							<div class="ui calendar" id="event_start_datetime_calendar">
+								<div class="ui icon input">
+									<input type="text" id="event_start_datetime"/>
+									<i class="calendar icon"></i>
+								</div>
+							</div>
+						</div>
+						<div class="required field">
+							<label>End Date and Time:</label>
+							<div class="ui calendar" id="event_end_datetime_calendar">
+								<div class="ui icon input">
+									<input type="text" id="event_end_datetime"/>
+									<i class="calendar icon"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="two fields" id="event_date_input">
+						<div class="required field">
+							<label>Start Date:</label>
+							<div class="ui calendar" id="event_start_date_calendar">
+								<div class="ui icon input">
+									<input type="text" id="event_start_date"/>
+									<i class="calendar icon"></i>
+								</div>
+							</div>
+						</div>
+						<div class="required field">
+							<label>End Date:</label>
+							<div class="ui calendar" id="event_end_date_calendar">
+								<div class="ui icon input">
+									<input type="text" id="event_end_date"/>
+									<i class="calendar icon"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="required field">
+						<label>Event Description:</label>
+						<textarea rows="3" name="event_description" id="event_description"></textarea>
+					</div>
 					<div class="field">
-						<div class="ui icon input">
-							<input type="text" placeholder="Seach Document.."/>
-							<i class="search icon"></i>
+						<label>Invite:</label>
+						<div class="ui action input">
+							<select class="ui fluid search selection dropdown" multiple="" name="event_invite" id="event_invite">
+								<option value="">Select Users</option>
+							</select>
+						  	<button class="ui orange button" type="button">
+						  		<i class="address book outline icon"></i>
+						  		Options 
+						  	</button>
 						</div>
 					</div>
 					
-					<!-- UPLOAD TIMESTAMP RANGE BOX -->
-					<div class="field">
-						<input type="text" placeholder="Upload Timestamp"/>
-					</div>
-						
-					<!-- DOCUMENT TYPE DROPDOWN -->
-					<div class="field">
-						<select class="ui fluid dropdown">
-				  			<option value="">Select Document Type</option>
-				 			<option value="Personal">Personal</option>
-				  			<option value="Incoming">Incoming</option>
-				 			<option value="Outgoing">Outgoing</option>
-						</select>
-					</div>
-						
-					<!-- CATEGORY DROPDOWN -->
-					<div class="field">
-						<select class="ui fluid dropdown" name="category">
-							<option value="">Select Category..</option>
-							<option value="memo">Memo</option>
-							<option value="letter">Letter</option>
-						</select>
-					</div>
-					
-					<!-- SEARCH BUTTON -->
-					<div class="field">
-						<button class="ui grey button" type="button">
-							Search
-						</button>
-					</div>
-				</div>
-			</form>
-				
-			<!-- TABLE AREA -->
-			<table class="ui compact selectable sortable table">
-				<thead>
-					<tr>
-						<th>Document Title</th>
-						<th>Uploader</th>
-						<th>Upload Timestamp</th>
-						<th>Document Type</th>
-						<th>Category</th>
-					</tr>
-				</thead>
-				<tbody></tbody>
-			</table>
-						
+					<div class="ui error message"></div>
+				</form>
 			</div>
-		</div>
-	
-<!-- END OF ACTUAL PAGE CONTENTS -->
+			<div class="actions">
+				<button class="ui cancel grey button">
+					<i class="remove icon"></i>
+					Cancel
+				</button>
+				<button class="ui orange button">
+					<i class="edit icon"></i>
+					Confirm Edit
+				</button>
+			</div>
 		</div>
 		
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header add-modal">
+				<h3 class="ui header add-modal">
 					<i class="checkmark icon"></i>
 					<div class="content" id="successdia_header"></div>
 				</h3>
@@ -299,8 +292,8 @@
 		
 		<!-- FAIL MESSAGE MODAL -->
 		<div class="ui tiny modal" id="faildia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header delete-modal">
+				<h3 class="ui header delete-modal">
 					<i class="remove icon"></i>
 					<div class="content" id="faildia_header"></div>
 				</h3>
@@ -337,10 +330,7 @@
 	</body>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/session/non_faculty_check.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/dataTable/jquery.dataTables.min.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/session/non_admin_check.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
 </html>

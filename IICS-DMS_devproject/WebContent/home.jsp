@@ -110,7 +110,7 @@
 			<div class="item">
 		   		Reports
 		   		<div class="menu">
-			    	<a class="item" href="${pageContext.request.contextPath}/reports/semestralstats.jsp">
+			    	<a class="item" href="${pageContext.request.contextPath}/reports/semestralstatstask.jsp">
 			    		<i class="large bar chart icon side"></i>Semestral Statistics
 			    	</a>
 		    	</div>
@@ -228,27 +228,22 @@
 				<div class="content">Notifications</div>
 			</div>
 			<div class="scrolling content">
-				<table class="ui very basic selectable compact table">
-					<tbody id="notification_body">
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>
-						<tr><td>Very long content goes here</td></tr>   
-					</tbody>
-				</table>
-				<br>
+				<div class="ui relaxed divided selection list">
+					<div class="item">
+					    <i class="large github middle aligned icon"></i>
+					    <div class="content">
+					      	<div class="header">Semantic-Org/Semantic-UI</div>
+					      	<div class="description">Updated 10 mins ago</div>
+					    </div>
+					</div>
+					<div class="item">
+					    <i class="large github middle aligned icon"></i>
+					    <div class="content">
+					      	<div class="header">Semantic-Org/Semantic-UI</div>
+					      	<div class="description">Updated 10 mins ago</div>
+					    </div>
+					</div>
+				</div> 
 		 	</div>					    	
 		    <div class="actions center-text">
 				<button class="ui ok small grey button">Close</button>

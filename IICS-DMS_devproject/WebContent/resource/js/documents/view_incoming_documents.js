@@ -159,7 +159,12 @@
 		$('#viewincoming_download_type').val(selectedData['type']);
 		$('#viewincoming_threadno').val(selectedData['threadNumber']);
 		
+		$('#viewincoming_note_id').val(selectedData['id']);
+		$('#viewincoming_note_type').val(selectedData['type']);
+		
 		if(!(selectedData['status'] == 'Done')) {
+			$('#viewincoming_done_id').val(selectedData['id']);
+			$('#viewincoming_done_type').val(selectedData['type']);
 			$('#mark_as_done_form').show();
 		}
 	}

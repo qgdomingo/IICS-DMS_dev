@@ -101,10 +101,10 @@
 	    },
 		success: function(response) {  
 			closeUploadProgress();
-			
-			if(response) {
+			if (response) {
 				clearIncomingDocsForm();
-				callSuccessModal('Incoming Document Upload Success', 'Your document has been successfully uploaded.');
+				callSuccessModal('Incoming Document Upload Success', 'Your document has been successfully uploaded.'
+						+ ' The document reference number is: ');
 			}
 			else {
 				callFailModal('Incoming Document Upload Failed', 'We are unable to upload your document, please try again.');

@@ -4,8 +4,6 @@
 <%
 	Account acc = new Account();
 	String userType = "";
-	
-	boolean restrictionCase2 = false;
 
 	if(request.getSession(false) == null || request.getSession(false).getAttribute("currentCredentials") == null) {
 		response.sendRedirect(request.getContextPath() + "/index.jsp");
@@ -15,25 +13,19 @@
 		
 		if( (userType.equalsIgnoreCase("Administrator")) ) {
 			response.sendRedirect(request.getContextPath() + "/admin/manageusers.jsp");
-		} else if (userType.equalsIgnoreCase("Faculty")) {
+		} 
+		else if (userType.equalsIgnoreCase("Faculty") || userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) {
 			response.sendRedirect(request.getContextPath() + "/home.jsp");
-		}
-		
-		// Restriction Case 2 - not allowed for Supervisor and Staff
-		if(userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) {
-			restrictionCase2 = true;
 		}
 	}
 %>
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Documents | IICS DMS</title>
+		<title>Semestral Statistics | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.css">
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 		
@@ -71,11 +63,11 @@
 		    <a class="item" href="${pageContext.request.contextPath}/files/fileupload.jsp">
 		      <i class="large cloud upload alternate icon side"></i>Upload Document
 		    </a>
-		    <a class="item active" href="${pageContext.request.contextPath}/files/personaldocs.jsp">
+		    <a class="item" href="${pageContext.request.contextPath}/files/personaldocs.jsp">
 		      <i class="large file icon side"></i>Documents
 		    </a>
 		    <a class="item" href="${pageContext.request.contextPath}/task/viewtasks.jsp">
-		      <i class="large tasks icon side"></i>Tasks
+		     <i class="large tasks icon side"></i>Tasks
 		    </a>
 		    <a class="item" href="${pageContext.request.contextPath}/calendar/viewcalendar.jsp">
 		      <i class="large calendar alternate outline icon side"></i>Calendar
@@ -83,42 +75,36 @@
 		    <div class="item">
 		   		Mail
 		   		<div class="menu">
-	<% if(!restrictionCase2) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/newmail.jsp">
 			    		<i class="large pencil alternate icon side"></i>Create Mail
 			    	</a>
-	<%  } %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/inbox.jsp">
 			    		<i class="large inbox icon side"></i>Inbox
 			    	</a>
-	<% if(!restrictionCase2) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
 			    		<i class="large envelope square icon side"></i>Mail Requests
 			    	</a>
-			    	<a class="item" href=${pageContext.request.contextPath}/mail/exportedmail.jsp>
+			    	<a class="item" href="${pageContext.request.contextPath}/mail/exportedmail.jsp">
 			    		<i class="large external link square alternate icon side"></i>Exported Mail
 			    	</a>
-	<%  } %>
 		    	</div>
 		    </div>
-	<% if(!restrictionCase2) { %>
 			<div class="item">
 		   		Reports
 		   		<div class="menu">
-			    	<a class="item" href="${pageContext.request.contextPath}/reports/semestralstatstask.jsp">
+			    	<a class="item active" href="${pageContext.request.contextPath}/reports/semestralstatstask.jsp">
 			    		<i class="large bar chart icon side"></i>Semestral Statistics
 			    	</a>
 		    	</div>
 		    </div>
-	<%  } %>
 		    <a class="item mobile only" id="logout_btn2">
 		      <i class="large power icon side"></i>Logout
 		    </a>
 		</div>
-		
+				
 		<!-- PAGE CONTENTS -->
 		<div class="pusher page-content-spacing page-background">
 		
@@ -128,8 +114,8 @@
 					<i class="large sidebar icon"></i>
 				</a>
 				<div class="item">
-					<i class="large file icon"></i>
-					Documents
+					<i class="large bar chart icon"></i>
+					Semestral Statistics
 				</div>
 				<div class="right menu">
 					<a class="item user-account-bgcolor mobile hidden" href="${pageContext.request.contextPath}/userprofile.jsp">
@@ -151,140 +137,119 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
+		<div class="ui secondary pointing menu element-rmt">
+			<a class="item active" href="${pageContext.request.contextPath}/reports/semestralstatstask.jsp">
+				<i class="folder open icon"></i>
+				Task Compliance
+			</a>
+			<a class="item" href="${pageContext.request.contextPath}/reports/semestralstatsmail.jsp">
+				<i class="folder icon"></i>
+				Mail Acknowledgement
+			</a>
+		</div>		
 		
-		<!-- DOCUMENT TYPE SELECTOR FOR MOBILE -->
-		<div class="ui form mobile only">
-			<div class="field">
-				<label>View Document Type:</label>
-				<select class="ui fluid dropdown" id="doctype_select">
-					<option value="">Navigate to</option>
-				  	<option value="personaldocs.jsp">Personal</option>
-				<% if(!userType.equalsIgnoreCase("Faculty")) { %>
-				  	<option value="incomingdocs.jsp">Incoming</option>
-				  	<option value="outgoingdocs.jsp">Outgoing</option>
-				  	<option value="archivedocs.jsp">Archived</option>
-				  	<option value="alldocs.jsp">All Documents</option>
-				<% } %>
-				</select>
+		<div class="ui segment element-rpt">
+			<div class="ui dimmer" id="task_statistics_loading">
+				<div class="ui text loader">Retrieving Task Statistics</div>
 			</div>
-		</div> 
-		
-		<!-- DOCUMENT TYPE SELECTOR FOR NON-MOBILE -->
-		<div class="mobile hidden">
-			<div class="ui secondary pointing menu">
-				<a class="item" href="${pageContext.request.contextPath}/files/personaldocs.jsp">
-					<i class="folder icon"></i>
-					Personal
-				</a>
-				<% if(!userType.equalsIgnoreCase("Faculty")) { %>
-				<a class="item" href="${pageContext.request.contextPath}/files/incomingdocs.jsp">
-					<i class="folder icon"></i>
-					Incoming
-				</a>
-				<a class="item" href="${pageContext.request.contextPath}/files/outgoingdocs.jsp">
-					<i class="folder icon"></i>
-					Outgoing
-				</a>
-				<% } %>
-				<a class="item active" href="${pageContext.request.contextPath}/files/archivedocs.jsp">
-					<i class="folder open icon"></i>
-					Archived
-				</a>
-				<a class="item" href="${pageContext.request.contextPath}/files/alldocs.jsp">
-					<i class="folder icon"></i>
-					All Files
-				</a>
-			</div>		
-		</div>
-		
-		<br>
 			
-		<!-- AREA FOR ARCHIVED DOCUMENTS -->
-		<div id="archiveddocs_table">
-			<h3 class="ui dividing header">
-				<i class="file archive icon"></i>
-				<div class="content">
-					Archived Documents
-					<div class="sub header">
-						Here lists past documents which are now archived and enabled by the administrator.
-					</div>
-				</div>
-			</h3>
-			
-			<div class="ui segment">
-				<div class="ui dimmer" id="archive_loading">
-					<div class="ui text loader" >Retrieving Archived Documents</div>
-				</div>
-			
-			<!-- SEARCH AREA -->
-			<form class="ui form">
-				<div class="five fields">
-				
-					<!-- SEARCH BOX -->
+			<form class="ui form" id="view_stats_form">
+				<h4 class="element-rmb element-mt">View Task Statistics:</h4>
+				<div class="four fields">
 					<div class="field">
-						<div class="ui icon input">
-							<input type="text" placeholder="Seach Document.."/>
-							<i class="search icon"></i>
-						</div>
-					</div>
-					
-					<!-- UPLOAD TIMESTAMP RANGE BOX -->
-					<div class="field">
-						<input type="text" placeholder="Upload Timestamp"/>
-					</div>
-						
-					<!-- DOCUMENT TYPE DROPDOWN -->
-					<div class="field">
-						<select class="ui fluid dropdown">
-				  			<option value="">Select Document Type</option>
-				 			<option value="Personal">Personal</option>
-				  			<option value="Incoming">Incoming</option>
-				 			<option value="Outgoing">Outgoing</option>
-						</select>
-					</div>
-						
-					<!-- CATEGORY DROPDOWN -->
-					<div class="field">
-						<select class="ui fluid dropdown" name="category">
-							<option value="">Select Category..</option>
-							<option value="memo">Memo</option>
-							<option value="letter">Letter</option>
+						<select class="ui fluid dropdown" name="view_academic_year" id="view_academic_year">
+							<option value="">Academic Year</option>
 						</select>
 					</div>
 					
-					<!-- SEARCH BUTTON -->
 					<div class="field">
-						<button class="ui grey button" type="button">
-							Search
+						<select class="ui fluid dropdown" name="view_scope" id="view_scope">
+							<option value="">View By</option>
+							<option value="Staff">Staff</option>
+							<option value="Faculty">Faculty</option>
+							<option value="Department">Department</option>
+						</select>
+					</div>
+					
+					<div class="field" id="department_selection">
+						<select class="ui fluid dropdown" name="department_selection" id="department_selection_dropdown">
+							<option value="">Select Department</option>
+							<option value="Information Technology">Information Technology</option>
+							<option value="Computer Science">Computer Science</option>
+							<option value="Information Systems">Information Systems</option>
+						</select>
+					</div>
+					
+					<div class="field" id="user_selection">
+						<select class="ui fluid dropdown" name="user_selection" id="user_selection_dropdown">
+							<option value="">Select User</option>
+						</select>
+					</div>
+					
+					<div class="field">
+						<button class="ui green button" type="submit" id="view_stats_submit">
+							Go
 						</button>
 					</div>
 				</div>
-			</form>
 				
-			<!-- TABLE AREA -->
-			<table class="ui compact selectable sortable table">
-				<thead>
-					<tr>
-						<th>Document Title</th>
-						<th>Uploader</th>
-						<th>Upload Timestamp</th>
-						<th>Document Type</th>
-						<th>Category</th>
-					</tr>
-				</thead>
-				<tbody></tbody>
-			</table>
-						
+				<div class="ui error message"></div>
+			</form>
+			
+			<br>
+			
+			<div class="ui stackable grid">
+				<div class="seven wide computer sixteen wide tablet sixteen wide mobile column">
+					<canvas id="myChart"></canvas>
+				</div>
+				
+				<div class="nine wide computer sixteen wide tablet sixteen wide mobile column">
+					<h4>Total No. of Tasks on the Statistics: <span id="no_of_tasks"></span></h4>
+				
+					<table class="ui compact selectable table" id="task_department_table">
+						<thead>
+							<tr>
+								<th class="seven wide">Task Title</th> 
+								<th class="three wide">No. of On-time Submission</th>
+								<th class="three wide">No. of Late Submission</th>
+								<th class="three wide">No. of Unaccomplishment</th>
+							</tr>
+						</thead>
+						<tbody id="task_department_tablebody"></tbody>
+					</table>
+					
+					<div class="ui action input">
+ 						<select class="ui fluid dropdown">
+							<option value="">Filter Task Status</option>
+							<option value="Information Technology">Information Technology</option>
+							<option value="Computer Science">Computer Science</option>
+							<option value="Information Systems">Information Systems</option>
+						</select>
+  						<div class="ui grey button">Clear Filter</div>
+					</div>
+									
+					<table class="ui compact selectable table" id="task_facultystaff_table">
+						<thead>
+							<tr>
+								<th class="thirteen wide">Task Title</th> 
+								<th class="three wide">Status</th>
+							</tr>
+						</thead>
+						<tbody id="task_facultystaff_tablebody"></tbody>
+					</table>
+					
+				</div>
+			 
 			</div>
+			
 		</div>
-	
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
 		
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header add-modal">
+				<h3 class="ui header add-modal">
 					<i class="checkmark icon"></i>
 					<div class="content" id="successdia_header"></div>
 				</h3>
@@ -299,8 +264,8 @@
 		
 		<!-- FAIL MESSAGE MODAL -->
 		<div class="ui tiny modal" id="faildia">
-			<div class="header">
-				<h3 class="ui header">
+			<div class="header delete-modal">
+				<h3 class="ui header delete-modal">
 					<i class="remove icon"></i>
 					<div class="content" id="faildia_header"></div>
 				</h3>
@@ -337,10 +302,12 @@
 	</body>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/session/non_faculty_check.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/dataTable/jquery.dataTables.min.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>	
+	<script src="${pageContext.request.contextPath}/resource/js/session/regular_user_check.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/fullcalendar/moment.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/chartjs/Chart.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/chartjs/Chart.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
-</html>
+	<script src="${pageContext.request.contextPath}/resource/js/reports/task_statistics.js"></script>
+</html> 
