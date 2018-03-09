@@ -38,6 +38,13 @@ public class Task {
 		this.assignedBy = assignedBy;
 	}
 	
+	public Task(String title, String status) {
+		super();
+		
+		this.title = title;
+		this.status = status;
+	}
+	
 	public String getDepartment() {
 		return department;
 	}

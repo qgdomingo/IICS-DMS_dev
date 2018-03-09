@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import com.ustiics_dms.controller.mail.MailFunctions;
 import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
 import com.ustiics_dms.model.Account;
+import com.ustiics_dms.model.Task;
 import com.ustiics_dms.model.TaskStatistics;
 
 
@@ -35,7 +36,7 @@ public class TaskComplianceStatistics extends HttpServlet {
 				HttpSession session = request.getSession();
 				Account acc = (Account)session.getAttribute("currentCredentials");
 				
-				String viewBy = "Department";//request.getParameter("view_by");
+				String viewBy = "Faculty";//request.getParameter("view_by");
 				
 				String schoolYear = ManageTasksFunctions.getSchoolYear();
 				
@@ -45,7 +46,9 @@ public class TaskComplianceStatistics extends HttpServlet {
 				
 				if(viewBy.equalsIgnoreCase("Faculty"))
 				{
-					String email = "coleensy@gmail.com";
+					
+						
+				//
 					
 				}
 				else if(viewBy.equalsIgnoreCase("Staff"))
@@ -55,7 +58,6 @@ public class TaskComplianceStatistics extends HttpServlet {
 				else if(viewBy.equalsIgnoreCase("Department"))
 				{
 					String department = "Information Systems";//request.getParameter("department");
-					
 					
 					ResultSet task = StatisticsFunctions.getTasksByDepartment(schoolYear, department);
 					List <TaskStatistics> taskList = new ArrayList <TaskStatistics> ();

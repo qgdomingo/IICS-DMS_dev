@@ -77,12 +77,13 @@ public class ManageTasksFunctions {
 			
 			for(String mail: email)
 			{
-				PreparedStatement prep = con.prepareStatement("INSERT INTO tasks_assigned_to (id, name, email) VALUES (?,?,?)");
+				PreparedStatement prep = con.prepareStatement("INSERT INTO tasks_assigned_to (id, name, email, school_year) VALUES (?,?,?,?)");
 				
 				String fullName = getFullName(mail);
 				prep.setInt(1, id);
 				prep.setString(2, fullName);
 				prep.setString(3, mail);
+				prep.setString(4, ManageTasksFunctions.getSchoolYear());
 				prep.executeUpdate();
 			}
 			

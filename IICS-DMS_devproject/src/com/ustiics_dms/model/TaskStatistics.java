@@ -14,6 +14,13 @@ public class TaskStatistics {
 		this.lateSubmission = lateSubmission;
 		this.noSubmission = noSubmission;
 	}
+	
+	public TaskStatistics(int onTimeSubmission, int lateSubmission, int noSubmission) {
+		super();
+		this.onTimeSubmission = onTimeSubmission;
+		this.lateSubmission = lateSubmission;
+		this.noSubmission = noSubmission;
+	}
 
 	public String getTaskTitle() {
 		return taskTitle;
