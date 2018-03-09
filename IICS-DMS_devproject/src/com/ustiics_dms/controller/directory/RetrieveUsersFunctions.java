@@ -9,35 +9,70 @@ import com.ustiics_dms.databaseconnection.DBConnect;
 
 public class RetrieveUsersFunctions {
 
-	public static ResultSet retrieveDepartmentUsers(String email, String userType, String department) throws SQLException
-	{
-			Connection con = DBConnect.getConnection();
-			String sqlStatement = null ;
-			boolean trigger = false;
-			PreparedStatement prep;
-			
-			if(userType.equalsIgnoreCase("Director") || userType.equalsIgnoreCase("Faculty Secretary"))
-			{
-				sqlStatement = "SELECT full_name, email, user_type, department"
-						+ " FROM accounts WHERE NOT statUs = 'inactive'";
-			}
-			else if(userType.equalsIgnoreCase("Department Head"))
-			{
-				sqlStatement = "SELECT full_name, email, user_type, department"
-						+ " FROM accounts WHERE NOT user_type = ? AND NOT email = ? AND department = ? AND NOT statUs = 'inactive'";
-				trigger = true;
-			}
-				prep = con.prepareStatement(sqlStatement);
+	public static ResultSet retrieveAllUsers(String email) throws SQLException {
+		
+		Connection con = DBConnect.getConnection();
+		String statement = "SELECT full_name, email, user_type, department FROM accounts WHERE " +
+				" NOT status = 'inactive' AND NOT email = ? AND NOT user_type = ?";
+		
+		PreparedStatement prep = con.prepareStatement(statement);
+		prep.setString(1, email);
+		prep.setString(2, "Administrator");
+		ResultSet result = prep.executeQuery();
 
-			if(trigger)
-			{
-				prep.setString(1, "Administrator");
-				prep.setString(2, email);
-				prep.setString(3,  department);
-			}
-			
-			ResultSet result = prep.executeQuery();
-
-			return result;
+		return result;
 	}
+	
+	public static ResultSet retrieveDepartmentUsers(String email, String department) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		String statement = "SELECT full_name, email, user_type, department FROM accounts "
+				+ "WHERE NOT email = ? AND NOT user_type = ? AND department = ? AND NOT status = 'inactive'";
+		
+		PreparedStatement prep = con.prepareStatement(statement);
+		
+		prep.setString(1, email);
+		prep.setString(2, "Administrator");
+		prep.setString(3,  department);
+		
+		ResultSet result = prep.executeQuery();
+
+		return result;
+	}
+	
+	public static ResultSet retrieveStaffUsers(String email) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		String statement = "SELECT full_name, email, user_type, department FROM accounts "
+				+ "WHERE NOT email = ? AND NOT user_type = ? AND user_type = ? AND NOT status = 'inactive'";
+		
+		PreparedStatement prep = con.prepareStatement(statement);
+		
+		prep.setString(1, email);
+		prep.setString(2, "Administrator");
+		prep.setString(3, "Staff");
+		
+		ResultSet result = prep.executeQuery();
+
+		return result;
+	}
+	
+	public static ResultSet retrieveFacultyUsers(String email) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		String statement = "SELECT full_name, email, user_type, department FROM accounts "
+				+ "WHERE NOT email = ? AND NOT user_type = ? AND user_type = ? OR user_type = ? AND NOT status = 'inactive'";
+		
+		PreparedStatement prep = con.prepareStatement(statement);
+		
+		prep.setString(1, email);
+		prep.setString(2, "Administrator");
+		prep.setString(3, "Faculty");
+		prep.setString(4, "Department Head");
+		
+		ResultSet result = prep.executeQuery();
+
+		return result;
+	}
+	
 }

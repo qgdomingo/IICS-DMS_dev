@@ -82,10 +82,6 @@
 				setCategoriesOutdated();
 				updateCategoryList(currentPageView);
 			}
-			else
-			{
-				callFailModal('Retrieve Category List Error', 'We are unable to retrieve the category list. ');
-			}
 		})
 		.fail((response) => {
 			callFailModal('Retrieve Category List Error', 'We are unable to retrieve the category list. ');
@@ -94,7 +90,9 @@
 	
 	/* POPULATE CATEGORY */
 	function populateCategory(categoryDropdown) {
+		addCSSClass(categoryDropdown, 'loading');
 		if(isCategoryNotEmpty) {
+			
 			$(categoryDropdown).empty();
 			$(categoryDropdown).append($('<option value="">').text('Select Category'));
 			$.each(localCategoriesData, (index, stringData) => {
@@ -104,7 +102,9 @@
 		else {
 			$(categoryDropdown).empty();
 			$(categoryDropdown).append($('<option value="">').text(localCategoriesData[0]));
+			addCSSClass(categoryDropdown, 'error');
 		}
+		removeCSSClass(categoryDropdown, 'loading');
 		$(categoryDropdown).dropdown();
 	}
 	

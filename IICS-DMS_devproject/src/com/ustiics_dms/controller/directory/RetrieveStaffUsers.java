@@ -16,34 +16,27 @@ import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.model.Account;
 
-
-@WebServlet("/RetrieveUserDirectory")
-public class RetrieveUserDirectory extends HttpServlet {
+/**
+ * Servlet implementation class RetrieveStaffUsers
+ */
+@WebServlet("/RetrieveStaffUsers")
+public class RetrieveStaffUsers extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
-    public RetrieveUserDirectory() {
+    public RetrieveStaffUsers() {
         super();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-	    Account acc = (Account) session.getAttribute("currentCredentials");
-	    
+		Account acc = (Account) session.getAttribute("currentCredentials");
+		
 		List<Account> users = new ArrayList<Account>();
-	    response.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
 		
 		try {
-			String userType = acc.getUserType();
-			ResultSet accounts = null;
-			
-			if(userType.equalsIgnoreCase("Director") || userType.equalsIgnoreCase("Faculty Secretary")) {
-				accounts = (ResultSet) RetrieveUsersFunctions.retrieveAllUsers(acc.getEmail());
-			} 
-			else if(userType.equalsIgnoreCase("Department Head")) {
-				accounts = (ResultSet) RetrieveUsersFunctions.retrieveDepartmentUsers(acc.getEmail(), acc.getDepartment());
-			}
-			
+			ResultSet accounts = (ResultSet) RetrieveUsersFunctions.retrieveStaffUsers(acc.getEmail());
+
 			while(accounts.next()) { 
 				users.add(new Account(accounts.getString("full_name"),
 									  accounts.getString("email"),

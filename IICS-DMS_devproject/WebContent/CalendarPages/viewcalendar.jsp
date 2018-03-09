@@ -37,6 +37,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/fullcalendar/fullcalendar.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 		
@@ -157,11 +159,11 @@
 <!-- ACTUAL PAGE CONTENTS -->
 
 		<div class="ui stackable grid element-rpt">
-			<div class="four wide computer six wide tablet sixteen wide mobile column">
+			<div class="six wide computer sixteen wide tablet sixteen wide mobile column">
 				<div class="two ui buttons">
 					<button class="ui labeled icon green button" id="add_event_btn">
 						<i class="plus icon"></i>
-						Add Event
+						Add Event 
 					</button>
 					
 					<button class="ui labeled icon orange button" id="event_list_btn">
@@ -172,38 +174,14 @@
 				
 				<!-- EVENT INVITATION LIST -->
 				<h3 class="element-rmb">Event Invitations</h3>
-				<div class="ui segment element-rmt">
+				<div class="ui segment element-rmt" id="invitation_list_segment">
 					<!-- LIST -->
-					<div class="ui relaxed divided selection list">
-						<div class="item">
-					    	<i class="large github middle aligned icon"></i>
-					    	<div class="content">
-					      		<div class="header">Semantic-Org/Semantic-UI</div>
-					      		<div class="description">Updated 10 mins ago</div>
-					    	</div>
-						</div>
-						<div class="item">
-					    	<i class="large github middle aligned icon"></i>
-					    	<div class="content">
-					      		<div class="header">Semantic-Org/Semantic-UI</div>
-					      		<div class="description">Updated 10 mins ago</div>
-					    	</div>
-						</div>
-						<div class="item">
-					    	<i class="large github middle aligned icon"></i>
-					    	<div class="content">
-					      		<div class="header">Semantic-Org/Semantic-UI</div>
-					      		<div class="description">Updated 10 mins ago</div>
-					    	</div>
-						</div>
-					</div>
-				
-				
+					<div class="ui relaxed divided selection list" id="invitation_list"></div>
 				</div>
 			</div>
 			
 			<!-- CALENDAR -->
-			<div class="twelve wide computer ten wide tablet sixteen wide mobile column">
+			<div class="ten wide computer sixteen wide tablet sixteen wide mobile column">
 				<div id="calendar" style="background: #ffff;"></div>
 			</div>
 		</div>
@@ -220,7 +198,8 @@
 				</h3>
 			</div>
 			<div class="modal-content">
-				<form class="ui form" id="add_event_form">
+				<form class="ui form" method="POST" action="${pageContext.request.contextPath}/AddEvent" 
+						id="add_event_form">
 					<div class="required field">
 						<label>Event Title:</label>
 						<input type="text" name="event_title" />
@@ -238,7 +217,7 @@
 							<label>Start Date and Time:</label>
 							<div class="ui calendar" id="event_start_datetime_calendar">
 								<div class="ui icon input">
-									<input type="text" id="event_start_datetime"/>
+									<input type="text" name="event_start_datetime" id="event_start_datetime"/>
 									<i class="calendar icon"></i>
 								</div>
 							</div>
@@ -247,7 +226,7 @@
 							<label>End Date and Time:</label>
 							<div class="ui calendar" id="event_end_datetime_calendar">
 								<div class="ui icon input">
-									<input type="text" id="event_end_datetime"/>
+									<input type="text" name="event_end_datetime" id="event_end_datetime"/>
 									<i class="calendar icon"></i>
 								</div>
 							</div>
@@ -258,7 +237,7 @@
 							<label>Start Date:</label>
 							<div class="ui calendar" id="event_start_date_calendar">
 								<div class="ui icon input">
-									<input type="text" id="event_start_date"/>
+									<input type="text" name="event_start_date" id="event_start_date"/>
 									<i class="calendar icon"></i>
 								</div>
 							</div>
@@ -267,7 +246,7 @@
 							<label>End Date:</label>
 							<div class="ui calendar" id="event_end_date_calendar">
 								<div class="ui icon input">
-									<input type="text" id="event_end_date"/>
+									<input type="text" name="event_end_date" id="event_end_date"/>
 									<i class="calendar icon"></i>
 								</div>
 							</div>
@@ -283,10 +262,57 @@
 							<select class="ui fluid search selection dropdown" multiple="" name="event_invite" id="event_invite">
 								<option value="">Select Users</option>
 							</select>
-						  	<button class="ui orange button" type="button">
-						  		<i class="address book outline icon"></i>
-						  		Options 
-						  	</button>
+						  	<div class="ui orange buttons" id="directory_options_btn">
+						  		<div class="ui button">Options</div>
+						  		<div class="ui floating dropdown icon button">
+    								<i class="dropdown icon"></i>
+								    <div class="menu"> 
+								      <div class="item">
+								    		<div class="ui checkbox">
+												<label>All Users</label>
+  												<input type="checkbox" />
+											</div>
+								      </div>
+								      <div class="divider"></div>
+								      <div class="item">
+								      		<div class="ui checkbox">
+												<label>All Department Head</label>
+  												<input type="checkbox" />
+											</div>
+								      </div>
+								      <div class="item">
+								      		<div class="ui checkbox">
+												<label>All Faculty</label>
+  												<input type="checkbox" />
+											</div>
+								      </div>
+								      <div class="item">
+								      		<div class="ui checkbox">
+												<label>All Staff</label>
+  												<input type="checkbox" />
+											</div>
+								      </div>
+								      <div class="item">
+								      		<div class="ui checkbox">
+												<label>IT Department</label>
+  												<input type="checkbox" />
+											</div>
+								      </div>
+								      <div class="item">
+								      		<div class="ui checkbox">
+												<label>IS Department</label>
+  												<input type="checkbox" />
+											</div>
+								      </div>
+								      <div class="item">
+								      		<div class="ui checkbox">
+												<label>CS Department</label>
+  												<input type="checkbox" />
+											</div>
+								      </div>
+								    </div>
+								</div> 
+						  	</div> 
 						</div>
 					</div>
 					
@@ -294,14 +320,62 @@
 				</form>
 			</div>
 			<div class="actions">
-				<button class="ui cancel grey button">
+				<button class="ui button" id="add_event_clear">
+					Clear Fields
+				</button>
+				<button class="ui cancel grey button" id="add_event_cancel">
 					<i class="remove icon"></i>
 					Cancel
 				</button>
-				<button class="ui green button" type="submit" form="add_event_form">
+				<button class="ui green button" form="add_event_form" id="add_event_submit">
 					<i class="plus icon"></i>
 					Add Event
 				</button>
+			</div>
+		</div>
+		
+		<!-- EVENT INVITATION MODAL -->
+		<div class="ui tiny modal" id="event_invitation_dialog">
+			<div class="header neutral-modal">
+				<h3 class="ui header neutral-modal">
+					<i class="calendar outline icon"></i>
+					Event Invitation
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p class="element-rmb"><b>Event Title: </b><span id="view_event_title"></span></p>
+				<p class="element-rmb"><b>Location: </b><span id="view_event_location"></span></p>
+				<p class="element-rmb"><b>Start Date and Time: </b><span id="view_event_start_datetime"></span></p>
+				<p class="element-rmb"><b>End Date and Time: </b><span id="view_event_end_datetime"></span></p>
+				<p class="element-rmb"><b>Invited by: </b><span id="view_event_invited_by"></span></p>
+				<p><b>Event Description: </b><span id="view_event_description"></span></p>
+				
+				<form class="ui form" method="POST" action="${pageContext.request.contextPath}/SendInvitationResponse" 
+						id="event_response_form">
+					<input type="hidden" name="event_id" id="view_event_id" />
+					
+					<div class="field">
+						<label>Response Details:</label>
+						<textarea rows="3" name="event_response_text"></textarea>
+					</div>
+					
+					<div class="ui error message"></div>
+					
+					<div class="two ui buttons">
+						<button class="ui green button" type="submit" name="event_response" value="Accepted">
+							<i class="calendar check outline icon"></i>
+							Accept Event
+						</button>
+						
+						<button class="ui red button" type="submit" name="event_response" value="Declined">
+							<i class="calendar times outline icon"></i>
+							Decline Event
+						</button>
+					</div>
+				</form>
+			</div>
+			<div class="actions center-text">
+				<button class="ui cancel grey button" id="event_response_close">Close</button>
 			</div>
 		</div>
 		
@@ -362,9 +436,15 @@
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/session/non_admin_check.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/dataTable/jquery.dataTables.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/fullcalendar/moment.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/fullcalendar/fullcalendar.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/directory.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/calendar/view_calendar.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/calendar/add_event.js"></script>
 </html>

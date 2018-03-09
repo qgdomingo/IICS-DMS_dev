@@ -16,13 +16,11 @@ import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.model.Account;
 
-
-@WebServlet("/RetrieveUserDirectory")
-public class RetrieveUserDirectory extends HttpServlet {
+@WebServlet("/RetrieveFacultyDeptHeadUsers")
+public class RetrieveFacultyDeptHeadUsers extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
-    public RetrieveUserDirectory() {
+    public RetrieveFacultyDeptHeadUsers() {
         super();
     }
 
@@ -38,7 +36,7 @@ public class RetrieveUserDirectory extends HttpServlet {
 			ResultSet accounts = null;
 			
 			if(userType.equalsIgnoreCase("Director") || userType.equalsIgnoreCase("Faculty Secretary")) {
-				accounts = (ResultSet) RetrieveUsersFunctions.retrieveAllUsers(acc.getEmail());
+				accounts = (ResultSet) RetrieveUsersFunctions.retrieveFacultyUsers(acc.getEmail());
 			} 
 			else if(userType.equalsIgnoreCase("Department Head")) {
 				accounts = (ResultSet) RetrieveUsersFunctions.retrieveDepartmentUsers(acc.getEmail(), acc.getDepartment());

@@ -7,6 +7,7 @@
 	
 	/* GET CATEGORIES */
 	function retrieveCategory(categoryDropdown) {
+		addCSSClass(categoryDropdown, 'loading');
 		var localCategoriesData = [];
 		
 		$.get(getContextPath() + '/RetrieveCategory', (responseList) => {
@@ -15,20 +16,19 @@
 				localCategoriesData = responseList;
 				isCategoryNotEmpty = true;
 				populateCategory(categoryDropdown, 'Categories', localCategoriesData);
+				removeCSSClass(categoryDropdown, 'loading');
 			}
 			else if(responseList.length == 0)
 			{
 				localCategoriesData = ['Category List Empty. Please Add One'];
 				populateCategory(categoryDropdown, 'Categories', localCategoriesData);
-			}
-			else
-			{
-				callFailModal('Retrieve Category List Error', 'We are unable to retrieve the category list. ');
+				removeCSSClass(categoryDropdown, 'loading');
 			}
 			return localCategoriesData;
 		})
 		.fail((response) => {
-			callFailModal('Retrieve Category List Error', 'We are unable to retrieve the category list. ');
+			removeCSSClass(categoryDropdown, 'loading');
+			addCSSClass(categoryDropdown, 'error');
 			return localCategoriesData;
 		});
 	}

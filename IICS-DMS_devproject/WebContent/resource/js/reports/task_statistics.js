@@ -8,7 +8,7 @@
 	var labels = ["On-time Submission", "Late Submission", "Unaccomplished Tasks"]
 	
 	$(document).ready( function() {
-		hideAllScopeChoices();
+		hideTaskTables();
 		
 		var myChart = new Chart($('#myChart'), {
 		    type: 'doughnut',
@@ -32,30 +32,12 @@
 		});
 	});
 	
-/*
- * QUERY INPUT CONDITIONS
- */
-	/* SHOW - Either Department Selection or User Selection */
-	$('#view_scope').on('change', function() {
-		hideAllScopeChoices();
-		
-		var tempData = $('#view_scope').dropdown('get value');
-		
-		if (tempData == 'Staff') {
-			$('#user_selection').show();
-		}
-		else if (tempData == 'Faculty') {
-			$('#user_selection').show();
-		}
-		else if (tempData == 'Department') {
-			$('#department_selection').show();
-		}
-	});
-	
-	/* HIDE - Department Selection and User Selection */
-	function hideAllScopeChoices() {
-		$('#department_selection').hide();
-		$('#user_selection').hide();
+	/* HIDE - Task Tables */
+	function hideTaskTables() {
+		$('#no_of_tasks_title').hide();
+		$('#task_department_table').hide();
+		$('#task_facultystaff_filter').hide();
+		$('#task_facultystaff_table').hide();
 	}
 	
 /*

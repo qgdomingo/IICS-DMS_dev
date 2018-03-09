@@ -17,7 +17,7 @@
 
 		// Calendar Input Initialization
 		$('#incoming_due_calendar').calendar({
-			minDate: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+			minDate: new Date(today.getFullYear(), today.getMonth(), today.getDate(), today.getHours(), today.getMinutes()),
 			ampm: false,
 			formatter: dateFormat
 		});

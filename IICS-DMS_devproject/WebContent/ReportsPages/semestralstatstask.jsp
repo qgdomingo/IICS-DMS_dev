@@ -4,12 +4,14 @@
 <%
 	Account acc = new Account();
 	String userType = "";
+	String department = "";
 
 	if(request.getSession(false) == null || request.getSession(false).getAttribute("currentCredentials") == null) {
 		response.sendRedirect(request.getContextPath() + "/index.jsp");
 	} else {
 		acc = (Account) session.getAttribute("currentCredentials");
 		userType = acc.getUserType();
+		department = acc.getDepartment();
 		
 		if( (userType.equalsIgnoreCase("Administrator")) ) {
 			response.sendRedirect(request.getContextPath() + "/admin/manageusers.jsp");
@@ -165,7 +167,9 @@
 					<div class="field">
 						<select class="ui fluid dropdown" name="view_scope" id="view_scope">
 							<option value="">View By</option>
+						<% if(!userType.equalsIgnoreCase("Department Head")) { %>
 							<option value="Staff">Staff</option>
+						<% } %>	
 							<option value="Faculty">Faculty</option>
 							<option value="Department">Department</option>
 						</select>
@@ -174,14 +178,20 @@
 					<div class="field" id="department_selection">
 						<select class="ui fluid dropdown" name="department_selection" id="department_selection_dropdown">
 							<option value="">Select Department</option>
+						<% if(department.equalsIgnoreCase("Information Technology") || department.equalsIgnoreCase("IICS")) { %>
 							<option value="Information Technology">Information Technology</option>
+						<% } %>
+						<% if(department.equalsIgnoreCase("Computer Science") || department.equalsIgnoreCase("IICS")) { %>
 							<option value="Computer Science">Computer Science</option>
+						<% } %>
+						<% if(department.equalsIgnoreCase("Information Systems") || department.equalsIgnoreCase("IICS")) { %>
 							<option value="Information Systems">Information Systems</option>
+						<% } %>
 						</select>
 					</div>
 					
 					<div class="field" id="user_selection">
-						<select class="ui fluid dropdown" name="user_selection" id="user_selection_dropdown">
+						<select class="ui fluid searchable dropdown" name="user_selection" id="user_selection_dropdown">
 							<option value="">Select User</option>
 						</select>
 					</div>
@@ -204,7 +214,7 @@
 				</div>
 				
 				<div class="nine wide computer sixteen wide tablet sixteen wide mobile column">
-					<h4>Total No. of Tasks on the Statistics: <span id="no_of_tasks"></span></h4>
+					<h4 id="no_of_tasks_title">Total No. of Tasks on the Statistics: <span id="no_of_tasks"></span></h4>
 				
 					<table class="ui compact selectable table" id="task_department_table">
 						<thead>
@@ -218,12 +228,12 @@
 						<tbody id="task_department_tablebody"></tbody>
 					</table>
 					
-					<div class="ui action input">
+					<div class="ui action input" id="task_facultystaff_filter">
  						<select class="ui fluid dropdown">
 							<option value="">Filter Task Status</option>
-							<option value="Information Technology">Information Technology</option>
-							<option value="Computer Science">Computer Science</option>
-							<option value="Information Systems">Information Systems</option>
+							<option value="On-time Submission">On-time Submission</option>
+							<option value="Late Submission">Late Submission</option>
+							<option value="No Submission">No Submission</option>
 						</select>
   						<div class="ui grey button">Clear Filter</div>
 					</div>
@@ -309,5 +319,6 @@
 	<script src="${pageContext.request.contextPath}/resource/chartjs/Chart.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/reports/directory_statistics.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/reports/task_statistics.js"></script>
 </html> 
