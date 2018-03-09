@@ -33,7 +33,7 @@ public class MailFunctions {
 	{
 			Connection con = DBConnect.getConnection();
 			InputStream pdf = createPdf(recipient, subject, name, message);
-			PreparedStatement prep = con.prepareStatement("INSERT INTO mail (iso_number, type, external_recipient, subject, file_data, sender_name, sent_by, school_year) VALUES (?,?,?,?,?,?,?,?)");
+			PreparedStatement prep = con.prepareStatement("INSERT INTO mail (iso_number, type, external_recipient, subject, file_data, sender_name, sent_by, school_year, department) VALUES (?,?,?,?,?,?,?,?,?)");
 			String isoNumber = getISONumber(department, type);
 			prep.setString(1, isoNumber);
 			prep.setString(2, type);
@@ -43,6 +43,7 @@ public class MailFunctions {
 			prep.setString(6, name);
 			prep.setString(7, sentBy);
 			prep.setString(8, ManageTasksFunctions.getSchoolYear());
+			prep.setString(9, department);
 			prep.executeUpdate();
 			
 			sendInternalMail(recipient);
@@ -113,9 +114,10 @@ public class MailFunctions {
 			{
 				String email = tempEmail.trim();
 
-				PreparedStatement prep = con.prepareStatement("INSERT INTO sent_mail_to (id, recipient_mail) VALUES (?,?)");
+				PreparedStatement prep = con.prepareStatement("INSERT INTO sent_mail_to (id, recipient_mail, school_year) VALUES (?,?,?)");
 				prep.setInt(1, getIncrement());
 				prep.setString(2, email);
+				prep.setString(3, ManageTasksFunctions.getSchoolYear());
 				
 				prep.executeUpdate();
 			}

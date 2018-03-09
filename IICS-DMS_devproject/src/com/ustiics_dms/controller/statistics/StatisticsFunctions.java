@@ -7,8 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
 import com.ustiics_dms.databaseconnection.DBConnect;
+import com.ustiics_dms.model.MailStatistics;
+import com.ustiics_dms.model.SentMail;
 import com.ustiics_dms.model.Task;
 import com.ustiics_dms.model.TaskStatistics;
 
@@ -19,6 +20,20 @@ public class StatisticsFunctions {
 		   Connection con = DBConnect.getConnection();
 			
 	       PreparedStatement prep = con.prepareStatement("SELECT id,title FROM tasks WHERE school_year = ? AND department = ?");
+
+	       prep.setString(1, schoolYear);
+	       prep.setString(2, department);
+	       
+	       ResultSet rs = prep.executeQuery();
+	       
+	       return rs;
+	}
+	
+	public static ResultSet getMailByDepartment(String schoolYear, String department) throws SQLException 
+	{
+		   Connection con = DBConnect.getConnection();
+			
+	       PreparedStatement prep = con.prepareStatement("SELECT id,subject FROM mail WHERE school_year = ? AND department = ?");
 
 	       prep.setString(1, schoolYear);
 	       prep.setString(2, department);
@@ -52,7 +67,19 @@ public class StatisticsFunctions {
 	       return rs;
 	}
 	
-	public static ResultSet getStatusByID(String id) throws SQLException 
+	public static ResultSet getSpecificMail(String id, String schoolYear) throws SQLException 
+	{
+		   Connection con = DBConnect.getConnection();
+			
+	       PreparedStatement prep = con.prepareStatement("SELECT subject FROM mail WHERE id = ? AND school_year = ?");
+	       prep.setString(1, id);
+	       prep.setString(2, schoolYear);
+	       ResultSet rs = prep.executeQuery();
+	       
+	       return rs;
+	}
+	
+	public static ResultSet getTaskStatusByID(String id) throws SQLException 
 	{
 		   Connection con = DBConnect.getConnection();
 			
@@ -63,7 +90,18 @@ public class StatisticsFunctions {
 	       return rs;
 	}
 	
-	public static ResultSet getStatusByEmail(String email, String schoolYear) throws SQLException 
+	public static ResultSet getMailStatusByID(String id) throws SQLException 
+	{
+		   Connection con = DBConnect.getConnection();
+			
+	       PreparedStatement prep = con.prepareStatement("SELECT acknowledgement FROM sent_mail_to WHERE id = ?");
+	       prep.setString(1, id);
+	       ResultSet rs = prep.executeQuery();
+	       
+	       return rs;
+	}
+	
+	public static ResultSet getTaskStatusByEmail(String email, String schoolYear) throws SQLException 
 	{
 		   Connection con = DBConnect.getConnection();
 			
@@ -74,28 +112,24 @@ public class StatisticsFunctions {
 	       
 	       return rs;
 	}
-	
-	public static int getStatistics(String email, String type) throws SQLException 
+
+	public static ResultSet getMailStatusByEmail(String email, String schoolYear) throws SQLException 
 	{
 		   Connection con = DBConnect.getConnection();
 			
-	       PreparedStatement prep = con.prepareStatement("SELECT COUNT(*) FROM tasks_assigned_to WHERE email = ? AND status = ?");
+	       PreparedStatement prep = con.prepareStatement("SELECT id,acknowledgement FROM sent_mail_to WHERE recipient_mail = ? AND school_year = ?");
 	       prep.setString(1, email);
-	       prep.setString(2, type);
-	       
+	       prep.setString(2, schoolYear);
 	       ResultSet rs = prep.executeQuery();
 	       
-	       rs.next();
-	       int counter = rs.getInt("COUNT(*)");
-	       
-	       return counter;
+	       return rs;
 	}
 	
-	public static List<Task> getTotalStatsPerPerson(String email, String schoolYear) throws SQLException 
+	public static List<Task> getTotalTaskPerPerson(String email, String schoolYear) throws SQLException 
 	{
 		
 		List <Task> taskList = new ArrayList <Task> ();
-		ResultSet status = StatisticsFunctions.getStatusByEmail(email, schoolYear);
+		ResultSet status = StatisticsFunctions.getTaskStatusByEmail(email, schoolYear);
 		
 		while(status.next())
 		{
@@ -112,8 +146,28 @@ public class StatisticsFunctions {
 		return taskList;
 	}
 	
+	public static List<SentMail> getTotalMailPerPerson(String email, String schoolYear) throws SQLException 
+	{
+		
+		List <SentMail> mailList = new ArrayList <SentMail> ();
+		ResultSet status = StatisticsFunctions.getMailStatusByEmail(email, schoolYear);
+		
+		while(status.next())
+		{
+			ResultSet mail = StatisticsFunctions.getSpecificMail(status.getString("id"), schoolYear);
+			mail.next();
+			
+			String subject = mail.getString("subject");
+			String tempStatus = status.getString("acknowledgement");
+			
+			mailList.add(new SentMail(
+					subject,
+					tempStatus));
+		}
+		return mailList;
+	}
 	
-	public static List<TaskStatistics> getTotalStatsDepartment(String department, String year) throws SQLException 
+	public static List<TaskStatistics> getTotalTaskDepartment(String department, String year) throws SQLException 
 	{
 		ResultSet task = StatisticsFunctions.getTasksByDepartment(year, department);
 		List <TaskStatistics> taskList = new ArrayList <TaskStatistics> ();
@@ -126,7 +180,7 @@ public class StatisticsFunctions {
 			
 			String taskName = task.getString("title");
 			
-			ResultSet status = StatisticsFunctions.getStatusByID(task.getString("id"));
+			ResultSet status = StatisticsFunctions.getTaskStatusByID(task.getString("id"));
 			
 			while(status.next())
 			{
@@ -155,7 +209,49 @@ public class StatisticsFunctions {
 		return taskList;
 	}
 	
-	public static List<TaskStatistics> getPieChartDepartment(String department,String schoolYear) throws SQLException 
+	public static List<MailStatistics> getTotalMailDepartment(String department, String year) throws SQLException 
+	{
+		ResultSet mail = StatisticsFunctions.getMailByDepartment(year, department);
+		List <MailStatistics> mailList = new ArrayList <MailStatistics> ();
+		
+		while(mail.next())
+		{
+			int read = 0;
+			int unread = 0;
+			int acknowledged = 0;
+			
+			String subject = mail.getString("subject");
+			
+			ResultSet status = StatisticsFunctions.getMailStatusByID(mail.getString("id"));
+			
+			while(status.next())
+			{
+				String tempStatus = status.getString("acknowledgement");
+				
+				if(tempStatus.equalsIgnoreCase("Read"))
+				{
+					read++;
+				}
+				else if(tempStatus.equalsIgnoreCase("Unread"))
+				{
+					unread++;
+				}
+				else if(tempStatus.equalsIgnoreCase("Acknowledged"))
+				{
+					acknowledged++;
+				}
+			}
+			mailList.add(new MailStatistics(
+							subject,
+							read,
+							unread,
+							acknowledged));
+		}
+		
+		return mailList;
+	}
+	
+	public static List<TaskStatistics> getTaskPieChartDepartment(String department,String schoolYear) throws SQLException 
 	{
 		int onTimeSubmission = 0;
 		int lateSubmission = 0;
@@ -168,7 +264,7 @@ public class StatisticsFunctions {
 		{
 			
 			
-			ResultSet status = StatisticsFunctions.getStatusByID(task.getString("id"));
+			ResultSet status = StatisticsFunctions.getTaskStatusByID(task.getString("id"));
 			
 			while(status.next())
 			{
@@ -197,14 +293,14 @@ public class StatisticsFunctions {
 		return taskStats;
 	}
 	
-	public static List<TaskStatistics> getPieChartPerson(String email, String schoolYear) throws SQLException 
+	public static List<TaskStatistics> getTaskPieChartPerson(String email, String schoolYear) throws SQLException 
 	{
 		int onTimeSubmission = 0;
 		int lateSubmission = 0;
 		int noSubmission = 0;
 		
 		List <TaskStatistics> taskStats = new ArrayList <TaskStatistics> ();
-		ResultSet status = StatisticsFunctions.getStatusByEmail(email, schoolYear);
+		ResultSet status = StatisticsFunctions.getTaskStatusByEmail(email, schoolYear);
 		
 		while(status.next())
 		{
@@ -228,6 +324,80 @@ public class StatisticsFunctions {
 				onTimeSubmission,
 				lateSubmission,
 				noSubmission));
+		
+		return taskStats;
+	}
+	
+	public static List<MailStatistics> getMailPieChartPerson(String email, String schoolYear) throws SQLException 
+	{
+		int read = 0;
+		int unread = 0;
+		int acknowledged = 0;
+		
+		List <MailStatistics> mailList = new ArrayList <MailStatistics> ();
+		ResultSet status = StatisticsFunctions.getMailStatusByEmail(email, schoolYear);
+		
+		while(status.next())
+		{
+			String tempStatus = status.getString("acknowledgement");
+
+			if(tempStatus.equalsIgnoreCase("Read"))
+			{
+				read++;
+			}
+			else if(tempStatus.equalsIgnoreCase("Unread"))
+			{
+				unread++;
+			}
+			else if(tempStatus.equalsIgnoreCase("Acknowledged"))
+			{
+				acknowledged++;
+			}
+		}
+			mailList.add(new MailStatistics(
+					read,
+					unread,
+					acknowledged));
+			
+		return mailList;
+	}
+	
+	public static List<MailStatistics> getMailPieChartDepartment(String department,String schoolYear) throws SQLException 
+	{
+		int read = 0;
+		int unread = 0;
+		int acknowledged = 0;
+		
+		ResultSet mail = StatisticsFunctions.getMailByDepartment(schoolYear, department);
+		List <MailStatistics> taskStats = new ArrayList <MailStatistics> ();
+		
+		while(mail.next())
+		{
+			ResultSet status = StatisticsFunctions.getMailStatusByID(mail.getString("id"));
+			
+			while(status.next())
+			{
+				String tempStatus = status.getString("acknowledgement");
+				
+				if(tempStatus.equalsIgnoreCase("Read"))
+				{
+					read++;
+				}
+				else if(tempStatus.equalsIgnoreCase("Unread"))
+				{
+					unread++;
+				}
+				else if(tempStatus.equalsIgnoreCase("Acknowledged"))
+				{
+					acknowledged++;
+				}
+			}
+			
+		}
+		taskStats.add(new MailStatistics(
+				read,
+				unread,
+				acknowledged));
 		
 		return taskStats;
 	}

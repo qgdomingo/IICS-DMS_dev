@@ -13,16 +13,18 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.ustiics_dms.model.Account;
-import com.ustiics_dms.model.TaskStatistics;
+import com.ustiics_dms.model.MailStatistics;
+import com.ustiics_dms.model.SentMail;
 
 
-@WebServlet("/PieChartStatistics")
-public class PieChartStatistics extends HttpServlet {
+@WebServlet("/RetrieveMailTotalStatistics")
+public class RetrieveMailTotalStatistics extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 
-    public PieChartStatistics() {
+    public RetrieveMailTotalStatistics() {
         super();
+
     }
 
 
@@ -33,24 +35,25 @@ try {
 		    HttpSession session = request.getSession();
 		    Account acc = (Account) session.getAttribute("currentCredentials");
 			
-			String viewBy = request.getParameter("view_by"); // example "Department", "Faculty", or "Staff"
+		    String viewBy = request.getParameter("view_by"); // example "Department", "Faculty", or "Staff"
 			String source = request.getParameter("source"); // example "Information Systems", "coleensy@gmail.com"
 			String year = request.getParameter("year"); // example "2017-2018"
 			String json = null;
 			
-		    List<TaskStatistics> stats = new ArrayList<TaskStatistics>(); // used for department
+		    List<MailStatistics> departmentStats = new ArrayList<MailStatistics>(); // used for department
+		    List<SentMail> facultyOrStaffStats = new ArrayList<SentMail>(); // used for staff or faculty
 		    
 			if(viewBy.equalsIgnoreCase("Faculty")||viewBy.equalsIgnoreCase("Staff"))
 			{
-				stats = StatisticsFunctions.getPieChartPerson(source, year);
-				
+				facultyOrStaffStats = StatisticsFunctions.getTotalMailPerPerson(source, year);
+				json = new Gson().toJson(facultyOrStaffStats);
 			}
 			else if(viewBy.equalsIgnoreCase("Department"))
 			{
-				stats = StatisticsFunctions.getPieChartDepartment(source, year);
+				departmentStats = StatisticsFunctions.getTotalMailDepartment(source, year);
+				json = new Gson().toJson(departmentStats);
 			}
-			
-			json = new Gson().toJson(stats);
+	
 			response.setCharacterEncoding("UTF-8");
 		    response.setContentType("application/json");
 		    response.setStatus(HttpServletResponse.SC_OK);
@@ -64,6 +67,7 @@ try {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 		doGet(request, response);
 	}
 

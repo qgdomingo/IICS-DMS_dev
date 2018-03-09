@@ -17,18 +17,19 @@ import com.ustiics_dms.model.Task;
 import com.ustiics_dms.model.TaskStatistics;
 
 
-@WebServlet("/RetrieveTotalStatistics")
-public class RetrieveTotalStatistics extends HttpServlet {
+@WebServlet("/RetrieveTasksTotalStatistics")
+public class RetrieveTasksTotalStatistics extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 
-    public RetrieveTotalStatistics() {
+    public RetrieveTasksTotalStatistics() {
         super();
-        // TODO Auto-generated constructor stub
+    
     }
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 		try {
 			
 		    HttpSession session = request.getSession();
@@ -44,12 +45,12 @@ public class RetrieveTotalStatistics extends HttpServlet {
 		    
 			if(viewBy.equalsIgnoreCase("Faculty")||viewBy.equalsIgnoreCase("Staff"))
 			{
-				facultyOrStaffStats = StatisticsFunctions.getTotalStatsPerPerson(source,year);
+				facultyOrStaffStats = StatisticsFunctions.getTotalTaskPerPerson(source, year);
 				json = new Gson().toJson(facultyOrStaffStats);
 			}
 			else if(viewBy.equalsIgnoreCase("Department"))
 			{
-				departmentStats = StatisticsFunctions.getTotalStatsDepartment(source, year);
+				departmentStats = StatisticsFunctions.getTotalTaskDepartment(source, year);
 				json = new Gson().toJson(departmentStats);
 			}
 	
@@ -66,6 +67,7 @@ public class RetrieveTotalStatistics extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
