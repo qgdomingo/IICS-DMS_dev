@@ -7,8 +7,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import com.ustiics_dms.controller.mail.MailFunctions;
+import com.ustiics_dms.controller.login.LoginFunctions;
+import com.ustiics_dms.model.Account;
 import com.ustiics_dms.utility.AesEncryption;
 
 
@@ -30,18 +32,23 @@ public class UpdateStatus extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-		String id = AesEncryption.decrypt(request.getParameter("id"));
-		String button = request.getParameter("buttonChoice");
+			
+			HttpSession session = request.getSession();
+			Account acc = (Account) session.getAttribute("currentCredentials");
+			
+			String id = AesEncryption.decrypt(request.getParameter("id"));
+			String button = request.getParameter("button_choice");
 		
 			if(button.equalsIgnoreCase("Edit Note"))
 			{
 				String note = request.getParameter("note");
-				
-				MailFunctions.addNote(id, note);
+
+				FileUploadFunctions.addNote(id, note, acc.getEmail());
 			}
 			else if(button.equalsIgnoreCase("Mark as Done"))
 			{
-				MailFunctions.markAsDone(id);
+				String type = AesEncryption.decrypt(request.getParameter("type"));
+				FileUploadFunctions.markAsDone(id, type, acc.getEmail());
 			}
 		} catch (Exception e) {
 			

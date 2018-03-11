@@ -91,6 +91,16 @@ public class RetrieveDocumentFunctions {
 			return result;
 	}
 	
+	public static ResultSet retrieveSpecificIncoming(String id) throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("SELECT * FROM incoming_documents WHERE id = ?");
+			prep.setString(1, id);
+			ResultSet result = prep.executeQuery();
+
+			return result;
+	}
+	
 
 
 	public static ResultSet retrieveOutgoingThread(String source, String department) throws SQLException

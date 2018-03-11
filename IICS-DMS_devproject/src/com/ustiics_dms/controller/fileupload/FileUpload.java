@@ -16,6 +16,8 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.*;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
+import com.ustiics_dms.controller.notifications.NotificationFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.utility.SessionChecking;
 
@@ -88,6 +90,7 @@ public class FileUpload extends HttpServlet {
 				description = tempStorage[3];
 				
 				FileUploadFunctions.uploadPersonalDocument(documentTitle, category, fileData, description, fullName, acc.getEmail());
+				
 			}
 			else if(documentType.equalsIgnoreCase("Incoming"))
 			{
@@ -100,6 +103,9 @@ public class FileUpload extends HttpServlet {
 				referenceNo = tempStorage[7];
 				threadNo = tempStorage[8];
 				FileUploadFunctions.uploadIncomingDocument(threadNo, referenceNo, documentSource, documentTitle, category, actionRequired, fileData, description, fullName, acc.getEmail(),acc.getDepartment(), actionDue);
+				
+				String des = ManageTasksFunctions.getFullName(acc.getEmail()) +" has uploaded a new incoming document, " + documentTitle;
+				NotificationFunctions.addNotification("Incoming Documents Page", des, FileUploadFunctions.getGroupByDepartment(acc.getDepartment()));
 			}
 			else if(documentType.equalsIgnoreCase("Outgoing"))
 			{
@@ -109,6 +115,9 @@ public class FileUpload extends HttpServlet {
 				description = tempStorage[4];
 				threadNo = tempStorage[5];
 				FileUploadFunctions.uploadOutgoingDocument(threadNo, documentRecipient, documentTitle, category, fileData, description, fullName, acc.getEmail(),acc.getDepartment());
+				
+				String des = ManageTasksFunctions.getFullName(acc.getEmail()) +" has uploaded a new outgoing document, " + documentTitle;
+				NotificationFunctions.addNotification("Outgoing Documents Page", des, FileUploadFunctions.getGroupByDepartment(acc.getDepartment()));
 			}
 				
 			response.setContentType("text/plain");

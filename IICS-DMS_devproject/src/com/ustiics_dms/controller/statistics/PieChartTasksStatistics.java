@@ -34,9 +34,9 @@ public class PieChartTasksStatistics extends HttpServlet {
 		    HttpSession session = request.getSession();
 		    Account acc = (Account) session.getAttribute("currentCredentials");
 			
-			String viewBy = request.getParameter("view_by"); // example "Department", "Faculty", or "Staff"
-			String source = request.getParameter("source"); // example "Information Systems", "coleensy@gmail.com"
-			String year = request.getParameter("year"); // example "2017-2018"
+		    String viewBy = "Department";//request.getParameter("view_by"); // example "Department", "Faculty", or "Staff"
+			String source = "Information Systems";//request.getParameter("source"); // example "Information Systems", "coleensy@gmail.com"
+			String year = "2017-2018";//request.getParameter("year"); // example "2017-2018"
 			String json = null;
 			
 		    List<TaskStatistics> stats = new ArrayList<TaskStatistics>(); // used for department

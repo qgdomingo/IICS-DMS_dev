@@ -22,7 +22,9 @@ import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.ustiics_dms.controller.fileupload.FileUploadFunctions;
 import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
+import com.ustiics_dms.controller.notifications.NotificationFunctions;
 import com.ustiics_dms.databaseconnection.DBConnect;
 import com.ustiics_dms.model.File;
 
@@ -47,6 +49,10 @@ public class MailFunctions {
 			prep.executeUpdate();
 			
 			sendInternalMail(recipient);
+			
+			String des = ManageTasksFunctions.getFullName(sentBy) +" has sent you a mail, " + subject;
+			NotificationFunctions.addNotification("Mail Page", des, recipient);
+			
 			ExternalMail.send(externalRecipient, subject, getIncrement(), "jlteoh23@gmail.com", "jed231096");
 	}
 	
@@ -120,6 +126,7 @@ public class MailFunctions {
 				prep.setString(3, ManageTasksFunctions.getSchoolYear());
 				
 				prep.executeUpdate();
+				
 			}
 	}
 	
@@ -183,9 +190,10 @@ public class MailFunctions {
 			prep.setString(6, name);
 			prep.setString(7, sentBy);
 			prep.setString(8, department);
-			
 			prep.executeUpdate();
-			
+
+			String des = name +" sent you a mail request, "+ subject + ", for your approval.";
+			NotificationFunctions.addNotification("Request Mail Page", des, FileUploadFunctions.getGroupByDepartment(department));
 	}
 	
 	public static ResultSet getRequestMail(String department) throws SQLException
@@ -215,13 +223,28 @@ public class MailFunctions {
 	
 	public static void approveRequestMail(String id) throws SQLException, IOException, DocumentException
 	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("UPDATE request SET status = ? WHERE id = ?");
+			prep.setString(1, "Approved");
+			prep.setString(2, id);
+			
+			prep.executeUpdate();
 			
 			ResultSet requestInfo = getRequestInformation(id);
 			
 			requestInfo.next();
 			
+			String subject = requestInfo.getString("subject");
+			String name = requestInfo.getString("sender_name");
+			String department = requestInfo.getString("department");
+			String sentBy = requestInfo.getString("sent_by");
+			/*
+			ResultSet requestInfo = getRequestInformation(id);
+			
+			requestInfo.next();
+			
 			String type = requestInfo.getString("type");
-			String recipient = requestInfo.getString("recipient");
+			String recipient = "mangkanor@gmail.com";//requestInfo.getString("recipient");
 			String externalRecipient = requestInfo.getString("external_recipient");
 			String subject = requestInfo.getString("subject");
 			String message = requestInfo.getString("message");
@@ -230,7 +253,11 @@ public class MailFunctions {
 			String department = requestInfo.getString("department");
 			
 			approveRequest(type, recipient, externalRecipient, subject, message, name, sentBy, department);
-			deleteRequest(id);
+			*/
+			String head = FileUploadFunctions.getGroupHead(department);
+			String des = head +" has approved your mail request, "+ subject;
+			NotificationFunctions.addNotification("Request Mail Page", des, sentBy);
+			//deleteRequest(id);
 
 	}
 	
@@ -301,7 +328,38 @@ public class MailFunctions {
 			prep.setString(4, email);
 			
 			prep.executeUpdate();
+			
+			String des = ManageTasksFunctions.getFullName(email) +" acknowledged your mail, " + getMailTitle(emailID);
+			NotificationFunctions.addNotification("Mail Page", des, getMailSender(emailID));
 		}
+	}
+	
+	public static String getMailTitle(String id) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT subject FROM mail WHERE id = ?");
+		prep.setString(1, id);
+		
+		ResultSet rs = prep.executeQuery();
+		
+		rs.next();
+		
+		return rs.getString("title");
+			
+	}
+	
+	public static String getMailSender(String id) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT sent_by FROM mail WHERE id = ?");
+		prep.setString(1, id);
+		
+		ResultSet rs = prep.executeQuery();
+		
+		rs.next();
+		
+		return rs.getString("sent_by");
+			
 	}
 	
 	public static boolean hasRead(String id, String email) throws SQLException
@@ -440,27 +498,6 @@ public class MailFunctions {
 			prep.executeUpdate();	
 	}
 	
-	public static void addNote(String id, String note) throws SQLException
-	{
-			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("UPDATE incoming_documents SET note = ? WHERE id = ?");
-			
-			prep.setString(1, note);
-			prep.setString(2, id);
-
-			prep.executeUpdate();
-
-	}
 	
-	public static void markAsDone(String id) throws SQLException
-	{
-			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("UPDATE incoming_documents SET status = ? WHERE id = ?");
-			
-			prep.setString(1, "Done");
-			prep.setString(2, id);
-
-			prep.executeUpdate();
-	}
 	
 }
