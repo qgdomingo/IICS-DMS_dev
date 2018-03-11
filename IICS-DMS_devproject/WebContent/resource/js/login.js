@@ -2,7 +2,7 @@
  * 	login.js
  * 	- used by the Login page (index.jsp) for scripting functionalities in logging in
  */
-		
+
 /* 
  * LOGIN FUNCTIONALITY  
  */
@@ -12,7 +12,7 @@
 	     success: function(response) { 
 	    	if(response == 'invalid') {
 		        	callFailModal('Invalid Login Credentials',  'Check your login credentials and try logging in again.');
-		        	removeCSSClass('#login_form', 'loading');
+		        	deactivatePageLoading();
 	    	}
 	        else if(response) {
 	        	setTimeout( function(){  
@@ -22,11 +22,11 @@
 	        else {
 	        	callFailModal('Unable to Login', 'Please try logging in again later. ' +
 					'If the problem persists, please contact your administrator.');
-	        	removeCSSClass('#login_form', 'loading');
+	        	deactivatePageLoading();
 	        }
 	     },
 	     error: function(response) {
-	    	 removeCSSClass('#login_form', 'loading');
+	    	 deactivatePageLoading();
 	    	 callFailRequestModal();
 	     }
 	});
@@ -56,9 +56,9 @@
 	});
 	
 	/* BOOLEAN VALIDATION - Login Form */
-	function isLoginFormValid() {
+	function isLoginFormValid() {		
 		if( $('#login_form').form('is valid') ) {
-			addCSSClass('#login_form', 'loading');
+			activatePageLoading('Logging In');
 			return true;
 		} 
 		else {

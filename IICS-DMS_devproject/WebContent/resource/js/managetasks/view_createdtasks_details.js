@@ -93,7 +93,7 @@
 				selectTaskAssigned();
 				removeCSSClass('#createdtaskdetails_loading', 'active');	
 			}
-			else if(responseJson.legth == 0)
+			else if(responseJson.length == 0)
 			{
 				$('<tr>').appendTo('#assignedtask_tablebody')
 				.append($('<td class="center-text" colspan="4">')
@@ -104,14 +104,14 @@
 			{
 				$('<tr>').appendTo('#assignedtask_tablebody')
 				.append($('<td class="center-text" colspan="4">')
-						.text("Unable to retrieved tasks assigned."));
+						.text("Unable to retrieve tasks assigned."));
 				removeCSSClass('#viewcreatedtask_table_loading', 'active');
 			}
 		})
 		.fail ((response) => {
 			$('<tr>').appendTo('#assignedtask_tablebody')
 			.append($('<td class="center-text" colspan="4">')
-					.text("Unable to retrieved tasks assigned."));
+					.text("Unable to retrieve tasks assigned."));
 			removeCSSClass('#viewcreatedtask_table_loading', 'active');
 		});
 	}

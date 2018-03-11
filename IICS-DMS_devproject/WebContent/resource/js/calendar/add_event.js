@@ -23,7 +23,6 @@
 			closable: false,
 			observeChanges: true,
 			centered: false,
-			allowMultiple: true,
 			onShow: function() {
 				initializeCalendarInputs();
 				if(isNewlyLoadedDirectory) {

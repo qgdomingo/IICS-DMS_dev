@@ -353,6 +353,7 @@
 				<form class="ui form" method="POST" action="${pageContext.request.contextPath}/SendInvitationResponse" 
 						id="event_response_form">
 					<input type="hidden" name="event_id" id="view_event_id" />
+					<input type="hidden" name="event_response_timestamp" id="event_response_timestamp"/>
 					
 					<div class="field">
 						<label>Response Details:</label>

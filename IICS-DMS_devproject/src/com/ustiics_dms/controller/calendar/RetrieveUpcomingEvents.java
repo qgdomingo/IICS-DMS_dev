@@ -14,20 +14,19 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
-import com.ustiics_dms.controller.directory.RetrieveUsersFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Event;
 import com.ustiics_dms.utility.AesEncryption;
 
-@WebServlet("/RetrieveCalendarData")
-public class RetrieveCalendarData extends HttpServlet {
+@WebServlet("/RetrieveUpcomingEvents")
+public class RetrieveUpcomingEvents extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public RetrieveCalendarData() {
+    public RetrieveUpcomingEvents() {
         super();
     }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<Event> eventsList = new ArrayList<Event>();
 		response.setCharacterEncoding("UTF-8");
 		
@@ -36,7 +35,7 @@ public class RetrieveCalendarData extends HttpServlet {
 			HttpSession session = request.getSession();
 			Account acc = (Account) session.getAttribute("currentCredentials");
 			
-			ResultSet events = (ResultSet) ManageEventsFunctions.getCalendarEventsData(acc.getEmail());
+			ResultSet events = (ResultSet) ManageEventsFunctions.getUpcomingEvents(acc.getEmail());
 
 			while(events.next()) { 
 				eventsList.add(new Event(
@@ -45,9 +44,8 @@ public class RetrieveCalendarData extends HttpServlet {
 					events.getString("location"),
 					events.getString("start_date"),
 					events.getString("end_date"),
-					events.getString("description"),
-					events.getString("created_by")
-					)
+					ManageEventsFunctions.getFullName(events.getString("created_by")) 
+						+ "<" + events.getString("created_by") + ">")
 				);
 			}
 			

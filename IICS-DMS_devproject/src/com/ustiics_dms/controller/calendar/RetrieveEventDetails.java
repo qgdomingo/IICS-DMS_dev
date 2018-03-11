@@ -10,45 +10,42 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
-import com.ustiics_dms.controller.directory.RetrieveUsersFunctions;
-import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Event;
 import com.ustiics_dms.utility.AesEncryption;
 
-@WebServlet("/RetrieveCalendarData")
-public class RetrieveCalendarData extends HttpServlet {
+@WebServlet("/RetrieveEventDetails")
+public class RetrieveEventDetails extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public RetrieveCalendarData() {
+    public RetrieveEventDetails() {
         super();
     }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<Event> eventsList = new ArrayList<Event>();
 		response.setCharacterEncoding("UTF-8");
 		
 		try {
+			String id = AesEncryption.decrypt(request.getParameter("id"));
 			
-			HttpSession session = request.getSession();
-			Account acc = (Account) session.getAttribute("currentCredentials");
-			
-			ResultSet events = (ResultSet) ManageEventsFunctions.getCalendarEventsData(acc.getEmail());
+			ResultSet events = (ResultSet) ManageEventsFunctions.getEventsData(id);
 
-			while(events.next()) { 
+			if(events.next()) { 
 				eventsList.add(new Event(
 					AesEncryption.encrypt(events.getString("event_id")),
 					events.getString("title"),
 					events.getString("location"),
+					events.getInt("all_day_event"),
 					events.getString("start_date"),
 					events.getString("end_date"),
 					events.getString("description"),
+					ManageEventsFunctions.getFullName(events.getString("created_by")) 
+						+ "<" + events.getString("created_by") + ">",
 					events.getString("created_by")
-					)
-				);
+				));
 			}
 			
 			String json = new Gson().toJson(eventsList);

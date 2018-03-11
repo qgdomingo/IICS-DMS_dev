@@ -14,41 +14,33 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
-import com.ustiics_dms.controller.directory.RetrieveUsersFunctions;
 import com.ustiics_dms.model.Account;
-import com.ustiics_dms.model.Event;
 import com.ustiics_dms.utility.AesEncryption;
 
-@WebServlet("/RetrieveCalendarData")
-public class RetrieveCalendarData extends HttpServlet {
+@WebServlet("/RetrieveEventResponseDetails")
+public class RetrieveEventResponseDetails extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public RetrieveCalendarData() {
+    public RetrieveEventResponseDetails() {
         super();
     }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
-		List<Event> eventsList = new ArrayList<Event>();
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		List<String> eventsList = new ArrayList<String>();
 		response.setCharacterEncoding("UTF-8");
 		
 		try {
+			String id = AesEncryption.decrypt(request.getParameter("id"));
 			
 			HttpSession session = request.getSession();
 			Account acc = (Account) session.getAttribute("currentCredentials");
 			
-			ResultSet events = (ResultSet) ManageEventsFunctions.getCalendarEventsData(acc.getEmail());
+			ResultSet event = (ResultSet) ManageEventsFunctions.getEventResponseDetails(id, acc.getEmail());
 
-			while(events.next()) { 
-				eventsList.add(new Event(
-					AesEncryption.encrypt(events.getString("event_id")),
-					events.getString("title"),
-					events.getString("location"),
-					events.getString("start_date"),
-					events.getString("end_date"),
-					events.getString("description"),
-					events.getString("created_by")
-					)
-				);
+			if(event.next()) { 
+				eventsList.add(event.getString("status"));
+				eventsList.add(event.getString("response"));
+				eventsList.add(event.getString("date_response"));
 			}
 			
 			String json = new Gson().toJson(eventsList);

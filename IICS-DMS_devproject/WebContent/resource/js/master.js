@@ -19,12 +19,21 @@
 		return $('#context_path').val();
 	}
 	
+	function activatePageLoading(loadingText) {
+		$('#page_loading_text').text(loadingText);
+		addCSSClass('#page_loading', 'active');
+	}
+	
+	function deactivatePageLoading() {
+		$('#page_loading_text').text('');
+		removeCSSClass('#page_loading', 'active');
+	}
+	
 	function callSuccessModal(header, body) {
 		$('#successdia_header').text(header);
 		$('#successdia_content').text(body);
 		
 		$('#successdia').modal({
-			blurring: true,
 			closable: false
 		}).modal('show');
 	}
@@ -34,7 +43,6 @@
 		$('#faildia_content').text(body);
 		
 		$('#faildia').modal({
-			blurring: true,
 			closable: false
 		}).modal('show');
 	}	

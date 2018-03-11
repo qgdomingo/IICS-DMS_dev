@@ -160,7 +160,7 @@
 		
 		<div class="ui stackable grid">
 			<div class="row">
-				<div class="two wide computer three wide tablet sixteen wide mobile column"> 
+				<div class="two wide computer sixteen wide tablet sixteen wide mobile column"> 
 					<h3 class="element-rmb">Today is</h3>
 					<div class="ui orange inverted center aligned segment element-rmt">
 						<div class="mobile hidden">
@@ -174,36 +174,23 @@
 					</div>
 				</div>
 			
-				<div class="ten wide computer nine wide tablet sixteen wide mobile column">
+				<div class="five wide computer sixteen wide tablet sixteen wide mobile column">
 					<h3 class="element-rmb">Upcoming Events</h3>
-					<div class="ui segment element-rmt">
-						<table class="ui very basic table">
-							<tbody>
-								<tr>
-									<td>12/09/1997 7:00 AM - 12/09/2018 8:00 PM</td>
-									<td>Gio's 21st Birthday</td>
-									<td>Sofitel</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					
-					<h3 class="element-rmb">Tasks</h3>
-					<div class="ui segment element-rmt">
-						<table class="ui very basic table">
-							<tbody>
-								<tr>
-									<td>12/09/1997 7:00 AM</td>
-									<td>Task Title</td>
-									<td>Category</td>
-									<td>Assigned By</td>
-								</tr>
-							</tbody>
-						</table>
+					<div class="ui segment element-rmt" id="upcoming_events_segment">
+						<div class="ui relaxed divided animated list" id="upcoming_events_list">
+						</div>
 					</div>
 				</div>
 				
-				<div class="four wide computer four wide tablet sixteen wide mobile column">
+				<div class="five wide computer sixteen wide tablet sixteen wide mobile column">
+					<h3 class="element-rmb">Your Pending Tasks</h3>
+					<div class="ui segment element-rmt" id="pending_tasks_segment">
+						<div class="ui relaxed divided animated list" id="pending_tasks_list">
+ 						</div>
+					</div>
+				</div>
+				
+				<div class="four wide computer sixteen wide tablet sixteen wide mobile column">
 					<h3 class="element-rmb">Attendance</h3>
 					<div class="ui blue inverted segment element-rmt">
 						<h4 class="ui header">

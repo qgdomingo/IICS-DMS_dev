@@ -36,6 +36,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 		
@@ -214,9 +216,10 @@
 							<th>Location</th>
 							<th>Start Date and Time</th>
 							<th>End Date and Time</th>
+							<th>Created by</th>
 						</tr>
 					</thead>
-					<tbody></tbody>
+					<tbody id="event_tablebody"></tbody>
 				</table>
 			</form>
 		</div>
@@ -280,7 +283,11 @@
 	</body>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/dataTable/jquery.dataTables.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/session/non_admin_check.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/calendar/view_event_list.js"></script>
 </html>
