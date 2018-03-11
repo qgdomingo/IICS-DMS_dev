@@ -5,9 +5,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.fileupload.FileItem;
 
+import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
+import com.ustiics_dms.controller.notifications.NotificationFunctions;
+import com.ustiics_dms.controller.retrievedocument.RetrieveDocumentFunctions;
 import com.ustiics_dms.databaseconnection.DBConnect;
 
 
@@ -222,4 +228,115 @@ public class FileUploadFunctions {
 			
 			return append;
 	}
+	
+	public static String [] getGroupByDepartment(String department) throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			String sqlStatement = null;
+			if(department.equalsIgnoreCase("IICS"))
+			{
+				sqlStatement = "SELECT email FROM accounts WHERE department = ?";
+			}
+			else
+			{
+				sqlStatement = "SELECT email FROM accounts WHERE department = ? AND user_type = ?";
+			}
+			PreparedStatement prep = con.prepareStatement(sqlStatement);
+			
+			prep.setString(1, department);
+			
+			if(!department.equalsIgnoreCase("IICS"))
+			{
+				prep.setString(2, "Department Head");
+			}
+
+			ResultSet rs = prep.executeQuery();
+			
+			String emailList = "";
+			
+			while(rs.next())
+			{
+				emailList += rs.getString("email") + ",";
+			}
+			
+			String list [] = emailList.split(",");
+			
+			return list;
+	}
+	
+	public static String getGroupHead(String department) throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			String sqlStatement = null;
+			if(department.equalsIgnoreCase("IICS"))
+			{
+				sqlStatement = "SELECT email FROM accounts WHERE department = ?";
+			}
+			else
+			{
+				sqlStatement = "SELECT email FROM accounts WHERE department = ? AND user_type = ?";
+			}
+			PreparedStatement prep = con.prepareStatement(sqlStatement);
+			
+			prep.setString(1, department);
+			
+			if(!department.equalsIgnoreCase("IICS"))
+			{
+				prep.setString(2, "Department Head");
+			}
+
+			ResultSet rs = prep.executeQuery();
+			
+			String email = "";
+			
+			rs.next();
+			
+			email = rs.getString("email");
+			
+			
+			String name = ManageTasksFunctions.getFullName(email);
+			
+			return name;
+	}
+	
+	public static void addNote(String id, String note,String email) throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("UPDATE incoming_documents SET note = ? WHERE id = ?");
+			
+			prep.setString(1, note);
+			prep.setString(2, id);
+
+			prep.executeUpdate();
+			
+			ResultSet info = RetrieveDocumentFunctions.retrieveSpecificIncoming(id);
+			info.next();
+			String title = info.getString("title");
+			String department = info.getString("department");
+			
+			String des = title + "‘s note has been updated by " + ManageTasksFunctions.getFullName(email);
+			NotificationFunctions.addNotification("Outgoing Documents Page", des, FileUploadFunctions.getGroupByDepartment(department));
+
+	}
+	
+	public static void markAsDone(String id, String type, String email) throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("UPDATE incoming_documents SET status = ? WHERE id = ? AND type = ?");
+			
+			prep.setString(1, "Done");
+			prep.setString(2, id);
+			prep.setString(3, type);
+
+			prep.executeUpdate();
+			
+			ResultSet info = RetrieveDocumentFunctions.retrieveSpecificIncoming(id);
+			info.next();
+			String title = info.getString("title");
+			String department = info.getString("department");
+			
+			String des = title + " has been marked as done by  " + ManageTasksFunctions.getFullName(email);
+			NotificationFunctions.addNotification("Outgoing Documents Page", des, FileUploadFunctions.getGroupByDepartment(department));
+	}
+
 }

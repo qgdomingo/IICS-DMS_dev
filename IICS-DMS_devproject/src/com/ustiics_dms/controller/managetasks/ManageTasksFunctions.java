@@ -12,6 +12,7 @@ import java.util.Date;
 
 import org.apache.commons.fileupload.FileItem;
 
+import com.ustiics_dms.controller.notifications.NotificationFunctions;
 import com.ustiics_dms.databaseconnection.DBConnect;
 import com.ustiics_dms.model.File;
 import com.ustiics_dms.utility.AesEncryption;
@@ -43,6 +44,8 @@ public class ManageTasksFunctions {
 			prep.executeUpdate();
 			
 			assignUsers(email);
+			
+		
 
 	}
 	
@@ -100,6 +103,20 @@ public class ManageTasksFunctions {
 		rs.next();
 		
 		return rs.getString("full_name");
+			
+	}
+	
+	public static String getTaskTitle(String id) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT title FROM tasks WHERE id = ?");
+		prep.setString(1, id);
+		
+		ResultSet rs = prep.executeQuery();
+		
+		rs.next();
+		
+		return rs.getString("title");
 			
 	}
 	
@@ -163,6 +180,7 @@ public class ManageTasksFunctions {
 			
 			return rs;
 	}
+	
 	public static ResultSet getTasksCreated(String email) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
@@ -193,7 +211,12 @@ public class ManageTasksFunctions {
 			id = AesEncryption.decrypt(id);
 			prep.setString(8, id);
 			prep.executeUpdate();
+			
+			String des = getFullName(email) +" has submitted his/her task for " + getTaskTitle(id);
+			NotificationFunctions.addNotification("Task Page", des, email);
 	}
+	
+	
 	
 	public static String compareTime (String currentTime, String deadline) throws SQLException, ParseException 
 	{
@@ -248,6 +271,9 @@ public class ManageTasksFunctions {
 		prep.executeUpdate();
 		
 		assignEditUsers(email, id);
+		
+		String des = getFullName(userEmail) +" has updated the task details of " + getTaskTitle(id);
+		NotificationFunctions.addNotification("Task Page", des, email);
 		
 	}
 	

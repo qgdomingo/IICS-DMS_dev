@@ -33,7 +33,7 @@ public class UpdateAcknowledgeTimeStamp extends HttpServlet {
 			    HttpSession session = request.getSession();
 			    Account acc = (Account) session.getAttribute("currentCredentials");
 			    
-				String emailID = "1";//request.getParameter("emailID");
+				String emailID = request.getParameter("emailID");
 				String email = acc.getEmail();
 				
 				MailFunctions.updateAcknowledgeTimeStamp(emailID, email);
