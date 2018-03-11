@@ -178,8 +178,8 @@ public class FileUploadFunctions {
 	public static String getAcadYear() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT start_year, end_year FROM academic_year");
-			
+			PreparedStatement prep = con.prepareStatement("SELECT start_year, end_year FROM academic_year WHERE status = ?");
+			prep.setString(1, "Current");
 
 			ResultSet rs = prep.executeQuery();
 			
