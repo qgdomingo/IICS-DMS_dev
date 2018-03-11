@@ -54,13 +54,16 @@ public class ManageTasksFunctions {
 	public static String getSchoolYear() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT start_year, end_year FROM academic_year");
-
+			PreparedStatement prep = con.prepareStatement("SELECT start_year, end_year FROM academic_year WHERE status = ?");
+			
+			prep.setString(1, "Current");
+			
 			ResultSet rs = prep.executeQuery();
-			rs.next();
-			
-			String schoolYear = rs.getString("start_year") + "-" + rs.getString("end_year"); 
-			
+			String schoolYear = "";
+			if(rs.next())
+			{
+				schoolYear = rs.getString("start_year") + "-" + rs.getString("end_year"); 
+			}
 			return schoolYear;
 
 	}

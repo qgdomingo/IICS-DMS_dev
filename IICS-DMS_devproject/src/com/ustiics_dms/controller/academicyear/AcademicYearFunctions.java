@@ -13,10 +13,18 @@ public class AcademicYearFunctions {
 	{
 		
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("UPDATE academic_year SET start_year = ?, end_year = ?");
 			
+			PreparedStatement prep = con.prepareStatement("UPDATE academic_year SET status = ?");
+
+			prep.setString(1, "Past");
+			
+			prep.executeUpdate();
+			
+			prep = con.prepareStatement("INSERT INTO academic_year (start_year, end_year, status) VALUES (?,?,?)");
+
 			prep.setInt(1, yearStart);
 			prep.setInt(2, yearEnd);
+			prep.setString(3, "Current");
 		
 			prep.executeUpdate();
 			
@@ -25,7 +33,21 @@ public class AcademicYearFunctions {
 	public static ResultSet getAcademicYear() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT start_year, end_year FROM academic_year");
+			
+			PreparedStatement prep = con.prepareStatement("SELECT start_year, end_year FROM academic_year WHERE status = ?");
+			
+			prep.setString(1, "Current");
+			
+			ResultSet rs = prep.executeQuery();
+			
+			return rs;
+	}
+	
+	public static ResultSet getAllAcademicYear() throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			
+			PreparedStatement prep = con.prepareStatement("SELECT start_year, end_year FROM academic_year ORDER BY start_year DESC");
 			
 			ResultSet rs = prep.executeQuery();
 			
