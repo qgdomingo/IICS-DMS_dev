@@ -369,7 +369,7 @@
 						
 							<div  class="field element-rmb">
 								<label>Note:</label>
-								<textarea name="note" rows="2"></textarea>
+								<textarea name="note" rows="2" id="view_incoming_note"></textarea>
 							</div>
 							<button type="submit"name="button_choice" value="Edit Note" class="ui tiny fluid orange button">
 								<i class="pencil icon"></i>

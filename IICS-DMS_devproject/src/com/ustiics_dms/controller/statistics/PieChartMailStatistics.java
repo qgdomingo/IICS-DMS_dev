@@ -29,15 +29,14 @@ public class PieChartMailStatistics extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-try {
-			
+		try {
 		    HttpSession session = request.getSession();
 		    Account acc = (Account) session.getAttribute("currentCredentials");
 			
 			String viewBy = "Department";//request.getParameter("view_by"); // example "Department", "Faculty", or "Staff"
 			String source = "Information Systems";//request.getParameter("source"); // example "Information Systems", "coleensy@gmail.com"
 			String year = "2017-2018";//request.getParameter("year"); // example "2017-2018"
-			String json = null;
+			String json = "";
 			
 		    List<MailStatistics> stats = new ArrayList<MailStatistics>(); // used for department
 		    
@@ -65,7 +64,6 @@ try {
 
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		doGet(request, response);
 	}
 

@@ -18,10 +18,11 @@ public class IncomingDocument {
 	private String timeCreated;
 	private String department;
 	private String dueOn;
+	private String note;
 	
 	public IncomingDocument(String id, String type, String threadNumber, String referenceNo, String sourceRecipient, String title,
 			String category, String actionRequired, String file_name, String description, String createdBy,
-			String email, String status, String timeCreated, String dueOn, String department) {
+			String email, String status, String timeCreated, String dueOn, String department, String note) {
 		super();
 		this.id = id;
 		this.type = type;
@@ -39,6 +40,7 @@ public class IncomingDocument {
 		this.timeCreated = timeCreated;
 		this.dueOn = dueOn;
 		this.department = department;
+		this.note = note;
 	}
 	
 	public IncomingDocument(String threadNumber, String title, String category, String timeCreated) {
@@ -146,6 +148,14 @@ public class IncomingDocument {
 
 	public void setDueOn(String dueOn) {
 		this.dueOn = dueOn;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
 	}
 
 	

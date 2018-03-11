@@ -36,7 +36,7 @@ public class FileUploadFunctions {
 			prep.executeUpdate();
 	}
 	
-	public static void uploadIncomingDocument(String threadNumber, String referenceNo, String source, String documentTitle, String category, String actionRequired, FileItem item, String description, String fullName, String email, String department, String actionDue) throws SQLException, IOException
+	public static String uploadIncomingDocument(String threadNumber, String referenceNo, String source, String documentTitle, String category, String actionRequired, FileItem item, String description, String fullName, String email, String department, String actionDue) throws SQLException, IOException
 	{
 			Connection con = DBConnect.getConnection();
 
@@ -52,9 +52,11 @@ public class FileUploadFunctions {
 				threadNumber = Integer.toString(getThreadCounter());
 			}
 			
+			String returningReferenceNo = getReferenceNo(source) + referenceNo;
+			
 			PreparedStatement prep = con.prepareStatement(statement);
 			prep.setString(1, threadNumber);
-			prep.setString(2, getReferenceNo(source) + referenceNo);
+			prep.setString(2, returningReferenceNo);
 			prep.setString(3, source);
 			prep.setString(4, documentTitle);
 			prep.setString(5, category);
@@ -72,6 +74,8 @@ public class FileUploadFunctions {
 			}
 			
 			prep.executeUpdate();
+			
+			return returningReferenceNo;
 	}
 	
 	public static void uploadOutgoingDocument(String threadNumber, String recipient, String documentTitle, String category, FileItem item, String description, String fullName, String email, String department) throws SQLException, IOException
@@ -194,7 +198,7 @@ public class FileUploadFunctions {
 	public static int getThreadCounter() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT counter FROM thread_number");
+			PreparedStatement prep = con.prepareStatement("SELECT counter FROM thread_number WHERE type = 'documents'");
 			
 
 			ResultSet rs = prep.executeQuery();
@@ -209,7 +213,7 @@ public class FileUploadFunctions {
 	public static void incrementThreadCounter(int counter) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("UPDATE thread_number SET counter = ?");
+			PreparedStatement prep = con.prepareStatement("UPDATE thread_number SET counter = ? WHERE type = 'documents'");
 			
 			prep.setInt(1, counter);
 

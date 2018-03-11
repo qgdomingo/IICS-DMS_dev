@@ -68,20 +68,23 @@ public class FileUpload extends HttpServlet {
 			
 			//used by all documents
 			String documentType = tempStorage[0];
-			String documentTitle = null;
-			String category = null;
-			String description = null;
+			String documentTitle = "";
+			String category = "";
+			String description = "";
 			String fullName = acc.getFullName();
+			
 			//used by incoming and outgoing
-			String threadNo = null;
+			String threadNo = "";
+			
 			//used by incoming documents
-			String documentSource = null;
-			String referenceNo = null;
-			String actionRequired = null;
-			String actionDue = null;
+			String documentSource = "";
+			String referenceNo = "";
+			String actionRequired = "";
+			String actionDue = "";
+			String returningReferenceNo = "";
 			
 			//used by outgoing documents
-			String documentRecipient = null;
+			String documentRecipient = "";
 			
 			if(documentType.equalsIgnoreCase("Personal"))
 			{
@@ -102,7 +105,8 @@ public class FileUpload extends HttpServlet {
 				actionDue = tempStorage[6];
 				referenceNo = tempStorage[7];
 				threadNo = tempStorage[8];
-				FileUploadFunctions.uploadIncomingDocument(threadNo, referenceNo, documentSource, documentTitle, category, actionRequired, fileData, description, fullName, acc.getEmail(),acc.getDepartment(), actionDue);
+				
+				returningReferenceNo = FileUploadFunctions.uploadIncomingDocument(threadNo, referenceNo, documentSource, documentTitle, category, actionRequired, fileData, description, fullName, acc.getEmail(),acc.getDepartment(), actionDue);
 				
 				String des = ManageTasksFunctions.getFullName(acc.getEmail()) +" has uploaded a new incoming document, " + documentTitle;
 				NotificationFunctions.addNotification("Incoming Documents Page", des, FileUploadFunctions.getGroupByDepartment(acc.getDepartment()));
@@ -114,6 +118,7 @@ public class FileUpload extends HttpServlet {
 				documentTitle = tempStorage[3];
 				description = tempStorage[4];
 				threadNo = tempStorage[5];
+				
 				FileUploadFunctions.uploadOutgoingDocument(threadNo, documentRecipient, documentTitle, category, fileData, description, fullName, acc.getEmail(),acc.getDepartment());
 				
 				String des = ManageTasksFunctions.getFullName(acc.getEmail()) +" has uploaded a new outgoing document, " + documentTitle;
@@ -122,7 +127,13 @@ public class FileUpload extends HttpServlet {
 				
 			response.setContentType("text/plain");
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write("success upload");
+			
+			if(documentType.equalsIgnoreCase("Incoming")) {
+				response.getWriter().write(returningReferenceNo);
+			} 
+			else {
+				response.getWriter().write("success upload");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

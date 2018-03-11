@@ -18,10 +18,11 @@ public class Document {
 	private String timeCreated;
 	private String department;
 	private String dueOn;
+	private String note;
 	
 	public Document(String id, String type, String threadNumber, String referenceNo, String sourceRecipient, String title,
 			String category, String actionRequired, String fileName, String description, String createdBy, String email,
-			String status, String timeCreated, String department, String dueOn) {
+			String status, String timeCreated, String department, String dueOn, String note) {
 		super();
 		this.id = id;
 		this.type = type;
@@ -39,8 +40,9 @@ public class Document {
 		this.timeCreated = timeCreated;
 		this.department = department;
 		this.dueOn = dueOn;
+		this.note = note;
 	}
-
+	
 	public String getId() {
 		return id;
 	}
