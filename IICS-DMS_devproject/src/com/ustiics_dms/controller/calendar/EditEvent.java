@@ -9,12 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.ustiics_dms.model.Account;
+import com.ustiics_dms.utility.AesEncryption;
 
-@WebServlet("/AddEvent")
-public class AddEvent extends HttpServlet {
+@WebServlet("/EditEvent")
+public class EditEvent extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public AddEvent() {
+    public EditEvent() {
         super();
     }
 
@@ -30,6 +31,7 @@ public class AddEvent extends HttpServlet {
 			
 			Account acc = (Account) session.getAttribute("currentCredentials");
 			
+			String id = AesEncryption.decrypt(request.getParameter("event_id"));
 			String title = request.getParameter("event_title");
 			String location = request.getParameter("event_location");
 			String allDayEvent = request.getParameter("event_all_day");
@@ -51,7 +53,8 @@ public class AddEvent extends HttpServlet {
 			
 			String eventDescription = request.getParameter("event_description");
 			String invited[] = request.getParameterValues("event_invite");
-			ManageEventsFunctions.addEvent(title, location, allDayEvent_flag, startDateTime, endDateTime, eventDescription, acc.getEmail(), invited);
+			
+			ManageEventsFunctions.updateEvent(acc.getEmail(), id, title, location, allDayEvent_flag, startDateTime, endDateTime, eventDescription, invited);
 			
 			response.setContentType("text/plain");
 			response.setStatus(HttpServletResponse.SC_OK);

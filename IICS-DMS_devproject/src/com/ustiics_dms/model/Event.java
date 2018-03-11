@@ -9,6 +9,22 @@ public class Event {
 	private String endDateTime;
 	private String description;
 	private String createdBy;
+	private String email;
+	private int allDayEvent_Flag;
+	
+	public Event(String id, String title, String location, int allDayEvent_Flag, String startDateTime, String endDateTime, String description,
+			String createdBy, String email) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.location = location;
+		this.allDayEvent_Flag = allDayEvent_Flag;
+		this.startDateTime = startDateTime;
+		this.endDateTime = endDateTime;
+		this.description = description;
+		this.createdBy = createdBy;
+		this.email = email;
+	}
 	
 	public Event(String id, String title, String location, String startDateTime, String endDateTime, String description,
 			String createdBy) {
@@ -22,13 +38,15 @@ public class Event {
 		this.createdBy = createdBy;
 	}
 	
-	public Event(String title, String startDateTime, String endDateTime) {
+	public Event(String id, String title, String location, String startDateTime, String endDateTime, String createdBy) {
 		super();
+		this.id = id;
 		this.title = title;
+		this.location = location;
 		this.startDateTime = startDateTime;
 		this.endDateTime = endDateTime;
+		this.createdBy = createdBy;
 	}
-	
 	
 	public String getId() {
 		return id;
@@ -71,6 +89,22 @@ public class Event {
 	}
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public int getAllDayEvent_Flag() {
+		return allDayEvent_Flag;
+	}
+
+	public void setAllDayEvent_Flag(int allDayEvent_Flag) {
+		this.allDayEvent_Flag = allDayEvent_Flag;
 	}
 
 	

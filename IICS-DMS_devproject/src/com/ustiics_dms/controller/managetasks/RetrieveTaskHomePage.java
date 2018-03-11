@@ -49,13 +49,12 @@ public class RetrieveTaskHomePage extends HttpServlet {
 				
 				while(tasksInfo.next())
 				{
-					String assignedBy = tasksInfo.getString("assigned_by");
 					task.add(new Task(
 							tasksInfo.getString("title"),
 							tasksInfo.getString("deadline"),
 							tasksInfo.getString("category"),
-							ManageTasksFunctions.getFullName(assignedBy),
-							assignedBy
+							ManageTasksFunctions.getFullName(tasksInfo.getString("assigned_by")),
+							tasksInfo.getString("assigned_by")
 							 ));	
 				}
 			}

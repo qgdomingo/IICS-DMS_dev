@@ -8,7 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.fileupload.FileItem;
 
@@ -89,7 +91,7 @@ public class ManageTasksFunctions {
 				prep.setInt(1, id);
 				prep.setString(2, fullName);
 				prep.setString(3, mail);
-				prep.setString(4, ManageTasksFunctions.getSchoolYear());
+				prep.setString(4, getSchoolYear());
 				prep.executeUpdate();
 			}
 			
@@ -163,7 +165,7 @@ public class ManageTasksFunctions {
 			ResultSet rs;
 
 			PreparedStatement prep = con.prepareStatement("SELECT id, title, deadline, category, instructions,"
-					+ "status, assigned_by, date_created, school_year FROM tasks WHERE id = ?");
+					+ "status, assigned_by, date_created, school_year FROM tasks WHERE id = ? ORDER BY deadline ASC");
 			prep.setInt(1, taskID);
 			rs = prep.executeQuery();
 			
@@ -284,21 +286,43 @@ public class ManageTasksFunctions {
 	{
 			String tempID = id;
 			Connection con = DBConnect.getConnection();
-			
+			boolean ifExistingOnAssignment;
+
 			for(String mail: email)
 			{
-				if(checkExists(id,mail))
-				{
-				PreparedStatement prep = con.prepareStatement("INSERT INTO tasks_assigned_to (id, name, email) VALUES (?,?,?)");
+				ifExistingOnAssignment = checkExists(id,mail);
 				
-				String fullName = getFullName(mail);
-				prep.setString(1, tempID);
-				prep.setString(2, fullName);
-				prep.setString(3, mail);
-				prep.executeUpdate();
+				if( !ifExistingOnAssignment )
+				{
+					PreparedStatement prep = con.prepareStatement("INSERT INTO tasks_assigned_to (id, name, email, school_year) VALUES (?,?,?,?)");
+					
+					String fullName = getFullName(mail);
+					prep.setString(1, tempID);
+					prep.setString(2, fullName);
+					prep.setString(3, mail);
+					prep.setString(4, getSchoolYear());
+					prep.executeUpdate();
 				}
 			}
 			
+			String deleteNotAssignedUserSQL = "DELETE FROM tasks_assigned_to WHERE id = ?";
+			
+			for(String mail: email)
+			{
+				deleteNotAssignedUserSQL += " AND NOT email = ?";
+			}
+			
+			PreparedStatement prep = con.prepareStatement(deleteNotAssignedUserSQL);
+			prep.setString(1, tempID);
+			
+			int mailCount = 2;
+			
+			for(String mail: email)
+			{
+				prep.setString(mailCount, mail);
+				mailCount++;
+			}
+			prep.executeUpdate();
 	}
 	
 	public static boolean checkExists(String id, String email) throws SQLException 
@@ -309,11 +333,11 @@ public class ManageTasksFunctions {
 		prep.setString(2, email);
 		ResultSet rs = prep.executeQuery();
 		
-		boolean flag = true;
+		boolean flag = false;
 		
 		if (rs.isBeforeFirst())
 		{
-			flag = false;
+			flag = true;
 		}
 		return flag;
 		

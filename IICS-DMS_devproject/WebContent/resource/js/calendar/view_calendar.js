@@ -18,7 +18,13 @@
 				right: 'month,basicWeek,basicDay'
 			},
 			navLinks: true, 
-			eventLimit: true
+			eventLimit: true,
+			eventRender: function(eventObj, element) {
+		      element.popup({
+		        title: eventObj.title,
+		        content: eventObj.description
+		      });
+			},
 		});
 		
 		$('#event_date_input').hide();
@@ -45,8 +51,12 @@
 				$.each(response, (index, event) => {
 					eventData.push({
 						title: event.title,
+						description: '[' + event.location + '] ' + event.description,
 						start: event.startDateTime,
-						end: event.endDateTime
+						end: event.endDateTime,
+						url: getContextPath() + '/calendar/vieweventdetails.jsp?id=' + encodeURIComponent(event.id)	
+							+ '&origin=1'
+							
 					})
 				});
 				
@@ -86,8 +96,12 @@
 			}
 		})
 		.fail( function(response) {
+			$('<div class="item">').appendTo('#invitation_list')
+			.append($('<div class="content">')
+				.append($('<div class="header">').text('Unable to retrieve event invitations.'))
+			)
+			
 			removeCSSClass('#invitation_list_segment', 'loading');
-			 callFailModal('Unable to Retrieve Event Invitation List', 'We are get your invitations. Please try refreshing the page.');
 		});
 	}
 	
@@ -138,7 +152,7 @@
 	
 	/* SUBMIT - Invitation Response Form */
 	$('#event_response_form').ajaxForm({
-		  beforeSubmit: isInvitationResponseFormValid,
+		  beforeSubmit: fillInvitationResponseForm,
           success: function(response) { 
         	  if(response == 'Accepted') {
         		  var selectedData = localEventInvitationData[selectedDataIndex];
@@ -147,8 +161,11 @@
         			[
                 		{
                 			title: selectedData.title,
+                			description: '[' + selectedData.location + '] ' + selectedData.description,
                 			start: selectedData.startDateTime,
-                			end: selectedData.endDateTime
+                			end: selectedData.endDateTime,
+                			url: getContextPath() + '/calendar/vieweventdetails.jsp?id=' + encodeURIComponent(selectedData.id)
+                				+ '&origin=1'
                 		}
                 	]
                   );
@@ -162,15 +179,41 @@
           }
 	});
 	
-	/* BOOLEAN VALIDATION - Invitation Response Form */
-	function isInvitationResponseFormValid() {
-		if( $('#event_response_form').form('is valid') ) {
-			 addCSSClass('#event_response_form', 'loading');
-			 $('#event_response_close').prop("disabled", "disabled");
-			return true;
-		} 
-		else {
-			return false;
+	/* BEFORE FORM SUBMIT FILL - Invitation Response Form */
+	function fillInvitationResponseForm() {
+		var timenow = getDateTimeFormat(); 
+		$('#event_response_timestamp').val(timenow);
+
+		addCSSClass('#event_response_form', 'loading');
+		$('#event_response_close').prop("disabled", "disabled");
+		return true;
+	} 
+		
+	function getDateTimeFormat() {
+		var now = new Date();
+		
+		var day = now.getDate() + '';
+		if (day.length < 2) {
+		   day = '0' + day;
 		}
+		var month = (now.getMonth() + 1) + '';
+		if (month.length < 2) {
+		   month = '0' + month;
+		}
+		var year = now.getFullYear();
+		var hour = now.getHours() + '';
+		if (hour.length < 2) {
+			hour = '0' + hour;
+		}
+		var minute = now.getMinutes() + '';
+		if (minute.length < 2) {
+			minute = '0' + minute;
+		}
+		var seconds = now.getSeconds() + '';
+		if (seconds.length < 2) {
+			seconds = '0' + seconds;
+		}
+		
+		return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + seconds;
 	}
 	

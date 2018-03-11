@@ -11,11 +11,11 @@ import javax.servlet.http.HttpSession;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.utility.AesEncryption;
 
-@WebServlet("/SendInvitationResponse")
-public class SendInvitationResponse extends HttpServlet {
+@WebServlet("/DeleteEvent")
+public class DeleteEvent extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
-    public SendInvitationResponse() {
+       
+    public DeleteEvent() {
         super();
     }
 
@@ -28,20 +28,17 @@ public class SendInvitationResponse extends HttpServlet {
 		
 		try {
 			HttpSession session = request.getSession();
+			
 			Account acc = (Account) session.getAttribute("currentCredentials");
 			
-			String id = AesEncryption.decrypt(request.getParameter("event_id"));
-			String responseTimestamp = request.getParameter("event_response_timestamp");
-			String responseText = request.getParameter("event_response_text");
-			String buttonResponse = request.getParameter("event_response");
+			String id = AesEncryption.decrypt(request.getParameter("id"));
 			
-			ManageEventsFunctions.updateInvitationResponse(id, acc.getEmail(), buttonResponse, responseText, responseTimestamp);
+			ManageEventsFunctions.deleteEvent(id, acc.getEmail());
 			
 			response.setContentType("text/plain");
-		    response.setStatus(HttpServletResponse.SC_OK);
-		    response.getWriter().write(buttonResponse);
-		} 
-		catch(Exception e) {
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write("success");
+		} catch(Exception e) {
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}

@@ -34,6 +34,10 @@
 	</head>
 	<body class="login-background">
 		<input type="hidden" value="${pageContext.request.contextPath}" id="context_path"/> 
+		<!-- LOADING INDICATOR FOR THE WHOLE PAGE -->
+		<div class="ui dimmer" id="page_loading">
+			<div class="ui huge text loader" id="page_loading_text"></div>
+		</div>
 		<div class="ui centered grid container">
 			<div class="eight wide computer ten wide tablet sixteen wide mobile column login-form-area">
 			
@@ -65,7 +69,7 @@
 						<input placeholder="Password" name="user_password" type="password" />
 					</div>
 					<div class="ui error message"></div>
-					<button class="fluid medium ui green button" id="login_submit">
+					<button class="fluid medium ui green button" type="submit" id="login_submit">
 						Login
 					</button>
 				</form>
