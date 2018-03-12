@@ -203,7 +203,7 @@ public class MailFunctions {
 			prep.executeUpdate();
 
 			String des = name +" sent you a mail request, "+ subject + ", for your approval.";
-			NotificationFunctions.addNotification("Request Mail Page", des, FileUploadFunctions.getGroupByDepartment(department));
+			NotificationFunctions.addNotification("Request Mail Page", des, FileUploadFunctions.getGroupByDepartment(department, sentBy));
 	}
 	
 	public static ResultSet getRequestMail(String department) throws SQLException
@@ -553,7 +553,7 @@ public class MailFunctions {
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("INSERT INTO approved_request (iso_number, type, external_recipient, subject, file_data, sender_name, sent_by) VALUES (?,?,?,?,?,?,?)");
 			String isoNumber = getISONumber(department, type);
-			InputStream pdf = createPdf(recipient, subject, name, message, isoNumber);
+			InputStream pdf = createPdf(recipient, subject, name, message, isoNumber, sentBy);
 			prep.setString(1, isoNumber);
 			prep.setString(2, type);
 			prep.setString(3, externalRecipient);
