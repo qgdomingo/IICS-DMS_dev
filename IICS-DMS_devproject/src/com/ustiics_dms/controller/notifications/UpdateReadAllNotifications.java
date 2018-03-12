@@ -31,6 +31,10 @@ public class UpdateReadAllNotifications extends HttpServlet {
 			String email = acc.getEmail();
 			
 			NotificationFunctions.updateAllNotificationStatus(email);
+			
+			response.setContentType("text/plain");
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write("success");
 		
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -94,7 +94,7 @@ public class NotificationFunctions {
 
 		Connection con = DBConnect.getConnection();
 		
-		PreparedStatement prep = con.prepareStatement("SELECT page, description, notif_timestamp FROM notification WHERE id = ?");
+		PreparedStatement prep = con.prepareStatement("SELECT page, description, notif_timestamp FROM notification WHERE id = ? ORDER BY notif_timestamp DESC");
 		prep.setString(1, id);
 		
 		ResultSet rs = prep.executeQuery();

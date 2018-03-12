@@ -5,9 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
+import com.ustiics_dms.controller.notifications.NotificationFunctions;
 import com.ustiics_dms.databaseconnection.DBConnect;
 
 public class ManageEventsFunctions {
@@ -28,6 +30,9 @@ public class ManageEventsFunctions {
 			
 			if(invited != null) {
 				inviteUsers(invited);
+				
+				String des = getFullName(createdBy) +" is inviting you to an event, "+ title;
+				NotificationFunctions.addNotification("Calendar Page", des, invited);
 			}
 			
 	}
@@ -145,6 +150,9 @@ public class ManageEventsFunctions {
 		prep.setString(5, id);
 		
 		prep.executeUpdate();
+		
+		String des = getFullName(email) +" has responded " + response + " to your event, "+ retrieveEventTitle(id);
+		NotificationFunctions.addNotification("Calendar Page", des, getFullName(retrieveEventOwner(id)) );
 	}
 	
 	public static ResultSet getUpcomingEvents(String email) throws SQLException
@@ -189,7 +197,8 @@ public class ManageEventsFunctions {
 		Connection con = DBConnect.getConnection();
 		
 		if(invited != null) { 
-			
+			String eventOwner = getFullName(retrieveEventOwner(tempID));
+			String title = retrieveEventTitle(tempID);
 			boolean ifExistingOnInvitation;
 			
 			for(String user: invited)
@@ -202,8 +211,14 @@ public class ManageEventsFunctions {
 					prep.setString(1, tempID);
 					prep.setString(2, user);
 					prep.executeUpdate();
+					
+					String des = eventOwner +" is inviting you to an event, "+ title;
+					NotificationFunctions.addNotification("Calendar Page", des, user);
 				}
 			}
+			
+			String des = eventOwner +" has updated the event details of "+ title;
+			NotificationFunctions.addNotification("Calendar Page", des, invited);
 			
 			String deleteNotInvitedUserSQL = "DELETE FROM events_invitation WHERE event_id = ?";
 			
@@ -234,6 +249,7 @@ public class ManageEventsFunctions {
 	
 	public static boolean checkExists(String id, String email) throws SQLException 
 	{
+		
 		Connection con = DBConnect.getConnection();
 		PreparedStatement prep = con.prepareStatement("SELECT event_id FROM events_invitation WHERE event_id = ? AND email = ?");
 		prep.setString(1, id);
@@ -252,6 +268,12 @@ public class ManageEventsFunctions {
 	
 	public static void deleteEvent(String id, String email) throws SQLException
 	{
+		String eventOwner = getFullName(retrieveEventOwner(id));
+		String title = retrieveEventTitle(id);
+		
+		String des = eventOwner +" has cancelled the event, "+ title;
+		NotificationFunctions.addNotification("Calendar Page", des, retrieveInvitedUsers(id));
+		
 		Connection con = DBConnect.getConnection();
 		PreparedStatement prep = con.prepareStatement("DELETE FROM events WHERE event_id = ? AND created_by = ?");
 		prep.setString(1, id);
@@ -261,6 +283,48 @@ public class ManageEventsFunctions {
 		prep = con.prepareStatement("DELETE FROM events_invitation WHERE event_id = ? ");
 		prep.setString(1, id);
 		prep.executeUpdate();
+		
 	}
 	
+	public static String retrieveEventOwner(String id) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT created_by FROM events WHERE event_id = ?");
+		prep.setString(1, id);
+		
+		ResultSet owner = prep.executeQuery();
+		owner.next();
+		
+		return owner.getString("created_by");
+	}
+	
+	public static String retrieveEventTitle(String id) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT title FROM events WHERE event_id = ?");
+		prep.setString(1, id);
+		
+		ResultSet owner = prep.executeQuery();
+		owner.next();
+		
+		return owner.getString("title");
+	}
+	
+	public static String[] retrieveInvitedUsers(String id) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT email FROM events_invitation WHERE event_id = ?");
+		prep.setString(1, id);
+		
+		ArrayList<String> invited = new ArrayList<String>();
+		ResultSet eventList = prep.executeQuery();
+		
+		while(eventList.next())
+		{
+			invited.add(eventList.getString("email"));
+		}
+		
+		return (String[]) invited.toArray();
+	}
 }
+

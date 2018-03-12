@@ -109,7 +109,7 @@ public class FileUpload extends HttpServlet {
 				returningReferenceNo = FileUploadFunctions.uploadIncomingDocument(threadNo, referenceNo, documentSource, documentTitle, category, actionRequired, fileData, description, fullName, acc.getEmail(),acc.getDepartment(), actionDue);
 				
 				String des = ManageTasksFunctions.getFullName(acc.getEmail()) +" has uploaded a new incoming document, " + documentTitle;
-				NotificationFunctions.addNotification("Incoming Documents Page", des, FileUploadFunctions.getGroupByDepartment(acc.getDepartment()));
+				NotificationFunctions.addNotification("Incoming Documents Page", des, FileUploadFunctions.getGroupByDepartment(acc.getDepartment(), acc.getEmail()));
 			}
 			else if(documentType.equalsIgnoreCase("Outgoing"))
 			{
@@ -122,7 +122,7 @@ public class FileUpload extends HttpServlet {
 				FileUploadFunctions.uploadOutgoingDocument(threadNo, documentRecipient, documentTitle, category, fileData, description, fullName, acc.getEmail(),acc.getDepartment());
 				
 				String des = ManageTasksFunctions.getFullName(acc.getEmail()) +" has uploaded a new outgoing document, " + documentTitle;
-				NotificationFunctions.addNotification("Outgoing Documents Page", des, FileUploadFunctions.getGroupByDepartment(acc.getDepartment()));
+				NotificationFunctions.addNotification("Outgoing Documents Page", des, FileUploadFunctions.getGroupByDepartment(acc.getDepartment(), acc.getEmail()));
 			}
 				
 			response.setContentType("text/plain");

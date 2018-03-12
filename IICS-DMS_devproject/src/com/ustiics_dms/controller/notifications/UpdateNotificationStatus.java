@@ -36,6 +36,10 @@ public class UpdateNotificationStatus extends HttpServlet {
 			String email = acc.getEmail();
 			
 			NotificationFunctions.updateNotificationStatus(id, email);
+			
+			response.setContentType("text/plain");
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write("success");
 		
 		} catch (Exception e) {
 			e.printStackTrace();

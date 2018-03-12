@@ -215,39 +215,7 @@
 				<div class="content">Notifications</div>
 			</div>
 			<div class="scrolling content">
-				<div class="ui relaxed divided selection list" id="notification_list">
-					<div class="item" id=""> <!-- INDEX ID (row1) -->
-						<div class="right floated content">
-						    <button class="ui blue circular icon button notif_read" id=""> <!-- notif encrypted ID -->
-	  							<i class="check circle outline icon"></i>
-							</button>
-					    </div>
-						<i class="large bullhorn middle aligned icon"></i>
-					    <div class="content">
-					      	<a class="header">Semantic-Org/Semantic-UI</a>
-					      	<div class="description">
-					      		Updated 10 mins ago Updated 10 mins ago Updated 10 mins ago Updated 10 mins ago 
-					      		Updated 10 mins ago Updated 10 mins ago Updated 10 mins ago Updated 10 mins ago 
-					      	</div>
-					      	<div class="description">Updated 10 mins ago</div>
-					    </div>
-					</div>
-					<div class="item" id="">
-						<div class="right floated content">
-						    <button class="ui blue circular icon button notif_read" id="">
-	  							<i class="check circle outline icon"></i>
-							</button>
-					    </div>
-						<i class="large bullhorn middle aligned icon"></i>
-					    <div class="content">
-					      	<a class="header">Semantic-Org/Semantic-UI</a>
-					      	<div class="description">
-					      		Updated 10 mins ago Updated 10 mins ago Updated 10 mins ago Updated 10 mins ago 
-					      	</div>
-					      	<div class="description">Updated 10 mins ago</div>
-					    </div>
-					</div>
-				</div> 
+				<div class="ui relaxed divided selection list" id="notification_list"></div> 
 		 	</div>					    	
 		    <div class="actions center-text">
 		    	<button class="ui blue button" id="mark_all_as_read_btn">
