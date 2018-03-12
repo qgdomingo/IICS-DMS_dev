@@ -95,6 +95,7 @@ public class ManageUserFunctions {
 			
 			prep.setString(1, email);
 			ResultSet rs = prep.executeQuery();
+			
 			rs.next();
 			
 			Account user = new Account (rs.getString("time_created"),

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.model.Account;
 
 @WebServlet("/AddEvent")
@@ -52,7 +53,7 @@ public class AddEvent extends HttpServlet {
 			String eventDescription = request.getParameter("event_description");
 			String invited[] = request.getParameterValues("event_invite");
 			ManageEventsFunctions.addEvent(title, location, allDayEvent_flag, startDateTime, endDateTime, eventDescription, acc.getEmail(), invited);
-			
+			LogsFunctions.addLog("System", "Add Event", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), title);
 			response.setContentType("text/plain");
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write("success");

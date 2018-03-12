@@ -5,9 +5,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.apache.commons.fileupload.FileItem;
 
@@ -314,15 +311,34 @@ public class FileUploadFunctions {
 			prep.executeUpdate();
 			
 			ResultSet info = RetrieveDocumentFunctions.retrieveSpecificIncoming(id);
-			info.next();
-			String title = info.getString("title");
-			String department = info.getString("department");
 			
-			String des = title + "‘s note has been updated by " + ManageTasksFunctions.getFullName(email);
-			NotificationFunctions.addNotification("Outgoing Documents Page", des, FileUploadFunctions.getGroupByDepartment(department));
-
+			if(info.next())
+			{
+				String title = info.getString("title");
+				String department = info.getString("department");
+				
+				String des = title + "‘s note has been updated by " + ManageTasksFunctions.getFullName(email);
+				NotificationFunctions.addNotification("Outgoing Documents Page", des, FileUploadFunctions.getGroupByDepartment(department));
+			}
 	}
 	
+	public static String getIncomingDocTitle(String id) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT title FROM incoming_documents WHERE id = ?");
+		
+		prep.setString(1, id);
+		
+		ResultSet rs = prep.executeQuery();
+		String title = "";
+		if(rs.next())
+		{
+			title = rs.getString("title");
+		}
+		
+		return title;
+			
+	}
 	public static void markAsDone(String id, String type, String email) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();

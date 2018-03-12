@@ -19,6 +19,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.utility.SessionChecking;
 
@@ -71,6 +72,8 @@ public class SubmitTask extends HttpServlet {
 			Account acc = (Account)session.getAttribute("currentCredentials");
 			
 			ManageTasksFunctions.submitTask(documentTitle,  fileData, documentDescription, acc.getEmail(), id, deadline);
+
+			LogsFunctions.addLog("System", "Submit Task", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), documentTitle);
 			
 			String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 			

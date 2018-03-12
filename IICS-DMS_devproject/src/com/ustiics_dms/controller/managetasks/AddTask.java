@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.controller.notifications.NotificationFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Task;
@@ -53,7 +54,9 @@ public class AddTask extends HttpServlet {
 			String description = acc.getFullName() +" assigned you a new task, " + title;
 			NotificationFunctions.addNotification("Task Page", description, email);
 			
-			String id = Integer.toString( ManageTasksFunctions.getIncrement() );
+			LogsFunctions.addLog("System", "New Task", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), title);
+			
+			String id = Integer.toString(ManageTasksFunctions.getIncrement());
 
 			ResultSet specificCreatedTask = (ResultSet) ManageTasksFunctions.getSpecificCreatedTask(id);
 			
