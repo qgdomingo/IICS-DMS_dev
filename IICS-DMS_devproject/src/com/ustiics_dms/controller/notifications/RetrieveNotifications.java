@@ -26,9 +26,7 @@ public class RetrieveNotifications extends HttpServlet {
 
     public RetrieveNotifications() {
         super();
-
     }
-
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -67,7 +65,6 @@ public class RetrieveNotifications extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
-
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);

@@ -45,38 +45,34 @@
 	/* SUBMIT - New Academic Year Configurations */
 	function submitAcademicYearChanges() {
 		
-		if(checkEmptyFields(inputFields)) 
-		{
-			clearErrorFields(inputFields);
-			activatePageLoading('Updating Academic Year Config');
+		activatePageLoading('Updating Academic Year Config');
 			
-			var newAcadYearData = {
-					year_from: $(inputFields[0]).val(),
-					year_to: $(inputFields[1]).val(),
-			}
-			
-			$.post(getContextPath() + '/EditYear', $.param(newAcadYearData), (response) => {
-				if(response) 
-				{
-					var startacadyear = parseInt(newAcadYearData['year_from']);
-					$(inputFields[0]).val(startacadyear + 1);
-					$(inputFields[1]).val(startacadyear + 2);
-					getAcademicYearConfigurations();
-					callSuccessModal('Success', 'Successfully updated academic year configurations! ');
-				}
-				else
-				{
-					deactivatePageLoading();
-					callFailModal('Update Failed', 'Unable to update academic year configurations. ' +
-						'Please try again.  If the problem persists, please contact your administrator.');
-				}
-			})
-			.fail( (response) => {
-				deactivatePageLoading();
-				callFailRequestModal();
-			});
+		var newAcadYearData = {
+				year_from: $(inputFields[0]).val(),
+				year_to: $(inputFields[1]).val(),
 		}
-	};
+			
+		$.post(getContextPath() + '/EditYear', $.param(newAcadYearData), (response) => {
+			if(response) 
+			{
+				var startacadyear = parseInt(newAcadYearData['year_from']);
+				$(inputFields[0]).val(startacadyear + 1);
+				$(inputFields[1]).val(startacadyear + 2);
+				getAcademicYearConfigurations();
+				callSuccessModal('Success', 'Successfully updated academic year configurations! ');
+			}
+			else
+			{
+				deactivatePageLoading();
+				callFailModal('Update Failed', 'Unable to update academic year configurations. ' +
+					'Please try again.  If the problem persists, please contact your administrator.');
+			}
+		})
+		.fail( (response) => {
+			deactivatePageLoading();
+			callFailRequestModal();
+		});
+	}
 	
 	/* OPEN MODAL - Change Confirmation */
 	$('#acadyear_submit').click(() => {

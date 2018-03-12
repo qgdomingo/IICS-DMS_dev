@@ -18,68 +18,40 @@
 	
 	function getNotifications() {
 		
+		$.get(getContextPath() + '/RetrieveNotifications', function(response) {
+			$('#notification_count').text(response.length);
+			if(!response.length == 0) {
+				
+			}
+			else {
+				
+			}
+		})
+		.fail( function(response) {
+			
+		});
+		
 	}
 	
-	function mapNotification() {
-		$('<div class="row">').appendTo('#thread_area')
+	function mapNotification(notifData) {
+		$('<div class="item" id="">').appendTo('#thread_area') // row reference, index for removal
+			.append($('<div class="right floated content">')
+				.append($('<button class="ui blue circular icon button notif_read" id="">') // bind notif id for notif as read
+					.append('<i class="check circle outline icon"></i>')
+				)
+			)
+			.append('<i class="large bullhorn middle aligned icon"></i>')
+			.append($('<div class="content">')
+				.append('<a class="header" href="">Semantic-Org/Semantic-UI</a>') // NOTIF LINK and NOTIF PAGE HEADER
+				.append($('<div class="description">')
+					// NOTIF DESCRIPTION
+				)
+				.append($('<div class="description">')
+					// NOTIF TIMESTAMP
+				)
+			)		
 	}
 	
-//	<div class="item" id=""> <!-- INDEX ID (row1) -->
-//	<div class="right floated content">
-//	    <button class="ui blue circular icon button notif_read" id=""> <!-- notif encrypted ID -->
-//				<i class="check circle outline icon"></i>
-//		</button>
-//    </div>
-//	<i class="large bullhorn middle aligned icon"></i>
-//    <div class="content">
-//      	<a class="header">Semantic-Org/Semantic-UI</a>
-//      	<div class="description">
-//      		Updated 10 mins ago Updated 10 mins ago Updated 10 mins ago Updated 10 mins ago 
-//      		Updated 10 mins ago Updated 10 mins ago Updated 10 mins ago Updated 10 mins ago 
-//      	</div>
-//      	<div class="description">Updated 10 mins ago</div>
-//    </div>
-//</div>
-//	
-
-	
-//		.append($('<div class="right floated ten wide computer twelve wide tablet sixteen wide mobile column">')
-//			.append($('<div class="ui orange segment">')
-//				.append($('<h3>').text( data.title ))
-//				.append($('<div class="ui grid stackable">')
-//					.append($('<div class="row">')
-//						.append($('<div class="left floated eight wide column">')	
-//							.append($('<p class="element-rmb">')
-//								.append('<b>Upload by: </b>' + data.createdBy + ' <i>(' + data.email + ')</i>')
-//							)
-//							.append($('<p class="element-rmb">')
-//								.append('<b>Upload Date: </b>' + data.timeCreated)
-//							)
-//							.append($('<p class="element-rmb">')
-//								.append('<b>Category: </b>' + data.category)
-//							)
-//						)
-//						.append($('<div class="right floated eight wide column">')	
-//							.append($('<p class="element-rmb">')
-//								.append('<b>File Name: </b>' + data.fileName)
-//							)
-//							.append($('<p class="element-rmb">')
-//								.append('<b>Description: </b>' + data.description)
-//							)
-//						)
-//					)
-//				)
-//				.append('<br>')
-//				.append($('<form method="GET" action="' + getContextPath() + '/FileDownload">')
-//					.append('<input type="hidden" name="id" value="'+ data.id +'">')
-//					.append('<input type="hidden" name="type" value="'+ data.type +'">')
-//					.append($('<button class="ui fluid small button" type="submit">')
-//							.append('<i class="file icon"></i>View File')
-//					)
-//				)
-//				
-//			)
-//		)	
 
 	function getNotificationLink(page) {
 		
