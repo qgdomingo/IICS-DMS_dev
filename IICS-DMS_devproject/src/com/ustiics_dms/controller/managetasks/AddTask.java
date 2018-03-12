@@ -18,6 +18,7 @@ import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.controller.notifications.NotificationFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Task;
+import com.ustiics_dms.utility.AesEncryption;
 
 @WebServlet("/AddTask")
 public class AddTask extends HttpServlet {
@@ -61,7 +62,7 @@ public class AddTask extends HttpServlet {
 			ResultSet specificCreatedTask = (ResultSet) ManageTasksFunctions.getSpecificCreatedTask(id);
 			
 			if(specificCreatedTask.next()) {
-				task.add(id);	
+				task.add(AesEncryption.encrypt(id));	
 				task.add(specificCreatedTask.getString("title"));
 				task.add(specificCreatedTask.getString("date_created"));	
 				task.add(specificCreatedTask.getString("deadline"));

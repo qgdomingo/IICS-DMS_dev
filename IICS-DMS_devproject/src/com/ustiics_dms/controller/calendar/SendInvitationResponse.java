@@ -32,14 +32,12 @@ public class SendInvitationResponse extends HttpServlet {
 			Account acc = (Account) session.getAttribute("currentCredentials");
 			
 			String id = AesEncryption.decrypt(request.getParameter("event_id"));
-			String responseTimestamp = request.getParameter("event_response_timestamp");
 			String responseText = request.getParameter("event_response_text");
 			String buttonResponse = request.getParameter("event_response");
 			
-			ManageEventsFunctions.updateInvitationResponse(id, acc.getEmail(), buttonResponse, responseText, responseTimestamp);
+			ManageEventsFunctions.updateInvitationResponse(id, acc.getEmail(), buttonResponse, responseText);
 			String title = ManageEventsFunctions.getEventTitle(id);
 			LogsFunctions.addLog("System", "Respond To Event", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), buttonResponse, title);
-			LogsFunctions.addLog("System", "Update Response", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), title);
 			response.setContentType("text/plain");
 		    response.setStatus(HttpServletResponse.SC_OK);
 		    response.getWriter().write(buttonResponse);

@@ -181,39 +181,8 @@
 	
 	/* BEFORE FORM SUBMIT FILL - Invitation Response Form */
 	function fillInvitationResponseForm() {
-		var timenow = getDateTimeFormat(); 
-		$('#event_response_timestamp').val(timenow);
-
 		addCSSClass('#event_response_form', 'loading');
 		$('#event_response_close').prop("disabled", "disabled");
 		return true;
 	} 
-		
-	function getDateTimeFormat() {
-		var now = new Date();
-		
-		var day = now.getDate() + '';
-		if (day.length < 2) {
-		   day = '0' + day;
-		}
-		var month = (now.getMonth() + 1) + '';
-		if (month.length < 2) {
-		   month = '0' + month;
-		}
-		var year = now.getFullYear();
-		var hour = now.getHours() + '';
-		if (hour.length < 2) {
-			hour = '0' + hour;
-		}
-		var minute = now.getMinutes() + '';
-		if (minute.length < 2) {
-			minute = '0' + minute;
-		}
-		var seconds = now.getSeconds() + '';
-		if (seconds.length < 2) {
-			seconds = '0' + seconds;
-		}
-		
-		return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + seconds;
-	}
 	

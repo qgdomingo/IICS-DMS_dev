@@ -15,7 +15,8 @@
 			closable: false,
 			observeChanges: true,
 			allowMultiple: true,
-			centered: false
+			centered: false,
+			autofocus: false
 		}).modal('show')
 	});
 	
@@ -94,7 +95,9 @@
 			case 'Request Mail Page':
 				returnPageLink = getContextPath() + '/mail/requests.jsp';
 				break;
-			// calendar event
+			case 'Calendar Page':
+				returnPageLink = getContextPath() + '/calendar/viewcalendar.jsp';
+				break;
 		}
 		
 		return returnPageLink;
@@ -118,6 +121,7 @@
 				)
 			)
 			$('#mark_all_as_read_btn').hide();
+			$('#notification_count').text('0');
 		})
 		.fail( function(response) {
 			$('#notification_list').empty();
@@ -127,6 +131,7 @@
 					.append('Unable to Clear Notifications')
 				)
 			)
+			$('#notification_count').text('0');
 		});
 	});
 	

@@ -340,13 +340,10 @@
 		  beforeSubmit: isInvitationResponseFormValid,
           success: function(response) { 
         	  if(response == 'Accepted') {
+        		 callSuccessModal('Successfully Responded ACCEPTED to Event', 'Your event response has been recorded. '
+        			+ 'Refreshing page in 2 seconds'); 
         		 
- 				 $('#event_response_status').text(response);
-				 $('#event_response_details').text(NewResponseData['details']);
-				 $('textarea[name="event_response_text"]').val(NewResponseData['details']);
-				 $('#event_response_timestamp').text(NewResponseData[timestamp]);
-        		  
-        		 callSuccessModal('Successfully Responded ACCEPTED to Event', 'Your event response has been recorded. '); 
+        		 setTimeout(function(){  window.location.reload(); }, 2000);
         	  }
         	  else {
         		 callSuccessModal('Successfully Responded DECLINED to Event', 'Your event response has been recorded. ' +
@@ -362,14 +359,6 @@
 	/* BOOLEAN VALIDATION - Invitation Response Form */
 	function isInvitationResponseFormValid() {
 		if( $('#event_response_form').form('is valid') ) {
-			 var timenow = getDateTimeFormat(); 
-			 $('#view_event_response_timestamp').val(timenow);
-			 
-			 NewResponseData = {
-				 timestamp: timenow,
-				 details: $('textarea[name="event_response_text"]').val()
-			 }
-			
 			 addCSSClass('#event_response_form', 'loading');
 			 $('#event_response_close').prop("disabled", "disabled");
 			return true;
@@ -377,34 +366,6 @@
 		else {
 			return false;
 		}
-	}
-	
-	function getDateTimeFormat() {
-		var now = new Date();
-		
-		var day = now.getDate() + '';
-		if (day.length < 2) {
-		   day = '0' + day;
-		}
-		var month = (now.getMonth() + 1) + '';
-		if (month.length < 2) {
-		   month = '0' + month;
-		}
-		var year = now.getFullYear();
-		var hour = now.getHours() + '';
-		if (hour.length < 2) {
-			hour = '0' + hour;
-		}
-		var minute = now.getMinutes() + '';
-		if (minute.length < 2) {
-			minute = '0' + minute;
-		}
-		var seconds = now.getSeconds() + '';
-		if (seconds.length < 2) {
-			seconds = '0' + seconds;
-		}
-		
-		return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + seconds;
 	}
 	
 /*
