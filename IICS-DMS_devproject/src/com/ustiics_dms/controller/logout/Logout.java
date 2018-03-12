@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
+import com.ustiics_dms.controller.logs.LogsFunctions;
+import com.ustiics_dms.model.Account;
 
 /**
  * Logout.java
@@ -29,6 +31,8 @@ public class Logout extends HttpServlet {
 		try {
 			HttpSession session = request.getSession();
 			session.invalidate();
+			
+			
 			
 			String redirectURL = "/index.jsp";
 			Map<String, String> data = new HashMap<>();

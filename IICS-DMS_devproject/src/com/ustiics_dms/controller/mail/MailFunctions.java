@@ -9,18 +9,28 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.FontSelector;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.ustiics_dms.controller.fileupload.FileUploadFunctions;
 import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
@@ -34,9 +44,9 @@ public class MailFunctions {
 	public static void saveMailInformation(String type, String recipient, String externalRecipient, String  subject, String message, String  name, String  sentBy, String department) throws SQLException, IOException, DocumentException
 	{
 			Connection con = DBConnect.getConnection();
-			InputStream pdf = createPdf(recipient, subject, name, message);
 			PreparedStatement prep = con.prepareStatement("INSERT INTO mail (iso_number, type, external_recipient, subject, file_data, sender_name, sent_by, school_year, department) VALUES (?,?,?,?,?,?,?,?,?)");
 			String isoNumber = getISONumber(department, type);
+			InputStream pdf = createPdf(recipient, subject, name, message, isoNumber, sentBy);
 			prep.setString(1, isoNumber);
 			prep.setString(2, type);
 			prep.setString(3, externalRecipient);
@@ -49,7 +59,7 @@ public class MailFunctions {
 			prep.executeUpdate();
 			
 			sendInternalMail(recipient);
-			
+
 			String des = ManageTasksFunctions.getFullName(sentBy) +" has sent you a mail, " + subject;
 			NotificationFunctions.addNotification("Mail Page", des, recipient);
 			
@@ -397,10 +407,9 @@ public class MailFunctions {
 			
 			return result;
 	}
-	public static InputStream createPdf(String recipient, String subject, String name, String message) throws IOException, DocumentException {
+	public static InputStream createPdf(String recipient, String subject, String name, String message, String isoNumber, String email) throws IOException, DocumentException, SQLException {
 	    Document doc = new Document(PageSize.A4, 50, 50, 50, 50);
 	       
-	    Image img = Image.getInstance("C:\\ros\\tt.jpg");
 	    ByteArrayOutputStream out = new ByteArrayOutputStream();            
 	    PdfWriter writer;
 	    
@@ -408,18 +417,76 @@ public class MailFunctions {
 	            
 	    doc.open();
 	    writer.setStrictImageSequence(true);
-	    doc.add(img);
 	    
+	    float fntSize, lineSpacing;
+	    fntSize = 11.5f;
+	    lineSpacing = 20f;
 	    
-	    Paragraph subjectParagraph = new Paragraph(subject);
-		doc.add(subjectParagraph);
-		Paragraph messageParagraph = new Paragraph(message);
-		doc.add(messageParagraph);
+	    String month = getMonth();
+	    String day = getDay();
+	    String year = getYear();
+	    String date = day + " " + month + " " + year;
+	    
+		String title = getTitle(email) + " " + name;
+		String position = getPosition(email);
+		
+		Paragraph isoNumberPara = new Paragraph(new Phrase(lineSpacing, isoNumber, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+		
+		Paragraph messagePara = new Paragraph(new Phrase(lineSpacing, message, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+		
+		messagePara.setAlignment(Element.ALIGN_JUSTIFIED);
+		
+		Paragraph datePara = new Paragraph(new Phrase(lineSpacing, date, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+		
+		Paragraph closingPara = new Paragraph(new Phrase(lineSpacing, "Your Sincerely,", FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+		
+		Paragraph signatoryPara = new Paragraph(new Phrase(lineSpacing, title, FontFactory.getFont(FontFactory.HELVETICA_BOLD,fntSize)));
+		
+		Paragraph positionPara = new Paragraph(new Phrase(lineSpacing, position, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+		
+		
+		doc.add(isoNumberPara);
+		doc.add(datePara);
+		doc.add(messagePara);
+		doc.add(Chunk.NEWLINE);
+		doc.add(Chunk.NEWLINE);
+		doc.add(closingPara);
+		doc.add(Chunk.NEWLINE);
+		doc.add(Chunk.NEWLINE);
+		doc.add(signatoryPara);
+		doc.add(positionPara);
 	    doc.close();
 	        
 	    return new ByteArrayInputStream(out.toByteArray());
 	}
 	
+	public static String getMonth() 
+	{
+		Calendar mCalendar = Calendar.getInstance();    
+		String month = mCalendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+		
+		return month;
+        
+    }
+	public static String getDay() 
+	{
+		DateFormat dateFormat = new SimpleDateFormat("dd");
+		Date date = new Date();
+		String day = dateFormat.format(date);
+		
+		return day;
+        
+    }
+	
+	public static String getYear() 
+	{
+		DateFormat dateFormat = new SimpleDateFormat("yyyy");
+		Date date = new Date();
+		String year = dateFormat.format(date);
+		
+		return year;
+        
+    }
 	public static File getPdf (int id) throws SQLException 
 	{
 			Connection con = DBConnect.getConnection();
@@ -484,9 +551,9 @@ public class MailFunctions {
 	public static void approveRequest(String type, String recipient, String externalRecipient, String  subject, String message, String  name, String  sentBy, String department) throws SQLException, IOException, DocumentException
 	{
 			Connection con = DBConnect.getConnection();
-			InputStream pdf = createPdf(recipient, subject, name, message);
 			PreparedStatement prep = con.prepareStatement("INSERT INTO approved_request (iso_number, type, external_recipient, subject, file_data, sender_name, sent_by) VALUES (?,?,?,?,?,?,?)");
 			String isoNumber = getISONumber(department, type);
+			InputStream pdf = createPdf(recipient, subject, name, message, isoNumber);
 			prep.setString(1, isoNumber);
 			prep.setString(2, type);
 			prep.setString(3, externalRecipient);
@@ -498,6 +565,41 @@ public class MailFunctions {
 			prep.executeUpdate();	
 	}
 	
+	public static String getTitle(String email) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		
+		PreparedStatement prep = con.prepareStatement("SELECT title FROM accounts WHERE email = ?");
+		
+		prep.setString(1, email);
+		
+		ResultSet rs = prep.executeQuery();
+		String title = "";
+		if(rs.next())
+		{
+			title = rs.getString("title");
+		}
+		
+		return title;
+	}
+	
+	public static String getPosition(String email) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		
+		PreparedStatement prep = con.prepareStatement("SELECT user_type FROM accounts WHERE email = ?");
+		
+		prep.setString(1, email);
+		
+		ResultSet rs = prep.executeQuery();
+		String position = "";
+		if(rs.next())
+		{
+			position = rs.getString("user_type");
+		}
+		
+		return position;
+	}
 	
 	
 }

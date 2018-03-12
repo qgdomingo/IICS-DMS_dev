@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.ustiics_dms.controller.logs.LogsFunctions;
+import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
 import com.ustiics_dms.databaseconnection.DBConnect;
 import com.ustiics_dms.utility.AesEncryption;
 
@@ -26,6 +28,8 @@ public class PasswordRecoveryFunctions {
 			prep.setString(2, encryptedCode);
 				
 			prep.executeUpdate();
+			
+			LogsFunctions.addLog("System", "Request Code", email, ManageTasksFunctions.getFullName(email), ManageTasksFunctions.getUserType(email), ManageTasksFunctions.getDepartment(email));
 			
 	}
 	
@@ -74,6 +78,7 @@ public class PasswordRecoveryFunctions {
 				prep.setString(2, email);
 				
 				prep.executeUpdate();
+				LogsFunctions.addLog("System", "Password Change", email, ManageTasksFunctions.getFullName(email), ManageTasksFunctions.getUserType(email), ManageTasksFunctions.getDepartment(email));
 				deleteRecoveryCode(email, code);
 				result = true;
 			}

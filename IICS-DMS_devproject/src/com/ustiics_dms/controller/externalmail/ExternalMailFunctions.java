@@ -23,6 +23,7 @@ import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.commons.fileupload.FileItem;
 
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.databaseconnection.DBConnect;
 import com.ustiics_dms.model.File;
 import com.ustiics_dms.utility.AesEncryption;
@@ -47,6 +48,9 @@ public class ExternalMailFunctions {
 
 		prep.executeUpdate();
 		
+		String fullName = firstName + " " + lastName;
+		LogsFunctions.addLog("System", "External Sent to Director", emailAddress, fullName, "External", "None", subject);
+		
 
 	}
 	
@@ -57,22 +61,32 @@ public class ExternalMailFunctions {
 		PreparedStatement prep = con.prepareStatement("INSERT INTO external_mail (id, first_name, last_name, email, contact_number, affiliation, subject, message, file_name, file_data) VALUES (?,?,?,?,?,?,?,?,?,?)");
 		
 		ResultSet rs = getExternalMail(threadNumber);
-		rs.next();
 		
-		prep.setString(1, threadNumber);
-		prep.setString(2, rs.getString("first_name"));
-		prep.setString(3, rs.getString("last_name"));
-		prep.setString(4, rs.getString("email"));
-		prep.setString(5, rs.getString("contact_number"));
-		prep.setString(6, rs.getString("affiliation"));
-		prep.setString(7, rs.getString("subject"));
-		prep.setString(8, message);
-		prep.setString(9, fileData.getName());
-		prep.setBinaryStream(10, fileData.getInputStream(), (int) fileData.getSize());
-
-		prep.executeUpdate();
+		if(rs.next())
+		{
+			String firstName = rs.getString("first_name");
+			String lastName = rs.getString("last_name");
+			String fullName = firstName + " " + lastName;
+			String email = rs.getString("email");
+			String contactNumber = rs.getString("contact_number");
+			String affiliation = rs.getString("affiliation");
+			String subject = rs.getString("subject");
+			
+			prep.setString(1, threadNumber);
+			prep.setString(2, firstName);
+			prep.setString(3, lastName);
+			prep.setString(4, email);
+			prep.setString(5, contactNumber);
+			prep.setString(6, affiliation);
+			prep.setString(7, subject);
+			prep.setString(8, message);
+			prep.setString(9, fileData.getName());
+			prep.setBinaryStream(10, fileData.getInputStream(), (int) fileData.getSize());
 		
-
+			prep.executeUpdate();
+		
+			LogsFunctions.addLog("System", "External Reply to Director", email, fullName, "External", "None", subject);
+		}
 	}
 	
 	public static ResultSet getExternalMail(String threadNumber) throws SQLException

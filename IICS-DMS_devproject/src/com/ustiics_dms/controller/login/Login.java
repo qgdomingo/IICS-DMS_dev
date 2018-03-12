@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.model.Account;
 
 /*
@@ -46,7 +47,9 @@ public class Login extends HttpServlet {
 				session.setAttribute("currentCredentials", LoginFunctions.authorize(email));
 				
 				Account acc = (Account) session.getAttribute("currentCredentials");
-
+				
+				LogsFunctions.addLog("System", "Login", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
+				
 				if(acc.getUserType().equalsIgnoreCase("Administrator")) 
 				{
 					redirectURL = "/admin/manageusers.jsp";

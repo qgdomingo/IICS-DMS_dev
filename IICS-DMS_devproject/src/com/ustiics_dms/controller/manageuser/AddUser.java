@@ -9,8 +9,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.model.Account;
 
 /**
@@ -30,31 +32,40 @@ public class AddUser extends HttpServlet {
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		String email = request.getParameter("email");
-		String facultyNo = request.getParameter("faculty_no");
-		String firstName = request.getParameter("first_name");
-		String lastName = request.getParameter("last_name");
-		String fullName = firstName + " " + lastName;
-		String userType = request.getParameter("user_type");
-		String department = request.getParameter("department");
-		
-		if(userType.equalsIgnoreCase("Director") || userType.equalsIgnoreCase("Faculty Secretary") 
-				|| userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff"))
-		{
-			department = "IICS";
-		}
 		try {
+			HttpSession session = request.getSession();
+			Account acc = (Account) session.getAttribute("currentCredentials");
 			
-			ManageUserFunctions.addAccount(email, facultyNo, firstName, lastName, fullName, userType, department);
-			ArrayList<Account> newUserList = new ArrayList<Account>();
-			newUserList.add(ManageUserFunctions.getAccount(email));
+			String email = request.getParameter("email");
+			String facultyNo = request.getParameter("faculty_no");
+			String firstName = request.getParameter("first_name");
+			String lastName = request.getParameter("last_name");
+			String fullName = firstName + " " + lastName;
+			String userType = request.getParameter("user_type");
+			String department = request.getParameter("department");
 			
-			String json = new Gson().toJson(newUserList);
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write(json);
+			if(userType.equalsIgnoreCase("Director") || userType.equalsIgnoreCase("Faculty Secretary") 
+					|| userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff"))
+			{
+				department = "IICS";
+			}
+			
+				
+				ManageUserFunctions.addAccount(email, facultyNo, firstName, lastName, fullName, userType, department);
+
+				String additonalInfo = fullName + "(" + email + ")";
+				
+				LogsFunctions.addLog("System", "Add User", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), additonalInfo);
+				
+				ArrayList<Account> newUserList = new ArrayList<Account>();
+				newUserList.add(ManageUserFunctions.getAccount(email));
+				
+				String json = new Gson().toJson(newUserList);
+				response.setContentType("application/json");
+				response.setCharacterEncoding("UTF-8");
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write(json);
+				
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -111,6 +111,34 @@ public class ManageTasksFunctions {
 			
 	}
 	
+	public static String getDepartment(String email) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT department FROM accounts WHERE email = ?");
+		prep.setString(1, email);
+		
+		ResultSet rs = prep.executeQuery();
+		
+		rs.next();
+		
+		return rs.getString("department");
+			
+	}
+	
+	public static String getUserType(String email) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT user_type FROM accounts WHERE email = ?");
+		prep.setString(1, email);
+		
+		ResultSet rs = prep.executeQuery();
+		
+		rs.next();
+		
+		return rs.getString("user_type");
+			
+	}
+	
 	public static String getTaskTitle(String id) throws SQLException
 	{
 		Connection con = DBConnect.getConnection();
