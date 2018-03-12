@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Notification;
+import com.ustiics_dms.utility.AesEncryption;
 
 
 @WebServlet("/RetrieveNotifications")
@@ -46,11 +47,12 @@ public class RetrieveNotifications extends HttpServlet {
 				ResultSet notifDetails = (ResultSet) NotificationFunctions.retrieveNotificationDetails(userNotif.getString("id"));
 				if(notifDetails.next())
 				{
-				notifList.add(new Notification(
-						userNotif.getString("id"),
-						notifDetails.getString("description"),
-						userNotif.getString("flag")
-						 ));	
+					notifList.add(new Notification(
+							AesEncryption.encrypt(userNotif.getString("id")),
+							notifDetails.getString("page"),
+							notifDetails.getString("description"),
+							notifDetails.getString("notif_timestamp")
+							 ));	
 				}
 			}
 			
@@ -68,7 +70,6 @@ public class RetrieveNotifications extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		doGet(request, response);
 	}
 

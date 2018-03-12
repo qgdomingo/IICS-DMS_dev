@@ -40,16 +40,17 @@ public class EditUser extends HttpServlet {
 		String userType = request.getParameter("user_type");
 		String department = request.getParameter("department");
 		String originalEmail = request.getParameter("original_email");	
+		String title = request.getParameter("title");
+		String contactNumber = request.getParameter("cellphone_number");
 		
 		if(userType.equalsIgnoreCase("Director") || userType.equalsIgnoreCase("Faculty Secretary") 
 				|| userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff"))
 		{
 			department = "IICS";
-			System.out.println("DEPARTMENT: " + department);
 		}
 		
 		try {
-			ManageUserFunctions.updateAccount(email, facultyNo, firstName, lastName, userType, department, originalEmail);
+			ManageUserFunctions.updateAccount(email, facultyNo, firstName, lastName, userType, department, title, contactNumber, originalEmail);
 			ArrayList<Account> updatedUserList = new ArrayList<Account>();
 			updatedUserList.add(ManageUserFunctions.getAccount(email));
 			

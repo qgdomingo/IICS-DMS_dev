@@ -28,6 +28,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 		
@@ -155,7 +156,7 @@
 				<div class="ui text loader">Retrieving Task Statistics</div>
 			</div>
 			
-			<form class="ui form" id="view_stats_form">
+			<form class="ui form" method="POST" action="${pageContext.request.contextPath}/RetrieveTasksTotalStatistics" id="view_stats_form">
 				<h4 class="element-rmb element-mt">View Task Statistics:</h4>
 				<div class="four fields">
 					<div class="field">
@@ -191,7 +192,7 @@
 					</div>
 					
 					<div class="field" id="user_selection">
-						<select class="ui fluid searchable dropdown" name="user_selection" id="user_selection_dropdown">
+						<select class="ui fluid search selection dropdown" name="user_selection" id="user_selection_dropdown">
 							<option value="">Select User</option>
 						</select>
 					</div>
@@ -211,6 +212,15 @@
 			<div class="ui stackable grid">
 				<div class="seven wide computer sixteen wide tablet sixteen wide mobile column">
 					<canvas id="myChart"></canvas>
+					
+					<div class="ui message" id="no_statistics_msg">
+						<div class="header">No statistics gathered for this query.</div>
+					</div>
+					<div class="ui message" id="error_statistics_msg">
+						<div class="header">
+							Unable to gather statistics for the chart, please try again or try refreshing the page.
+						</div>
+					</div>
 				</div>
 				
 				<div class="nine wide computer sixteen wide tablet sixteen wide mobile column">
@@ -228,14 +238,14 @@
 						<tbody id="task_department_tablebody"></tbody>
 					</table>
 					
-					<div class="ui action input" id="task_facultystaff_filter">
- 						<select class="ui fluid dropdown">
+					<div class="ui action input element-mb" id="task_facultystaff_filter">
+ 						<select class="ui fluid dropdown" id="task_facultystaff_filter_dropdown">
 							<option value="">Filter Task Status</option>
 							<option value="On-time Submission">On-time Submission</option>
 							<option value="Late Submission">Late Submission</option>
 							<option value="No Submission">No Submission</option>
 						</select>
-  						<div class="ui grey button">Clear Filter</div>
+  						<div class="ui grey button" id="task_facultystaff_filter_clear">Clear Filter</div>
 					</div>
 									
 					<table class="ui compact selectable table" id="task_facultystaff_table">
@@ -312,6 +322,8 @@
 	</body>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/dataTable/jquery.dataTables.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>	
 	<script src="${pageContext.request.contextPath}/resource/js/session/regular_user_check.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/fullcalendar/moment.min.js"></script>
@@ -321,4 +333,5 @@
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/reports/directory_statistics.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/reports/task_statistics.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/reports/retrieve_acad_year.js"></script>
 </html> 

@@ -80,8 +80,9 @@ public class NotificationFunctions {
 
 		Connection con = DBConnect.getConnection();
 		
-		PreparedStatement prep = con.prepareStatement("SELECT id, email, flag FROM notification_list WHERE email = ?");
+		PreparedStatement prep = con.prepareStatement("SELECT id, email, flag FROM notification_list WHERE email = ? AND flag = ?");
 		prep.setString(1, email);
+		prep.setString(2, "Unread");
 		
 		ResultSet rs = prep.executeQuery();
 		
@@ -93,7 +94,7 @@ public class NotificationFunctions {
 
 		Connection con = DBConnect.getConnection();
 		
-		PreparedStatement prep = con.prepareStatement("SELECT description FROM notification WHERE id = ?");
+		PreparedStatement prep = con.prepareStatement("SELECT page, description, notif_timestamp FROM notification WHERE id = ?");
 		prep.setString(1, id);
 		
 		ResultSet rs = prep.executeQuery();
@@ -108,6 +109,16 @@ public class NotificationFunctions {
 			prep.setString(1, "Read");
 			prep.setString(2, id);
 			prep.setString(3, email);
+			prep.executeUpdate();
+
+	}
+	
+	public static void updateAllNotificationStatus(String email) throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("UPDATE notification_list SET flag = ? WHERE email = ?");
+			prep.setString(1, "Read");
+			prep.setString(2, email);
 			prep.executeUpdate();
 
 	}

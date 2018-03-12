@@ -24,9 +24,7 @@ public class RetrieveTasksTotalStatistics extends HttpServlet {
 
     public RetrieveTasksTotalStatistics() {
         super();
-    
     }
-
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -35,9 +33,17 @@ public class RetrieveTasksTotalStatistics extends HttpServlet {
 		    HttpSession session = request.getSession();
 		    Account acc = (Account) session.getAttribute("currentCredentials");
 			
-		    String viewBy = request.getParameter("view_by"); // example "Department", "Faculty", or "Staff"
-			String source = request.getParameter("source"); // example "Information Systems", "coleensy@gmail.com"
-			String year = request.getParameter("year"); // example "2017-2018"
+		    String viewBy = request.getParameter("view_scope"); // example "Department", "Faculty", or "Staff"
+		    String source = "";  // example "Information Systems", "coleensy@gmail.com"
+		    
+		    if(viewBy.equalsIgnoreCase("Department")) {
+		    	source = request.getParameter("department_selection");
+		    }
+		    else {
+		    	source = request.getParameter("user_selection");
+		    }
+
+			String year = request.getParameter("view_academic_year"); // example "2017-2018"
 			String json = null;
 			
 		    List<TaskStatistics> departmentStats = new ArrayList<TaskStatistics>(); // used for department
@@ -65,9 +71,7 @@ public class RetrieveTasksTotalStatistics extends HttpServlet {
 		}
 	}
 
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

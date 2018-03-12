@@ -12,8 +12,8 @@
  */
 	
 	/* UPDATE - Add new row data */
-	function addNewRowData(newData) {
-		var rowString = '<tr>'
+	function addNewRowData(newData, index) {
+		var rowString = '<tr id="'+index+'">'
 			+ '<td>' + newData.facultyNumber + '</td>'
 			+ '<td>' + newData.firstName + '</td>'
 			+ '<td>' + newData.lastName + '</td>'
@@ -49,8 +49,7 @@
 	        if(!response.length == 0) {
 	        	if(!isUsersTableEmpty)
 				{
-					console.log(response);
-	        		table.row.add( $(addNewRowData(response[0]))[0] ).draw();
+	        		table.row.add( $(addNewRowData(response[0], localAccountsData.length + 1))[0] ).draw();
 					table.order( [7, 'desc'] ).draw();
 				}
 				else

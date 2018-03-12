@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.ustiics_dms.model.Account;
+import com.ustiics_dms.utility.AesEncryption;
 import com.ustiics_dms.controller.notifications.NotificationFunctions;;
 
 
@@ -19,16 +20,11 @@ public class UpdateNotificationStatus extends HttpServlet {
        
     public UpdateNotificationStatus() {
         super();
-
     }
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		doPost(request, response);
-		
+		doPost(request, response);	
 	}
-
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -36,14 +32,14 @@ public class UpdateNotificationStatus extends HttpServlet {
 			HttpSession session = request.getSession();
 			Account acc = (Account) session.getAttribute("currentCredentials");
 			    
-			String id = request.getParameter("id");
+			String id = AesEncryption.decrypt(request.getParameter("id"));
 			String email = acc.getEmail();
 			
 			NotificationFunctions.updateNotificationStatus(id, email);
 		
 		} catch (Exception e) {
-
 			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 

@@ -38,6 +38,8 @@ public class AddUser extends HttpServlet {
 		String fullName = firstName + " " + lastName;
 		String userType = request.getParameter("user_type");
 		String department = request.getParameter("department");
+		String title = request.getParameter("title");
+		String contactNumber = request.getParameter("cellphone_number");
 		
 		if(userType.equalsIgnoreCase("Director") || userType.equalsIgnoreCase("Faculty Secretary") 
 				|| userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff"))
@@ -46,7 +48,7 @@ public class AddUser extends HttpServlet {
 		}
 		try {
 			
-			ManageUserFunctions.addAccount(email, facultyNo, firstName, lastName, fullName, userType, department);
+			ManageUserFunctions.addAccount(email, facultyNo, firstName, lastName, fullName, userType, department, title, contactNumber);
 			ArrayList<Account> newUserList = new ArrayList<Account>();
 			newUserList.add(ManageUserFunctions.getAccount(email));
 			

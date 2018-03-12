@@ -216,7 +216,7 @@
 						</div>
 						<div class="field">
 							<label>Title:</label>
-							<input type="text" name="title" placeholder="09000000000"/>
+							<input type="text" name="title"/>
 						</div>
 					</div>
 					
@@ -238,7 +238,7 @@
 						</div>
 						<div class="field">
 							<label>Cellphone Number</label>
-							<input type="text" name="cellphone_number"/>
+							<input type="text" name="cellphone_number" placeholder="09000000000"/>
 						</div>
 					</div>
 					
@@ -305,7 +305,7 @@
 						</div>
 						<div class="field">
 							<label>Title:</label>
-							<input type="text" name="title" id="edit_title" placeholder="09000000000"/>
+							<input type="text" name="title" id="edit_title"/>
 						</div>
 					</div>
 					
@@ -327,7 +327,7 @@
 						</div>
 						<div class="field">
 							<label>Cellphone Number</label>
-							<input type="text" name="cellphone_number" id="edit_cellphone_number"/>
+							<input type="text" name="cellphone_number" id="edit_cellphone_number"  placeholder="09000000000"/>
 						</div>
 					</div>
 					
@@ -503,8 +503,8 @@
 	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/manageusers/edit_user.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/manageusers/manage_users.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/manageusers/add_user.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/manageusers/edit_user.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/manageusers/enable_disable_user.js"></script>
 </html>

@@ -44,13 +44,14 @@ public class RetrieveUsersFunctions {
 	{
 		Connection con = DBConnect.getConnection();
 		String statement = "SELECT full_name, email, user_type, department FROM accounts "
-				+ "WHERE NOT email = ? AND NOT user_type = ? AND user_type = ? AND NOT status = 'inactive'";
+				+ "WHERE NOT email = ? AND NOT user_type = ? AND user_type = ? OR user_type =? AND NOT status = 'inactive'";
 		
 		PreparedStatement prep = con.prepareStatement(statement);
 		
 		prep.setString(1, email);
 		prep.setString(2, "Administrator");
 		prep.setString(3, "Staff");
+		prep.setString(4, "Supervisor");
 		
 		ResultSet result = prep.executeQuery();
 

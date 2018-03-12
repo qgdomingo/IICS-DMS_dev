@@ -16,6 +16,8 @@
  */
 	var table;
 	var isUsersTableEmpty = false;
+	var localAccountsData;
+	var selectedIndex;
 	
 /* 
  * FUNCTIONS 
@@ -29,8 +31,9 @@
 			$('#usertable-body').empty();
 			if(!responseData.length == 0) 
 			{
+				localAccountsData = responseData; 
 				$.each(responseData, (index, account) => {
-					$('<tr id="data'+index+'">').appendTo('#usertable-body')		
+					$('<tr id="'+index+'">').appendTo('#usertable-body')		
 						.append($('<td>').text(account.facultyNumber))
 						.append($('<td>').text(account.firstName))
 						.append($('<td>').text(account.lastName))
@@ -105,11 +108,75 @@
 	/* SELECT ROW */
 	function selectRow() {
 	    $('#userstable tbody').on('click', 'tr', function (){
+	    	selectedIndex = $(this).attr('id');
 	        $(this).toggleClass('active');
 			selectedRowsTogglers();
 	    });
 	}
+	
+	
+/*
+ * EDIT USER 
+ */
+	
+	/* GET - Individual User for Edit */
+	function retrieveUserForEdit() {
+		var existingData = table.rows('.active').data()[0];
+		var localDataReference = localAccountsData[selectedIndex];
 
+		$('#edit_original_email').val(existingData[3]);		
+		$('#edit_facultyno').val(existingData[0]);
+		$('#edit_title').val(localDataReference.title);
+		$('#edit_firstname').val(existingData[1]);
+		$('#edit_lastname').val(existingData[2]);
+		$('#edit_email').val(existingData[3]);
+		$('#edit_cellphone_number').val(localDataReference.contactNumber);
+		$('#edit_usertype').dropdown('set selected', existingData[4]);
+		$('#edit_department').dropdown('set selected', existingData[5]);
+		
+	}
+	
+	/* OPEN MODAL - Edit User */
+	$('#edituser_btn').click(() => {		
+		$('#edituser_dia').modal({
+			closable: false,
+			observeChanges: true,
+			onShow: () => {
+				checkUserTypeDepartment('#edit_usertype', '#edit_department_field'); 
+				retrieveUserForEdit();
+			},
+			onHidden: () => {
+				cleanEditUserForm();
+				selectedRowsTogglers();
+			}
+		}).modal('show');
+		
+	});
+	
+	/* SUBMIT - Edit User Profile Form */
+	$('#edituser_form').ajaxForm({
+		 beforeSubmit: isEditUserFormValid,
+	     success: function(response) { 
+	        if(!response.length == 0) {
+	        	localAccountsData[selectedIndex] = response[0];
+	        	table.row('.active').remove();
+				table.row.add( $(addNewRowData(response[0], selectedIndex))[0] ).draw();	
+				callSuccessModal('Success', 'The account has successfully been updated.');
+	        }
+	        else if(response == 'existing email') {
+	        	$('#edit_invalid_email_message').show();
+	        	enableEditUserForm();
+	        }
+	        else {
+	        	callFailModal('Unable to Edit User', 'An error has occured when updating an account. ' +
+					'Please try again. If the problem persists, please contact your administrator.');
+	        }
+	     },
+	     error: function(response) {
+	    	 callFailRequestModal();
+	     }
+	});
+	
 /*
  *  SEARCH FUNCTIONS
  */

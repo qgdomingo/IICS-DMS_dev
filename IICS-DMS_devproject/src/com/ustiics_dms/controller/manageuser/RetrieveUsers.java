@@ -32,6 +32,8 @@ public class RetrieveUsers extends HttpServlet {
 			while(accounts.next()) { 
 				users.add(new Account(accounts.getString("time_created"),
 									  Integer.parseInt(accounts.getString("faculty_number")),
+									  accounts.getString("title"),
+									  accounts.getString("contact_number"),
 									  accounts.getString("first_name"),
 									  accounts.getString("last_name"),
 									  accounts.getString("first_name") + " " + accounts.getString("last_name"),

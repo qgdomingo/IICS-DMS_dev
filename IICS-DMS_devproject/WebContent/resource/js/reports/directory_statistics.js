@@ -32,15 +32,19 @@
 		if (tempData == 'Staff') {
 			$('#user_selection').show();
 			$('#user_selection_dropdown').dropdown('restore defaults'); 
+			$('#department_selection_dropdown').dropdown('restore defaults'); 
 			getListStaff();
 		}
 		else if (tempData == 'Faculty') {
 			$('#user_selection').show();
 			$('#user_selection_dropdown').dropdown('restore defaults'); 
+			$('#department_selection_dropdown').dropdown('restore defaults'); 
 			getListFaculty();
 		}
 		else if (tempData == 'Department') {
 			$('#department_selection').show();
+			$('#user_selection_dropdown').dropdown('restore defaults'); 
+			$('#department_selection_dropdown').dropdown('restore defaults'); 
 		}
 	});
 	
@@ -66,7 +70,7 @@
 						$('#user_selection_dropdown').append($('<option value="'+account.email+'">')
 								.text(account.fullName + ' <' +account.email+ '>'));
 					});
-					$('#user_selection_dropdown').dropdown(); 
+					$('#user_selection_dropdown').dropdown('restore defaults'); 
 					removeCSSClass('#user_selection_dropdown', 'loading');
 				}
 				else if(responseJson.length == 0)
@@ -75,7 +79,7 @@
 					isFacultyListEmpty = true;
 					$('#user_selection_dropdown').empty(); 
 					$('#user_selection_dropdown').append('<option value="">').text('No Users are available');
-					$('#user_selection_dropdown').dropdown(); 
+					$('#user_selection_dropdown').dropdown('restore defaults'); 
 					removeCSSClass('#user_selection_dropdown', 'loading');
 				}
 			})
@@ -94,12 +98,12 @@
 					$('#user_selection_dropdown').append($('<option value="'+account.email+'">')
 							.text(account.fullName + ' <' +account.email+ '>'));
 				});
-				$('#user_selection_dropdown').dropdown(); 
+				$('#user_selection_dropdown').dropdown('restore defaults'); 
 			}
 			else {
 				$('#user_selection_dropdown').empty(); 
 				$('#user_selection_dropdown').append('<option value="">').text('No Users are available');
-				$('#user_selection_dropdown').dropdown(); 
+				$('#user_selection_dropdown').dropdown('restore defaults'); 
 			}
 
 			removeCSSClass('#user_selection_dropdown', 'loading');
@@ -123,7 +127,7 @@
 						$('#user_selection_dropdown').append($('<option value="'+account.email+'">')
 								.text(account.fullName + ' <' +account.email+ '>'));
 					});
-					$('#user_selection_dropdown').dropdown(); 
+					$('#user_selection_dropdown').dropdown('restore defaults'); 
 					removeCSSClass('#user_selection_dropdown', 'loading');
 				}
 				else if(responseJson.length == 0)
@@ -132,7 +136,7 @@
 					isStaffListEmpty = true;
 					$('#user_selection_dropdown').empty(); 
 					$('#user_selection_dropdown').append('<option value="">').text('No Users are available');
-					$('#user_selection_dropdown').dropdown(); 
+					$('#user_selection_dropdown').dropdown('restore defaults'); 
 					removeCSSClass('#user_selection_dropdown', 'loading');
 				}
 			})
@@ -151,12 +155,12 @@
 					$('#user_selection_dropdown').append($('<option value="'+account.email+'">')
 							.text(account.fullName + ' <' +account.email+ '>'));
 				});
-				$('#user_selection_dropdown').dropdown(); 
+				$('#user_selection_dropdown').dropdown('restore defaults'); 
 			}
 			else {
 				$('#user_selection_dropdown').empty(); 
 				$('#user_selection_dropdown').append('<option value="">').text('No Users are available');
-				$('#user_selection_dropdown').dropdown(); 
+				$('#user_selection_dropdown').dropdown('restore defaults'); 
 			}
 
 			removeCSSClass('#user_selection_dropdown', 'loading');
