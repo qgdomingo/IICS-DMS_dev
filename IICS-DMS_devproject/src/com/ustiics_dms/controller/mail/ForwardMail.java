@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.itextpdf.text.DocumentException;
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.controller.notifications.NotificationFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.File;
@@ -50,8 +51,9 @@ public class ForwardMail extends HttpServlet {
 			if(button.equalsIgnoreCase("Send Mail"))
 			{
 				String title = acc.getTitle() + acc.getFullName();
-					MailFunctions.saveMailInformation(type, "duran@gmail.com", externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment());
-					
+				MailFunctions.saveMailInformation(type, "duran@gmail.com", externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment());
+				//
+				LogsFunctions.addLog("System", "Send Mail", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), subject);
 			}
 			else if(button.equalsIgnoreCase("Mail Request") && acc.getUserType().equals("Faculty") || acc.getUserType().equals("Faculty Secretary"))
 			{
@@ -64,7 +66,7 @@ public class ForwardMail extends HttpServlet {
 				 int latestID = MailFunctions.getIncrement();
 				 File file = MailFunctions.getPdf(latestID);
 				 MailFunctions.addExportedMail (latestID, acc.getEmail());
-				 
+				 LogsFunctions.addLog("System", "Export Mail", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), subject);
 				 String contentType = this.getServletContext().getMimeType(file.getFileName());
 				 
 				 response.setHeader("Content-Type", contentType);

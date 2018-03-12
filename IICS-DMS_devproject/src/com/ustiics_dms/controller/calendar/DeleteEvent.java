@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.utility.AesEncryption;
 
@@ -34,7 +35,8 @@ public class DeleteEvent extends HttpServlet {
 			String id = AesEncryption.decrypt(request.getParameter("id"));
 			
 			ManageEventsFunctions.deleteEvent(id, acc.getEmail());
-			
+			String title = ManageEventsFunctions.getEventTitle(id);
+			LogsFunctions.addLog("System", "Delete Event", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), title);
 			response.setContentType("text/plain");
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write("success");

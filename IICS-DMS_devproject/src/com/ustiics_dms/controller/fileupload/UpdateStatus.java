@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.ustiics_dms.controller.login.LoginFunctions;
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.utility.AesEncryption;
 
@@ -38,17 +39,22 @@ public class UpdateStatus extends HttpServlet {
 			
 			String id = AesEncryption.decrypt(request.getParameter("id"));
 			String button = request.getParameter("button_choice");
-		
+			String title = FileUploadFunctions.getIncomingDocTitle(id);
 			if(button.equalsIgnoreCase("Edit Note"))
 			{
 				String note = request.getParameter("note");
 
 				FileUploadFunctions.addNote(id, note, acc.getEmail());
+
+				LogsFunctions.addLog("System", "Change Note", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), title);
 			}
 			else if(button.equalsIgnoreCase("Mark as Done"))
 			{
 				String type = AesEncryption.decrypt(request.getParameter("type"));
+				
 				FileUploadFunctions.markAsDone(id, type, acc.getEmail());
+
+				LogsFunctions.addLog("System", "Mark As Done", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), title);
 			}
 		} catch (Exception e) {
 			

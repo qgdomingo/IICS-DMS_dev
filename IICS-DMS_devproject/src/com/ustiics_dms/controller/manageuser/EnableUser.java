@@ -10,8 +10,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
+import com.ustiics_dms.controller.logs.LogsFunctions;
+import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.utility.SessionChecking;
 
@@ -35,13 +38,20 @@ public class EnableUser extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		
 		try {
-			String[] selected = request.getParameterValues("selected[]");
+			HttpSession session = request.getSession();
+			Account acc = (Account) session.getAttribute("currentCredentials");
+			
+			String selected [] = request.getParameter("selected[]").split(",");
+			String purpose = request.getParameter("enable_user_purpose");
 			ArrayList<Account> updatedUserList = new ArrayList<Account>();
+			
 			
 			for(String email : selected)
 			{
 				ManageUserFunctions.enableStatus(email);
 				updatedUserList.add(ManageUserFunctions.getAccount(email));
+				String additonalInfo = ManageTasksFunctions.getFullName(email) + "(" + email + ")";
+				LogsFunctions.addLog("System", "Enable User", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), additonalInfo, purpose);
 			}
 			
 			String json = new Gson().toJson(updatedUserList);

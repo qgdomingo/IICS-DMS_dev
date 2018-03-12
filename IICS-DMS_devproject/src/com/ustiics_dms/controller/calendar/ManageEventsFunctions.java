@@ -66,6 +66,20 @@ public class ManageEventsFunctions {
 			
 	}
 	
+	public static String getEventTitle(String id) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT title FROM events WHERE id = ?");
+		prep.setString(1, id);
+		
+		ResultSet rs = prep.executeQuery();
+		
+		rs.next();
+		
+		return rs.getString("title");
+			
+	}
+	
 	public static int getIncrement() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();

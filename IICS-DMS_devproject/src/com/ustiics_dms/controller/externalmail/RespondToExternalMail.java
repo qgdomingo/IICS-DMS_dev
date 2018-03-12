@@ -14,6 +14,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.controller.mail.ExternalMail;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.utility.AesEncryption;
@@ -70,7 +71,7 @@ public class RespondToExternalMail extends HttpServlet {
 			ExternalMailFunctions.saveSentExternalMail(threadNumber, subject, message, fileData, acc.getEmail());
 			
 			threadNumber = AesEncryption.encrypt(threadNumber);
-			
+			LogsFunctions.addLog("System", "External Mail", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), subject);
 
 		}catch(Exception e) {
 			e.printStackTrace();

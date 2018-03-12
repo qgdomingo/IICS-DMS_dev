@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.model.Account;
 
 
@@ -37,6 +38,8 @@ public class UpdateAcknowledgeTimeStamp extends HttpServlet {
 				String email = acc.getEmail();
 				
 				MailFunctions.updateAcknowledgeTimeStamp(emailID, email);
+				String title = MailFunctions.getMailTitle(emailID);
+				LogsFunctions.addLog("System", "Acknowledge Mail", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), title);
 				
 	} catch (Exception e) {
 

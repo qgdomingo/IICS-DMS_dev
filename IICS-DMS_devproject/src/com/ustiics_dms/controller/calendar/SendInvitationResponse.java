@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.utility.AesEncryption;
 
@@ -36,7 +37,9 @@ public class SendInvitationResponse extends HttpServlet {
 			String buttonResponse = request.getParameter("event_response");
 			
 			ManageEventsFunctions.updateInvitationResponse(id, acc.getEmail(), buttonResponse, responseText, responseTimestamp);
-			
+			String title = ManageEventsFunctions.getEventTitle(id);
+			LogsFunctions.addLog("System", "Respond To Event", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), buttonResponse, title);
+			LogsFunctions.addLog("System", "Update Response", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), title);
 			response.setContentType("text/plain");
 		    response.setStatus(HttpServletResponse.SC_OK);
 		    response.getWriter().write(buttonResponse);
