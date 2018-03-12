@@ -6,7 +6,6 @@
 
 	$(document).ready(() => {
 		getAcademicYearConfigurations();
-		cleanAcademicYearForm();
 	});
 	
 	/* VARIABLE - Inputs */
