@@ -60,7 +60,8 @@ public class Thread extends HttpServlet {
 						documentFiles.getString("status"),
 						documentFiles.getString("time_created"),
 						documentFiles.getString("department"),
-						documentFiles.getString("due_on")
+						documentFiles.getString("due_on"),
+						documentFiles.getString("note")
 						 ));	
 				
 			}

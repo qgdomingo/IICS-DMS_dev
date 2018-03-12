@@ -15,7 +15,7 @@ public class RetrieveDocumentFunctions {
 			if(type.equalsIgnoreCase("Incoming"))
 			{
 				sqlStatement = "SELECT id, type, thread_number, reference_no, source_recipient, title, category, action_required, file_name, description, created_by,"
-						+ " email, status, time_created, due_on, department FROM incoming_documents WHERE department = ?";
+						+ " email, status, time_created, due_on, department, note FROM incoming_documents WHERE department = ?";
 			}
 			else if(type.equalsIgnoreCase("Outgoing"))
 			{
@@ -50,11 +50,11 @@ public class RetrieveDocumentFunctions {
 	public static ResultSet retrieveAllDocuments(String email) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT type, id, reference_no, source_recipient, title, category, action_required, file_name, description, created_by, email, status,  time_created, department  FROM incoming_documents WHERE email = ? " + 
+			PreparedStatement prep = con.prepareStatement("SELECT type, id, reference_no, source_recipient, title, category, action_required, file_name, description, created_by, email, status,  time_created, department, note  FROM incoming_documents WHERE email = ? " + 
 					"UNION" + 
-					" SELECT type, id, reference_no, source_recipient, title, category, null, file_name, description, created_by, email, null, time_created, department  FROM outgoing_documents WHERE email = ? " + 
+					" SELECT type, id, reference_no, source_recipient, title, category, null, file_name, description, created_by, email, null, time_created, department, null  FROM outgoing_documents WHERE email = ? " + 
 					"UNION" + 
-					" SELECT type, id, null, null, title, category, null,  file_name, description, created_by, email, null, time_created , null FROM personal_documents WHERE email = ? ORDER BY time_created ASC");
+					" SELECT type, id, null, null, title, category, null,  file_name, description, created_by, email, null, time_created , null, null FROM personal_documents WHERE email = ? ORDER BY time_created ASC");
 			
 			prep.setString(1,  email);
 			prep.setString(2,  email);
@@ -67,9 +67,9 @@ public class RetrieveDocumentFunctions {
 	public static ResultSet retrieveThread(String threadNumber) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT id, type, thread_number, reference_no, source_recipient, title, category, action_required, file_name, description, created_by, email, status,  time_created, department, due_on  FROM incoming_documents WHERE thread_number = ?" + 
+			PreparedStatement prep = con.prepareStatement("SELECT id, type, thread_number, reference_no, source_recipient, title, category, action_required, file_name, description, created_by, email, status,  time_created, department, due_on, note  FROM incoming_documents WHERE thread_number = ?" + 
 					" UNION " + 
-					"SELECT id, type, thread_number, null, source_recipient, title, category, null, file_name, description, created_by, email, null, time_created, department, null  FROM outgoing_documents WHERE thread_number = ? ORDER BY time_created DESC");
+					"SELECT id, type, thread_number, null, source_recipient, title, category, null, file_name, description, created_by, email, null, time_created, department, null, null  FROM outgoing_documents WHERE thread_number = ? ORDER BY time_created DESC");
 			
 			prep.setString(1,  threadNumber);
 			prep.setString(2,  threadNumber);

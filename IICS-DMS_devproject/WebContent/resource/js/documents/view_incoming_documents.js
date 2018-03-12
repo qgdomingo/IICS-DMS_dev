@@ -130,6 +130,7 @@
 				autofocus: false,
 				onHidden: function() {
 					$('#viewincoming_due').text('');
+					$('#view_incoming_note').val('');
 					reinitializeMarkAsDone();
 					hideNoteMessages();
 				}
@@ -161,6 +162,7 @@
 		
 		$('#viewincoming_note_id').val(selectedData['id']);
 		$('#viewincoming_note_type').val(selectedData['type']);
+		$('#view_incoming_note').val(selectedData['note']);
 		
 		if(!(selectedData['status'] == 'Done')) {
 			$('#viewincoming_done_id').val(selectedData['id']);
