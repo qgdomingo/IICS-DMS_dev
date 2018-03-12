@@ -31,11 +31,12 @@ public class DisableUser extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		String[] selected = request.getParameterValues("selected[]");
-		ArrayList<Account> updatedUserList = new ArrayList<Account>();
+		response.setCharacterEncoding("UTF-8");
 		
 		try {
+			String[] selected = request.getParameterValues("selected[]");
+			ArrayList<Account> updatedUserList = new ArrayList<Account>();
+			
 			for(String email : selected)
 			{
 				ManageUserFunctions.disableStatus(email);
@@ -44,11 +45,12 @@ public class DisableUser extends HttpServlet {
 			
 			String json = new Gson().toJson(updatedUserList);
 			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write(json);
-		} catch (SQLException e) {
+			
+		} catch (Exception e) {
 			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		
 	}
