@@ -20,6 +20,7 @@
 		hideTaskTables();
 		hideChartMessages();
 		viewStatisticsFormValidation(); 
+		getAcadYearList('#view_academic_year');
 		
 		taskChart = new Chart($('#myChart'), {
 		    type: 'doughnut',

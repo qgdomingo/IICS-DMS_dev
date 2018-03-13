@@ -20,6 +20,7 @@
 		hideMailTables();
 		hideChartMessages();
 		viewStatisticsFormValidation(); 
+		getAcadYearList('#view_academic_year');
 		
 		mailChart = new Chart($('#myChart'), {
 		    type: 'doughnut',

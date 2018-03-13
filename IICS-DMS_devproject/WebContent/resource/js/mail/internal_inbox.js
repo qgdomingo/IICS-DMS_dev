@@ -5,6 +5,8 @@
 	$(document).ready( function() {
 		getInbox();
 		hideAcknowledgementMessages();
+		
+		getAcadYearList('#search_acad_year');
 	});
 
 /*
@@ -30,7 +32,7 @@
 	
 	/* CUSTOM SEARCH FILTER: Date Range */
 	function filterDateRange(data, min, max) {
-		var dateData = new Date( data[3] ).getTime(); 
+		var dateData = new Date( data[5] ).getTime(); 
 			
 		if ( ( isNaN(min) && isNaN(max) ) ||
 		     ( isNaN(min) && dateData <= max ) ||
@@ -64,12 +66,13 @@
 						.append($('<td>').text(inboxMail.subject))
 						.append($('<td>').text(inboxMail.type))
 						.append($('<td>').text(inboxMail.isoNumber))
+						.append($('<td>').text(inboxMail.schoolYear))
 						.append($('<td>').text(inboxMail.dateCreated))
 				});
 					
 				// bind events and classes to the table after all data received
 				inboxMailTable = $('#inbox_table').DataTable({
-					'order': [[4, 'desc']]
+					'order': [[5, 'desc']]
 				});
 				selectInboxRow();
 				isInboxMailTableEmpty = false;
@@ -78,7 +81,7 @@
 			else if(response.length == 0)
 			{
 				$('<tr>').appendTo('#inbox_tablebody')
-					.append($('<td class="center-text" colspan="5">')
+					.append($('<td class="center-text" colspan="6">')
 							.text("You do not have any mail right now."));
 				removeCSSClass('#inbox_loading', 'active');
 			}
@@ -86,7 +89,7 @@
 		.fail((response) => {
 			$('#inbox_tablebody').empty();
 			$('<tr>').appendTo('#incoming_tablebody')
-			.append($('<td class="center-text error" colspan="5">')
+			.append($('<td class="center-text error" colspan="6">')
 					.text("Unable to retrieve your inbox. Please try refreshing the page."));
 			removeCSSClass('#inbox_loading', 'active');
 		});
@@ -135,6 +138,7 @@
 		$('#view_mail_sender').text(selectedData.senderName + '(' + selectedData.senderEmail + ')');
 		$('#view_mail_subject').text(selectedData.subject);
 		$('#view_mail_type').text(selectedData.type);
+		$('#view_mail_acad_year').text(selectedData.schoolYear);
 		$('#view_mail_iso_number').text(selectedData.isoNumber);
 		$('#view_mail_timestamp').text(selectedData.dateCreated);
 		$('#view_mail_id').val(selectedData.id);
@@ -265,6 +269,11 @@
 		}) 
 	});
 		
+	/* SEARCH - Academic Year */
+	$('#search_acad_year').on('change', function() {
+		if(!isInboxMailTableEmpty) inboxMailTable.column(4).search( $(this).val() ).draw();
+	});
+	
 	/* CLEAR SEARCH EVENT - Inbox */
 	$('#clear_search').click(() => {
 		clearInboxSearch();
@@ -276,5 +285,6 @@
 		$('#search_sentfrom_calendar').calendar('clear');
 		$('#search_sentto_calendar').calendar('clear');
 		$('#search_type').dropdown('restore defaults');
+		$('#search_acad_year').dropdown('restore defaults');
 	}
 	

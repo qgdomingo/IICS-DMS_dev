@@ -48,7 +48,8 @@ public class RetrieveExportedMail extends HttpServlet {
 						mailInfo.getString("subject"),
 						mailInfo.getString("sender_name"),
 						mailInfo.getString("sent_by"),
-						mailInfo.getString("date_created")
+						mailInfo.getString("date_created"),
+						mailInfo.getString("school_year")
 				));		
 			}
 			

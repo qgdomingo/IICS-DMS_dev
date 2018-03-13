@@ -4,6 +4,7 @@
 
 	$(document).ready( function() {
 		getExportedMail();
+		getAcadYearList('#search_acad_year');
 	});
 
 /*
@@ -29,7 +30,7 @@
 	
 	/* CUSTOM SEARCH FILTER: Date Range */
 	function filterDateRange(data, min, max) {
-		var dateData = new Date( data[2] ).getTime(); 
+		var dateData = new Date( data[4] ).getTime(); 
 			
 		if ( ( isNaN(min) && isNaN(max) ) ||
 		     ( isNaN(min) && dateData <= max ) ||
@@ -62,12 +63,13 @@
 						.append($('<td>').text(exportedMail.subject))
 						.append($('<td>').text(exportedMail.type))
 						.append($('<td>').text(exportedMail.isoNumber))
+						.append($('<td>').text(exportedMail.schoolYear))
 						.append($('<td>').text(exportedMail.dateCreated))
 				});
 					
 				// bind events and classes to the table after all data received
 				exportedMailTable = $('#exported_mail_table').DataTable({
-					'order': [[3, 'desc']]
+					'order': [[4, 'desc']]
 				});
 				selectExportedMailRow();
 				isExportedMailTableEmpty = false;
@@ -76,7 +78,7 @@
 			else if(response.length == 0)
 			{
 				$('<tr>').appendTo('#exported_mail_tablebody')
-					.append($('<td class="center-text" colspan="4">')
+					.append($('<td class="center-text" colspan="5">')
 							.text("You do not have any exported mail right now."));
 				removeCSSClass('#exported_loading', 'active');
 			}
@@ -84,7 +86,7 @@
 		.fail((response) => {
 			$('#exported_mail_tablebody').empty();
 			$('<tr>').appendTo('#exported_mail_tablebody')
-			.append($('<td class="center-text error" colspan="4">')
+			.append($('<td class="center-text error" colspan="5">')
 					.text("Unable to retrieve your exported mail. Please try refreshing the page."));
 			removeCSSClass('#exported_loading', 'active');
 		});
@@ -112,6 +114,7 @@
 		$('#view_mail_createdby').text(selectedData.senderName + '(' + selectedData.senderEmail + ')');
 		$('#view_mail_subject').text(selectedData.subject);
 		$('#view_mail_type').text(selectedData.type);
+		$('#view_mail_acad_year').text(selectedData.schoolYear);
 		$('#view_mail_iso_number').text(selectedData.isoNumber);
 		$('#view_mail_timestamp').text(selectedData.dateCreated);
 		$('#view_mail_id').val(selectedData.id);
@@ -160,6 +163,11 @@
 		}) 
 	});	
 	
+	/* SEARCH - Academic Year */
+	$('#search_acad_year').on('change', function() {
+		if(!isExportedMailTableEmpty) exportedMailTable.column(3).search( $(this).val() ).draw();
+	});
+	
 	/* CLEAR SEARCH EVENT - Exported Mail */
 	$('#clear_search').click(() => {
 		clearExportedMailSearch();
@@ -171,5 +179,6 @@
 		$('#search_sentfrom_calendar').calendar('clear');
 		$('#search_sentto_calendar').calendar('clear');
 		$('#search_type').dropdown('restore defaults');
+		$('#search_acad_year').dropdown('restore defaults');
 	}
 	

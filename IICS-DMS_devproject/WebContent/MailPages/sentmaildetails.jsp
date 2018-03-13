@@ -142,11 +142,38 @@
 		
 <!-- ACTUAL PAGE CONTENTS -->
 		
+		<h3 class="ui dividing header element-rmt">
+			<a href="${pageContext.request.contextPath}/mail/sentmail.jsp">
+				<i class="black chevron left icon"></i>
+			</a> 
+			View Sent Mail Details
+		</h3>
+		
 		<div class="ui segment">
 			<div class="ui dimmer" id="sent_mail_loading">
-				<div class="ui text loader">Retrieving Sent Mail</div>
+				<div class="ui text loader">Retrieving Sent Mail Details</div>
 			</div>
-		
+			
+			<p class="element-rmb"><b>Sent By: </b><span id="view_mail_sender"></span></p>
+			<p class="element-rmb"><b>Subject: </b><span id="view_mail_subject"></span></p>
+			<p class="element-rmb"><b>Mail Type: </b><span id="view_mail_type"></span></p>
+			<p class="element-rmb"><b>Academic Year: </b><span id="view_mail_acad_year"></span></p>
+			<p class="element-rmb"><b>ISO Number: </b><span id="view_mail_iso_number"></span></p>
+			<p><b>Mail Timestamp: </b><span id="view_mail_timestamp"></span></p>
+			
+			<form method="GET" action="${pageContext.request.contextPath}/ViewPdf">
+				<input type="hidden" name="id" id="view_mail_id">
+
+				<button class="ui small button" type="submit">
+					<i class="envelope icon icon"></i>View Mail
+				</button>
+			</form>
+			
+			<h4 class="ui horizontal divider header">
+				<i class="users icon"></i>
+				Sent To Users
+			</h4>
+			
 			<!-- SEARCH AREA -->
 			<form class="ui form">
 				<div class="four fields">
@@ -154,26 +181,26 @@
 					<!-- SEARCH BOX -->
 					<div class="field">
 						<div class="ui icon input">
-							<input type="text" placeholder="Seach Mail" id="search_mail"/>
+							<input type="text" placeholder="Seach User" id="search_user"/>
 							<i class="search icon"></i>
 						</div>
 					</div>
-							
-					<!-- MAIL SENT FROM -->
+					
+					<!-- ACKNOWLEDGE STATUS BOX -->
 					<div class="field">
-						<div class="ui calendar" id="search_sentfrom_calendar">
-							<div class="ui icon input">
-								<input type="text" placeholder="Upload To" id="search_sentfrom"/>
-								<i class="calendar icon"></i>
-							</div>
-						</div>
-					</div>
-								
-					<!-- MAIL SENT TO -->
+						<select class="ui fluid dropdown" id="search_status">
+							<option value="">Status</option>
+							<option value="Unread">Unread</option>
+							<option value="Read">Read</option>
+							<option value="Acknowledged">Acknowledged</option>
+						</select>
+					</div>	
+					
+					<!-- ACKNOWLEDGE Date -->
 					<div class="field">
-						<div class="ui calendar" id="search_sentto_calendar">
+						<div class="ui calendar" id="search_acknowledge_date_calendar">
 							<div class="ui icon input">
-								<input type="text" placeholder="Upload To" id="search_sentto"/>
+								<input type="text" placeholder="Acknowledged Date" id="search_acknowledge_date"/>
 								<i class="calendar icon"></i>
 							</div>
 						</div>
@@ -189,15 +216,15 @@
 			</form>
 					
 			<!-- TABLE AREA -->
-			<table class="ui compact selectable table" id="sent_mail_table">
+			<table class="ui compact selectable table" id="sent_mail_to_table">
 				<thead>
 					<tr>
-						<th>Subject</th>
-						<th>ISO</th>
-						<th>Timestamp</th>
+						<th>Sent to</th>
+						<th>Status</th>
+						<th>Acknowledge Timestamp</th>
 					</tr>
 				</thead>
-				<tbody id="inbox_tablebody"></tbody>			
+				<tbody id="sent_mail_to_tablebody"></tbody>			
 			</table>	
 		
 		</div>

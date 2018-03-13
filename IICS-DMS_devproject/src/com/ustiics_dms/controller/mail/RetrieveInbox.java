@@ -32,9 +32,9 @@ public class RetrieveInbox extends HttpServlet {
 		List<Mail> mail = new ArrayList<Mail>();
 	    response.setCharacterEncoding("UTF-8");
 		
-	    HttpSession session = request.getSession();
-	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
+		    HttpSession session = request.getSession();
+		    Account acc = (Account) session.getAttribute("currentCredentials");
 			
 			ResultSet getInbox = (ResultSet) MailFunctions.getInbox(acc.getEmail());
 			
@@ -54,7 +54,8 @@ public class RetrieveInbox extends HttpServlet {
 							inboxInfo.getString("date_created"),
 							getInbox.getString("acknowledgement"),
 							getInbox.getString("time_acknowledged"),
-							getInbox.getString("remarks")
+							getInbox.getString("remarks"),
+							inboxInfo.getString("school_year")
 					));	
 				}
 			}

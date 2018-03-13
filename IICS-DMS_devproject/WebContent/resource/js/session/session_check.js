@@ -5,7 +5,7 @@
 	$(document).ready( function() {
 	
 		$.get(getContextPath() + '/checkexistingsession', function(response) {
-			if (response == 'unauthorized') {
+			if (response == 'not logged in') {
 				console.log('correct page loaded');
 			} else if (response == 'admin') {
 				window.location.href = getContextPath() + '/admin/manageusers.jsp';

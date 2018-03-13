@@ -170,7 +170,7 @@ public class MailFunctions {
 	public static ResultSet getInboxInformation(String id) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT type, iso_number, subject, sender_name, sent_by, date_created FROM mail "
+			PreparedStatement prep = con.prepareStatement("SELECT type, iso_number, subject, sender_name, sent_by, date_created, school_year FROM mail "
 					+ "WHERE id = ?");
 			
 			prep.setString(1, id);
@@ -184,7 +184,7 @@ public class MailFunctions {
 	public static ResultSet getSentMail(String email) throws SQLException
 	{
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("SELECT id, type, iso_number, subject, date_created FROM mail WHERE sent_by = ?");
+		PreparedStatement prep = con.prepareStatement("SELECT id, type, iso_number, subject, date_created, school_year FROM mail WHERE sent_by = ?");
 
 		prep.setString(1, email);
 		ResultSet rs = prep.executeQuery();
@@ -594,6 +594,16 @@ public class MailFunctions {
 		rs.next();
 		
 		return rs.getString("department");
+	}
+	
+	public static ResultSet getSentMailToUsersInformation(String id) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT recipient_mail, acknowledgement, remarks, time_acknowledged FROM sent_mail_to WHERE id = ?");
+		prep.setString(1, id);
+		ResultSet rs = prep.executeQuery();
+		
+		return rs;
 	}
 
 }

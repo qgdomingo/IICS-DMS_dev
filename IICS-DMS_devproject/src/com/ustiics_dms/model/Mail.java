@@ -17,7 +17,8 @@ public class Mail {
 	private String acknowledgementRemarks;
 	
 	public Mail(String id, String type, String isoNumber, String subject, String senderName, String senderEmail, 
-			String dateCreated, String acknowledgementStatus, String acknowledgementTimestamp, String acknowledgementRemarks) {
+			String dateCreated, String acknowledgementStatus, String acknowledgementTimestamp, String acknowledgementRemarks,
+			String schoolYear) {
 		super();
 		this.id = id;
 		this.type = type;
@@ -29,10 +30,11 @@ public class Mail {
 		this.acknowledgementStatus = acknowledgementStatus;
 		this.acknowledgementTimestamp = acknowledgementTimestamp;
 		this.acknowledgementRemarks = acknowledgementRemarks;
+		this.schoolYear = schoolYear;
 	}
 	
 	public Mail(String id, String type, String isoNumber, String subject, String senderName, String senderEmail, 
-			String dateCreated) {
+			String dateCreated, String schoolYear) {
 		super();
 		this.id = id;
 		this.type = type;
@@ -41,15 +43,25 @@ public class Mail {
 		this.senderName = senderName;
 		this.senderEmail = senderEmail;
 		this.dateCreated = dateCreated;
+		this.schoolYear = schoolYear;
 	}
 	
-	public Mail(String id, String type, String isoNumber, String subject, String dateCreated) {
+	public Mail(String id, String type, String isoNumber, String subject, String dateCreated, String schoolYear) {
 		super();
 		this.id = id;
 		this.type = type;
 		this.isoNumber = isoNumber;
 		this.subject = subject;
 		this.dateCreated = dateCreated;
+		this.schoolYear = schoolYear;
+	}
+	
+	public Mail(String senderName, String acknowledgementStatus, String acknowledgementTimestamp, String acknowledgementRemarks) {
+		super();
+		this.senderName = senderName;
+		this.acknowledgementStatus = acknowledgementStatus;
+		this.acknowledgementTimestamp = acknowledgementTimestamp;
+		this.acknowledgementRemarks = acknowledgementRemarks;
 	}
 	
 	public String getSchoolYear() {

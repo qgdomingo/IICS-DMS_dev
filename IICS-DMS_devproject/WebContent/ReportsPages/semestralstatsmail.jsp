@@ -350,8 +350,8 @@
 	<script src="${pageContext.request.contextPath}/resource/chartjs/Chart.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/retrieve_acad_year.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/reports/directory_statistics.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/reports/mail_statistics.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/reports/retrieve_acad_year.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/notifications.js"></script>
 </html> 

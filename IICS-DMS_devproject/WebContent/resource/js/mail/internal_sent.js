@@ -4,6 +4,7 @@
 
 	$(document).ready( function() {
 		getSentMail();
+		getAcadYearList('#search_acad_year');
 	});
 
 /*
@@ -25,7 +26,7 @@
 	
 	/* CUSTOM SEARCH FILTER: Date Range */
 	function filterDateRange(data, min, max) {
-		var dateData = new Date( data[2] ).getTime(); 
+		var dateData = new Date( data[4] ).getTime(); 
 			
 		if ( ( isNaN(min) && isNaN(max) ) ||
 		     ( isNaN(min) && dateData <= max ) ||
@@ -57,12 +58,13 @@
 						.append($('<td>').text(sentMail.subject))
 						.append($('<td>').text(sentMail.type))
 						.append($('<td>').text(sentMail.isoNumber))
+						.append($('<td>').text(sentMail.schoolYear))
 						.append($('<td>').text(sentMail.dateCreated))
 				});
 					
 				// bind events and classes to the table after all data received
 				sentMailTable = $('#sent_mail_table').DataTable({
-					'order': [[3, 'desc']]
+					'order': [[4, 'desc']]
 				});
 				selectSentMailRow();
 				isSentMailTableEmpty = false;
@@ -71,7 +73,7 @@
 			else if(response.length == 0)
 			{
 				$('<tr>').appendTo('#sent_mail_tablebody')
-					.append($('<td class="center-text" colspan="4">')
+					.append($('<td class="center-text" colspan="5">')
 							.text("You do not have any sent mail right now."));
 				removeCSSClass('#sent_mail_loading', 'active');
 			}
@@ -79,7 +81,7 @@
 		.fail((response) => {
 			$('#inbox_tablebody').empty();
 			$('<tr>').appendTo('#sent_mail_tablebody')
-			.append($('<td class="center-text error" colspan="4">')
+			.append($('<td class="center-text error" colspan="5">')
 					.text("Unable to retrieve your sent mail. Please try refreshing the page."));
 			removeCSSClass('#sent_mail_loading', 'active');
 		});
@@ -139,6 +141,11 @@
 		}) 
 	});
 		
+	/* SEARCH - Academic Year */
+	$('#search_acad_year').on('change', function() {
+		if(!isSentMailTableEmpty) sentMailTable.column(3).search( $(this).val() ).draw();
+	});
+	
 	/* CLEAR SEARCH EVENT - Inbox */
 	$('#clear_search').click(() => {
 		clearInboxSearch();
@@ -150,5 +157,6 @@
 		$('#search_sentfrom_calendar').calendar('clear');
 		$('#search_sentto_calendar').calendar('clear');
 		$('#search_type').dropdown('restore defaults');
+		$('#search_acad_year').dropdown('restore defaults');
 	}
 	

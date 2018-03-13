@@ -31,11 +31,10 @@ public class RetrieveSentMail extends HttpServlet {
 
 		List<Mail> mail = new ArrayList<Mail>();
 	    response.setCharacterEncoding("UTF-8");
-		
-	    HttpSession session = request.getSession();
-	    Account acc = (Account) session.getAttribute("currentCredentials");
 	    
 		try {
+		    HttpSession session = request.getSession();
+		    Account acc = (Account) session.getAttribute("currentCredentials");
 			
 			ResultSet inboxInfo = (ResultSet) MailFunctions.getSentMail(acc.getEmail());
 			
@@ -46,7 +45,8 @@ public class RetrieveSentMail extends HttpServlet {
 						inboxInfo.getString("type"),
 						inboxInfo.getString("iso_number"),
 						inboxInfo.getString("subject"),
-						inboxInfo.getString("date_created")
+						inboxInfo.getString("date_created"),
+						inboxInfo.getString("school_year")
 				));	
 			}
 			

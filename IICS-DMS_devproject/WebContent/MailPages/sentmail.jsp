@@ -162,7 +162,7 @@
 		
 			<!-- SEARCH AREA -->
 			<form class="ui form">
-				<div class="four fields">
+				<div class="six fields">
 						
 					<!-- SEARCH BOX -->
 					<div class="field">
@@ -200,7 +200,14 @@
 							</div>
 						</div>
 					</div>
-										
+								
+					<!-- ACAD YEAR BOX -->
+					<div class="field">
+						<select class="ui fluid dropdown" id="search_acad_year">
+							<option value="">Academic Year</option>
+						</select>
+					</div>			
+							
 					<!-- SEARCH BUTTON -->
 					<div class="field">
 						<button class="ui grey button" type="button" id="clear_search">
@@ -217,6 +224,7 @@
 						<th>Subject</th>
 						<th>Type</th>
 						<th>ISO</th>
+						<th>Academic Year</th>
 						<th>Timestamp</th>
 					</tr>
 				</thead>
@@ -309,6 +317,7 @@
 	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/retrieve_acad_year.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/mail/internal_sent.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/notifications.js"></script>
 </html>
