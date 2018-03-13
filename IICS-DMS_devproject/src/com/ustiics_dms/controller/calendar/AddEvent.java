@@ -52,8 +52,11 @@ public class AddEvent extends HttpServlet {
 			
 			String eventDescription = request.getParameter("event_description");
 			String invited[] = request.getParameterValues("event_invite");
+			
 			ManageEventsFunctions.addEvent(title, location, allDayEvent_flag, startDateTime, endDateTime, eventDescription, acc.getEmail(), invited);
+			
 			LogsFunctions.addLog("System", "Add Event", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), title);
+			
 			response.setContentType("text/plain");
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write("success");

@@ -58,12 +58,15 @@ public class MailFunctions {
 			prep.setString(9, department);
 			prep.executeUpdate();
 			
-			sendInternalMail(recipient);
-
-			String des = ManageTasksFunctions.getFullName(sentBy) +" has sent you a mail, " + subject;
-			NotificationFunctions.addNotification("Mail Page", des, recipient);
-			
-			ExternalMail.send(externalRecipient, subject, getIncrement(), "jlteoh23@gmail.com", "jed231096");
+			if(!(recipient.length() <= 0))
+			{
+				sendInternalMail(recipient);
+	
+				String des = ManageTasksFunctions.getFullName(sentBy) +" has sent you a mail, " + subject;
+				NotificationFunctions.addNotification("Mail Page", des, recipient);
+				
+				ExternalMail.send(externalRecipient, subject, getIncrement(), "jlteoh23@gmail.com", "jed231096");
+			}
 	}
 	
 	public static String getISONumber(String department, String type) throws SQLException

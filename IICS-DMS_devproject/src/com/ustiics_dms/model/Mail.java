@@ -4,9 +4,11 @@ public class Mail {
 
 	private String id;
 	private String type;
+	private String recipient;
 	private String isoNumber;
 	private String externalRecipient;
 	private String subject;
+	private String message;
 	private String senderName;
 	private String senderEmail;
 	private String dateCreated;
@@ -25,7 +27,6 @@ public class Mail {
 		this.dateCreated = dateCreated;
 		this.schoolYear = schoolYear;
 	}
-	
 	
 
 	public String getSchoolYear() {

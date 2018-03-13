@@ -52,18 +52,19 @@ public class ForwardMail extends HttpServlet {
 			{
 				String title = acc.getTitle() + acc.getFullName();
 				MailFunctions.saveMailInformation(type, "duran@gmail.com", externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment());
-				//
+				
 				LogsFunctions.addLog("System", "Send Mail", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), subject);
 			}
 			else if(button.equalsIgnoreCase("Mail Request") && acc.getUserType().equals("Faculty") || acc.getUserType().equals("Faculty Secretary"))
 			{
-				MailFunctions.forwardRequestMail(type, "duran@gmail.com,", externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getUserType(), acc.getDepartment());
+				MailFunctions.forwardRequestMail(type, "duran@gmail.com", externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getUserType(), acc.getDepartment());
 				
 			}
 			else if(button.equalsIgnoreCase("Save and Export"))
 			{
 				 MailFunctions.saveMailInformation(type, "", "", subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment());
 				 int latestID = MailFunctions.getIncrement();
+				
 				 File file = MailFunctions.getPdf(latestID);
 				 MailFunctions.addExportedMail (latestID, acc.getEmail());
 				 LogsFunctions.addLog("System", "Export Mail", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), subject);
