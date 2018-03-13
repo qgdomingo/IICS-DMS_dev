@@ -16,18 +16,16 @@ import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Mail;
+import com.ustiics_dms.utility.AesEncryption;
 
 
 @WebServlet("/RetrieveSentMail")
 public class RetrieveSentMail extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public RetrieveSentMail() {
         super();
-   
     }
-
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -36,25 +34,21 @@ public class RetrieveSentMail extends HttpServlet {
 		
 	    HttpSession session = request.getSession();
 	    Account acc = (Account) session.getAttribute("currentCredentials");
+	    
 		try {
 			
-	
-				ResultSet inboxInfo = (ResultSet) MailFunctions.getSentMail(acc.getEmail());
-				
-				while(inboxInfo.next())
-				{ 
-					mail.add(new Mail(
-							inboxInfo.getString("id"),
-							inboxInfo.getString("type"),
-							inboxInfo.getString("iso_number"),
-							inboxInfo.getString("external_recipient"),
-							inboxInfo.getString("subject"),
-							inboxInfo.getString("sender_name"),
-							inboxInfo.getString("sent_by"),
-							inboxInfo.getString("date_created"),
-							inboxInfo.getString("school_year")
-							 ));	
-				}
+			ResultSet inboxInfo = (ResultSet) MailFunctions.getSentMail(acc.getEmail());
+			
+			while(inboxInfo.next())
+			{ 
+				mail.add(new Mail(
+						AesEncryption.encrypt(inboxInfo.getString("id")),
+						inboxInfo.getString("type"),
+						inboxInfo.getString("iso_number"),
+						inboxInfo.getString("subject"),
+						inboxInfo.getString("date_created")
+				));	
+			}
 			
 			String json = new Gson().toJson(mail);
 			
@@ -68,9 +62,8 @@ public class RetrieveSentMail extends HttpServlet {
 		}
 	}
 
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		doGet(request, response);
 	}
 
 }

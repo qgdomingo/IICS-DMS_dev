@@ -19,10 +19,13 @@ public class StatisticsFunctions {
 	{
 		   Connection con = DBConnect.getConnection();
 			
-	       PreparedStatement prep = con.prepareStatement("SELECT id,title FROM tasks WHERE school_year = ? AND department = ?");
+	       PreparedStatement prep = con.prepareStatement("SELECT id, title FROM tasks WHERE school_year = ? "
+	       		+ "AND id IN (SELECT DISTINCT(id) as id FROM tasks_assigned_to WHERE school_year = ? AND email IN "
+	       		+ "(SELECT email FROM accounts WHERE department = ?))");
 
 	       prep.setString(1, schoolYear);
-	       prep.setString(2, department);
+	       prep.setString(2, schoolYear);
+	       prep.setString(3, department);
 	       
 	       ResultSet rs = prep.executeQuery();
 	       
@@ -32,11 +35,14 @@ public class StatisticsFunctions {
 	public static ResultSet getMailByDepartment(String schoolYear, String department) throws SQLException 
 	{
 		   Connection con = DBConnect.getConnection();
-			
-	       PreparedStatement prep = con.prepareStatement("SELECT id,subject FROM mail WHERE school_year = ? AND department = ?");
+
+	       PreparedStatement prep = con.prepareStatement("SELECT id, subject FROM mail WHERE school_year = ? "
+	       		+ "AND id IN (SELECT DISTINCT(id) as id FROM sent_mail_to WHERE school_year = ? AND recipient_mail IN "
+	       		+ "(SELECT email FROM accounts WHERE department = ?))");
 
 	       prep.setString(1, schoolYear);
-	       prep.setString(2, department);
+	       prep.setString(2, schoolYear);
+	       prep.setString(3, department);
 	       
 	       ResultSet rs = prep.executeQuery();
 	       
@@ -79,23 +85,25 @@ public class StatisticsFunctions {
 	       return rs;
 	}
 	
-	public static ResultSet getTaskStatusByID(String id) throws SQLException 
+	public static ResultSet getTaskStatusByID(String id, String department) throws SQLException 
 	{
 		   Connection con = DBConnect.getConnection();
 			
-	       PreparedStatement prep = con.prepareStatement("SELECT status FROM tasks_assigned_to WHERE id = ?");
+	       PreparedStatement prep = con.prepareStatement("SELECT status FROM tasks_assigned_to WHERE id = ? AND department = ?");
 	       prep.setString(1, id);
+	       prep.setString(2, department);
 	       ResultSet rs = prep.executeQuery();
 	       
 	       return rs;
 	}
 	
-	public static ResultSet getMailStatusByID(String id) throws SQLException 
+	public static ResultSet getMailStatusByID(String id, String department) throws SQLException 
 	{
 		   Connection con = DBConnect.getConnection();
 			
-	       PreparedStatement prep = con.prepareStatement("SELECT acknowledgement FROM sent_mail_to WHERE id = ?");
+	       PreparedStatement prep = con.prepareStatement("SELECT acknowledgement FROM sent_mail_to WHERE id = ? AND department = ?");
 	       prep.setString(1, id);
+	       prep.setString(2, department);
 	       ResultSet rs = prep.executeQuery();
 	       
 	       return rs;
@@ -151,7 +159,7 @@ public class StatisticsFunctions {
 		
 		List <SentMail> mailList = new ArrayList <SentMail> ();
 		ResultSet status = StatisticsFunctions.getMailStatusByEmail(email, schoolYear);
-		
+		// TODO
 		while(status.next())
 		{
 			ResultSet mail = StatisticsFunctions.getSpecificMail(status.getString("id"), schoolYear);
@@ -180,7 +188,7 @@ public class StatisticsFunctions {
 			
 			String taskName = task.getString("title");
 			
-			ResultSet status = StatisticsFunctions.getTaskStatusByID(task.getString("id"));
+			ResultSet status = StatisticsFunctions.getTaskStatusByID(task.getString("id"), department);
 			
 			while(status.next())
 			{
@@ -222,7 +230,7 @@ public class StatisticsFunctions {
 			
 			String subject = mail.getString("subject");
 			
-			ResultSet status = StatisticsFunctions.getMailStatusByID(mail.getString("id"));
+			ResultSet status = StatisticsFunctions.getMailStatusByID(mail.getString("id"), department);
 			
 			while(status.next())
 			{
@@ -263,8 +271,7 @@ public class StatisticsFunctions {
 		while(task.next())
 		{
 			
-			
-			ResultSet status = StatisticsFunctions.getTaskStatusByID(task.getString("id"));
+			ResultSet status = StatisticsFunctions.getTaskStatusByID(task.getString("id"), department);
 			
 			while(status.next())
 			{
@@ -373,7 +380,7 @@ public class StatisticsFunctions {
 		
 		while(mail.next())
 		{
-			ResultSet status = StatisticsFunctions.getMailStatusByID(mail.getString("id"));
+			ResultSet status = StatisticsFunctions.getMailStatusByID(mail.getString("id"), department);
 			
 			while(status.next())
 			{

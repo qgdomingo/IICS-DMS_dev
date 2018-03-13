@@ -4,6 +4,7 @@
 	var localDocumentsData = [];
 	var currentCursor = 0;
 	var maxCursor = 0;
+	var selectedIncomingID;
 	
 	$(document).ready(function() {
 		$('#fail_request_message').hide();
@@ -194,6 +195,8 @@
 	/* OPEN - Incoming Document Details */
 	function bindViewIncomingDetailsClickEvent() {
 		$('button[name="viewincoming_details"]').on('click', function () {
+			selectedIncomingID = $(this).attr('id');
+			
 			getIncomingDocumentsData($(this).attr('id'));
 			
 		    $('#viewincoming_dialog').modal({
@@ -247,7 +250,8 @@
 	
 	/* SUBMIT - Update Document Note */
 	$('#edit_note_form').ajaxForm({
-		success: function(response) {  
+		success: function(response) {
+			localDocumentsData[selectedIncomingID]['note'] = $('#view_incoming_note').val();
 			$('#note_green_message').show();
 		},
 		error: function(response) { 

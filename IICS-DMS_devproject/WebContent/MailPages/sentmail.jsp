@@ -5,8 +5,6 @@
 	Account acc = new Account();
 	String userType = "";
 	
-	boolean restrictionCase1 = false;
-
 	if(request.getSession(false) == null || request.getSession(false).getAttribute("currentCredentials") == null) {
 		response.sendRedirect(request.getContextPath() + "/index.jsp");
 	} else {
@@ -16,14 +14,10 @@
 		if( (userType.equalsIgnoreCase("Administrator")) ) {
 			response.sendRedirect(request.getContextPath() + "/admin/manageusers.jsp");
 		} 
-		else if(userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) {
+		else if(userType.equalsIgnoreCase("Faculty") || userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) {
 			response.sendRedirect(request.getContextPath() + "/home.jsp");
 		}
-		
-		// Restriction Case 1 - not allowed for Faculty, Supervisor and Staff
-		if(userType.equalsIgnoreCase("Faculty")) { 
-			restrictionCase1 = true;
-		}
+
 	}
 %>
 <!DOCTYPE html>
@@ -33,6 +27,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 		
@@ -99,7 +95,6 @@
 			    	</a>
 		    	</div>
 		    </div>
-	<% if(!restrictionCase1) { %>
 			<div class="item">
 		   		Reports
 		   		<div class="menu">
@@ -108,7 +103,6 @@
 			    	</a>
 		    	</div>
 		    </div>
-	<%  } %>
 		    <a class="item mobile only" id="logout_btn2">
 		      <i class="large power icon side"></i>Logout
 		    </a>
@@ -147,51 +141,89 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
-		<!-- SEARCH AREA -->
-		<form class="ui form">
-			<div class="three fields">
-					
-				<!-- SEARCH BOX -->
-				<div class="field">
-					<div class="ui icon input">
-						<input type="text" placeholder="Seach Mail"/>
-						<i class="search icon"></i>
+		
+		<% if(userType.equalsIgnoreCase("Director")) { %>
+		<div class="ui secondary pointing menu element-rmt">
+			<a class="item active" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
+				<i class="folder open icon"></i>
+				Internal Sent Mail
+			</a>
+			<a class="item" href="${pageContext.request.contextPath}/mail/externalsentmail.jsp">
+				<i class="folder icon"></i>
+				External Sent Mail
+			</a>
+		</div>
+		<% } %>
+
+		<div class="ui segment">
+			<div class="ui dimmer" id="sent_mail_loading">
+				<div class="ui text loader">Retrieving Sent Mail</div>
+			</div>
+		
+			<!-- SEARCH AREA -->
+			<form class="ui form">
+				<div class="four fields">
+						
+					<!-- SEARCH BOX -->
+					<div class="field">
+						<div class="ui icon input">
+							<input type="text" placeholder="Seach Mail" id="search_mail"/>
+							<i class="search icon"></i>
+						</div>
+					</div>
+							
+					<!-- MAIL TYPE BOX -->
+					<div class="field">
+						<select class="ui fluid dropdown" id="search_type">
+							<option value="">Mail Type</option>
+							<option value="Memo">Memo</option>
+							<option value="Letter">Letter</option>
+						</select>
+					</div>
+							
+					<!-- MAIL SENT FROM -->
+					<div class="field">
+						<div class="ui calendar" id="search_sentfrom_calendar">
+							<div class="ui icon input">
+								<input type="text" placeholder="Sent From" id="search_sentfrom"/>
+								<i class="calendar icon"></i>
+							</div>
+						</div>
+					</div>
+								
+					<!-- MAIL SENT TO -->
+					<div class="field">
+						<div class="ui calendar" id="search_sentto_calendar">
+							<div class="ui icon input">
+								<input type="text" placeholder="Sent To" id="search_sentto"/>
+								<i class="calendar icon"></i>
+							</div>
+						</div>
+					</div>
+										
+					<!-- SEARCH BUTTON -->
+					<div class="field">
+						<button class="ui grey button" type="button" id="clear_search">
+							Clear Search
+						</button>
 					</div>
 				</div>
-						
-				<!-- MAIL TIMESTAMP RANGE BOX -->
-				<div class="field">
-					<input type="text" placeholder="Mail Timestamp Range"/>
-				</div>
-									
-				<!-- SEARCH BUTTON -->
-				<div class="field">
-					<button class="ui grey button" type="button">
-						Search
-					</button>
-				</div>
-			</div>
-		</form>
-				
-		<!-- TABLE AREA -->
-		<table class="ui compact selectable sortable table">
-			<thead>
-				<tr>
-					<th>To</th>
-					<th>Subject</th>
-					<th>Timestamp</th>
-				</tr>
-			</thead>
-			<tr>
-				<td>Princess Daisy</td>
-				<td class="selectable"><a href="../index.jsp">
-					<i class="mail icon"></i>
-					A Princess' Diary
-					</a>
-				</td>
-				<td>12-12-2018 12:00:00</td>
-			</tr>				
-		</table>	
+			</form>
+					
+			<!-- TABLE AREA -->
+			<table class="ui compact selectable table" id="sent_mail_table">
+				<thead>
+					<tr>
+						<th>Subject</th>
+						<th>Type</th>
+						<th>ISO</th>
+						<th>Timestamp</th>
+					</tr>
+				</thead>
+				<tbody id="sent_mail_tablebody"></tbody>			
+			</table>	
+		
+		</div>
 		
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
@@ -271,8 +303,12 @@
 	</body>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/session/non_staff_check.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/session/regular_user_check.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/dataTable/jquery.dataTables.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/mail/internal_sent.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/notifications.js"></script>
 </html>

@@ -4,12 +4,14 @@
 <%
 	Account acc = new Account();
 	String userType = "";
+	String department = "";
 
 	if(request.getSession(false) == null || request.getSession(false).getAttribute("currentCredentials") == null) {
 		response.sendRedirect(request.getContextPath() + "/index.jsp");
 	} else {
 		acc = (Account) session.getAttribute("currentCredentials");
 		userType = acc.getUserType();
+		department = acc.getDepartment();
 		
 		if( (userType.equalsIgnoreCase("Administrator")) ) {
 			response.sendRedirect(request.getContextPath() + "/admin/manageusers.jsp");
@@ -154,43 +156,43 @@
 				<div class="ui text loader">Retrieving Mail Statistics</div>
 			</div>
 			
-			<form class="ui form" id="view_stats_form">
+			<form class="ui form" method="POST" action="${pageContext.request.contextPath}/RetrieveMailTotalStatistics" id="view_stats_form">
 				<h4 class="element-rmb element-mt">View Mail Statistics:</h4>
-				<div class="five fields">
+				<div class="four fields">
 					<div class="field">
-						<select class="ui fluid dropdown" id="view_academic_year">
+						<select class="ui fluid dropdown" name="view_academic_year" id="view_academic_year">
 							<option value="">Academic Year</option>
 						</select>
 					</div>
 					
 					<div class="field">
-						<select class="ui fluid dropdown" id="view_scope">
+						<select class="ui fluid dropdown" name="view_scope" id="view_scope">
 							<option value="">View By</option>
+						<% if(!userType.equalsIgnoreCase("Department Head")) { %>
 							<option value="Staff">Staff</option>
+						<% } %>	
 							<option value="Faculty">Faculty</option>
 							<option value="Department">Department</option>
 						</select>
 					</div>
 					
-					<div class="field" id="scope_selection">
-						<select class="ui fluid dropdown" id="view_staff">
-							<option value="">Select Staff</option>
-						</select>
-						
-						<select class="ui fluid dropdown" id="view_faculty">
-							<option value="">Select Faculty</option>
-						</select>
-						
-						<select class="ui fluid dropdown" id="view_department">
+					<div class="field" id="department_selection">
+						<select class="ui fluid dropdown" name="department_selection" id="department_selection_dropdown">
 							<option value="">Select Department</option>
+						<% if(department.equalsIgnoreCase("Information Technology") || department.equalsIgnoreCase("IICS")) { %>
 							<option value="Information Technology">Information Technology</option>
+						<% } %>
+						<% if(department.equalsIgnoreCase("Computer Science") || department.equalsIgnoreCase("IICS")) { %>
 							<option value="Computer Science">Computer Science</option>
+						<% } %>
+						<% if(department.equalsIgnoreCase("Information Systems") || department.equalsIgnoreCase("IICS")) { %>
 							<option value="Information Systems">Information Systems</option>
+						<% } %>
 						</select>
 					</div>
 					
 					<div class="field" id="user_selection">
-						<select class="ui fluid dropdown" id="user_selection_dropdown">
+						<select class="ui fluid search selection dropdown" name="user_selection" id="user_selection_dropdown">
 							<option value="">Select User</option>
 						</select>
 					</div>
@@ -207,9 +209,59 @@
 			
 			<br>
 			
-			<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+			<div class="ui stackable grid">
+				<div class="seven wide computer sixteen wide tablet sixteen wide mobile column">
+					<canvas id="myChart"></canvas>
+					
+					<div class="ui message" id="no_statistics_msg">
+						<div class="header">No statistics gathered for this query.</div>
+					</div>
+					<div class="ui message" id="error_statistics_msg">
+						<div class="header">
+							Unable to gather statistics for the chart, please try again or try refreshing the page.
+						</div>
+					</div>
+				</div>
+				
+				<div class="nine wide computer sixteen wide tablet sixteen wide mobile column">
+					<h4 id="no_of_mail_title">Total No. of Mail on the Statistics: <span id="no_of_mail"></span></h4>
+				
+					<table class="ui compact selectable table" id="mail_department_table">
+						<thead>
+							<tr>
+								<th class="seven wide">Mail Subject</th> 
+								<th class="three wide">No. of Acknowledged</th>
+								<th class="three wide">No. of Read</th>
+								<th class="three wide">No. of Unread</th>
+							</tr>
+						</thead>
+						<tbody id="mail_department_tablebody"></tbody>
+					</table>
+					
+					<div class="ui action input element-mb" id="mail_facultystaff_filter">
+ 						<select class="ui fluid dropdown" id="mail_facultystaff_filter_dropdown">
+							<option value="">Filter Mail Status</option>
+							<option value="Acknowledged">Acknowledged</option>
+							<option value="Read">Read</option>
+							<option value="Unread">Unread</option>
+						</select>
+  						<div class="ui grey button" id="mail_facultystaff_filter_clear">Clear Filter</div>
+					</div>
+									
+					<table class="ui compact selectable table" id="mail_facultystaff_table">
+						<thead>
+							<tr>
+								<th class="thirteen wide">Mail Subject</th> 
+								<th class="three wide">Status</th>
+							</tr>
+						</thead>
+						<tbody id="mail_facultystaff_tablebody"></tbody>
+					</table>
+					
+				</div>
+			 
+			</div>
 			
-	
 		</div>
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
@@ -289,12 +341,17 @@
 	</body>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/dataTable/jquery.dataTables.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>	
 	<script src="${pageContext.request.contextPath}/resource/js/session/regular_user_check.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/fullcalendar/moment.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/chartjs/Chart.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/chartjs/Chart.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/reports/directory_statistics.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/reports/mail_statistics.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/reports/retrieve_acad_year.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/notifications.js"></script>
 </html> 

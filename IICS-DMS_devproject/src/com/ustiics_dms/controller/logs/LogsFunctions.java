@@ -64,6 +64,10 @@ public class LogsFunctions {
 		{
 			description = "User has successfully logged in to the system";
 		}
+		else if(information.equalsIgnoreCase("Logout"))
+		{
+			description = "User has successfully logged out from the system";
+		}
 		else if(information.equalsIgnoreCase("Request Code"))
 		{
 			description = "User has requested for a reset code.";

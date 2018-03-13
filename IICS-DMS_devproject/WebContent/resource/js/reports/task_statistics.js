@@ -230,19 +230,18 @@
  */
 	/* SET - BY DEPARTMENT */
 	function setTableByDepartment(response) {
+		$('#no_of_tasks').text(response.length);
+		$('#no_of_tasks_title').show();
 		$('#task_department_tablebody').empty();
 		if(!response.length == 0) 
 		{
-			var taskCount = 0;
 			$.each(response, (index, taskData) => {
-				taskCount = taskCount + 1;
 				$('<tr>').appendTo('#task_department_tablebody')
 					.append($('<td>').text(taskData.taskTitle))
 					.append($('<td>').text(taskData.onTimeSubmission))
 					.append($('<td>').text(taskData.lateSubmission))
 					.append($('<td>').text(taskData.noSubmission))
 			});
-			$('#no_of_tasks').text(taskCount)
 			
 			// bind events and classes to the table after all data received
 			taskTableByDepartment = $('#task_department_table').DataTable({
@@ -267,17 +266,16 @@
 	
 	/* SET - BY PERSON */
 	function setTableByPerson(response) {
+		$('#no_of_tasks').text(response.length);
+		$('#no_of_tasks_title').show();
 		$('#task_facultystaff_tablebody').empty();
 		if(!response.length == 0) 
 		{
-			var taskCount = 0;
 			$.each(response, (index, taskData) => {
-				taskCount = taskCount + 1;
 				$('<tr>').appendTo('#task_facultystaff_tablebody')
 					.append($('<td>').text(taskData.title))
 					.append($('<td>').text(taskData.status))
 			});
-			$('#no_of_tasks').text(taskCount);
 			
 			// bind events and classes to the table after all data received
 			taskTableByPerson = $('#task_facultystaff_table').DataTable({

@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Array;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -41,29 +42,31 @@ import com.ustiics_dms.model.File;
 
 public class MailFunctions {
 	
-	public static void saveMailInformation(String type, String recipient, String externalRecipient, String  subject, String message, String  name, String  sentBy, String department) throws SQLException, IOException, DocumentException
+	public static void saveMailInformation(String type, String[] recipient, String[] externalRecipient, String  subject, String message, String  name, String  sentBy, String department) throws Exception
 	{
-			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("INSERT INTO mail (iso_number, type, external_recipient, subject, file_data, sender_name, sent_by, school_year, department) VALUES (?,?,?,?,?,?,?,?,?)");
-			String isoNumber = getISONumber(department, type);
-			InputStream pdf = createPdf(recipient, subject, name, message, isoNumber, sentBy);
-			prep.setString(1, isoNumber);
-			prep.setString(2, type);
-			prep.setString(3, externalRecipient);
-			prep.setString(4, subject);
-			prep.setBinaryStream(5, pdf, pdf.available() );
-			prep.setString(6, name);
-			prep.setString(7, sentBy);
-			prep.setString(8, ManageTasksFunctions.getSchoolYear());
-			prep.setString(9, department);
-			prep.executeUpdate();
-			
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("INSERT INTO mail (iso_number, type, subject, file_data, sender_name, sent_by, school_year, department) VALUES (?,?,?,?,?,?,?,?)");
+		String isoNumber = getISONumber(department, type);
+		InputStream pdf = createPdf(recipient, subject, name, message, isoNumber, sentBy);
+		prep.setString(1, isoNumber);
+		prep.setString(2, type);
+		prep.setString(3, subject);
+		prep.setBinaryStream(4, pdf, pdf.available() );
+		prep.setString(5, name);
+		prep.setString(6, sentBy);
+		prep.setString(7, ManageTasksFunctions.getSchoolYear());
+		prep.setString(8, department);
+		prep.executeUpdate();
+		
+		if(recipient != null) {
 			sendInternalMail(recipient);
-
 			String des = ManageTasksFunctions.getFullName(sentBy) +" has sent you a mail, " + subject;
 			NotificationFunctions.addNotification("Mail Page", des, recipient);
-			
+		}
+		
+		if(externalRecipient != null) {
 			ExternalMail.send(externalRecipient, subject, getIncrement(), "jlteoh23@gmail.com", "jed231096");
+		}
 	}
 	
 	public static String getISONumber(String department, String type) throws SQLException
@@ -121,20 +124,20 @@ public class MailFunctions {
 	}
 	
 	
-	public static void sendInternalMail(String recipient) throws SQLException
+	public static void sendInternalMail(String[] recipient) throws SQLException
 	{
-			List<String> emailList = Arrays.asList(recipient.split(","));
+			
 			Connection con = DBConnect.getConnection();
 
-			for(String tempEmail : emailList)
+			for(String tempEmail : recipient)
 			{
 				String email = tempEmail.trim();
 
-				PreparedStatement prep = con.prepareStatement("INSERT INTO sent_mail_to (id, recipient_mail, school_year) VALUES (?,?,?)");
+				PreparedStatement prep = con.prepareStatement("INSERT INTO sent_mail_to (id, recipient_mail, school_year, department) VALUES (?,?,?,?)");
 				prep.setInt(1, getIncrement());
 				prep.setString(2, email);
 				prep.setString(3, ManageTasksFunctions.getSchoolYear());
-				
+				prep.setString(4, getDepartment(tempEmail));
 				prep.executeUpdate();
 				
 			}
@@ -153,9 +156,11 @@ public class MailFunctions {
 	public static ResultSet getInbox(String email) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT id FROM sent_mail_to WHERE recipient_mail = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT id, acknowledgement, remarks, time_acknowledged FROM sent_mail_to "
+					+ "WHERE recipient_mail = ? AND school_year = ?");
 			
 			prep.setString(1, email);
+			prep.setString(2, ManageTasksFunctions.getSchoolYear());
 			
 			ResultSet rs = prep.executeQuery();
 
@@ -165,7 +170,8 @@ public class MailFunctions {
 	public static ResultSet getInboxInformation(String id) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM mail WHERE id = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT type, iso_number, subject, sender_name, sent_by, date_created FROM mail "
+					+ "WHERE id = ?");
 			
 			prep.setString(1, id);
 			
@@ -177,33 +183,35 @@ public class MailFunctions {
 	
 	public static ResultSet getSentMail(String email) throws SQLException
 	{
-			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM mail WHERE sent_by = ?");
-			
-			prep.setString(1, email);
-			ResultSet rs = prep.executeQuery();
-		
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT id, type, iso_number, subject, date_created FROM mail WHERE sent_by = ?");
 
-			return rs;
+		prep.setString(1, email);
+		ResultSet rs = prep.executeQuery();
+
+		return rs;
 	}
 	
 	//Requests
-	public static void forwardRequestMail(String type, String recipient, String externalRecipient, String  subject, String  message, String  name, String  sentBy, String userType, String department) throws SQLException
+	public static void forwardRequestMail(String type, String[] recipient, String[] externalRecipient, String  subject, String  message, String  name, String  sentBy, String userType, String department) throws SQLException
 	{
-			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("INSERT INTO request (type, recipient, external_recipient, subject, message, sender_name, sent_by, department) VALUES (?,?,?,?,?,?,?,?)");
-			prep.setString(1, type);
-			prep.setString(2, recipient);
-			prep.setString(3, externalRecipient);
-			prep.setString(4, subject);
-			prep.setString(5, message);
-			prep.setString(6, name);
-			prep.setString(7, sentBy);
-			prep.setString(8, department);
-			prep.executeUpdate();
+		String recipientString = String.join(",", recipient);	
+		String externalRecipientString = String.join(",", externalRecipient);	
+		
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("INSERT INTO request (type, recipient, external_recipient, subject, message, sender_name, sent_by, department) VALUES (?,?,?,?,?,?,?,?)");
+		prep.setString(1, type);
+		prep.setString(2, recipientString);
+		prep.setString(3, externalRecipientString);
+		prep.setString(4, subject);
+		prep.setString(5, message);
+		prep.setString(6, name);
+		prep.setString(7, sentBy);
+		prep.setString(8, department);
+		prep.executeUpdate();
 
-			String des = name +" sent you a mail request, "+ subject + ", for your approval.";
-			NotificationFunctions.addNotification("Request Mail Page", des, FileUploadFunctions.getGroupByDepartment(department, sentBy));
+		String des = name +" sent you a mail request, "+ subject + ", for your approval.";
+		NotificationFunctions.addNotification("Request Mail Page", des, getToSendRequestApprovers(sentBy, userType, department));
 	}
 	
 	public static ResultSet getRequestMail(String department) throws SQLException
@@ -306,42 +314,35 @@ public class MailFunctions {
 			
 	}
 	
-	public static void updateReadTimeStamp(String emailID, String email) throws SQLException
+	public static void updateReadTimeStamp(String mailID, String email) throws SQLException
 	{
-		if(hasRead(emailID,email))
-		{
-			String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("UPDATE sent_mail_to SET acknowledgement = ? WHERE id = ? AND recipient_mail = ?");
+		prep.setString(1, "Read");
+		prep.setString(2, mailID);
+		prep.setString(3, email);
 		
-			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("UPDATE sent_mail_to SET acknowledgement = ?, time_read = ? WHERE id = ? AND recipient_mail = ?");
-			prep.setString(1, "Read");
-			prep.setString(2, timeStamp);
-			prep.setString(3, emailID);
-			prep.setString(4, email);
-			
-			prep.executeUpdate();
-		}
-			
+		prep.executeUpdate();
 	}
 	
-	public static void updateAcknowledgeTimeStamp(String emailID, String email) throws SQLException
+	public static String updateAcknowledgeTimeStamp(String mailID, String remark, String email) throws SQLException
 	{
-		if(hasAcknowledged(emailID,email))
-		{
-			String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		
-			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("UPDATE sent_mail_to SET acknowledgement = ?, time_acknowledged = ? WHERE id = ? AND recipient_mail = ?");
-			prep.setString(1, "Acknowledged");
-			prep.setString(2, timeStamp);
-			prep.setString(3, emailID);
-			prep.setString(4, email);
-			
-			prep.executeUpdate();
-			
-			String des = ManageTasksFunctions.getFullName(email) +" acknowledged your mail, " + getMailTitle(emailID);
-			NotificationFunctions.addNotification("Mail Page", des, getMailSender(emailID));
-		}
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("UPDATE sent_mail_to SET acknowledgement = ?, remarks = ?, time_acknowledged = ? WHERE id = ? AND recipient_mail = ?");
+		prep.setString(1, "Acknowledged");
+		prep.setString(2, remark);
+		prep.setString(3, timeStamp);
+		prep.setString(4, mailID);
+		prep.setString(5, email);
+		
+		prep.executeUpdate();
+		
+		String des = ManageTasksFunctions.getFullName(email) +" acknowledged your mail, " + getMailTitle(mailID);
+		NotificationFunctions.addNotification("Mail Page", des, getMailSender(mailID));
+		
+		return timeStamp;
 	}
 	
 	public static String getMailTitle(String id) throws SQLException
@@ -354,7 +355,7 @@ public class MailFunctions {
 		
 		rs.next();
 		
-		return rs.getString("title");
+		return rs.getString("subject");
 			
 	}
 	
@@ -372,42 +373,7 @@ public class MailFunctions {
 			
 	}
 	
-	public static boolean hasRead(String id, String email) throws SQLException
-	{
-			boolean result = true;
-			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT acknowledgement FROM sent_mail_to WHERE id = ? AND recipient_mail = ?");
-			prep.setString(1, id);
-			prep.setString(2, email);
-			
-			ResultSet rs = prep.executeQuery();
-		
-			if(rs.getString("acknowledgement").equals("Read"))
-			{
-				result = false;
-			}
-			
-			return result;
-	}
-	
-	public static boolean hasAcknowledged(String id, String email) throws SQLException
-	{
-			boolean result = true;
-			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT acknowledgement FROM sent_mail_to WHERE id = ? AND recipient_mail = ?");
-			prep.setString(1, id);
-			prep.setString(2, email);
-			
-			ResultSet rs = prep.executeQuery();
-		
-			if(rs.getString("acknowledgement").equals("Acknowledged"))
-			{
-				result = false;
-			}
-			
-			return result;
-	}
-	public static InputStream createPdf(String recipient, String subject, String name, String message, String isoNumber, String email) throws IOException, DocumentException, SQLException {
+	public static InputStream createPdf(String[] recipient, String subject, String name, String message, String isoNumber, String email) throws IOException, DocumentException, SQLException {
 	    Document doc = new Document(PageSize.A4, 50, 50, 50, 50);
 	       
 	    ByteArrayOutputStream out = new ByteArrayOutputStream();            
@@ -438,7 +404,7 @@ public class MailFunctions {
 		
 		Paragraph datePara = new Paragraph(new Phrase(lineSpacing, date, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 		
-		Paragraph closingPara = new Paragraph(new Phrase(lineSpacing, "Your Sincerely,", FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+		Paragraph closingPara = new Paragraph(new Phrase(lineSpacing, "Sincerely Yours,", FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 		
 		Paragraph signatoryPara = new Paragraph(new Phrase(lineSpacing, title, FontFactory.getFont(FontFactory.HELVETICA_BOLD,fntSize)));
 		
@@ -487,53 +453,43 @@ public class MailFunctions {
 		return year;
         
     }
+	
 	public static File getPdf (int id) throws SQLException 
 	{
-			Connection con = DBConnect.getConnection();
+		Connection con = DBConnect.getConnection();
 			
-	       PreparedStatement prep = con.prepareStatement("SELECT * FROM mail WHERE id = ?");
-	       prep.setInt(1, id);
+	    PreparedStatement prep = con.prepareStatement("SELECT iso_number, file_data FROM mail WHERE id = ?");
+	    prep.setInt(1, id);
 	       
-	       ResultSet rs = prep.executeQuery();
+	    ResultSet rs = prep.executeQuery();
 	       
-	       if (rs.next()) 
-	       {
-	           String fileName = rs.getString("iso_number") + ".pdf";
-	           Blob fileData = rs.getBlob("file_data");
-	           String description = "";
+	    if (rs.next()) 
+	    {
+	    	String fileName = rs.getString("iso_number") + ".pdf";
+	        Blob fileData = rs.getBlob("file_data");
+	        String description = "";
 
-	           return new File(id, fileName, fileData, description);
-	       }
-	       return null;
+	        return new File(id, fileName, fileData, description);
+	    }
+	    return null;
 	}
 
-	public static void addExportedMail (int id, String email) throws SQLException 
+	public static void addExportedMail(int id, String email) throws SQLException 
 	{
-			Connection con = DBConnect.getConnection();
+		Connection con = DBConnect.getConnection();
 			
-	       PreparedStatement prep = con.prepareStatement("INSERT INTO exported_mail (id, owner) VALUES (?,?)");
-	       prep.setInt(1, id);
-	       prep.setString(2, email);
-	       prep.executeUpdate();  
+	    PreparedStatement prep = con.prepareStatement("INSERT INTO exported_mail (id, owner) VALUES (?,?)");
+	    prep.setInt(1, id);
+	    prep.setString(2, email);
+	    prep.executeUpdate();  
 	}
 	
-	public static List <String> getExportedMailID (String email) throws SQLException 
+	public static ResultSet getExportedMailID(String email) throws SQLException 
 	{
-		   Connection con = DBConnect.getConnection();
-			
-	       PreparedStatement prep = con.prepareStatement("SELECT * FROM exported_mail");
-	       
-	       ResultSet rs = prep.executeQuery();
-	       
-	      
-	       List <String> idValues = new ArrayList <String> ();
-	       while(rs.next())
-	       {
-	    	   idValues.add(rs.getString("id"));
-	    	   
-	       }
-	       
-	       return idValues;
+		  Connection con = DBConnect.getConnection();
+	      PreparedStatement prep = con.prepareStatement("SELECT id FROM exported_mail WHERE owner = ?");
+	      prep.setString(1, email);
+	      return prep.executeQuery();
 	}
 	
 	public static ResultSet getExportedMail (String email, String id) throws SQLException 
@@ -548,7 +504,7 @@ public class MailFunctions {
 	       return rs;
 	}
 	
-	public static void approveRequest(String type, String recipient, String externalRecipient, String  subject, String message, String  name, String  sentBy, String department) throws SQLException, IOException, DocumentException
+	public static void approveRequest(String type, String[] recipient, String externalRecipient, String  subject, String message, String  name, String  sentBy, String department) throws SQLException, IOException, DocumentException
 	{
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("INSERT INTO approved_request (iso_number, type, external_recipient, subject, file_data, sender_name, sent_by) VALUES (?,?,?,?,?,?,?)");
@@ -601,5 +557,43 @@ public class MailFunctions {
 		return position;
 	}
 	
+	public static String[] getToSendRequestApprovers(String email, String userType, String department) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		ArrayList<String> emailList = new ArrayList<String>();
+		PreparedStatement prep = con.prepareStatement("SELECT email FROM accounts WHERE NOT email = ? and user_type = ? and department = ?");
+		prep.setString(1, email);
+		
+		if(userType.equalsIgnoreCase("Faculty"))
+		{
+			prep.setString(2, "Department Head");
+		}
+		else if(userType.equalsIgnoreCase("Faculty Secretary")) {
+			prep.setString(2, "Director");
+		}
+		
+		prep.setString(3, department);
+		
+		ResultSet rs = prep.executeQuery();
+		
+		while(rs.next())
+		{
+			emailList.add(rs.getString("email"));
+		}
+		String[] returnEmailList = emailList.toArray(new String[emailList.size()]);
+		
+		return returnEmailList;
+	}
 	
+	public static String getDepartment(String email) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT department FROM accounts WHERE email = ?");
+		prep.setString(1, email);
+		ResultSet rs = prep.executeQuery();
+		rs.next();
+		
+		return rs.getString("department");
+	}
+
 }

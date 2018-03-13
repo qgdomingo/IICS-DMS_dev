@@ -36,6 +36,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 		
@@ -93,14 +95,16 @@
 			    	<a class="item active" href="${pageContext.request.contextPath}/mail/inbox.jsp">
 			    		<i class="large inbox icon side"></i>Inbox
 			    	</a>
-	<% if(!restrictionCase2) { %>
+	<% if(!restrictionCase1) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
+	<%  } %>
+	<% if(!restrictionCase2) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
 			    		<i class="large envelope square icon side"></i>Mail Requests
 			    	</a>
-			    	<a class="item" href="${pageContext.request.contextPath}/mail/viewmemoletter.jsp">
+			    	<a class="item" href="${pageContext.request.contextPath}/mail/exportedmail.jsp">
 			    		<i class="large external link square alternate icon side"></i>Exported Mail
 			    	</a>
 	<%  } %>
@@ -154,53 +158,164 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
-		<!-- SEARCH AREA -->
-		<form class="ui form">
-			<div class="three fields">
-					
-				<!-- SEARCH BOX -->
-				<div class="field">
-					<div class="ui icon input">
-						<input type="text" placeholder="Seach Mail"/>
-						<i class="search icon"></i>
+
+		<% if(userType.equalsIgnoreCase("Director")) { %>
+		<div class="ui secondary pointing menu element-rmt">
+			<a class="item active" href="${pageContext.request.contextPath}/mail/inbox.jsp">
+				<i class="folder open icon"></i>
+				Internal Inbox
+			</a>
+			<a class="item" href="${pageContext.request.contextPath}/mail/externalinbox.jsp">
+				<i class="folder icon"></i>
+				External Inbox
+			</a>
+		</div>
+		<% } %>
+
+		<div class="ui segment">
+			<div class="ui dimmer" id="inbox_loading">
+				<div class="ui text loader">Retrieving Inbox</div>
+			</div>
+		
+			<!-- SEARCH AREA -->
+			<form class="ui form">
+				<div class="four fields">
+						
+					<!-- SEARCH BOX -->
+					<div class="field">
+						<div class="ui icon input">
+							<input type="text" placeholder="Seach Mail" id="search_mail"/>
+							<i class="search icon"></i>
+						</div>
+					</div>
+						
+					<!-- MAIL TYPE BOX -->
+					<div class="field">
+						<select class="ui fluid dropdown" id="search_type">
+							<option value="">Mail Type</option>
+							<option value="Memo">Memo</option>
+							<option value="Letter">Letter</option>
+						</select>
+					</div>	
+						
+					<!-- MAIL SENT FROM -->
+					<div class="field">
+						<div class="ui calendar" id="search_sentfrom_calendar">
+							<div class="ui icon input">
+								<input type="text" placeholder="Received From" id="search_sentfrom"/>
+								<i class="calendar icon"></i>
+							</div>
+						</div>
+					</div>
+								
+					<!-- MAIL SENT TO -->
+					<div class="field">
+						<div class="ui calendar" id="search_sentto_calendar">
+							<div class="ui icon input">
+								<input type="text" placeholder="Received To" id="search_sentto"/>
+								<i class="calendar icon"></i>
+							</div>
+						</div>
+					</div>
+										
+					<!-- SEARCH BUTTON -->
+					<div class="field">
+						<button class="ui grey button" type="button" id="clear_search">
+							Clear Search
+						</button>
 					</div>
 				</div>
-						
-				<!-- MAIL TIMESTAMP RANGE BOX -->
-				<div class="field">
-					<input type="text" placeholder="Mail Timestamp Range"/>
-				</div>
-									
-				<!-- SEARCH BUTTON -->
-				<div class="field">
-					<button class="ui grey button" type="button">
-						Search
-					</button>
-				</div>
-			</div>
-		</form>
-				
-		<!-- TABLE AREA -->
-		<table class="ui compact selectable sortable table">
-			<thead>
-				<tr>
-					<th>Sender</th>
-					<th>Subject</th>
-					<th>Timestamp</th>
-				</tr>
-			</thead>
-			<tr>
-				<td>Princess Daisy</td>
-				<td class="selectable"><a href="../index.jsp">
-					<i class="mail icon"></i>
-					A Princess' Diary
-					</a>
-				</td>
-				<td>12-12-2018 12:00:00</td>
-			</tr>				
-		</table>	
+			</form>
+					
+			<!-- TABLE AREA -->
+			<table class="ui compact selectable table" id="inbox_table">
+				<thead>
+					<tr>
+						<th>Sender</th>
+						<th>Subject</th>
+						<th>Type</th>
+						<th>ISO</th>
+						<th>Timestamp</th>
+					</tr>
+				</thead>
+				<tbody id="inbox_tablebody"></tbody>			
+			</table>	
+		
+		</div>
 			
 <!-- END OF ACTUAL PAGE CONTENTS -->
+		</div>
+		
+		<!-- VIEW MAIL -->
+		<div class="ui modal" id="view_mail_dialog">
+			<div class="header neutral-modal">
+				<h3 class="ui header neutral-modal">
+					<i class="envelope icon"></i>
+					View Mail
+				</h3>
+			</div>
+			<div class="modal-content">
+				<div class="ui stackable grid">
+					<div class="eight wide column">
+						<p class="element-rmb"><b>Sender: </b><span id="view_mail_sender"></span></p>
+						<p class="element-rmb"><b>Subject: </b><span id="view_mail_subject"></span></p>
+						<p class="element-rmb"><b>Mail Type: </b><span id="view_mail_type"></span></p>
+						<p class="element-rmb"><b>ISO Number: </b><span id="view_mail_iso_number"></span></p>
+						<p><b>Mail Timestamp: </b><span id="view_mail_timestamp"></span></p>
+						
+						<form method="GET" action="${pageContext.request.contextPath}/ViewPdf">
+							<input type="hidden" name="id" id="view_mail_id">
+
+							<button class="ui fluid small button" type="submit">
+								<i class="envelope icon icon"></i>View Mail
+							</button>
+						</form>
+					</div>
+					
+					<div class="eight wide column">
+						<!-- ACKNOWLEDGEMENT FORM -->
+						<form class="ui form" method="POST" action="${pageContext.request.contextPath}/UpdateAcknowledgeTimeStamp" 
+								id="acknowledge_form">
+							<input type="hidden" name="mail_id" id="acknowledge_mail_id">
+						
+							<div class="ui checkbox" id="confirmation_checkbox" style="margin-bottom: 14px;">
+								<label>I have read and understood this mail I received.</label>
+  								<input type="checkbox" name="confirmation" />
+							</div>
+							<div class="field element-rmb">
+								<label>Remarks:</label>
+								<textarea name="remark" id="acknowledge_remarks" rows="2"></textarea>
+							</div>
+							<button type="submit" class="ui tiny fluid green button">
+								<i class="check icon"></i>
+								Submit
+							</button>
+							
+							<div class="ui error message"></div>
+							
+							<div class="ui orange message" id="ack_orange_message">
+								<i class="close icon" id="close_ack_orange_message"></i>
+								<div class="header">Failed to Update Acknowledgement.</div>
+							</div>
+						</form>
+						
+						<div class="ui green message" id="ack_green_message">
+							<i class="close icon" id="close_ack_green_message"></i>
+							<div class="header">Acknowledgment updated!</div>
+						</div>
+
+						<!-- ACKNOWLEGED FORM -->
+						<div class="ui segment" id="acknowledgement_info">
+							<p class="element-rmb"><b>Status: </b><span id="view_mail_acknowledgment_status"></span></p>
+							<p class="element-rmb"><b>Acknowledge Timestamp: </b><span id="view_mail_acknowledgement_timestamp"></span></p>
+							<p><b>Acknowledge Remarks: </b><span id="view_mail_acknowledgement_remarks"></span></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button" id="viewincoming_close">Close</button>
+			</div>
 		</div>
 		
 		<!-- NOTIFICATIONS MODAL -->
@@ -279,7 +394,12 @@
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/session/non_admin_check.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/dataTable/jquery.dataTables.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/mail/internal_inbox.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/notifications.js"></script>
 </html>

@@ -32,6 +32,7 @@ public class UpdateStatus extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setCharacterEncoding("UTF-8");
 		try {
 			
 			HttpSession session = request.getSession();
@@ -56,8 +57,12 @@ public class UpdateStatus extends HttpServlet {
 
 				LogsFunctions.addLog("System", "Mark As Done", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), title);
 			}
-		} catch (Exception e) {
 			
+		    response.setContentType("text/plain");
+		    response.setStatus(HttpServletResponse.SC_OK);
+		    response.getWriter().write("success");
+		} catch (Exception e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			e.printStackTrace();
 		}
 	}

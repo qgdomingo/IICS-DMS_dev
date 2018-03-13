@@ -33,17 +33,16 @@ public class ManageTasksFunctions {
 			return rs;
 	}
 	
-	public static void addTask(String title, String deadline, String category, String instructions, String email [], String assignedBy, String department) throws SQLException
+	public static void addTask(String title, String deadline, String category, String instructions, String email [], String assignedBy) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("INSERT INTO tasks (title, deadline, category, instructions, assigned_by, school_year, department) VALUES (?,?,?,?,?,?,?)");
+			PreparedStatement prep = con.prepareStatement("INSERT INTO tasks (title, deadline, category, instructions, assigned_by, school_year) VALUES (?,?,?,?,?,?)");
 			prep.setString(1, title);
 			prep.setString(2, deadline);
 			prep.setString(3, category);
 			prep.setString(4, instructions);
 			prep.setString(5, assignedBy);
 			prep.setString(6, getSchoolYear());
-			prep.setString(7, department);
 			prep.executeUpdate();
 			
 			assignUsers(email);
@@ -82,13 +81,14 @@ public class ManageTasksFunctions {
 		
 		for(String mail: email)
 		{
-			PreparedStatement prep = con.prepareStatement("INSERT INTO tasks_assigned_to (id, name, email, school_year) VALUES (?,?,?,?)");
+			PreparedStatement prep = con.prepareStatement("INSERT INTO tasks_assigned_to (id, name, email, school_year, department) VALUES (?,?,?,?,?)");
 			
 			String fullName = getFullName(mail);
 			prep.setInt(1, id);
 			prep.setString(2, fullName);
 			prep.setString(3, mail);
 			prep.setString(4, getSchoolYear());
+			prep.setString(5, getUserDepartment(mail));
 			prep.executeUpdate();
 		}
 	}
@@ -319,13 +319,14 @@ public class ManageTasksFunctions {
 				
 				if( !ifExistingOnAssignment )
 				{
-					PreparedStatement prep = con.prepareStatement("INSERT INTO tasks_assigned_to (id, name, email, school_year) VALUES (?,?,?,?)");
+					PreparedStatement prep = con.prepareStatement("INSERT INTO tasks_assigned_to (id, name, email, school_year, department) VALUES (?,?,?,?,?)");
 					
 					String fullName = getFullName(mail);
 					prep.setString(1, tempID);
 					prep.setString(2, fullName);
 					prep.setString(3, mail);
 					prep.setString(4, getSchoolYear());
+					prep.setString(5, getUserDepartment(mail));
 					prep.executeUpdate();
 					
 					String des = taskOwner +" assigned you a new task, "+ title;
@@ -446,5 +447,16 @@ public class ManageTasksFunctions {
 		
 	}
 
+	public static String getUserDepartment(String email) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT department FROM accounts WHERE email = ?");
+		prep.setString(1, email);
+		
+		ResultSet rs = prep.executeQuery();
+		rs.next();
+		
+		return rs.getString("department");
+	}
 	
 }

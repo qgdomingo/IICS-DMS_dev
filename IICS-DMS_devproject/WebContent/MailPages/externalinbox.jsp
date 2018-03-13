@@ -5,9 +5,6 @@
 	Account acc = new Account();
 	String userType = "";
 	
-	boolean restrictionCase1 = false;
-	boolean restrictionCase2 = false;
-
 	if(request.getSession(false) == null || request.getSession(false).getAttribute("currentCredentials") == null) {
 		response.sendRedirect(request.getContextPath() + "/index.jsp");
 	} else {
@@ -17,22 +14,16 @@
 		if( (userType.equalsIgnoreCase("Administrator")) ) {
 			response.sendRedirect(request.getContextPath() + "/admin/manageusers.jsp");
 		} 
-		
-		// Restriction Case 1 - not allowed for Faculty, Supervisor and Staff
-		if(userType.equalsIgnoreCase("Faculty") || userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) { 
-			restrictionCase1 = true;
+		else if(!userType.equalsIgnoreCase("Director")) {
+			response.sendRedirect(request.getContextPath() + "/home.jsp");
 		}
 		
-		// Restriction Case 2 - not allowed for Supervisor and Staff
-		if(userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) {
-			restrictionCase2 = true;
-		}
 	}
 %>
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Event List | IICS DMS</title>
+		<title>External Inbox | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
@@ -61,7 +52,7 @@
 		<!-- LEFT SIDE MENU -->
 		<div class="ui large left vertical menu sidebar" id="side_nav">
 			<a class="item mobile only user-account-bgcolor" href="${pageContext.request.contextPath}/userprofile.jsp">
-				<h5 class="ui header">
+				<h5 class="ui header ">
 					<i class="large user circle icon user-account-color"></i>
 					<div class="content user-account-color">
 						<%= acc.getFullName() %>
@@ -72,7 +63,7 @@
 			<a class="item" href="${pageContext.request.contextPath}/home.jsp">
 		      <i class="large home icon side"></i>Home
 		    </a>
-		   	<a class="item" href="${pageContext.request.contextPath}/files/fileupload.jsp">
+		    <a class="item" href="${pageContext.request.contextPath}/files/fileupload.jsp">
 		      <i class="large cloud upload alternate icon side"></i>Upload Document
 		    </a>
 		    <a class="item" href="${pageContext.request.contextPath}/files/personaldocs.jsp">
@@ -81,37 +72,29 @@
 		    <a class="item" href="${pageContext.request.contextPath}/task/viewtasks.jsp">
 		      <i class="large tasks icon side"></i>Tasks
 		    </a>
-		    <a class="item active" href="${pageContext.request.contextPath}/calendar/viewcalendar.jsp">
+		    <a class="item" href="${pageContext.request.contextPath}/calendar/viewcalendar.jsp">
 		      <i class="large calendar alternate outline icon side"></i>Calendar
 		    </a>
-	
 		    <div class="item">
 		   		Mail
 		   		<div class="menu">
-	<% if(!restrictionCase2) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/newmail.jsp">
 			    		<i class="large pencil alternate icon side"></i>Create Mail
 			    	</a>
-	<%  } %>
-			    	<a class="item" href="${pageContext.request.contextPath}/mail/inbox.jsp">
+			    	<a class="item active" href="${pageContext.request.contextPath}/mail/inbox.jsp">
 			    		<i class="large inbox icon side"></i>Inbox
 			    	</a>
-	<% if(!restrictionCase1) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
-	<%  } %>
-	<% if(!restrictionCase2) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
 			    		<i class="large envelope square icon side"></i>Mail Requests
 			    	</a>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/exportedmail.jsp">
 			    		<i class="large external link square alternate icon side"></i>Exported Mail
 			    	</a>
-	<%  } %>
 		    	</div>
 		    </div>
-	<% if(!restrictionCase1) { %>
 			<div class="item">
 		   		Reports
 		   		<div class="menu">
@@ -120,12 +103,11 @@
 			    	</a>
 		    	</div>
 		    </div>
-	<%  } %>
 		    <a class="item mobile only" id="logout_btn2">
 		      <i class="large power icon side"></i>Logout
 		    </a>
 		</div>
-				
+		
 		<!-- PAGE CONTENTS -->
 		<div class="pusher page-content-spacing page-background">
 		
@@ -135,8 +117,8 @@
 					<i class="large sidebar icon"></i>
 				</a>
 				<div class="item">
-					<i class="large calendar alternate outline icon"></i>
-					Event List
+					<i class="large inbox icon"></i>
+					Inbox
 				</div>
 				<div class="right menu">
 					<a class="item user-account-bgcolor mobile hidden" href="${pageContext.request.contextPath}/userprofile.jsp">
@@ -159,77 +141,77 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
-		<h2 class="ui dividing header element-rmt">
-			<a href="${pageContext.request.contextPath}/calendar/viewcalendar.jsp">
-				<i class="black chevron left icon"></i>
-			</a> 
-			Event List
-		</h2>
-		
-		<!-- EVENT LIST SEGMENT -->
-		<div class="ui segment">
-			<div class="ui dimmer" id="event_list_loading">
-				<div class="ui text loader">Retrieving Event List</div>
-			</div>
-			
-			<!-- SEARCH FIELDS FOR EVENTS -->
-			<form class="ui form">
-				<div class="four fields">
-					
-					<!-- GLOBAL EVENT SEARCH -->
-					<div class="field">
-						<div class="ui icon input">
-							<input type="text" placeholder="Seach Event" id="search_event"/>
-							<i class="search icon"></i>
-						</div>
-					</div>
-					
-					<!-- EVENT FROM -->
-					<div class="field">
-						<div class="ui calendar" id="search_datefrom_calendar">
-							<div class="ui icon input">
-								<input type="text" placeholder="Event Date From" id="search_datefrom"/>
-								<i class="calendar icon"></i>
-							</div>
-						</div>
-					</div>
-					
-					<!-- EVENT TO -->
-					<div class="field">
-						<div class="ui calendar" id="search_dateto_calendar">
-							<div class="ui icon input">
-								<input type="text" placeholder="Event Date To" id="search_dateto"/>
-								<i class="calendar icon"></i>
-							</div>
-						</div>
-					</div>
-					
-					<div class="field">
-						<button class="ui grey button" type="button" id="search_clear">
-							Clear Search
-						</button>
-					</div>
-					
-				</div>
-				
-				<table class="ui compact selectable table" id="event_table">
-					<thead>
-						<tr>
-							<th>Event Title</th>
-							<th>Location</th>
-							<th>Start Date and Time</th>
-							<th>End Date and Time</th>
-							<th>Created by</th>
-						</tr>
-					</thead>
-					<tbody id="event_tablebody"></tbody>
-				</table>
-			</form>
+
+		<% if(userType.equalsIgnoreCase("Director")) { %>
+		<div class="ui secondary pointing menu element-rmt">
+			<a class="item" href="${pageContext.request.contextPath}/mail/inbox.jsp">
+				<i class="folder icon"></i>
+				Internal Inbox
+			</a>
+			<a class="item active" href="${pageContext.request.contextPath}/mail/externalinbox.jsp">
+				<i class="folder open icon"></i>
+				External Inbox
+			</a>
 		</div>
-		
+		<% } %>
+
+		<!-- SEARCH AREA -->
+		<form class="ui form">
+			<div class="four fields">
+					
+				<!-- SEARCH BOX -->
+				<div class="field">
+					<div class="ui icon input">
+						<input type="text" placeholder="Seach Mail" id="search_mail"/>
+						<i class="search icon"></i>
+					</div>
+				</div>
+						
+				<!-- MAIL SENT FROM -->
+				<div class="field">
+					<div class="ui calendar" id="search_sentfrom_calendar">
+						<div class="ui icon input">
+							<input type="text" placeholder="Upload To" id="search_sentfrom"/>
+							<i class="calendar icon"></i>
+						</div>
+					</div>
+				</div>
+							
+				<!-- MAIL SENT TO -->
+				<div class="field">
+					<div class="ui calendar" id="search_sentto_calendar">
+						<div class="ui icon input">
+							<input type="text" placeholder="Upload To" id="search_sentto"/>
+							<i class="calendar icon"></i>
+						</div>
+					</div>
+				</div>
+									
+				<!-- SEARCH BUTTON -->
+				<div class="field">
+					<button class="ui grey button" type="button" id="clear_search">
+						Clear Search
+					</button>
+				</div>
+			</div>
+		</form>
+				
+		<!-- TABLE AREA -->
+		<table class="ui compact selectable table" id="external_inbox_table">
+			<thead>
+				<tr>
+					<th>Sender</th>
+					<th>Affiliation</th>
+					<th>Subject</th>
+					<th>Timestamp</th>
+				</tr>
+			</thead>
+			<tbody id="external_inbox_tablebody"></tbody>			
+		</table>	
+			
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
-				
+		
 		<!-- NOTIFICATIONS MODAL -->
 		<div class="ui tiny modal" id="notification_dialog">
 			<div class="header center-text">
@@ -247,7 +229,7 @@
 					Close
 				</button>
 			</div>
-		</div>		
+		</div>
 		
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">
@@ -305,12 +287,12 @@
 	</body>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/session/non_admin_check.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/dataTable/jquery.dataTables.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/session/non_admin_check.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/calendar/view_event_list.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/notifications.js"></script>
 </html>

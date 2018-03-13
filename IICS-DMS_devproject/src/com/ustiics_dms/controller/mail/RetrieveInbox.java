@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Mail;
+import com.ustiics_dms.utility.AesEncryption;
 
 
 
@@ -22,12 +23,9 @@ import com.ustiics_dms.model.Mail;
 public class RetrieveInbox extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public RetrieveInbox() {
         super();
- 
     }
-
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -47,16 +45,17 @@ public class RetrieveInbox extends HttpServlet {
 				while(inboxInfo.next())
 				{ 
 					mail.add(new Mail(
-							inboxInfo.getString("id"),
+							AesEncryption.encrypt(getInbox.getString("id")),
 							inboxInfo.getString("type"),
 							inboxInfo.getString("iso_number"),
-							inboxInfo.getString("external_recipient"),
 							inboxInfo.getString("subject"),
 							inboxInfo.getString("sender_name"),
 							inboxInfo.getString("sent_by"),
 							inboxInfo.getString("date_created"),
-							inboxInfo.getString("school_year")
-							 ));	
+							getInbox.getString("acknowledgement"),
+							getInbox.getString("time_acknowledged"),
+							getInbox.getString("remarks")
+					));	
 				}
 			}
 			String json = new Gson().toJson(mail);

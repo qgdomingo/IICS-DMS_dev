@@ -20,13 +20,12 @@ public class ChangePassword extends HttpServlet {
         super();
     }
 
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
 	}
 
-	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setCharacterEncoding("UTF-8");
 		
 		try {
 			HttpSession session = request.getSession();
@@ -53,6 +52,7 @@ public class ChangePassword extends HttpServlet {
 		catch(Exception e)
 		{
 			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		
 		

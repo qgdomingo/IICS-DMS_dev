@@ -135,7 +135,14 @@
 			</div>
 			<div class="modal-content">
 				<h4 class="element-rmb">Are you sure you want to change the academic year settings?</h4>
-				<p>This would reset the ISO number count of the Memos, Letters, and Notice of Meetings. </p>
+				<div class="ui message">
+					<div class="header">
+						This would do the following:
+					</div>
+					<ul class="list">
+						<li>Reset the ISO number count of the Memos, and Letters of all Departments</li>
+					</ul>
+				</div>
 				<p style="color: red;">THIS CHANGE WILL BE IRREVERSIBLE. </p>
 			</div>
 			<div class="actions">

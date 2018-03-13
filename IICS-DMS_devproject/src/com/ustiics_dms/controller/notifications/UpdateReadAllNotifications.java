@@ -23,7 +23,7 @@ public class UpdateReadAllNotifications extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		response.setCharacterEncoding("UTF-8");
 		try {
 			HttpSession session = request.getSession();
 			Account acc = (Account) session.getAttribute("currentCredentials");

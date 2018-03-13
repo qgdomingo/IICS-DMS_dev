@@ -20,12 +20,9 @@ import com.ustiics_dms.model.MailStatistics;
 public class PieChartMailStatistics extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public PieChartMailStatistics() {
         super();
-
     }
-
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -33,9 +30,17 @@ public class PieChartMailStatistics extends HttpServlet {
 		    HttpSession session = request.getSession();
 		    Account acc = (Account) session.getAttribute("currentCredentials");
 			
-			String viewBy = "Department";//request.getParameter("view_by"); // example "Department", "Faculty", or "Staff"
-			String source = "Information Systems";//request.getParameter("source"); // example "Information Systems", "coleensy@gmail.com"
-			String year = "2017-2018";//request.getParameter("year"); // example "2017-2018"
+		    String viewBy = request.getParameter("view_scope"); // example "Department", "Faculty", or "Staff"
+		    String source = "";  // example "Information Systems", "coleensy@gmail.com"
+		    
+		    if(viewBy.equalsIgnoreCase("Department")) {
+		    	source = request.getParameter("department_selection");
+		    }
+		    else {
+		    	source = request.getParameter("user_selection");
+		    }
+		    
+			String year = request.getParameter("view_academic_year"); // example "2017-2018"
 			String json = "";
 			
 		    List<MailStatistics> stats = new ArrayList<MailStatistics>(); // used for department

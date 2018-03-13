@@ -21,25 +21,30 @@ import com.ustiics_dms.model.SentMail;
 public class RetrieveMailTotalStatistics extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public RetrieveMailTotalStatistics() {
         super();
-
     }
-
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-try {
+		try {
 			
 		    HttpSession session = request.getSession();
 		    Account acc = (Account) session.getAttribute("currentCredentials");
 			
-		    String viewBy = request.getParameter("view_by"); // example "Department", "Faculty", or "Staff"
-			String source = request.getParameter("source"); // example "Information Systems", "coleensy@gmail.com"
-			String year = request.getParameter("year"); // example "2017-2018"
+		    String viewBy = request.getParameter("view_scope"); // example "Department", "Faculty", or "Staff"
+		    String source = "";  // example "Information Systems", "coleensy@gmail.com"
+		    
+		    if(viewBy.equalsIgnoreCase("Department")) {
+		    	source = request.getParameter("department_selection");
+		    }
+		    else {
+		    	source = request.getParameter("user_selection");
+		    }
+		    
+			String year = request.getParameter("view_academic_year"); // example "2017-2018"
 			String json = null;
-			
+
 		    List<MailStatistics> departmentStats = new ArrayList<MailStatistics>(); // used for department
 		    List<SentMail> facultyOrStaffStats = new ArrayList<SentMail>(); // used for staff or faculty
 		    

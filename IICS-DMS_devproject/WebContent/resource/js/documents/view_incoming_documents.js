@@ -268,8 +268,9 @@
 	
 	/* SUBMIT - Update Document Note */
 	$('#edit_note_form').ajaxForm({
-		success: function(response) {  
-			$('#note_green_message').show();
+		success: function(response) {
+			localIncomingDocsData[selectedRowId]['note'] = $('#view_incoming_note').val();
+ 			$('#note_green_message').show();
 		},
 		error: function(response) { 
 			$('#note_orange_message').show();

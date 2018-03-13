@@ -33,6 +33,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 		
@@ -88,9 +90,11 @@
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/inbox.jsp">
 			    		<i class="large inbox icon side"></i>Inbox
 			    	</a>
+	<% if(!restrictionCase1) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
+	<%  } %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
 			    		<i class="large envelope square icon side"></i>Mail Requests
 			    	</a>
@@ -147,55 +151,108 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
-		<!-- SEARCH AREA -->
-		<form class="ui form">
-			<div class="three fields">
-					
-				<!-- SEARCH BOX -->
-				<div class="field">
-					<div class="ui icon input">
-						<input type="text" placeholder="Seach Mail"/>
-						<i class="search icon"></i>
+
+		<div class="ui segment">
+			<div class="ui dimmer" id="exported_loading">
+				<div class="ui text loader">Retrieving Exported Mail</div>
+			</div>
+		
+			<!-- SEARCH AREA -->
+			<form class="ui form">
+				<div class="five fields">
+						
+					<!-- SEARCH BOX -->
+					<div class="field">
+						<div class="ui icon input">
+							<input type="text" placeholder="Seach Mail" id="search_mail"/>
+							<i class="search icon"></i>
+						</div>
+					</div>
+						 
+					<!-- MAIL TYPE BOX -->
+					<div class="field">
+						<select class="ui fluid dropdown" id="search_type">
+							<option value="">Mail Type</option>
+							<option value="Memo">Memo</option>
+							<option value="Letter">Letter</option>
+						</select>
+					</div>
+							
+					<!-- MAIL SENT FROM -->
+					<div class="field">
+						<div class="ui calendar" id="search_sentfrom_calendar">
+							<div class="ui icon input">
+								<input type="text" placeholder="Exported From" id="search_sentfrom"/>
+								<i class="calendar icon"></i>
+							</div>
+						</div>
+					</div>
+								
+					<!-- MAIL SENT TO -->
+					<div class="field">
+						<div class="ui calendar" id="search_sentto_calendar">
+							<div class="ui icon input">
+								<input type="text" placeholder="Exported To" id="search_sentto"/>
+								<i class="calendar icon"></i>
+							</div>
+						</div>
+					</div>
+							
+					<!-- SEARCH BUTTON -->
+					<div class="field">
+						<button class="ui grey button" type="button" id="clear_search">
+							Clear Search
+						</button>
 					</div>
 				</div>
-						
-				<!-- MAIL TIMESTAMP RANGE BOX -->
-				<div class="field">
-					<input type="text" placeholder="Mail Timestamp Range"/>
-				</div>
-									
-				<!-- SEARCH BUTTON -->
-				<div class="field">
-					<button class="ui grey button" type="button">
-						Search
-					</button>
-				</div>
-			</div>
-		</form>
-				
-		<!-- TABLE AREA -->
-		<table class="ui compact selectable sortable table">
-			<thead>
-				<tr>
-					<th>To</th>
-					<th>Created by</th>
-					<th>Subject</th>
-					<th>Timestamp</th>
-				</tr>
-			</thead>
-			<tr>
-				<td>Princess Daisy</td>
-				<td>Princess Peach</td>
-				<td class="selectable"><a href="../index.jsp">
-					<i class="mail icon"></i>
-					A Princess' Diary
-					</a>
-				</td>
-				<td>12-12-2018 12:00:00</td>
-			</tr>				
-		</table>	
+			</form>
+					
+			<!-- TABLE AREA -->
+			<table class="ui compact selectable table" id="exported_mail_table">
+				<thead>
+					<tr>
+						<th>Subject</th>
+						<th>Type</th>
+						<th>ISO</th>
+						<th>Timestamp</th>
+					</tr>
+				</thead>
+				<tbody id="exported_mail_tablebody"></tbody>			
+			</table>	
+		
+		</div>
 		
 <!-- END OF ACTUAL PAGE CONTENTS -->
+		</div>
+		
+		<!-- VIEW MAIL -->
+		<div class="ui tiny modal" id="view_mail_dialog">
+			<div class="header neutral-modal">
+				<h3 class="ui header neutral-modal">
+					<i class="envelope icon"></i>
+					View Exported Mail
+				</h3>
+			</div>
+			<div class="modal-content">
+
+				<p class="element-rmb"><b>Created By: </b><span id="view_mail_createdby"></span></p>
+				<p class="element-rmb"><b>Subject: </b><span id="view_mail_subject"></span></p>
+				<p class="element-rmb"><b>Mail Type: </b><span id="view_mail_type"></span></p>
+				<p class="element-rmb"><b>ISO Number: </b><span id="view_mail_iso_number"></span></p>
+				<p><b>Mail Timestamp: </b><span id="view_mail_timestamp"></span></p>
+				
+				<form method="GET" action="${pageContext.request.contextPath}/ViewPdf">
+					<input type="hidden" name="id" id="view_mail_id">
+
+					<button class="ui fluid small button" type="submit">
+						<i class="envelope icon icon"></i>View Mail
+					</button>
+				</form>
+
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button" id="viewincoming_close">Close</button>
+			</div>
 		</div>
 		
 		<!-- NOTIFICATIONS MODAL -->
@@ -274,7 +331,11 @@
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/session/non_staff_check.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/dataTable/jquery.dataTables.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/mail/view_exported_mail.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/notifications.js"></script>
 </html>

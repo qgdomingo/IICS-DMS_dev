@@ -88,9 +88,11 @@
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/inbox.jsp">
 			    		<i class="large inbox icon side"></i>Inbox
 			    	</a>
+	<% if(!restrictionCase1) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
+	<%  } %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
 			    		<i class="large envelope square icon side"></i>Mail Requests
 			    	</a>
@@ -147,74 +149,115 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
-		<form class="ui form" method="post" action="${pageContext.request.contextPath}/ForwardMail" id="new_mail_form"> 
-			<div class="two fields">
-			<div class="three wide field">
-				<label>Mail Type:</label>
-				<select class="ui fluid dropdown" name="type">
-					<option value="">Select Mail Type</option>
-					<option value="Memo">Memo</option>
-					<option value="Letter">Letter</option>
-					<option value="Notice">Notice</option>
-				</select>
-			</div>
-			</div>
-			
-			<div class="field">
-				<label>To:</label>
-				<div class="ui action input">
-				  	<select class="ui fluid search selection dropdown" multiple="" name="assigned_to">
-						<option value="">Select Users</option>
+		<input type="hidden" id="user_type" value="<%= userType %>" />
+
+		<div class="ui grid form element-rpt">
+		
+			<div class="three wide computer four wide tablet sixteen wide mobile column">
+				<div class="field">
+					<label>Mail Type:</label>
+					<select class="ui fluid dropdown" id="mail_type_select">
+			  			<option value="Memo">Memo</option>
+					  	<option value="Letter">Letter</option>
+					  	<% if (!restrictionCase1) { %>
+					  	<option value="ISO">Generate ISO Code</option>
+					  	<% } %>
 					</select>
-				  	<button class="ui orange button" type="button">
-				  		<i class="address book outline icon"></i>
-				  		Options 
-				  	</button>
 				</div>
 			</div>
+		
+			<br>
+			
+			<div class="twelve wide computer eleven wide tablet sixteen wide mobile column">
 				
-			<div class="field">
-				<label>External To:</label>
-				<select class="ui fluid search selection dropdown" multiple="" name="assigned_to">
-					<option value="">Select Users</option>
-				</select>
+				<form class="ui form" method="post" action="${pageContext.request.contextPath}/ForwardMail" id="new_mail_form"> 
+					<input type="hidden" name="type" id="mail_type" />
+				
+				<% if(!restrictionCase1) { %>
+					<div class="field">
+						<label>To:</label>
+						<div class="ui action input">
+			  				<select class="ui fluid search selection dropdown" multiple="" name="internal_to" id="internal_to">
+								<option value="">Select Users</option>
+							</select>
+			  				<button class="ui orange button" type="button">
+				  				<i class="address book outline icon"></i>
+				  				Options 
+			  				</button>
+						</div>
+					</div>
+					
+					<div class="field">
+						<label>External To:</label>
+						<div class="ui action input">
+			  				<select class="ui fluid search selection dropdown" multiple="" name="external_to" id="external_to">
+								<option value="">Select Users</option>
+							</select>
+			  				<button class="ui orange button" type="button">
+				  				<i class="address book outline icon"></i>
+				  				Options 
+			  				</button>
+						</div>
+					</div>
+				<% } %>
+					
+					<div class="required field">
+						<label>Subject:</label>
+						<input type="text" name="subject"/>
+					</div>
+					
+					<div class="required field">
+						<label>Message:</label>
+						<textarea rows="6" name="message"></textarea>
+					</div>
+					
+					<div class="ui error message"></div>
+					
+					<!-- SENDING MAIL BUTTONS -->
+					<% if(!restrictionCase1) { %>
+					<button type="submit" name="submit" value="send mail" class="ui labeled icon green button element-mb">
+						<i class="send icon"></i>
+						Send Mail
+					</button>
+		
+					<button type="submit" name="submit" value="save and export" class="ui labeled icon blue button element-mb">
+						<i class="download icon"></i>
+						Export Mail as PDF
+					</button>
+					<% } %>
+					
+					<% if(acc.getUserType().equals("Faculty Secretary") || acc.getUserType().equals("Faculty")) { %>
+					<button type="submit" name="submit" value="mail request" class="ui labeled icon orange button element-mb">
+						<i class="large envelope square icon"></i>
+						Send Mail as Request
+					</button>	
+					<% } %>
+					
+					<button type="button" class="ui grey button element-mb" id="clear_mail_form">
+						Clear Fields
+					</button>
+					
+				</form>
+			
+				<form class="ui form" method="POST" id="generate_iso_form">
+					<input type="hidden" name="type" />
+					
+					<div class="required field">
+						<label>Purpose of ISO Number to be Generated:</label>
+						<textarea rows="3" name="purpose"></textarea>
+					</div>
+					
+					<div class="ui error message"></div>
+					
+					<button type="submit" class="ui labeled icon green button">
+						<i class="check icon"></i>
+						Generate ISO Code
+					</button>
+				</form>
+				
 			</div>
-			
-			<div class="required field">
-				<label>Subject:</label>
-				<input type="text" name="subject"/>
-			</div>
-			
-			<div class="required field">
-				<label>Message:</label>
-				<textarea name="message"></textarea>
-			</div>
-			
-			<!-- SENDING MAIL BUTTONS -->
-			<% if(acc.getUserType().equals("Faculty Secretary") || acc.getUserType().equals("Faculty")) { %>
-			<button name="submit" value="mail request" class="ui labeled icon orange button element-mb">
-				<i class="exchange icon"></i>
-				Send Mail as Request
-			</button>	
-			<% } %>
-			
-			<% if(!acc.getUserType().equals("Faculty")) { %>
-			<button name="submit" value="send mail" class="ui labeled icon green button element-mb">
-				<i class="send icon"></i>
-				Send Mail
-			</button>
-
-			<button name="submit" value="save and export" class="ui labeled icon blue button element-mb">
-				<i class="download icon"></i>
-				Export Mail as PDF
-			</button>
-			<% } %>
-			
-			<button type="button" class="ui grey button element-mb">
-				Clear Fields
-			</button>
-			
-		</form>
+		
+		</div>
 				
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
@@ -294,8 +337,11 @@
 	</body>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/session/non_staff_check.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/directory.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/mail/new_mail.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/notifications.js"></script>
 </html>

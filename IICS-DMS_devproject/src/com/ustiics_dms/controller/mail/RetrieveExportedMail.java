@@ -15,66 +15,57 @@ import javax.servlet.http.HttpSession;
 import com.google.gson.Gson;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Mail;
-
+import com.ustiics_dms.utility.AesEncryption;
 
 @WebServlet("/RetrieveExportedMail")
 public class RetrieveExportedMail extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public RetrieveExportedMail() {
         super();
     }
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
-	}
-
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		response.setCharacterEncoding("UTF-8");
+		
 		try {
 			HttpSession session = request.getSession();
 		    Account acc = (Account) session.getAttribute("currentCredentials");
 		    
-			List <String> exportedID =MailFunctions.getExportedMailID(acc.getEmail());
-			response.setCharacterEncoding("UTF-8");
+			ResultSet rs = MailFunctions.getExportedMailID(acc.getEmail());
 			
-		    
-		    
 			List <Mail> mail = new ArrayList <Mail> ();
-			for(String id:exportedID)
+			
+			while(rs.next())
 			{
-				ResultSet mailInfo = MailFunctions.getInboxInformation(id);
+				ResultSet mailInfo = MailFunctions.getInboxInformation(rs.getString("id"));
 				mailInfo.next();
 					
 				mail.add(new Mail(
-						mailInfo.getString("id"),
+						AesEncryption.encrypt(rs.getString("id")),
 						mailInfo.getString("type"),
 						mailInfo.getString("iso_number"),
-						mailInfo.getString("external_recipient"),
 						mailInfo.getString("subject"),
 						mailInfo.getString("sender_name"),
 						mailInfo.getString("sent_by"),
-						mailInfo.getString("date_created"),
-						mailInfo.getString("school_year")
-						 ));	
-				
+						mailInfo.getString("date_created")
+				));		
 			}
-				String json = new Gson().toJson(mail);
-				
-			    response.setContentType("application/json");
-			    response.setStatus(HttpServletResponse.SC_OK);
-			    response.getWriter().write(json);
-				
 			
+			String json = new Gson().toJson(mail);
 			
-			
+		    response.setContentType("application/json");
+		    response.setStatus(HttpServletResponse.SC_OK);
+		    response.getWriter().write(json);
+	
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
 	}
 
 }

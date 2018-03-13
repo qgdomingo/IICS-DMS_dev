@@ -5,40 +5,58 @@ public class Mail {
 	private String id;
 	private String type;
 	private String isoNumber;
-	private String externalRecipient;
 	private String subject;
 	private String senderName;
 	private String senderEmail;
 	private String dateCreated;
 	private String schoolYear;
+	private String acknowledgementStatus;
+	private String acknowledgementTimestamp;
+	private String acknowledgementRemarks;
 	
-	public Mail(String id, String type, String isoNumber, String externalRecipient, String subject, String senderName,
-			String senderEmail, String dateCreated, String schoolYear) {
+	public Mail(String id, String type, String isoNumber, String subject, String senderName, String senderEmail, 
+			String dateCreated, String acknowledgementStatus, String acknowledgementTimestamp, String acknowledgementRemarks) {
 		super();
 		this.id = id;
 		this.type = type;
 		this.isoNumber = isoNumber;
-		this.externalRecipient = externalRecipient;
 		this.subject = subject;
 		this.senderName = senderName;
 		this.senderEmail = senderEmail;
 		this.dateCreated = dateCreated;
-		this.schoolYear = schoolYear;
+		this.acknowledgementStatus = acknowledgementStatus;
+		this.acknowledgementTimestamp = acknowledgementTimestamp;
+		this.acknowledgementRemarks = acknowledgementRemarks;
 	}
 	
+	public Mail(String id, String type, String isoNumber, String subject, String senderName, String senderEmail, 
+			String dateCreated) {
+		super();
+		this.id = id;
+		this.type = type;
+		this.isoNumber = isoNumber;
+		this.subject = subject;
+		this.senderName = senderName;
+		this.senderEmail = senderEmail;
+		this.dateCreated = dateCreated;
+	}
 	
-
+	public Mail(String id, String type, String isoNumber, String subject, String dateCreated) {
+		super();
+		this.id = id;
+		this.type = type;
+		this.isoNumber = isoNumber;
+		this.subject = subject;
+		this.dateCreated = dateCreated;
+	}
+	
 	public String getSchoolYear() {
 		return schoolYear;
 	}
 
-
-
 	public void setSchoolYear(String schoolYear) {
 		this.schoolYear = schoolYear;
 	}
-
-
 
 	public String getId() {
 		return id;
@@ -62,14 +80,6 @@ public class Mail {
 
 	public void setIsoNumber(String isoNumber) {
 		this.isoNumber = isoNumber;
-	}
-
-	public String getExternalRecipient() {
-		return externalRecipient;
-	}
-
-	public void setExternalRecipient(String externalRecipient) {
-		this.externalRecipient = externalRecipient;
 	}
 
 	public String getSubject() {
@@ -102,6 +112,30 @@ public class Mail {
 
 	public void setDateCreated(String dateCreated) {
 		this.dateCreated = dateCreated;
+	}
+
+	public String getAcknowledgementStatus() {
+		return acknowledgementStatus;
+	}
+
+	public void setAcknowledgementStatus(String acknowledgementStatus) {
+		this.acknowledgementStatus = acknowledgementStatus;
+	}
+
+	public String getAcknowledgementTimestamp() {
+		return acknowledgementTimestamp;
+	}
+
+	public void setAcknowledgementTimestamp(String acknowledgementTimestamp) {
+		this.acknowledgementTimestamp = acknowledgementTimestamp;
+	}
+
+	public String getAcknowledgementRemarks() {
+		return acknowledgementRemarks;
+	}
+
+	public void setAcknowledgementRemarks(String acknowledgementRemarks) {
+		this.acknowledgementRemarks = acknowledgementRemarks;
 	}
 	
 	

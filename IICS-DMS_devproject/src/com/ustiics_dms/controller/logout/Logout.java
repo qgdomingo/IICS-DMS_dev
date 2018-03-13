@@ -30,7 +30,12 @@ public class Logout extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			HttpSession session = request.getSession();
-			session.invalidate();
+			
+			if(session.getAttribute("currentCredentials") != null) {
+				Account acc = (Account) session.getAttribute("currentCredentials");
+				LogsFunctions.addLog("System", "Logout", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
+				session.invalidate();
+			}
 			
 			String redirectURL = "/index.jsp";
 			Map<String, String> data = new HashMap<>();
@@ -41,6 +46,7 @@ public class Logout extends HttpServlet {
 			response.setCharacterEncoding("UTF-8");
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write(json);
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

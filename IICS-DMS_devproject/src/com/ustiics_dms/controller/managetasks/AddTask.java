@@ -50,7 +50,7 @@ public class AddTask extends HttpServlet {
 			String assignedBy = acc.getEmail();
 		
 			
-			ManageTasksFunctions.addTask(title, deadline, category, instructions, email, assignedBy, acc.getDepartment());
+			ManageTasksFunctions.addTask(title, deadline, category, instructions, email, assignedBy);
 			
 			String description = acc.getFullName() +" assigned you a new task, " + title;
 			NotificationFunctions.addNotification("Task Page", description, email);
