@@ -240,18 +240,13 @@ public class FileUploadFunctions {
 			}
 			else
 			{
-				sqlStatement = "SELECT email FROM accounts WHERE department = ? AND NOT email = ? AND user_type = ? ";
+				sqlStatement = "SELECT email FROM accounts WHERE department = ? AND NOT email = ?";
 			}
 			PreparedStatement prep = con.prepareStatement(sqlStatement);
 			
 			prep.setString(1, department);
 			prep.setString(2, email);
 			
-			if(!department.equalsIgnoreCase("IICS"))
-			{
-				prep.setString(3, "Department Head");
-			}
-
 			ResultSet rs = prep.executeQuery();
 			
 			String emailList = "";
@@ -319,7 +314,8 @@ public class FileUploadFunctions {
 				String department = info.getString("department");
 				
 				String des = title + "‘s note has been updated by " + ManageTasksFunctions.getFullName(email);
-				NotificationFunctions.addNotification("Outgoing Documents Page", des, FileUploadFunctions.getGroupByDepartment(department, email));
+				System.out.println(department);
+				NotificationFunctions.addNotification("Incoming Documents Page", des, FileUploadFunctions.getGroupByDepartment(department, email));
 			}
 	}
 	

@@ -4,8 +4,10 @@ public class Mail {
 
 	private String id;
 	private String type;
+	private String recipient;
 	private String isoNumber;
 	private String subject;
+	private String message;
 	private String senderName;
 	private String senderEmail;
 	private String dateCreated;

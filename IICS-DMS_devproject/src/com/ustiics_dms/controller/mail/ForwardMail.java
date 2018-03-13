@@ -57,6 +57,7 @@ public class ForwardMail extends HttpServlet {
 				}
 				
 				String title = acc.getTitle() + acc.getFullName();
+				
 				MailFunctions.saveMailInformation(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment());
 				LogsFunctions.addLog("System", "Send Mail", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), subject);
 				
@@ -79,7 +80,7 @@ public class ForwardMail extends HttpServlet {
 				LogsFunctions.addLog("System", "Export Mail", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), subject);
 				
 				String contentType = this.getServletContext().getMimeType(file.getFileName());
-				 
+
 				response.setHeader("Content-Type", contentType);
 		        response.setHeader("Content-Length", String.valueOf(file.getFileData().length()));
 		        response.setHeader("Content-Disposition", "inline; filename=\"" + file.getFileName() + "\"");
