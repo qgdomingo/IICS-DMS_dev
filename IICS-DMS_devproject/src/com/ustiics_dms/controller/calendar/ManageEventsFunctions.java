@@ -154,19 +154,18 @@ public class ManageEventsFunctions {
 		return prep.executeQuery();
 	}
 	
-	public static void updateInvitationResponse(String id, String email, String response, String responseText, String timestamp) throws SQLException {
+	public static void updateInvitationResponse(String id, String email, String response, String responseText) throws SQLException {
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("UPDATE events_invitation SET status = ?, response = ?, date_response = ? WHERE email = ? AND event_id = ?");
+		PreparedStatement prep = con.prepareStatement("UPDATE events_invitation SET status = ?, response = ? WHERE email = ? AND event_id = ?");
 		prep.setString(1, response);
 		prep.setString(2, responseText);
-		prep.setString(3, timestamp);
-		prep.setString(4, email);
-		prep.setString(5, id);
+		prep.setString(3, email);
+		prep.setString(4, id);
 		
 		prep.executeUpdate();
 		
 		String des = getFullName(email) +" has responded " + response + " to your event, "+ retrieveEventTitle(id);
-		NotificationFunctions.addNotification("Calendar Page", des, getFullName(retrieveEventOwner(id)) );
+		NotificationFunctions.addNotification("Calendar Page", des, retrieveEventOwner(id) );
 	}
 	
 	public static ResultSet getUpcomingEvents(String email) throws SQLException
@@ -338,7 +337,7 @@ public class ManageEventsFunctions {
 			invited.add(eventList.getString("email"));
 		}
 		
-		return (String[]) invited.toArray();
+		return invited.toArray(new String[invited.size()]);
 	}
 }
 

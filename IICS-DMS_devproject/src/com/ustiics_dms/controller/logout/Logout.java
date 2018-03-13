@@ -32,8 +32,6 @@ public class Logout extends HttpServlet {
 			HttpSession session = request.getSession();
 			session.invalidate();
 			
-			
-			
 			String redirectURL = "/index.jsp";
 			Map<String, String> data = new HashMap<>();
 			data.put("redirect", redirectURL);

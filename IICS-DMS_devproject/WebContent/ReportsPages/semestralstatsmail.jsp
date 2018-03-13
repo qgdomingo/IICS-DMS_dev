@@ -127,9 +127,10 @@
 						  </div>
 						</h5>
 					</a>
-					<a class="item">
+					<a class="item" id="notification_button">
 						<i class="large alarm icon"></i>
-					</a>
+						<div class="ui circular teal label element-rml" id="notification_count">0</div>
+					</a> 
 					<a class="item mobile hidden" id="logout_btn">
 						<i class="large power icon"></i>
 					</a>
@@ -213,6 +214,25 @@
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
 		
+		<!-- NOTIFICATIONS MODAL -->
+		<div class="ui tiny modal" id="notification_dialog">
+			<div class="header center-text">
+				<i class="alarm icon"></i>
+				<div class="content">Notifications</div>
+			</div>
+			<div class="scrolling content">
+				<div class="ui relaxed divided selection list" id="notification_list"></div> 
+		 	</div>					    	
+		    <div class="actions center-text">
+		    	<button class="ui blue button" id="mark_all_as_read_btn">
+		    		Mark All as Read
+		    	</button>
+				<button class="ui ok grey button">
+					Close
+				</button>
+			</div>
+		</div>
+		
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">
 			<div class="header add-modal">
@@ -276,4 +296,5 @@
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/reports/mail_statistics.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/notifications.js"></script>
 </html> 

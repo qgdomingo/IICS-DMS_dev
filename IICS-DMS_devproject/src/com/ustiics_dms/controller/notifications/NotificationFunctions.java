@@ -80,7 +80,7 @@ public class NotificationFunctions {
 
 		Connection con = DBConnect.getConnection();
 		
-		PreparedStatement prep = con.prepareStatement("SELECT id, email, flag FROM notification_list WHERE email = ? AND flag = ?");
+		PreparedStatement prep = con.prepareStatement("SELECT id, email, flag FROM notification_list WHERE email = ? AND flag = ? ORDER BY id DESC");
 		prep.setString(1, email);
 		prep.setString(2, "Unread");
 		
@@ -94,7 +94,7 @@ public class NotificationFunctions {
 
 		Connection con = DBConnect.getConnection();
 		
-		PreparedStatement prep = con.prepareStatement("SELECT page, description, notif_timestamp FROM notification WHERE id = ? ORDER BY notif_timestamp DESC");
+		PreparedStatement prep = con.prepareStatement("SELECT page, description, notif_timestamp FROM notification WHERE id = ?");
 		prep.setString(1, id);
 		
 		ResultSet rs = prep.executeQuery();

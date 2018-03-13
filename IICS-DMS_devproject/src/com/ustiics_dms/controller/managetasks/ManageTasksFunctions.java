@@ -240,7 +240,7 @@ public class ManageTasksFunctions {
 		prep.executeUpdate();
 		
 		String des = getFullName(email) +" has submitted his/her task for " + getTaskTitle(id);
-		NotificationFunctions.addNotification("Task Page", des, getTaskOwner(id)); // GET TASK OWNER EMAIL
+		NotificationFunctions.addNotification("Task Page", des, getTaskOwner(id)); 
 	}
 	
 	
@@ -405,7 +405,7 @@ public class ManageTasksFunctions {
 		ResultSet rs = prep.executeQuery();
 		rs.next();
 		
-		return getFullName(rs.getString("assigned_by"));
+		return rs.getString("assigned_by");
 	}
 	
 	public static void notifyUsersToBeRemovedFromTask(String id, String[] email) throws SQLException
@@ -439,9 +439,10 @@ public class ManageTasksFunctions {
 		
 		String taskOwner = getFullName(getTaskOwner(id));
 		String title = getTaskTitle(id);
+		String[] usersToDelete = toBeDeletedUsers.toArray(new String[toBeDeletedUsers.size()]);
 		
 		String des = taskOwner +" removed you from the task, "+ title;
-		NotificationFunctions.addNotification("Task Page", des, (String[]) toBeDeletedUsers.toArray());
+		NotificationFunctions.addNotification("Task Page", des, usersToDelete);
 		
 	}
 

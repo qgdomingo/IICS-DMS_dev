@@ -34,9 +34,11 @@ public class DeleteEvent extends HttpServlet {
 			
 			String id = AesEncryption.decrypt(request.getParameter("id"));
 			
-			ManageEventsFunctions.deleteEvent(id, acc.getEmail());
 			String title = ManageEventsFunctions.getEventTitle(id);
 			LogsFunctions.addLog("System", "Delete Event", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), title);
+			
+			ManageEventsFunctions.deleteEvent(id, acc.getEmail());
+			
 			response.setContentType("text/plain");
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write("success");
