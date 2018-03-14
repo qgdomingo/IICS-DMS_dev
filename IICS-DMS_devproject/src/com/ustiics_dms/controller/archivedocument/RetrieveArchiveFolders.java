@@ -1,4 +1,4 @@
-package com.ustiics_dms.controller.retrievedocument;
+package com.ustiics_dms.controller.archivedocument;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -15,41 +15,40 @@ import javax.servlet.http.HttpSession;
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.controller.manageuser.ManageUserFunctions;
+import com.ustiics_dms.controller.retrievedocument.RetrieveDocumentFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Archive;
 import com.ustiics_dms.model.Document;
+import com.ustiics_dms.utility.AesEncryption;
 
-
-@WebServlet("/ArchiveDocuments")
-public class ArchiveDocuments extends HttpServlet {
+@WebServlet("/RetrieveArchiveFolders")
+public class RetrieveArchiveFolders extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
-    public ArchiveDocuments() {
+    public RetrieveArchiveFolders() {
         super();
     }
-
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		List<Archive> documents = new ArrayList<Archive>();
 	    response.setCharacterEncoding("UTF-8");
 		
-	    HttpSession session = request.getSession();
-	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
+		    HttpSession session = request.getSession();
+		    Account acc = (Account) session.getAttribute("currentCredentials");
 			
 			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveArchivedFolders();
 			
 			while(documentFiles.next()) 
 			{ 
 				documents.add(new Archive(
-						documentFiles.getString("id"),
+						AesEncryption.encrypt(documentFiles.getString("id")),
 						documentFiles.getString("archive_title"),
 						documentFiles.getString("status"),
 						documentFiles.getString("archive_timestamp"),
 						documentFiles.getString("academic_year")
-						 ));	
+				));	
 			}
 			String json = new Gson().toJson(documents);
 			
@@ -63,10 +62,8 @@ public class ArchiveDocuments extends HttpServlet {
 		}
 	}
 
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-
+		doGet(request, response);
 	}
 
 }

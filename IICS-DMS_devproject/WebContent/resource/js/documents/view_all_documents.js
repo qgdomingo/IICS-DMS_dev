@@ -78,7 +78,7 @@
 						.append($('<td>').text(getType(docsData.type)))
 						.append($('<td>').text(docsData.title))
 						.append($('<td>').text(docsData.category))
-						.append($('<td>').text(docsData.createdBy))
+						.append($('<td>').text(docsData.createdBy + ' (' + docsData.email + ')'))
 						.append($('<td>').text(docsData.timeCreated))
 				});
 					
@@ -214,7 +214,7 @@
 		$('#viewincoming_uploaddate').text(selectedData['timeCreated']);
 		$('#viewincoming_category').text(selectedData['category']);
 		$('#viewincoming_type').text('Incoming');
-		$('#viewincoming_file').text(selectedData['file_name']);
+		$('#viewincoming_file').text(selectedData['fileName']);
 		$('#viewincoming_description').text(selectedData['description']);
 		$('#viewincoming_download_id').val(selectedData['id']);
 		$('#viewincoming_download_type').val(selectedData['type']);

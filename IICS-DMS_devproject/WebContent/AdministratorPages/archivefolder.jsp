@@ -1,34 +1,24 @@
 <%@page import="com.ustiics_dms.model.Account"%>
+<%@page import="com.ustiics_dms.controller.archivedocument.ArchiveDocumentFunctions"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
 	Account acc = new Account();
-	String userType = "";
-	
-	boolean restrictionCase2 = false;
 
 	if(request.getSession(false) == null || request.getSession(false).getAttribute("currentCredentials") == null) {
 		response.sendRedirect(request.getContextPath() + "/index.jsp");
 	} else {
 		acc = (Account) session.getAttribute("currentCredentials");
-		userType = acc.getUserType();
 		
-		if( (userType.equalsIgnoreCase("Administrator")) ) {
-			response.sendRedirect(request.getContextPath() + "/admin/manageusers.jsp");
-		} else if (userType.equalsIgnoreCase("Faculty")) {
+		if( !(acc.getUserType().equalsIgnoreCase("Administrator")) ) {
 			response.sendRedirect(request.getContextPath() + "/home.jsp");
-		}
-		
-		// Restriction Case 2 - not allowed for Supervisor and Staff
-		if(userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) {
-			restrictionCase2 = true;
-		}
+		}	
 	}
 %>
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Documents | IICS DMS</title>
+		<title>Archive Documents | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
@@ -56,7 +46,7 @@
 		
 		<!-- LEFT SIDE MENU -->
 		<div class="ui large left vertical menu sidebar" id="side_nav">
-			<a class="item mobile only user-account-bgcolor" href="${pageContext.request.contextPath}/userprofile.jsp">
+			<a class="item mobile only user-account-bgcolor" href="${pageContext.request.contextPath}/admin/profile.jsp">
 				<h5 class="ui header ">
 					<i class="large user circle icon user-account-color"></i>
 					<div class="content user-account-color">
@@ -65,55 +55,18 @@
 					</div>
 				</h5>
 			</a>
-			<a class="item" href="${pageContext.request.contextPath}/home.jsp">
-		      <i class="large home icon side"></i>Home
+			<a class="item" href="${pageContext.request.contextPath}/admin/manageusers.jsp">
+		      <i class="large users icon side"></i>User Management
 		    </a>
-		    <a class="item" href="${pageContext.request.contextPath}/files/fileupload.jsp">
-		      <i class="large cloud upload alternate icon side"></i>Upload Document
+		    <a class="item" href="${pageContext.request.contextPath}/admin/acadyear.jsp">
+		      <i class="large student icon side"></i>Academic Year
 		    </a>
-		    <a class="item active" href="${pageContext.request.contextPath}/files/personaldocs.jsp">
-		      <i class="large file icon side"></i>Documents
+		    <a class="item active" href="${pageContext.request.contextPath}/admin/archive.jsp">
+		      <i class="large archive icon side"></i>Archive Documents
 		    </a>
-		    <a class="item" href="${pageContext.request.contextPath}/task/viewtasks.jsp">
-		      <i class="large tasks icon side"></i>Tasks
+		    <a class="item" href="${pageContext.request.contextPath}/admin/logs.jsp">
+		      <i class="large file text icon side"></i>Log Files
 		    </a>
-		    <a class="item" href="${pageContext.request.contextPath}/calendar/viewcalendar.jsp">
-		      <i class="large calendar alternate outline icon side"></i>Calendar
-		    </a>
-		    <div class="item">
-		   		Mail
-		   		<div class="menu">
-	<% if(!restrictionCase2) { %>
-			    	<a class="item" href="${pageContext.request.contextPath}/mail/newmail.jsp">
-			    		<i class="large pencil alternate icon side"></i>Create Mail
-			    	</a>
-	<%  } %>
-			    	<a class="item" href="${pageContext.request.contextPath}/mail/inbox.jsp">
-			    		<i class="large inbox icon side"></i>Inbox
-			    	</a>
-	<% if(!restrictionCase2) { %>
-			    	<a class="item" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
-			    		<i class="large send icon side"></i>Sent Mail
-			    	</a>
-			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
-			    		<i class="large envelope square icon side"></i>Mail Requests
-			    	</a>
-			    	<a class="item" href=${pageContext.request.contextPath}/mail/exportedmail.jsp>
-			    		<i class="large external link square alternate icon side"></i>Exported Mail
-			    	</a>
-	<%  } %>
-		    	</div>
-		    </div>
-	<% if(!restrictionCase2) { %>
-			<div class="item">
-		   		Reports
-		   		<div class="menu">
-			    	<a class="item" href="${pageContext.request.contextPath}/reports/semestralstatstask.jsp">
-			    		<i class="large bar chart icon side"></i>Semestral Statistics
-			    	</a>
-		    	</div>
-		    </div>
-	<%  } %>
 		    <a class="item mobile only" id="logout_btn2">
 		      <i class="large power icon side"></i>Logout
 		    </a>
@@ -128,11 +81,11 @@
 					<i class="large sidebar icon"></i>
 				</a>
 				<div class="item">
-					<i class="large file icon"></i>
-					Documents
+					<i class="large archive icon"></i>
+					Archive Documents
 				</div>
 				<div class="right menu">
-					<a class="item user-account-bgcolor mobile hidden" href="${pageContext.request.contextPath}/userprofile.jsp">
+					<a class="item user-account-bgcolor mobile hidden" href="${pageContext.request.contextPath}/admin/profile.jsp">
 						<h5 class="ui header">
 						  <i class="large user circle icon user-account-color"></i>
 						  <div class="content user-account-color">
@@ -141,10 +94,6 @@
 						  </div>
 						</h5>
 					</a>
-					<a class="item" id="notification_button">
-						<i class="large alarm icon"></i>
-						<div class="ui circular teal label element-rml" id="notification_count">0</div>
-					</a> 
 					<a class="item mobile hidden" id="logout_btn">
 						<i class="large power icon"></i>
 					</a>
@@ -152,161 +101,108 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
-		
-		<!-- DOCUMENT TYPE SELECTOR FOR MOBILE -->
-		<div class="ui form mobile only">
-			<div class="field">
-				<label>View Document Type:</label>
-				<select class="ui fluid dropdown" id="doctype_select">
-					<option value="">Navigate to</option>
-				  	<option value="personaldocs.jsp">Personal</option>
-				<% if(!userType.equalsIgnoreCase("Faculty")) { %>
-				  	<option value="incomingdocs.jsp">Incoming</option>
-				  	<option value="outgoingdocs.jsp">Outgoing</option>
-				  	<option value="archivedocs.jsp">Archived</option>
-				  	<option value="alldocs.jsp">All Documents</option>
-				<% } %>
-				</select>
+
+		<h3 class="ui dividing header element-rmt">
+			<a href="${pageContext.request.contextPath}/admin/archive.jsp">
+				<i class="black chevron left icon"></i>
+			</a> 
+			<span id="folder_title"></span>
+		</h3>
+
+		<div class="ui segment">
+			<div class="ui dimmer" id="archive_folder_loading">
+				<div class="ui text loader">Retrieving Archived Documents</div>
 			</div>
-		</div> 
-		
-		<!-- DOCUMENT TYPE SELECTOR FOR NON-MOBILE -->
-		<div class="mobile hidden">
-			<div class="ui secondary pointing menu">
-				<a class="item" href="${pageContext.request.contextPath}/files/personaldocs.jsp">
-					<i class="folder icon"></i>
-					Personal
-				</a>
-				<% if(!userType.equalsIgnoreCase("Faculty")) { %>
-				<a class="item" href="${pageContext.request.contextPath}/files/incomingdocs.jsp">
-					<i class="folder icon"></i>
-					Incoming
-				</a>
-				<a class="item" href="${pageContext.request.contextPath}/files/outgoingdocs.jsp">
-					<i class="folder icon"></i>
-					Outgoing
-				</a>
-				<% } %>
-				<a class="item active" href="${pageContext.request.contextPath}/files/archivedocs.jsp">
-					<i class="folder open icon"></i>
-					Archived
-				</a>
-				<a class="item" href="${pageContext.request.contextPath}/files/alldocs.jsp">
-					<i class="folder icon"></i>
-					All Files
-				</a>
-			</div>		
-		</div>
-		
-		<br>
 			
-		<!-- AREA FOR ARCHIVED DOCUMENTS -->
-		<div>
-			<h3 class="ui dividing header">
-				<i class="file archive icon"></i>
-				<div class="content">
-					Archived Documents
-					<div class="sub header">
-						Here lists past documents which are now archived and enabled by the administrator.
-					</div>
-				</div>
-			</h3>
-			
-			<div class="ui segment">
-				<div class="ui dimmer" id="archive_folder_loading">
-					<div class="ui text loader">Retrieving Archived Documents</div>
-				</div>
+			<!-- SEARCH ROW -->
+			<form class="ui form">
+				<div class="eight fields">
 				
-				<!-- SEARCH ROW -->
-				<form class="ui form">
-					<div class="eight fields">
-					
-						<!-- SEARCH BOX -->
-						<div class="field">
-							<div class="ui icon input">
-								<input type="text" placeholder="Search Archive" id="search_archive"/>
-								<i class="search icon"></i>
-							</div>
+					<!-- SEARCH BOX -->
+					<div class="field">
+						<div class="ui icon input">
+							<input type="text" placeholder="Search Archive" id="search_archive"/>
+							<i class="search icon"></i>
 						</div>
-								
-						<!-- DOCUMENT TYPE -->
-						<div class="field">
-							<select class="ui fluid dropdown" id="search_type">
-								<option value="">Document Type</option>
-								<option value="Incoming">Incoming</option>
-								<option value="Outgoing">Outgoing</option>
-							</select>
-						</div>	
-								
-						<!-- CATEGORY DROPDOWN -->
-						<div class="field">
-							<select class="ui fluid dropdown" id="search_category">
-								<option value="">Category</option>
-							</select>
-						</div>		
-						
-						<!-- SOURCE/RECIPIENT DROPDOWN -->
-						<div class="field">
-							<select class="ui fluid dropdown" id="search_source_recipient">
-								<option value="">Source/Recipient</option>
-							</select>
-						</div>	
-								
-						<!-- UPLOAD FROM DATE BOX -->
-						<div class="field">
-							<div class="ui calendar" id="search_uploadfrom_calendar">
-								<div class="ui icon input">
-									<input type="text" placeholder="Upload From" id="search_uploadfrom"/>
-									<i class="calendar icon"></i>
-								</div>
-							</div>
-						</div>
-						
-						<!-- UPLOAD TO DATE BOX -->
-						<div class="field">
-							<div class="ui calendar" id="search_uploadto_calendar">
-								<div class="ui icon input">
-									<input type="text" placeholder="Upload To" id="search_uploadto"/>
-									<i class="calendar icon"></i>
-								</div>
-							</div>
-						</div>
-							
-						<!-- ACAD YEAR BOX -->
-						<div class="field">
-							<select class="ui fluid dropdown" id="search_acad_year">
-								<option value="">Academic Year</option>
-							</select>
-						</div>					
-											
-						<!-- SEARCH BUTTON -->
-						<div class="field">
-							<button class="ui grey button" type="button" id="clear_search">
-								Clear Search
-							</button>
-						</div>
-						
 					</div>
-				</form>
-	
-				<!-- TABLE AREA -->
-				<table class="ui compact selectable table" id="archive_folders_table">
-					<thead>
-						<tr>
-							<th>Title</th>
-							<th>Type</th>
-							<th>Category</th>
-							<th>Source/Recipient</th>
-							<th>Uploader</th>
-							<th>Upload Timestamp</th>
-							<th>Academic Year</th>
-						</tr>
-					</thead>
-					<tbody id="archive_folders_tablebody"></tbody>
-				</table>
-			</div>
+							
+					<!-- DOCUMENT TYPE -->
+					<div class="field">
+						<select class="ui fluid dropdown" id="search_type">
+							<option value="">Document Type</option>
+							<option value="Incoming">Incoming</option>
+							<option value="Outgoing">Outgoing</option>
+						</select>
+					</div>	
+							
+					<!-- CATEGORY DROPDOWN -->
+					<div class="field">
+						<select class="ui fluid dropdown" id="search_category">
+							<option value="">Category</option>
+						</select>
+					</div>		
+					
+					<!-- SOURCE/RECIPIENT DROPDOWN -->
+					<div class="field">
+						<select class="ui fluid dropdown" id="search_source_recipient">
+							<option value="">Source/Recipient</option>
+						</select>
+					</div>	
+							
+					<!-- UPLOAD FROM DATE BOX -->
+					<div class="field">
+						<div class="ui calendar" id="search_uploadfrom_calendar">
+							<div class="ui icon input">
+								<input type="text" placeholder="Upload From" id="search_uploadfrom"/>
+								<i class="calendar icon"></i>
+							</div>
+						</div>
+					</div>
+					
+					<!-- UPLOAD TO DATE BOX -->
+					<div class="field">
+						<div class="ui calendar" id="search_uploadto_calendar">
+							<div class="ui icon input">
+								<input type="text" placeholder="Upload To" id="search_uploadto"/>
+								<i class="calendar icon"></i>
+							</div>
+						</div>
+					</div>
+						
+					<!-- ACAD YEAR BOX -->
+					<div class="field">
+						<select class="ui fluid dropdown" id="search_acad_year">
+							<option value="">Academic Year</option>
+						</select>
+					</div>					
+										
+					<!-- SEARCH BUTTON -->
+					<div class="field">
+						<button class="ui grey button" type="button" id="clear_search">
+							Clear Search
+						</button>
+					</div>
+					
+				</div>
+			</form>
+
+			<!-- TABLE AREA -->
+			<table class="ui compact selectable table" id="archive_folders_table">
+				<thead>
+					<tr>
+						<th>Title</th>
+						<th>Type</th>
+						<th>Category</th>
+						<th>Source/Recipient</th>
+						<th>Uploader</th>
+						<th>Upload Timestamp</th>
+						<th>Academic Year</th>
+					</tr>
+				</thead>
+				<tbody id="archive_folders_tablebody"></tbody>
+			</table>
 		</div>
-	
+
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
 		
@@ -388,25 +284,6 @@
 			</div>
 		</div>
 		
-		<!-- NOTIFICATIONS MODAL -->
-		<div class="ui tiny modal" id="notification_dialog">
-			<div class="header center-text">
-				<i class="alarm icon"></i>
-				<div class="content">Notifications</div>
-			</div>
-			<div class="scrolling content">
-				<div class="ui relaxed divided selection list" id="notification_list"></div> 
-		 	</div>					    	
-		    <div class="actions center-text">
-		    	<button class="ui blue button" id="mark_all_as_read_btn">
-		    		Mark All as Read
-		    	</button>
-				<button class="ui ok grey button">
-					Close
-				</button>
-			</div>
-		</div>
-		
 		<!-- SUCCESS MESSAGE MODAL -->
 		<div class="ui tiny modal" id="successdia">
 			<div class="header add-modal">
@@ -467,11 +344,10 @@
 	<script src="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/session/non_faculty_check.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/session/admin_check.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/categories.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/retrieve_acad_year.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/notifications.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/documents/view_archived_documents.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/archive/view_archive_folder_documents.js"></script>
 </html>

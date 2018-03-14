@@ -18,7 +18,19 @@
 
 
 	$(document).ready( function() {
-		getArchivedFolderDocuments();
+	    var url = document.location.href,
+        params = url.split('?')[1].split('&'),
+        data = {}, tmp;
+	    for (var i = 0, l = params.length; i < l; i++) {
+	         tmp = params[i].split('=');
+	         data[tmp[0]] = tmp[1];
+	    }
+	    folderID = decodeURIComponent(data.id);
+		folderName = decodeURIComponent(data.name);
+		
+		$('#folder_title').text(folderName);
+		
+		getArchivedFolderDocuments(folderID);
 		
 		retrieveCategory('#search_category');
 		getAcadYearList('#search_acad_year');
@@ -76,10 +88,14 @@
 	);
 	
 	/* GET - Archived Documents */
-	function getArchivedFolderDocuments() {
+	function getArchivedFolderDocuments(folderID) {
 		addCSSClass('#archive_folder_loading', 'active');
 		
-		$.get(getContextPath() + '/RetrieveEnabledArchiveDocuments' ,(response) => {
+		var data = {
+			id: folderID	
+		}
+		
+		$.get(getContextPath() + '/RetrieveArchivedDocuments', $.param(data) ,(response) => {
 			$('#archive_folders_tablebody').empty();
 			if(!response.length == 0) 
 			{
@@ -107,7 +123,7 @@
 			{
 				$('<tr>').appendTo('#archive_folders_tablebody')
 					.append($('<td class="center-text" colspan="7">')
-							.text("This folder does not contain any enabled archived documents"));
+							.text("This folder does not contain any archived documents"));
 				removeCSSClass('#archive_folder_loading', 'active');
 			}
 		})

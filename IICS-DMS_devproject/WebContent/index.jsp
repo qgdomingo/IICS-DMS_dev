@@ -1,6 +1,15 @@
 <%@page import="com.ustiics_dms.model.Account"%>
+<%@page import="com.ustiics_dms.controller.archivedocument.ArchiveDocumentFunctions"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
+	boolean archive = false;
+	String archiveDate = "";
+	
+	archive = ArchiveDocumentFunctions.isThereASetArchive();
+	if(archive) {
+		archiveDate = ArchiveDocumentFunctions.retrieveArchiveDate();
+	}
+
 	if(request.getSession(false) != null && request.getSession(false).getAttribute("currentCredentials") != null) {
 		Account acc = (Account) session.getAttribute("currentCredentials");
 		
@@ -54,9 +63,18 @@
 				</div>
 				</h2>
 				
-				<!-- NOTIFICATIONS AREA -->
-				<div></div>
-				
+			<% if(archive) { %>
+				<!-- ARCHIVE DATE AREA -->
+				<div class="ui warning message">
+					<div class="header">
+				    	ARCHIVE DOCUMENT DATE SET
+				 	</div>
+  					The Administrator has set an archive date: <b><%= archiveDate %></b>. 
+  					Please download files needed after the archive date and accomplish remaining tasks that
+  					concerns incoming documents.
+				</div>
+			<% } %>	
+			
 				<!-- LOGIN FORM -->
 				<h1 class="ui grey header">Login</h1>
 				<form class="ui form element-mb" method="POST" action="Login" id="login_form">

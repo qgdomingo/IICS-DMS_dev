@@ -30,6 +30,15 @@ public class File {
 		this.description = description;
 	}
 	
+	public File(int id, String fileName, Blob fileData, String description) 
+	{
+		super();
+		this.id = id;
+		this.fileName = fileName;
+		this.fileData = fileData;
+		this.description = description;
+	}
+	
 	
 	
 	public InputStream getDataStream() {

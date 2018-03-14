@@ -21,28 +21,22 @@ import com.ustiics_dms.controller.filedownload.FileDownloadFunctions;
 import com.ustiics_dms.model.File;
 import com.ustiics_dms.utility.AesEncryption;
 
-/**
- * Servlet implementation class DownloadArchivedFolder
- */
 @WebServlet("/DownloadArchivedFolder")
 public class DownloadArchivedFolder extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public DownloadArchivedFolder() {
         super();
     }
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setCharacterEncoding("UTF-8");
 		
 		try {
-			int id = Integer.parseInt(request.getParameter("id"));
-			String stringId = request.getParameter("id");
+			int id = Integer.parseInt(AesEncryption.decrypt(request.getParameter("id")));
+			String stringId = AesEncryption.decrypt(request.getParameter("id"));
 			List <File> file = ArchiveDocumentFunctions.getBinaryStream(id);
 			 
-			
-			
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ZipOutputStream zip = new ZipOutputStream(out);
 			for(File f : file)
@@ -75,10 +69,6 @@ public class DownloadArchivedFolder extends HttpServlet {
 	 
 	        response.setHeader("Content-Disposition", "inline; filename=\"" + ArchiveDocumentFunctions.getArchiveFolderName(stringId) + ".zip"+ "\"");
 		
-		
-
-	        
-	
 	        byte[] bytes = new byte[1024];
 	        int bytesRead;
 	
@@ -88,15 +78,13 @@ public class DownloadArchivedFolder extends HttpServlet {
 	            response.getOutputStream().write(bytes, 0, bytesRead);
 	        }
 	         
-			} catch (Exception e) {
-				e.printStackTrace();
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
 	}
 
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		doGet(request, response);
 	}
 

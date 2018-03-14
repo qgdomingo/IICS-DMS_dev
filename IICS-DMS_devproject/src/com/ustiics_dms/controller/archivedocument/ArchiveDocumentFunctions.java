@@ -64,9 +64,7 @@ public class ArchiveDocumentFunctions
 				prep.executeUpdate();
 		    }
 			
-			//deleteCurrentDocuments();
-			
-			
+			deleteCurrentDocuments();
 	}
 	
 	private static ResultSet getCurrentDocuments() throws SQLException
@@ -181,7 +179,7 @@ public class ArchiveDocumentFunctions
 	{
 		Connection con = DBConnect.getConnection();
 		
-		PreparedStatement prep = con.prepareStatement("UPDATE archive_date set date = ?");
+		PreparedStatement prep = con.prepareStatement("INSERT INTO archive_date(date) VALUES(?)");
 		prep.setString(1, timestamp);
 
 		prep.executeUpdate();
@@ -291,5 +289,55 @@ public class ArchiveDocumentFunctions
 	       rs.next();
 	       
 	       return rs.getString("archive_title");
+	}
+	
+	public static String retrieveArchiveDate() throws Exception
+	{
+		   Connection con = DBConnect.getConnection();
+		   PreparedStatement prep = con.prepareStatement("SELECT date FROM archive_date");
+		   ResultSet rs = prep.executeQuery();
+		   String archive = "";
+		   
+		   if(rs.next()) {
+			   archive = rs.getString("date");
+		   }
+		   
+		   String archiveDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		   
+	       return archiveDate;
+	}
+	
+	public static Boolean isThereASetArchive() throws Exception
+	{
+		   Connection con = DBConnect.getConnection();
+		   PreparedStatement prep = con.prepareStatement("SELECT date FROM archive_date");
+		   ResultSet rs = prep.executeQuery();
+		   
+		   boolean result = false;
+		   
+		   if(rs.next())
+		   {
+			   result = true;
+		   }
+		   
+		   return result;
+	}
+	
+	public static void deleteDateFromArchiveDate() throws Exception
+	{
+	   Connection con = DBConnect.getConnection();
+	   PreparedStatement prep = con.prepareStatement("DELETE FROM archive_date");
+	   prep.executeUpdate();
+	}
+	
+	public static ResultSet retrieveArchivedDocuments(String id) throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("SELECT id, folder_id, type, source_recipient, title, category, file_name, description, uploaded_by, "
+					+ "email, upload_date, department, reference_no, academic_year FROM archived_documents WHERE folder_id = ?");
+			prep.setString(1, id);
+			ResultSet result = prep.executeQuery();
+
+			return result;
 	}
 }

@@ -40,8 +40,8 @@ public class DisableUser extends HttpServlet {
 			HttpSession session = request.getSession();
 			Account acc = (Account) session.getAttribute("currentCredentials");
 			
-			String[] selected = request.getParameterValues("selected[]");
-			String purpose = request.getParameter("enable_user_purpose");
+			String[] selected = request.getParameter("selected[]").split(",");
+			String purpose = request.getParameter("disable_user_purpose");
 			
 			ArrayList<Account> updatedUserList = new ArrayList<Account>();
 			

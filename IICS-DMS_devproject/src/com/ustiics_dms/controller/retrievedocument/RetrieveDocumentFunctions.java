@@ -40,28 +40,30 @@ public class RetrieveDocumentFunctions {
 	public static ResultSet retrieveArchivedFolders() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM archived_folder");
+			PreparedStatement prep = con.prepareStatement("SELECT id, archive_title, status, archive_timestamp, academic_year FROM archived_folder");
 
 			ResultSet result = prep.executeQuery();
 
 			return result;
 	}
-	
-	public static ResultSet retrieveEnabledArchivedFolders() throws SQLException
-	{
-			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM archived_folder WHERE status = ?");
-			prep.setString(1, "Enabled");
-			ResultSet result = prep.executeQuery();
-
-			return result;
-	}
-	
+		
 	public static ResultSet retrieveArchivedDocuments(String id) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM archived_documents WHERE folder_id = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT id, folder_id, type, source_recipient, title, category, file_name, description, uploaded_by, email, upload_date, department, reference_no, academic_year FROM archived_documents WHERE folder_id = ?");
 			prep.setString(1, id);
+			ResultSet result = prep.executeQuery();
+
+			return result;
+	}
+	
+	public static ResultSet retrieveEnabledArchivedDocuments(String department) throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("SELECT id, folder_id, type, source_recipient, title, category, file_name, description, uploaded_by, email, upload_date, department, reference_no, academic_year "
+					+ "FROM archived_documents WHERE folder_id IN (SELECT id FROM archived_folder WHERE status = ?) AND department = ?");
+			prep.setString(1, "Enabled");
+			prep.setString(2, department);
 			ResultSet result = prep.executeQuery();
 
 			return result;

@@ -18,9 +18,6 @@ import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Mail;
 import com.ustiics_dms.utility.AesEncryption;
 
-/**
- * Servlet implementation class CheckArchiveDate
- */
 @WebServlet("/CheckArchiveDate")
 public class CheckArchiveDate extends HttpServlet {
 	private static final long serialVersionUID = 1L;

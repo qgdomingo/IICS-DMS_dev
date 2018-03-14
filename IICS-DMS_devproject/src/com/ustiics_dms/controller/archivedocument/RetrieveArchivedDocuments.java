@@ -16,34 +16,33 @@ import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.controller.retrievedocument.RetrieveDocumentFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.ArchiveDocuments;
+import com.ustiics_dms.utility.AesEncryption;
 
 
 @WebServlet("/RetrieveArchivedDocuments")
 public class RetrieveArchivedDocuments extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public RetrieveArchivedDocuments() {
         super();
-
     }
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		List<ArchiveDocuments> documents = new ArrayList<ArchiveDocuments>();
+	    response.setCharacterEncoding("UTF-8");
+		
 		try {
-			List<ArchiveDocuments> documents = new ArrayList<ArchiveDocuments>();
-		    response.setCharacterEncoding("UTF-8");
 			
 		    HttpSession session = request.getSession();
 		    Account acc = (Account) session.getAttribute("currentCredentials");
 			
-			String id = request.getParameter("id");
+			String id = AesEncryption.decrypt(request.getParameter("id"));
 			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveArchivedDocuments(id);
-
+		    
 			while(documentFiles.next()) 
 			{ 
 				documents.add(new ArchiveDocuments(
-						documentFiles.getString("id"),
+						AesEncryption.encrypt(documentFiles.getString("id")),
 						documentFiles.getString("folder_id"),
 						documentFiles.getString("type"),
 						documentFiles.getString("source_recipient"),
@@ -71,9 +70,7 @@ public class RetrieveArchivedDocuments extends HttpServlet {
 		}
 	}
 
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		doGet(request, response);
 	}
 
