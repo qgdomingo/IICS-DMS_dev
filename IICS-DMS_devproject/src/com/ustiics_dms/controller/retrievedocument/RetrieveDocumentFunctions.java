@@ -37,10 +37,10 @@ public class RetrieveDocumentFunctions {
 			return result;
 	}
 	
-	public static ResultSet retrieveArchivedDocuments() throws SQLException
+	public static ResultSet retrieveArchivedFolders() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM archived_documents");
+			PreparedStatement prep = con.prepareStatement("SELECT * FROM archived_folder");
 
 			ResultSet result = prep.executeQuery();
 

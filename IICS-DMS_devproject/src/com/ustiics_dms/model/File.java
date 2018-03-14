@@ -1,11 +1,13 @@
 package com.ustiics_dms.model;
 
+import java.io.InputStream;
 import java.sql.Blob;
 
 public class File {
 	private int id;
 	private String fileName;
 	private Blob fileData;
+	private InputStream dataStream;
 	private String description;
 	
 	
@@ -18,7 +20,25 @@ public class File {
 		this.description = description;
 	}
 	
+	public File(int id, String fileName, InputStream dataStream, String description) 
+	{
+		super();
+		this.id = id;
+		this.fileName = fileName;
+		this.dataStream = dataStream;
+		this.description = description;
+	}
 	
+	
+	
+	public InputStream getDataStream() {
+		return dataStream;
+	}
+
+	public void setDataStream(InputStream dataStream) {
+		this.dataStream = dataStream;
+	}
+
 	public int getId() {
 		return id;
 	}
