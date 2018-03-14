@@ -38,7 +38,7 @@
 	#outgoing_table_filter, #event_table_filter, #invitedusers_table_filter,
 	#inbox_table_filter, #sent_mail_table_filter, #exported_mail_table_filter,
 	#sent_mail_to_table_filter, #logs_table_filter, #external_inbox_table_filter,
-	#alldocs_table_filter
+	#alldocs_table_filter, #request_table_filter
 	{
 		display: none !important;
 	}

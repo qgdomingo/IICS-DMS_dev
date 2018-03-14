@@ -307,50 +307,22 @@
 		$('#mark_as_done_conf').hide();
 		$('#mark_as_done_btn').prop("disabled", false);
 	});
-
-	/* UPDATE - Document Row Data */
-	function updateDocumentRowData(incomingDocs) {
-		var rowString = '<tr id="'+selectedRowId+'">'
-			+ '<td>' + incomingDocs.title + '</td>'
-			+ '<td>' + incomingDocs.sourceRecipient + '</td>'
-			+ '<td>' + incomingDocs.timeCreated + '</td>'
-			+ '<td>' + incomingDocs.category + '</td>'
-			+ '<td>' + incomingDocs.actionRequired + '</td>'
-			+ '<td>' + (incomingDocs.dueOn == undefined ? "" : incomingDocs.dueOn)  + '</td>'
-			+ '<td>' + incomingDocs.status + '</td>'
-			+ '<td>' + incomingDocs.referenceNo + '</td>'
-		+ '</tr>';
-		
-		return rowString;
-	}
 	
 	/* SUBMIT - Mark Document as Done */
 	$('#mark_as_done_form').ajaxForm({
-		beforeSubmit: initializePageForMarkAsDone,
 		success: function(response) {  
-			localIncomingDocsData[selectedRowId]['status'] = "Done";
-			incomingDocsTable.rows( '#' + selectedRowId ).remove();
-			incomingDocsTable.row.add( $(updateDocumentRowData(localIncomingDocsData[selectedRowId]))[0] ).draw();
-			// update the row (remove + update)
-			deactivatePageLoading();
+			reinitializeMarkAsDone();
 			callSuccessModal('Document Status Update Success', 'The incoming document has been updated to done.');
 		},
 		error: function(response) { 
-			deactivatePageLoading();
 			callFailRequestModal();
 		}
 	});
 	
-	/* ON SUBMIT - Hide Modal and Activate Loading */
-	function initializePageForMarkAsDone() {
-		$('#viewincoming_dialog').modal('hide');
-		activatePageLoading('Updating Document Status');
-		return true;
-	}
-	
+
 	/* Fix Elements on Modal Hide */
 	function reinitializeMarkAsDone() {
-		$('#mark_as_done_form').hide();
+		$('#mark_as_done_form').show();
 		$('#mark_as_done_conf').hide();
 		$('#mark_as_done_btn').prop("disabled", false);
 	}
