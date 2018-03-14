@@ -33,7 +33,7 @@ public class ArchiveDocument extends HttpServlet {
 			if(button.equals("archive"))
 			{
 				ArchiveDocumentFunctions.transferToArchived();
-			}
+			}			
 			
 
 		} 

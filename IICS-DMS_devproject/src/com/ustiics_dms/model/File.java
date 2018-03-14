@@ -11,12 +11,13 @@ public class File {
 	private String description;
 	
 	
-	public File(int id, String fileName, Blob fileData, String description) 
+	public File(int id, String fileName, Blob fileData, InputStream dataStream, String description) 
 	{
 		super();
 		this.id = id;
 		this.fileName = fileName;
 		this.fileData = fileData;
+		this.dataStream = dataStream;
 		this.description = description;
 	}
 	

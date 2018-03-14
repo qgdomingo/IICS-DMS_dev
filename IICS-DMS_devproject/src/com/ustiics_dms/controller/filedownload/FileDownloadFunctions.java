@@ -1,5 +1,6 @@
 package com.ustiics_dms.controller.filedownload;
 
+import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -38,9 +39,40 @@ public class FileDownloadFunctions {
 	       {
 	           String fileName = rs.getString("file_name");
 	           Blob fileData = rs.getBlob("file_data");
+	           InputStream fileStream = rs.getBinaryStream("file_data");
 	           String description = rs.getString("description");
 
-	           return new File(id, fileName, fileData, description);
+	           return new File(id, fileName, fileData, fileStream, description);
+	       }
+	       return null;
+	}
+	
+	public static String checkSum (int id, String type) throws SQLException 
+	{
+			Connection con = DBConnect.getConnection();
+			String sqlStatement = null;
+			
+			if(type.equalsIgnoreCase("Personal"))
+			{
+				sqlStatement = "SELECT checksum FROM personal_documents WHERE id = ?";
+			}
+			else if(type.equalsIgnoreCase("Incoming"))
+			{
+				sqlStatement = "SELECT checksum FROM incoming_documents WHERE id = ?";
+			}
+			else if(type.equalsIgnoreCase("Outgoing"))
+			{
+				sqlStatement = "SELECT checksum FROM outgoing_documents WHERE id = ?";
+			}
+
+	       PreparedStatement prep = con.prepareStatement(sqlStatement);
+	       prep.setInt(1, id);
+	       
+	       ResultSet rs = prep.executeQuery();
+	       
+	       if (rs.next()) 
+	       {
+	           return rs.getString("checksum");
 	       }
 	       return null;
 	}
