@@ -23,14 +23,14 @@
 			$('#letter_form').show();
 			$('#memo_notice_form').hide();
 			$('#generate_iso_form').hide();
-			$('#mail_type').val(tempVal);
+			$('#mail_letter_type').val(tempVal);
 		}
 		else if (tempVal == 'Memo' || tempVal == 'Notice Of Meeting') {
 			$('#letter_form').hide();
 			$('#memo_notice_form').show();
 			$('#generate_iso_form').hide();
 			$('#mail_type_label').text(tempVal);
-			$('#mail_type').val(tempVal);
+			$('#mail_memo_notice_type').val(tempVal);
 		}
 		else if(tempVal == 'ISO'){
 			$('#letter_form').hide();
@@ -130,7 +130,7 @@
 	function clearLetterForm() {
 		removeCSSClass('#letter_form', 'error');		
 	  	$('#letter_form').form('reset');
-	  	$('#mail_type').val(tempVal);
+	  	$('#mail_letter_type').val(tempVal);
 	  	if( ! ($('#user_type').val() == 'Faculty') ) {
 			$('#internal_letter_to').dropdown('restore defaults');
 		  	$('#external_letter_to').dropdown('restore defaults');
@@ -232,7 +232,7 @@
 	function clearMemoNoticeForm() {
 		removeCSSClass('#memo_notice_form', 'error');		
 	  	$('#memo_notice_form').form('reset');
-	  	$('#mail_type').val(tempVal);
+	  	$('#mail_memo_notice_type').val(tempVal);
 	  	if( ! ($('#user_type').val() == 'Faculty') ) {
 			$('#internal_memo_notice_to').dropdown('restore defaults');
 		  	$('#external_memo_notice_to').dropdown('restore defaults');

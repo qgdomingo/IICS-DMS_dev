@@ -30,9 +30,13 @@ public class ApproveRequestMail extends HttpServlet {
 		
 		try {
 			
-			String id = "3";//request.getParameter("id");
+			String id = request.getParameter("id");
 		
 			MailFunctions.approveRequestMail(id);
+			
+			response.setContentType("text/plain");
+		    response.setStatus(HttpServletResponse.SC_OK);
+		    response.getWriter().write("success");
 		} catch (Exception e) {
 
 			e.printStackTrace();
