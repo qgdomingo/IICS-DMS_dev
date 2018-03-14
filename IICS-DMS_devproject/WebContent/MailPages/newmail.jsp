@@ -159,7 +159,7 @@
 					<select class="ui fluid dropdown" id="new_mail_type_select">
 					  	<option value="Letter">Letter</option>
 					  	<option value="Memo">Memo</option>
-					  	<option value="Notice">Notice</option>
+					  	<option value="Notice Of Meeting">Notice Of Meeting</option>
 					  	<% if (!restrictionCase1) { %>
 					  	<option value="ISO">Generate ISO Code</option>
 					  	<% } %>
@@ -224,7 +224,7 @@
 							<input type="text" placeholder="Header Line 2" name="addressee_line2" />
 						</div>
 						<div class="field">
-							<input type="text" placeholder="Header Line 3" name="addressee_line2" />
+							<input type="text" placeholder="Header Line 3" name="addressee_line3" />
 						</div>
 					</div>
 					

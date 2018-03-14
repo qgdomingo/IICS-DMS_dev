@@ -25,6 +25,8 @@ import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.DottedLineSeparator;
+import com.ustiics_dms.controller.academicyear.AcademicYearFunctions;
 import com.ustiics_dms.controller.fileupload.FileUploadFunctions;
 import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
 import com.ustiics_dms.controller.notifications.NotificationFunctions;
@@ -34,24 +36,25 @@ import com.ustiics_dms.model.File;
 
 public class MailFunctions {
 	
-	public static void saveMailInformation(String type, String[] recipient, String[] externalRecipient, String  subject, String message, String  name, String  sentBy, String department) throws Exception
+	public static void saveMailInformation(String type, String[] recipient, String[] externalRecipient, String  subject, String message, String  name, String  sentBy, String department, String addressLine1, String addressLine2, String addressLine3, String closingLine) throws Exception
 	{
-		
-		
 		Connection con = DBConnect.getConnection();
+		
 		PreparedStatement prep = con.prepareStatement("INSERT INTO mail (iso_number, type, subject, file_data, checksum, sender_name, sent_by, school_year, department) VALUES (?,?,?,?,?,?,?,?,?)");
 		String isoNumber = getISONumber(department, type);
-		InputStream pdf = createPdf(recipient, subject, name, message, isoNumber, sentBy);
-		String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(pdf);
+		InputStream pdf = createPdf(type, recipient, subject, name, message, isoNumber, sentBy, addressLine1, addressLine2, addressLine3, closingLine);
+		
 		prep.setString(1, isoNumber);
 		prep.setString(2, type);
 		prep.setString(3, subject);
 		prep.setBinaryStream(4, pdf, pdf.available() );
+		String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(pdf);
 		prep.setString(5, md5);
 		prep.setString(6, name);
 		prep.setString(7, sentBy);
 		prep.setString(8, ManageTasksFunctions.getSchoolYear());
 		prep.setString(9, department);
+		pdf.reset();
 		prep.executeUpdate();
 		
 		if(recipient != null) {
@@ -363,7 +366,7 @@ public class MailFunctions {
 			
 	}
 	
-	public static InputStream createPdf(String[] recipient, String subject, String name, String message, String isoNumber, String email) throws IOException, DocumentException, SQLException {
+	public static InputStream createPdf(String type,String[] recipient, String subject, String name, String message, String isoNumber, String email, String addressLine1, String addressLine2, String addressLine3, String closingLine) throws IOException, DocumentException, SQLException {
 	    Document doc = new Document(PageSize.A4, 50, 50, 50, 50);
 	       
 	    ByteArrayOutputStream out = new ByteArrayOutputStream();            
@@ -386,32 +389,109 @@ public class MailFunctions {
 		String title = getTitle(email) + " " + name;
 		String position = getPosition(email);
 		
+		String academicYear = AcademicYearFunctions.getAcademicYearMail();
+		
+		Paragraph lineOnePara = new Paragraph(new Phrase(lineSpacing, addressLine1, FontFactory.getFont(FontFactory.HELVETICA_BOLD,fntSize)));
+		
+		Paragraph lineTwoPara = new Paragraph(new Phrase(lineSpacing, addressLine2, FontFactory.getFont(FontFactory.HELVETICA_BOLD,fntSize)));
+		
+		Paragraph lineThreePara = new Paragraph(new Phrase(lineSpacing, addressLine3, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+		
 		Paragraph isoNumberPara = new Paragraph(new Phrase(lineSpacing, isoNumber, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 		
 		Paragraph messagePara = new Paragraph(new Phrase(lineSpacing, message, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 		
 		messagePara.setAlignment(Element.ALIGN_JUSTIFIED);
 		
+		Paragraph yearPara = new Paragraph(new Phrase(lineSpacing, academicYear, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+		
 		Paragraph datePara = new Paragraph(new Phrase(lineSpacing, date, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 		
-		Paragraph closingPara = new Paragraph(new Phrase(lineSpacing, "Sincerely Yours,", FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+		Paragraph closingPara = new Paragraph(new Phrase(lineSpacing, closingLine, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 		
 		Paragraph signatoryPara = new Paragraph(new Phrase(lineSpacing, title, FontFactory.getFont(FontFactory.HELVETICA_BOLD,fntSize)));
 		
 		Paragraph positionPara = new Paragraph(new Phrase(lineSpacing, position, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 		
-		
-		doc.add(isoNumberPara);
-		doc.add(datePara);
-		doc.add(messagePara);
-		doc.add(Chunk.NEWLINE);
-		doc.add(Chunk.NEWLINE);
-		doc.add(closingPara);
-		doc.add(Chunk.NEWLINE);
-		doc.add(Chunk.NEWLINE);
-		doc.add(signatoryPara);
-		doc.add(positionPara);
-	    doc.close();
+		if(type.equalsIgnoreCase("Letter"))
+		{
+			doc.add(isoNumberPara);
+			doc.add(yearPara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(datePara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(lineOnePara);
+			doc.add(lineTwoPara);
+			doc.add(lineThreePara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(messagePara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(closingPara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(signatoryPara);
+			doc.add(positionPara);
+		    doc.close();
+		}
+		else if(type.equalsIgnoreCase("Notice Of Meeting"))
+		{
+			lineOnePara = new Paragraph(new Phrase(lineSpacing, "TO:	" + addressLine1, FontFactory.getFont(FontFactory.HELVETICA_BOLD,fntSize)));
+			lineTwoPara = new Paragraph(new Phrase(lineSpacing, "RE:	" + addressLine2, FontFactory.getFont(FontFactory.HELVETICA_BOLD,fntSize)));
+			lineThreePara = new Paragraph(new Phrase(lineSpacing, "FR:	" + addressLine3, FontFactory.getFont(FontFactory.HELVETICA_BOLD,fntSize)));
+			datePara = new Paragraph(new Phrase(lineSpacing, "DATE:	" + date, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+			
+			doc.add(isoNumberPara);
+			doc.add(yearPara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(datePara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(lineOnePara);
+			doc.add(lineTwoPara);
+			doc.add(lineThreePara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(messagePara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(closingPara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(signatoryPara);
+		}
+		else if(type.equalsIgnoreCase("Memo"))
+		{
+			lineOnePara = new Paragraph(new Phrase(lineSpacing, "TO:	" + addressLine1, FontFactory.getFont(FontFactory.HELVETICA_BOLD,fntSize)));
+			lineTwoPara = new Paragraph(new Phrase(lineSpacing, "FROM:	" + addressLine2, FontFactory.getFont(FontFactory.HELVETICA_BOLD,fntSize)));
+			lineThreePara = new Paragraph(new Phrase(lineSpacing, "SUBJECT:	" + addressLine3, FontFactory.getFont(FontFactory.HELVETICA_BOLD,fntSize)));
+			datePara = new Paragraph(new Phrase(lineSpacing, "DATE:	" + date, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+			
+			doc.add(isoNumberPara);
+			doc.add(yearPara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(datePara);
+			DottedLineSeparator separator = new DottedLineSeparator();
+	        separator.setPercentage(59500f / 523f);
+	        Chunk linebreak = new Chunk(separator);
+	        doc.add(linebreak);
+			doc.add(Chunk.NEWLINE);
+			doc.add(lineOnePara);
+			doc.add(lineTwoPara);
+			doc.add(lineThreePara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(messagePara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(closingPara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(signatoryPara);
+		}
 	        
 	    return new ByteArrayInputStream(out.toByteArray());
 	}

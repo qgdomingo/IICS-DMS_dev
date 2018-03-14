@@ -33,12 +33,11 @@ public class ViewPdf extends HttpServlet {
 			
 			String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(file.getDataStream());
 			String checksum = MailFunctions.getCheckSum(id);
-			System.out.println(md5);
-			System.out.println(checksum);
-			/*if(!md5.equalsIgnoreCase(checksum))
+
+			if(!md5.equalsIgnoreCase(checksum))
 			 {
 				 response.sendRedirect("fileerror.jsp");
-			 }	*/
+			 }	
 			response.setHeader("Content-Type", contentType);
 			response.setHeader("Content-Length", String.valueOf(file.getFileData().length()));
 			response.setHeader("Content-Disposition", "inline; filename=\"" + file.getFileName() + "\"");

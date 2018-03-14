@@ -46,19 +46,45 @@ public class ForwardMail extends HttpServlet {
 			String subject = request.getParameter("subject");
 			String message = request.getParameter("message");
 			String button = request.getParameter("submit");
-			
-
+			String closingLine = request.getParameter("closing_line");
+			System.out.println(type);
 			if(button.equalsIgnoreCase("Send Mail"))
 			{
+				
 				if(recipient == null) {
 					response.setStatus(HttpServletResponse.SC_OK);
 					response.getWriter().write("invalid send mail");
 					return;
 				}
+				String addressLine1 = "";
+				String addressLine2 = "";
+				String addressLine3 = "";
 				
 				String title = acc.getTitle() + acc.getFullName();
-				
-				MailFunctions.saveMailInformation(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment());
+				if(type.equalsIgnoreCase("Letter"))
+				{
+					addressLine1 = request.getParameter("addressee");
+					addressLine2 = request.getParameter("addressee_line2");
+					addressLine3 = request.getParameter("addressee_line3");
+					
+					MailFunctions.saveMailInformation(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, addressLine2, addressLine3, closingLine);
+				}
+				else if(type.equalsIgnoreCase("Memo"))
+				{
+					String addressee = request.getParameter("addressee");
+					String from = request.getParameter("from");
+					String subjectName = request.getParameter("subject");
+					
+					MailFunctions.saveMailInformation(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressee, from, subjectName, closingLine);
+				}
+				else if(type.equalsIgnoreCase("Notice Of Meeting"))
+				{
+					String addressee = request.getParameter("addressee");
+					String from = request.getParameter("from");
+					String subjectName = request.getParameter("subject");
+					
+					MailFunctions.saveMailInformation(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressee, from, subjectName, closingLine);
+				}
 				LogsFunctions.addLog("System", "Send Mail", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), subject);
 				
 				response.setStatus(HttpServletResponse.SC_OK);
@@ -72,7 +98,7 @@ public class ForwardMail extends HttpServlet {
 			}
 			else if(button.equalsIgnoreCase("Save and Export"))
 			{
-				MailFunctions.saveMailInformation(type, null, null, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment());
+				//MailFunctions.saveMailInformation(type, null, null, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, addressLine2, addressLine3, closingLine);
 				
 				int latestID = MailFunctions.getIncrement();
 				File file = MailFunctions.getPdf(latestID);

@@ -23,7 +23,7 @@
 			$('#generate_iso_form').hide();
 			$('#mail_type').val(tempVal);
 		}
-		else if (tempVal == 'Memo' || tempVal == 'Notice') {
+		else if (tempVal == 'Memo' || tempVal == 'Notice Of Meeting') {
 			$('#letter_form').hide();
 			$('#memo_notice_form').show();
 			$('#generate_iso_form').hide();
