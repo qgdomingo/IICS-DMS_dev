@@ -266,7 +266,7 @@
 					
 					<div class="required inline field">
 						<label>Attachment:</label>
-						<input type="file" name="file"/>
+						<input type="file" name="file[]" multiple/>
 					</div>
 					
 					<div class="field">

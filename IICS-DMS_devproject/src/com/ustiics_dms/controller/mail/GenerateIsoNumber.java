@@ -19,18 +19,13 @@ import com.ustiics_dms.model.Account;
 public class GenerateIsoNumber extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public GenerateIsoNumber() {
         super();
-        
     }
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		doPost(request, response);
+		doGet(request, response);
 	}
-
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
@@ -44,10 +39,16 @@ public class GenerateIsoNumber extends HttpServlet {
 
 			String isoNumber = MailFunctions.generateISONumber(type, generated_by, department, purpose);
 			LogsFunctions.addLog(type, "Generate ISO", generated_by, ManageTasksFunctions.getFullName(generated_by), acc.getUserType(), department, isoNumber, purpose);
-			} catch (Exception e) 
-			{
-				e.printStackTrace();
-			}
+			
+		    response.setContentType("text/plain");
+		    response.setStatus(HttpServletResponse.SC_OK);
+		    response.getWriter().write(isoNumber);
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
 	}
 
 }

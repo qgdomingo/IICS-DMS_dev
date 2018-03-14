@@ -94,7 +94,7 @@
 	/* SET - Row as Unread */
 	function setRowAsUnread(status){
 		if(status == 'Unread') {
-			return 'positive'
+			return 'active unread_mail'
 		}
 	}
 	
@@ -106,7 +106,8 @@
 			
 //			if(localExternalInboxMailData[selectedID].status == 'Unread') {
 //				setMailAsRead(selectedID);
-//				$(this).removeClass('positive');
+//				$(this).removeClass('active');
+//				$(this).removeClass('unread_mail');
 //			}
 			
 			$('#view_mail_dialog').modal({

@@ -155,10 +155,11 @@
 		
 			<div class="three wide computer four wide tablet sixteen wide mobile column">
 				<div class="field">
-					<label>Mail Type:</label>
-					<select class="ui fluid dropdown" id="mail_type_select">
-			  			<option value="Memo">Memo</option>
+					<label>New Mail:</label>
+					<select class="ui fluid dropdown" id="new_mail_type_select">
 					  	<option value="Letter">Letter</option>
+					  	<option value="Memo">Memo</option>
+					  	<option value="Notice">Notice</option>
 					  	<% if (!restrictionCase1) { %>
 					  	<option value="ISO">Generate ISO Code</option>
 					  	<% } %>
@@ -170,14 +171,23 @@
 			
 			<div class="twelve wide computer eleven wide tablet sixteen wide mobile column">
 				
-				<form class="ui form" method="post" action="${pageContext.request.contextPath}/ForwardMail" id="new_mail_form"> 
+			<!-- FORM FOR LETTER -->
+				<form class="ui form" method="post" action="${pageContext.request.contextPath}/ForwardMail" id="letter_form"> 
 					<input type="hidden" name="type" id="mail_type" />
 				
 				<% if(!restrictionCase1) { %>
+					<h3 class="ui diving header">
+						Mail Recipients
+						<p class="microcopy-hint">
+							Place here users that will be receiving the mail. You can indicate none if the mail is 
+							to be exported.
+						</p>
+					</h3>
+				
 					<div class="field">
 						<label>To:</label>
 						<div class="ui action input">
-			  				<select class="ui fluid search selection dropdown" multiple="" name="internal_to" id="internal_to">
+			  				<select class="ui fluid search selection dropdown" multiple="" name="internal_to" id="internal_letter_to">
 								<option value="">Select Users</option>
 							</select>
 			  				<button class="ui orange button" type="button">
@@ -190,7 +200,7 @@
 					<div class="field">
 						<label>External To:</label>
 						<div class="ui action input">
-			  				<select class="ui fluid search selection dropdown" multiple="" name="external_to" id="external_to">
+			  				<select class="ui fluid search selection dropdown" multiple="" name="external_to" id="external_letter_to">
 								<option value="">Select Users</option>
 							</select>
 			  				<button class="ui orange button" type="button">
@@ -201,6 +211,23 @@
 					</div>
 				<% } %>
 					
+					<h3 class="ui diving header">
+						Letter Content
+					</h3>
+					
+					<div class="inline fields">
+						<div class="required field">
+							<label>Addressee:</label>
+							<input type="text" placeholder="Header Line 1" name="addressee_line1" />
+						</div>
+						<div class="field">
+							<input type="text" placeholder="Header Line 2" name="addressee_line2" />
+						</div>
+						<div class="field">
+							<input type="text" placeholder="Header Line 3" name="addressee_line2" />
+						</div>
+					</div>
+					
 					<div class="required field">
 						<label>Subject:</label>
 						<input type="text" name="subject"/>
@@ -209,6 +236,108 @@
 					<div class="required field">
 						<label>Message:</label>
 						<textarea rows="6" name="message"></textarea>
+					</div>
+					
+					<div class="required field">
+						<label>Complimentary Closing Line:</label>
+						<input type="text" placeholder="Yours Truly, " name="closing_line"/>
+					</div>
+					
+					<div class="ui error message"></div>
+					
+					<!-- SENDING MAIL BUTTONS -->
+					<% if(!restrictionCase1) { %>
+					<button type="submit" name="submit" value="send mail" class="ui labeled icon green button element-mb">
+						<i class="send icon"></i>
+						Send Mail
+					</button>
+		
+					<button type="submit" name="submit" value="save and export" class="ui labeled icon blue button element-mb">
+						<i class="download icon"></i>
+						Export Mail as PDF
+					</button>
+					<% } %>
+					
+					<% if(acc.getUserType().equals("Faculty Secretary") || acc.getUserType().equals("Faculty")) { %>
+					<button type="submit" name="submit" value="mail request" class="ui labeled icon orange button element-mb">
+						<i class="large envelope square icon"></i>
+						Send Mail as Request
+					</button>	
+					<% } %>
+					
+					<button type="button" class="ui grey button element-mb" id="clear_letter_form">
+						Clear Fields
+					</button>
+					
+				</form>
+				
+			<!-- FORM FOR MEMO AND NOTICE -->
+				<form class="ui form" method="post" action="${pageContext.request.contextPath}/ForwardMail" id="memo_notice_form"> 
+					<input type="hidden" name="type" id="mail_type" />
+				
+				<% if(!restrictionCase1) { %>
+					<h3 class="ui diving header">
+						Mail Recipients
+						<p class="microcopy-hint">
+							Place here users that will be receiving the mail. You can indicate none if the mail is 
+							to be exported.
+						</p>
+					</h3>
+				
+					<div class="field">
+						<label>To:</label>
+						<div class="ui action input">
+			  				<select class="ui fluid search selection dropdown" multiple="" name="internal_to" id="internal_memo_notice_to">
+								<option value="">Select Users</option>
+							</select>
+			  				<button class="ui orange button" type="button">
+				  				<i class="address book outline icon"></i>
+				  				Options 
+			  				</button>
+						</div>
+					</div>
+					
+					<div class="field">
+						<label>External To:</label>
+						<div class="ui action input">
+			  				<select class="ui fluid search selection dropdown" multiple="" name="external_to" id="external_memo_notice_to">
+								<option value="">Select Users</option>
+							</select>
+			  				<button class="ui orange button" type="button">
+				  				<i class="address book outline icon"></i>
+				  				Options 
+			  				</button>
+						</div>
+					</div>
+				<% } %>
+					
+					<h3 class="ui diving header">
+						<span id="mail_type_label"></span> Content
+					</h3>
+					
+					<div class="required field">
+						<label>Addressee:</label>
+						<input type="text" name="addressee"/>
+					</div>
+					
+					<div class="required field">
+						<label>From:</label>
+						<input type="text" name="from"/>
+					</div>
+					
+					<div class="required field">
+						<label>Subject:</label>
+						<input type="text" name="subject"/>
+					</div>
+					
+					<div class="required field">
+						<label>Message:</label>
+						<textarea rows="6" name="message"></textarea>
+					</div>
+					
+					<div class="required field">
+						<label>Complimentary Closing Line:</label>
+						<input type="text" placeholder="Yours Truly, " name="closing_line"/>
 					</div>
 					
 					<div class="ui error message"></div>
@@ -239,21 +368,39 @@
 					
 				</form>
 			
-				<form class="ui form" method="POST" id="generate_iso_form">
-					<input type="hidden" name="type" />
+			<!-- GENERATE ISO CODE FORM -->
+				<% if(!restrictionCase1) { %>
+				<form class="ui form" method="POST" action="${pageContext.request.contextPath}/GenerateIsoNumber" id="generate_iso_form">
+					<div class="two fields">
+						<div class="required four wide field">
+							<label>Generate ISO Number for:</label>
+							<select class="ui fluid dropdown" name="type" id="generate_iso_type">
+								<option value="">Select Mail Type</option>
+							  	<option value="Letter">Letter</option>
+							  	<option value="Memo">Memo</option>
+							  	<option value="Notice">Notice</option>
+							</select>
+						</div>
+						
+						<div class="required twelve wide field">
+							<label>Purpose of ISO Number to be Generated:</label>
+							<input type="text" name="purpose"/>
+						</div>
 					
-					<div class="required field">
-						<label>Purpose of ISO Number to be Generated:</label>
-						<textarea rows="3" name="purpose"></textarea>
 					</div>
 					
 					<div class="ui error message"></div>
 					
-					<button type="submit" class="ui labeled icon green button">
-						<i class="check icon"></i>
+					<div class="ui success message">
+					    <div class="header">ISO Generate Success!</div>
+					    <p>Your ISO Number for <span id="generated_type"></span> is: <span id="generated_iso"></span></p>
+  					</div>
+					
+					<button type="submit" class="ui fluid  green button">
 						Generate ISO Code
 					</button>
 				</form>
+				<% } %>
 				
 			</div>
 		

@@ -6,6 +6,7 @@
 		getAllDocuments();
 		retrieveCategory('#search_category');	
 		
+		// For Incoming Documents
 		$('#note_orange_message').hide();
 		$('#note_green_message').hide();
 		$('#mark_as_done_conf').hide();
