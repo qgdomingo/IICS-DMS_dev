@@ -37,8 +37,8 @@ public class DownloadArchivedFolder extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		try {
-			int id = 1;//Integer.parseInt(request.getParameter("id"));
-			String stringId = "1";//request.getParameter("id");
+			int id = Integer.parseInt(request.getParameter("id"));
+			String stringId = request.getParameter("id");
 			List <File> file = ArchiveDocumentFunctions.getBinaryStream(id);
 			 
 			

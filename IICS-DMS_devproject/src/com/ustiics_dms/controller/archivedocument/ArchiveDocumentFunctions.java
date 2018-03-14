@@ -57,8 +57,8 @@ public class ArchiveDocumentFunctions
 				prep.setString(9, currentDocuments.getString("created_by"));
 				prep.setString(10, currentDocuments.getString("email"));
 				prep.setString(11, currentDocuments.getString("time_created"));
-				prep.setString(12, refValue);
-				prep.setString(13, currentDocuments.getString("department"));
+				prep.setString(12, currentDocuments.getString("department"));
+				prep.setString(13, refValue);
 				prep.setString(14, academicYear);
 				
 				prep.executeUpdate();

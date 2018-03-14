@@ -188,6 +188,10 @@ public class LogsFunctions {
 		{
 			description = "User has responded, " +  additionalInfo + ", to the event  " + additionalInfo1;
 		}
+		else if(information.equalsIgnoreCase("Generate ISO"))
+		{
+			description = "User has generated an ISO Number, " +  additionalInfo + ", for the reason of" + additionalInfo1;
+		}
 		
 		return description;
 	}

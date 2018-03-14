@@ -47,6 +47,26 @@ public class RetrieveDocumentFunctions {
 			return result;
 	}
 	
+	public static ResultSet retrieveEnabledArchivedFolders() throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("SELECT * FROM archived_folder WHERE status = ?");
+			prep.setString(1, "Enabled");
+			ResultSet result = prep.executeQuery();
+
+			return result;
+	}
+	
+	public static ResultSet retrieveArchivedDocuments(String id) throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("SELECT * FROM archived_documents WHERE folder_id = ?");
+			prep.setString(1, id);
+			ResultSet result = prep.executeQuery();
+
+			return result;
+	}
+	
 	public static ResultSet retrieveAllDocuments(String email, String department) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();

@@ -469,6 +469,14 @@ public class MailFunctions {
 	      return prep.executeQuery();
 	}
 	
+	public static ResultSet getGeneratedISONumbers(String department) throws SQLException 
+	{
+		  Connection con = DBConnect.getConnection();
+	      PreparedStatement prep = con.prepareStatement("SELECT iso_number, purpose, type, generated_by, department FROM generated_iso_numbers WHERE department= ?");
+	      prep.setString(1, department);
+	      return prep.executeQuery();
+	}
+	
 	public static ResultSet getExportedMail (String email, String id) throws SQLException 
 	{
 		   Connection con = DBConnect.getConnection();
@@ -581,6 +589,21 @@ public class MailFunctions {
 		ResultSet rs = prep.executeQuery();
 		
 		return rs;
+	}
+	
+	public static String generateISONumber(String type, String generated_by, String department, String purpose) throws SQLException
+	{
+		String isoNumber = getISONumber(department, type);
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("INSERT into generated_iso_numbers (iso_number, type, generated_by, department, purpose) VALUES (?,?,?,?,?)");
+		prep.setString(1, isoNumber);
+		prep.setString(2, type);
+		prep.setString(3, generated_by);
+		prep.setString(4, department);
+		prep.setString(5, purpose);
+		
+		prep.executeUpdate();
+		return isoNumber;
 	}
 
 }
