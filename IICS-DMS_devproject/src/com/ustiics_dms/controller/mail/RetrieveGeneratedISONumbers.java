@@ -28,7 +28,8 @@ public class RetrieveGeneratedISONumbers extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		response.setCharacterEncoding("UTF-8");
+		
 		try {
 			HttpSession session = request.getSession();
 		    Account acc = (Account) session.getAttribute("currentCredentials");
@@ -46,7 +47,8 @@ public class RetrieveGeneratedISONumbers extends HttpServlet {
 						isoInfo.getString("purpose"),
 						isoInfo.getString("type"),
 						isoInfo.getString("generated_by"),
-						isoInfo.getString("department")
+						isoInfo.getString("generate_date"),
+						isoInfo.getString("school_year")
 				));		
 			}
 			

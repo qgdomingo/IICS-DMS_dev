@@ -152,6 +152,20 @@
 		
 <!-- ACTUAL PAGE CONTENTS -->
 
+		<!-- MENU -->
+		<div class="ui secondary pointing menu element-rmt">
+			<a class="item active" href="${pageContext.request.contextPath}/mail/exportedmail.jsp">
+				<i class="folder open icon"></i>
+				Exported Mail
+			</a>
+			<% if(!restrictionCase1) { %>
+			<a class="item" href="${pageContext.request.contextPath}/mail/viewgeneratediso.jsp">
+				<i class="folder icon"></i>
+				View Generated ISO List
+			</a>
+			<% } %>
+		</div>
+
 		<div class="ui segment">
 			<div class="ui dimmer" id="exported_loading">
 				<div class="ui text loader">Retrieving Exported Mail</div>
@@ -175,6 +189,7 @@
 							<option value="">Mail Type</option>
 							<option value="Memo">Memo</option>
 							<option value="Letter">Letter</option>
+							<option value="Notice Of Meeting">Notice Of Meeting</option>
 						</select>
 					</div>
 							

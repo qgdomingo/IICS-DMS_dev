@@ -1,6 +1,8 @@
 /**
  * 
  */
+	var tempVal;
+
 	$(document).ready( function() {
 		displayAppropriateForm();
 
@@ -15,7 +17,7 @@
 	});
 	
 	function displayAppropriateForm() {
-		var tempVal = $('#new_mail_type_select').val();
+		tempVal = $('#new_mail_type_select').val();
 		
 		if (tempVal == 'Letter') {
 			$('#letter_form').show();
@@ -128,7 +130,7 @@
 	function clearLetterForm() {
 		removeCSSClass('#letter_form', 'error');		
 	  	$('#letter_form').form('reset');
-	  	
+	  	$('#mail_type').val(tempVal);
 	  	if( ! ($('#user_type').val() == 'Faculty') ) {
 			$('#internal_letter_to').dropdown('restore defaults');
 		  	$('#external_letter_to').dropdown('restore defaults');
@@ -230,7 +232,7 @@
 	function clearMemoNoticeForm() {
 		removeCSSClass('#memo_notice_form', 'error');		
 	  	$('#memo_notice_form').form('reset');
-	  	
+	  	$('#mail_type').val(tempVal);
 	  	if( ! ($('#user_type').val() == 'Faculty') ) {
 			$('#internal_memo_notice_to').dropdown('restore defaults');
 		  	$('#external_memo_notice_to').dropdown('restore defaults');

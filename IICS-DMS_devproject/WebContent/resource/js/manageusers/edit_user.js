@@ -49,6 +49,15 @@
 					}
 				]
 			},
+			title: {
+				identifier: 'title',
+				rules: [
+					{
+						type   : 'empty',
+						prompt : 'Please enter the title of the faculty'
+					}
+				]
+			},
 			first_name: {
 				identifier: 'first_name',
 				rules: [
@@ -64,6 +73,15 @@
 					{
 						type   : 'empty',
 						prompt : 'Please enter the last name'
+					}
+				]
+			},
+			middile_initial: {
+				identifier: 'middile_initial',
+				rules: [
+					{
+						type   : 'empty',
+						prompt : 'Please enter the middle initial'
 					}
 				]
 			},

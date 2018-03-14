@@ -178,6 +178,7 @@
 							<option value="">Mail Type</option>
 							<option value="Memo">Memo</option>
 							<option value="Letter">Letter</option>
+							<option value="Notice Of Meeting">Notice Of Meeting</option>
 						</select>
 					</div>
 							

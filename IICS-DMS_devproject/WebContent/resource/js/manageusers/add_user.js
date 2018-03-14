@@ -31,7 +31,6 @@
 	$('#adduser_btn').click(() => {
 		$('#adduser_dia').modal({
 			closable: false,
-			observeChanges: true,
 			onShow: () => {
 				checkUserTypeDepartment('#add_usertype', '#add_department_field'); 
 			},
@@ -112,6 +111,15 @@
 					}
 				]
 			},
+			title: {
+				identifier: 'title',
+				rules: [
+					{
+						type   : 'empty',
+						prompt : 'Please enter the title of the faculty'
+					}
+				]
+			},
 			first_name: {
 				identifier: 'first_name',
 				rules: [
@@ -127,6 +135,15 @@
 					{
 						type   : 'empty',
 						prompt : 'Please enter the last name'
+					}
+				]
+			},
+			middile_initial: {
+				identifier: 'middile_initial',
+				rules: [
+					{
+						type   : 'empty',
+						prompt : 'Please enter the middle initial'
 					}
 				]
 			},
@@ -193,7 +210,7 @@
 
 	/* CLEAN - Clear Fields Button on Add User Modal Event */
 	$('#adduser_clear').on('click', () => {
-		clearAddUserModal();
+		clearFieldsAddUserForm();
 	});
 	
 	/* CLEAR FIELDS - Add User Form */

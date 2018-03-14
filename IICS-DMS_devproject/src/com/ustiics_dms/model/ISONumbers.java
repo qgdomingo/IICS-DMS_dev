@@ -7,14 +7,18 @@ public class ISONumbers {
 	private String type;
 	private String generatedBy;
 	private String department;
+	private String schoolYear;
+	private String generatedDate;
 	
-	public ISONumbers(String isoNumber, String purpose, String type, String generatedBy, String department) {
+	public ISONumbers(String isoNumber, String purpose, String type, String generatedBy, String generatedDate,
+			String schoolYear) {
 		super();
 		this.isoNumber = isoNumber;
 		this.purpose = purpose;
 		this.type = type;
 		this.generatedBy = generatedBy;
-		this.department = department;
+		this.generatedDate = generatedDate;
+		this.schoolYear = schoolYear;
 	}
 
 	public String getIsoNumber() {
@@ -55,6 +59,22 @@ public class ISONumbers {
 
 	public void setDepartment(String department) {
 		this.department = department;
+	}
+
+	public String getSchoolYear() {
+		return schoolYear;
+	}
+
+	public void setSchoolYear(String schoolYear) {
+		this.schoolYear = schoolYear;
+	}
+
+	public String getGeneratedDate() {
+		return generatedDate;
+	}
+
+	public void setGeneratedDate(String generatedDate) {
+		this.generatedDate = generatedDate;
 	}
 	
 	
