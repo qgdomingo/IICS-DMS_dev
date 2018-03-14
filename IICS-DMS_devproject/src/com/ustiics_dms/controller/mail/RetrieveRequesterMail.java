@@ -22,38 +22,39 @@ import com.ustiics_dms.model.Mail;
 public class RetrieveRequesterMail extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public RetrieveRequesterMail() {
         super();
     }
-
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		List<Mail> mail = new ArrayList<Mail>();
 	    response.setCharacterEncoding("UTF-8");
 		
-	    HttpSession session = request.getSession();
-	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
 			
-	
-				ResultSet inboxInfo = (ResultSet) MailFunctions.getRequesterMail(acc.getEmail());
-				
-				while(inboxInfo.next())
-				{ 
-					mail.add(new Mail(
-							inboxInfo.getString("id"),
-							inboxInfo.getString("type"),
-							inboxInfo.getString("iso_number"),
-							inboxInfo.getString("external_recipient"),
-							inboxInfo.getString("subject"),
-							inboxInfo.getString("sender_name"),
-							inboxInfo.getString("sent_by"),
-							inboxInfo.getString("date_created"),
-							inboxInfo.getString("school_year")
-							 ));	
-				}
+			HttpSession session = request.getSession();
+			Account acc = (Account) session.getAttribute("currentCredentials");
+			
+			ResultSet requestInfo = (ResultSet) MailFunctions.getRequesterMail(acc.getEmail());
+			
+			while(requestInfo.next())
+			{ 
+				mail.add(new Mail(
+						requestInfo.getString("id"),
+						requestInfo.getString("type"),
+						requestInfo.getString("recipient"),
+						requestInfo.getString("external_recipient"),
+						requestInfo.getString("subject"),
+						requestInfo.getString("message"),
+						requestInfo.getString("sender_name"),
+						requestInfo.getString("sent_by"),
+						requestInfo.getString("date_created"),
+						requestInfo.getString("status"),
+						requestInfo.getString("note"),
+						requestInfo.getString("department")
+						 ));	
+			}
 			
 			String json = new Gson().toJson(mail);
 			
@@ -69,8 +70,7 @@ public class RetrieveRequesterMail extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		
+		doGet(request, response);
 	}
 
 }

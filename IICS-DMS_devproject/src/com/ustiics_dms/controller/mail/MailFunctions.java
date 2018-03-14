@@ -188,8 +188,17 @@ public class MailFunctions {
 	//Requests
 	public static void forwardRequestMail(String type, String[] recipient, String[] externalRecipient, String  subject, String  message, String  name, String  sentBy, String userType, String department) throws SQLException
 	{
-		String recipientString = String.join(",", recipient);	
-		String externalRecipientString = String.join(",", externalRecipient);	
+		String recipientString = "";
+		
+		if(recipient != null) {
+			recipientString = String.join(",", recipient);
+		} 
+			
+		String externalRecipientString =  "";
+		
+		if(externalRecipient != null) {
+			externalRecipientString = String.join(",", externalRecipient);
+		} 
 		
 		Connection con = DBConnect.getConnection();
 		PreparedStatement prep = con.prepareStatement("INSERT INTO request (type, recipient, external_recipient, subject, message, sender_name, sent_by, department) VALUES (?,?,?,?,?,?,?,?)");
@@ -210,12 +219,12 @@ public class MailFunctions {
 	public static ResultSet getRequestMail(String department) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM request WHERE department = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT * FROM request WHERE department = ? AND status = ?");
 			
 			prep.setString(1, department);
+			prep.setString(2, "Pending");
 			ResultSet rs = prep.executeQuery();
 		
-
 			return rs;
 	}
 	
