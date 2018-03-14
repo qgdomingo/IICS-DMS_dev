@@ -260,6 +260,7 @@
 		$('#search_action').dropdown('restore defaults');
 		$('#search_action_due_calendar').calendar('clear');
 		$('#search_status').dropdown('restore defaults');
+		if(!isIncomingDocsTableEmpty) incomingDocsTable.search('').draw();
 	}
 	
 /*

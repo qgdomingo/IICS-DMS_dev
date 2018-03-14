@@ -146,17 +146,18 @@
 		if(!isSentMailTableEmpty) sentMailTable.column(3).search( $(this).val() ).draw();
 	});
 	
-	/* CLEAR SEARCH EVENT - Inbox */
+	/* CLEAR SEARCH EVENT - Sent */
 	$('#clear_search').click(() => {
 		clearInboxSearch();
 	});
 		
-	/* CLEAR SEARCH - Inbox */
+	/* CLEAR SEARCH - Sent */
 	function clearInboxSearch() {
 		$('#search_mail').val('');
 		$('#search_sentfrom_calendar').calendar('clear');
 		$('#search_sentto_calendar').calendar('clear');
 		$('#search_type').dropdown('restore defaults');
 		$('#search_acad_year').dropdown('restore defaults');
+		if(!isSentMailTableEmpty) sentMailTable.search('').draw();
 	}
 	

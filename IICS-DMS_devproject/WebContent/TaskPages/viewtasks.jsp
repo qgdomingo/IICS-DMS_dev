@@ -178,7 +178,7 @@
 			
 			<!-- SEARCH ROW -->
 			<form class="ui form">
-				<div class="five fields">
+				<div class="six fields">
 				
 					<!-- SEARCH BOX -->
 					<div class="field">
@@ -215,6 +215,13 @@
 						</select>
 					</div>
 					
+					<!-- ACAD YEAR BOX -->
+					<div class="field">
+						<select class="ui fluid dropdown" id="search_acad_year">
+							<option value="">Academic Year</option>
+						</select>
+					</div>	
+					
 					<!-- SEARCH BUTTON -->
 					<div class="field">
 						<button class="ui grey button" type="button" id="mytask_clear">
@@ -233,6 +240,7 @@
 						<th>Deadline Set</th>
 						<th>Category</th>
 						<th>Status</th>
+						<th>Academic Year</th>
 					</tr>
 				</thead>
 				<tbody id="mytasks_tablebody"></tbody>		
@@ -253,6 +261,7 @@
 			<div class="modal-content">
 				<p class="element-rmb"><b>Category: </b><span id="mytask_viewcategory"></span></p>
 				<p class="element-rmb"><b>Assigned by: </b><span id="mytask_assignedby"></span></p>
+				<p class="element-rmb"><b>Academic Year: </b><span id="mytask_academicyear"></span></p>
 				<p class="element-rmb"><b>Date Created: </b><span id="mytask_datecreated"></span></p>
 				<p class="element-rmb"><b>Deadline: </b><span id="mytask_viewdeadline"></span></p>
 				<p><b>Instructions: </b><span id="mytask_instructions"></span></p>
@@ -406,6 +415,7 @@
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/categories.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/retrieve_acad_year.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/managetasks/view_mytasks.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/notifications.js"></script>
 </html>

@@ -40,7 +40,8 @@ public class RetrieveSpecificCreatedTask extends HttpServlet {
 				task.add(specificCreatedTask.getString("date_created"));	
 				task.add(specificCreatedTask.getString("status"));
 				task.add(specificCreatedTask.getString("deadline"));	
-				task.add(specificCreatedTask.getString("instructions"));		
+				task.add(specificCreatedTask.getString("instructions"));	
+				task.add(specificCreatedTask.getString("school_year"));		
 			 }
 			 
 			 String json = new Gson().toJson(task);

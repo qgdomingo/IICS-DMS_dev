@@ -376,7 +376,7 @@ public class ManageTasksFunctions {
 	public static ResultSet getSpecificCreatedTask(String id) throws SQLException 
 	{
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("SELECT title, deadline, category, instructions, status, date_created FROM tasks WHERE id = ?");
+		PreparedStatement prep = con.prepareStatement("SELECT title, deadline, category, instructions, status, date_created, school_year FROM tasks WHERE id = ?");
 		prep.setString(1, id);
 		
 		ResultSet rs = prep.executeQuery();

@@ -180,5 +180,6 @@
 		$('#search_sentto_calendar').calendar('clear');
 		$('#search_type').dropdown('restore defaults');
 		$('#search_acad_year').dropdown('restore defaults');
+		if(!isExportedMailTableEmpty) exportedMailTable.search('').draw();
 	}
 	

@@ -13,6 +13,8 @@
 		// Initialize Task Submission Form
 		submitMyTask();
 		validateMyTaskForm();
+		
+		getAcadYearList('#search_acad_year');
 	});
 
 /*
@@ -43,6 +45,7 @@
 						.append($('<td>').text(mytask.deadline))
 						.append($('<td>').text(mytask.category))
 						.append($('<td>').text(mytask.status))
+						.append($('<td>').text(mytask.schoolYear))
 				});
 				
 				// bind events and classes to the table after all data received
@@ -56,14 +59,14 @@
 			else if(responseData.length == 0)
 			{
 				$('<tr>').appendTo('#mytasks_tablebody')
-					.append($('<td class="center-text" colspan="5">')
+					.append($('<td class="center-text" colspan="6">')
 							.text("Hooray! You do not have any assigned tasks at the moment."));
 				removeCSSClass('#mytasks_loading', 'active');
 			}
 			else
 			{
 				$('<tr>').appendTo('#mytasks_tablebody')
-				.append($('<td class="center-text error" colspan="5">')
+				.append($('<td class="center-text error" colspan="6">')
 						.text("Unable to retrieve list of your tasks. Please refresh page. :("));
 				removeCSSClass('#mytasks_loading', 'active');
 				callFailRequestModal();
@@ -71,7 +74,7 @@
 		})
 		.fail((response) => {
 			$('<tr>').appendTo('#mytasks_tablebody')
-			.append($('<td class="center-text error" colspan="5">')
+			.append($('<td class="center-text error" colspan="6">')
 					.text("Unable to retrieve list of your tasks. Please refresh page. :("));
 			removeCSSClass('#mytasks_loading', 'active');
 			callFailRequestModal();
@@ -130,10 +133,12 @@
 	function populateMyTaskDetails(data) {
 		$('#mytask_title').text(data['title']);
 		$('#mytask_viewcategory').text(data['category']);
+		$('#mytask_academicyear').text(data['schoolYear']);
 		$('#mytask_assignedby').text(data['assignedBy']);
 		$('#mytask_datecreated').text(data['dateCreated']);
 		$('#mytask_viewdeadline').text(data['deadline']);
 		$('#mytask_instructions').text(data['instructions']);
+		
 	}
 	
 	/* GET - Submission Data of Task */
@@ -279,6 +284,11 @@
 		if(!isMyTasksTableEmpty) myTasksTable.column(4).search( $(this).val() ).draw();
 	});
 		
+	/* SEARCH - Academic Year */
+	$('#search_acad_year').on('change', function() {
+		if(!isMyTasksTableEmpty) myTasksTable.column(5).search( $(this).val() ).draw();
+	});
+	
 	$('#mytask_clear').click(() => {
 		resetMyTasksSearchFields();
 	})
@@ -288,5 +298,7 @@
 		$('#mytask_deadline_calendar').calendar('clear');
 		$('#mytask_category').dropdown('restore defaults');
 		$('#mytask_status').dropdown('restore defaults');
+		$('#search_acad_year').dropdown('restore defaults');
+		if(!isMyTasksTableEmpty) myTasksTable.search('').draw();
 	}
 

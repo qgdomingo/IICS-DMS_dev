@@ -67,7 +67,8 @@ public class AddTask extends HttpServlet {
 				task.add(specificCreatedTask.getString("date_created"));	
 				task.add(specificCreatedTask.getString("deadline"));
 				task.add(specificCreatedTask.getString("category"));	
-				task.add(specificCreatedTask.getString("status"));		
+				task.add(specificCreatedTask.getString("status"));	
+				task.add(specificCreatedTask.getString("school_year"));		
 			 }	
 			 
 			String json = new Gson().toJson(task);

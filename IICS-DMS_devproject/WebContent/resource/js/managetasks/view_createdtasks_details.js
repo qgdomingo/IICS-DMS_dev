@@ -56,6 +56,7 @@
 				$('#createdtask_status').text(response[3]);
 				$('#createdtask_deadline').text(response[4]);
 				$('#createdtask_instructions').text(response[5]);
+				$('#createdtask_academicyear').text(response[6]);
 			}
 			else {
 				callFailRequestModal();
@@ -218,6 +219,7 @@
 		$('#search_filter').val('');
 		$('#upload_date_filter_calendar').calendar('clear');
 		$('#status_filter').dropdown('restore defaults');
+		if(!isAssignedTaskTableEmpty) assignedToTasksTable.search('').draw();
 	})
 	
 /*

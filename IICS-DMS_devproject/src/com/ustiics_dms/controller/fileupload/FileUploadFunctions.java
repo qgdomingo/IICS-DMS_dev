@@ -314,7 +314,6 @@ public class FileUploadFunctions {
 				String department = info.getString("department");
 				
 				String des = title + "‘s note has been updated by " + ManageTasksFunctions.getFullName(email);
-				System.out.println(department);
 				NotificationFunctions.addNotification("Incoming Documents Page", des, FileUploadFunctions.getGroupByDepartment(department, email));
 			}
 	}

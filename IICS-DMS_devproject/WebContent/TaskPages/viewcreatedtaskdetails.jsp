@@ -172,6 +172,7 @@
 			</button>
 			
 			<p class="element-rmb"><b>Category: </b><span id="createdtask_category"></span></p>
+			<p class="element-rmb"><b>Academic Year: </b><span id="createdtask_academicyear"></span></p>
 			<p class="element-rmb"><b>Date Created: </b><span id="createdtask_datecreated"></span></p>
 			<p class="element-rmb"><b>Status: </b><span id="createdtask_status"></span></p>
 			<p class="element-rmb"><b>Deadline: </b><span id="createdtask_deadline"></span></p>
