@@ -36,17 +36,18 @@ public class ChangePassword extends HttpServlet {
 
 			if(LoginFunctions.authenticate(acc.getEmail(), currentPassword))
 			{
-				
-					ProfileFunctions.editPassword(acc.getEmail(), newPassword);
-					response.setContentType("text/plain");
-					response.setStatus(HttpServletResponse.SC_OK);
-					response.getWriter().write("success");
+				ProfileFunctions.editPassword(acc.getEmail(), newPassword);
+				response.setContentType("text/plain");
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write("success");
+				return;
 			}
 			else
 			{
 				response.setContentType("text/plain");
 				response.setStatus(HttpServletResponse.SC_OK);
 				response.getWriter().write("invalid password");
+				return;
 			}
 		}
 		catch(Exception e)

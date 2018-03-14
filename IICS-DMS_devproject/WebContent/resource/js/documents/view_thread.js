@@ -38,6 +38,9 @@
 		else if(origin == '2') {
 			$('#page_origin').attr('href', getContextPath() + '/files/outgoingdocs.jsp');
 		}
+		else if(origin == '3') {
+			$('#page_origin').attr('href', getContextPath() + '/files/alldocs.jsp');
+		}
 	}
 	
 	/* GET - Documents Thread */

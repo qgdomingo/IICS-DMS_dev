@@ -57,7 +57,7 @@ public class MailFunctions {
 		}
 		
 		if(externalRecipient != null) {
-			ExternalMail.send(externalRecipient, subject, getIncrement(), "jlteoh23@gmail.com", "jed231096");
+			ExternalMail.send(externalRecipient, subject, getIncrement(), "iics2014dmsystem@gmail.com", "bluespace09");
 		}
 	}
 	
@@ -176,7 +176,8 @@ public class MailFunctions {
 	public static ResultSet getSentMail(String email) throws SQLException
 	{
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("SELECT id, type, iso_number, subject, date_created, school_year FROM mail WHERE sent_by = ?");
+		PreparedStatement prep = con.prepareStatement("SELECT id, type, iso_number, subject, date_created, school_year FROM mail WHERE sent_by = ? "
+				+ "AND id IN (SELECT DISTINCT(id) as id FROM sent_mail_to)");
 
 		prep.setString(1, email);
 		ResultSet rs = prep.executeQuery();

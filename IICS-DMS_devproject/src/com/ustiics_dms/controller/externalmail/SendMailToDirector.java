@@ -22,7 +22,6 @@ import com.ustiics_dms.utility.SendMail;
 public class SendMailToDirector extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public SendMailToDirector() {
         super();
     }
@@ -66,9 +65,14 @@ public class SendMailToDirector extends HttpServlet {
 			String message = tempStorage[6];
 		
 			ExternalMailFunctions.SendMailToDirector(firstName, lastName, emailAddress, contactNumber, affiliation ,subject, message, fileData);
+			
+			response.setContentType("text/plain");
+		    response.setStatus(HttpServletResponse.SC_OK);
+		    response.getWriter().write("success");
 		} 
 		catch(Exception e) {
 			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 

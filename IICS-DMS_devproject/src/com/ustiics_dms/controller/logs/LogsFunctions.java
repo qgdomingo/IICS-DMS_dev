@@ -2,6 +2,7 @@ package com.ustiics_dms.controller.logs;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.ustiics_dms.databaseconnection.DBConnect;
@@ -110,7 +111,7 @@ public class LogsFunctions {
 		}
 		else if(information.equalsIgnoreCase("Mark As Done"))
 		{
-			description = "User has set an incoming document, "+ additionalInfo +"to ‘Done’";
+			description = "User has set an incoming document, "+ additionalInfo +" to ‘Done’";
 		}
 		else if(information.equalsIgnoreCase("Upload Personal"))
 		{
@@ -189,5 +190,12 @@ public class LogsFunctions {
 		}
 		
 		return description;
+	}
+	
+	public static ResultSet getLogs() throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT timestamp, type, information, user, user_type, department FROM logs");
+		return prep.executeQuery();
 	}
 }

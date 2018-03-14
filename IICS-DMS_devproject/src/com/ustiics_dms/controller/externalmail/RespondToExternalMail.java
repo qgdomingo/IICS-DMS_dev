@@ -24,18 +24,13 @@ import com.ustiics_dms.utility.AesEncryption;
 public class RespondToExternalMail extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public RespondToExternalMail() {
         super();
-
     }
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		doGet(request, response);
 	}
-
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -68,7 +63,7 @@ public class RespondToExternalMail extends HttpServlet {
 			String subject = tempStorage[1];
 			String message = tempStorage[2];
 			
-			ExternalMailFunctions.saveSentExternalMail(threadNumber, subject, message, fileData, acc.getEmail());
+			ExternalMailFunctions.saveSentExternalMail(threadNumber, subject, message, fileData, acc.getEmail(), request.getContextPath());
 			
 			threadNumber = AesEncryption.encrypt(threadNumber);
 			LogsFunctions.addLog("System", "External Mail", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), subject);

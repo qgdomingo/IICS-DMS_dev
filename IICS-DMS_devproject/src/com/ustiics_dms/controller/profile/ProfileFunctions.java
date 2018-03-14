@@ -25,6 +25,17 @@ public class ProfileFunctions {
 			prep.executeUpdate();
 	}
 	
+	public static void editUserProfile(String email, String currentEmail) throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("UPDATE accounts SET email = ? WHERE email = ?");
+			
+			prep.setString(1, email);
+			prep.setString(2, currentEmail);
+
+			prep.executeUpdate();
+	}
+	
 	public static void editPassword(String email, String newPassword) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();

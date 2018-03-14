@@ -21,6 +21,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 		
@@ -98,71 +100,79 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
-		<!-- SEARCH ROW -->
+
+		<div class="ui segment">
+			<div class="ui dimmer" id="logs_loading">
+				<div class="ui text loader">Retrieving Logs</div>
+			</div>
+		
+			<!-- SEARCH ROW -->
 			<form class="ui form">
-				<div class="two fields">
+				<div class="seven fields">
 					
-					<!-- TIMESTAMP BOX -->
+					<!-- LOG SEARCH BOX -->
 					<div class="field">
 						<div class="ui icon input">
-							<input type="text" placeholder="Log Timestamp Range"/>
-							<i class="calendar icon"></i>
+							<input type="text" placeholder="Find Log" id="search_log"/>
+							<i class="search icon"></i>
 						</div>
 					</div>
 					
 					<!-- LOG TYPE DROPDOWN -->
 					<div class="field">
-						<select class="ui fluid dropdown">
-							<option value="none">Log Type</option>
-							<option value="sys">System Log</option>
-							<option value="err">Error Log</option>
+						<select class="ui fluid dropdown" id="search_log_type">
+							<option value="">Log Type</option>
+							<option value="System">System Logs</option>
+							<option value="Error">Error Logs</option>
 						</select>
 					</div>
 					
-					<!-- LOG SEARCH BOX -->
+					<!-- TIMESTAMP FROM BOX -->
 					<div class="field">
-						<div class="ui icon input">
-							<input type="text" placeholder="Find Log Information.."/>
-							<i class="search icon"></i>
+						<div class="ui calendar" id="search_timestamp_from_calendar">
+							<div class="ui icon input">
+								<input type="text" placeholder="Log Timestamp From" id="search_timestamp_from"/>
+								<i class="calendar icon"></i>
+							</div>
 						</div>
 					</div>
 					
-					<!-- USER SEARCH BOX -->
+					<!-- TIMESTAMP TO BOX -->
 					<div class="field">
-						<div class="ui icon input">
-							<input type="text" placeholder="Seach User.."/>
-							<i class="search icon"></i>
+						<div class="ui calendar" id="search_timestamp_to_calendar">
+							<div class="ui icon input">
+								<input type="text" placeholder="Log Timestamp To" id="search_timestamp_to"/>
+								<i class="calendar icon"></i>
+							</div>
 						</div>
 					</div>
 					
 					<!-- USER TYPE DROPDOWN -->
 					<div class="field">
-						<select class="ui fluid dropdown">
-							<option value="none">User Type</option>
-							<option value="dir">Director</option>
-							<option value="sec">Faculty Secretary</option>
-							<option value="dep">Department Head</option>
-							<option value="fac">Faculty</option>
-							<option value="sta">Staff</option>
+						<select class="ui fluid dropdown" id="search_user_type">
+							<option value="">User Type</option>
+							<option value="Director">Director</option>
+							<option value="Faculty Secretary">Faculty Secretary</option>
+							<option value="Department Head">Department Head</option>
+							<option value="Faculty">Faculty</option>
+							<option value="Staff">Staff</option>
 						</select>
 					</div>
 					
 					<!-- DEPARTMENT DROPDOWN -->
 					<div class="field">
-						<select class="ui fluid dropdown">
-							<option value="none">Department</option>
-							<option value="cs">Computer Science</option>
-							<option value="it">Information Technology</option>
-							<option value="is">Information Systems</option>
+						<select class="ui fluid dropdown" id="search_department">
+							<option value="">Department</option>
+							<option value="Computer Science">Computer Science</option>
+							<option value="Information Technology">Information Technology</option>
+							<option value="Information Systems">Information Systems</option>
 						</select>
 					</div>
 					
-
-					
 					<!-- SEARCH BUTTON -->
 					<div class="field">
-						<button class="ui grey button" type="button">
-							Search
+						<button class="ui grey button" type="button" id="clear_search">
+							Clear Search
 						</button>
 					</div>
 					
@@ -170,7 +180,7 @@
 			</form>
 			
 			<!-- TABLE AREA -->
-			<table class="ui compact selectable sortable table">
+			<table class="ui compact selectable table" id="logs_table">
 				<thead>
 					<tr>
 						<th>Log Timestamp</th>
@@ -181,15 +191,10 @@
 						<th>Department</th>
 					</tr>
 				</thead>
-				<tr>
-					<td>12-12-2018 12:00:00</td>
-					<td>System Log</td>
-					<td>UPLOAD --- incoming document</td>
-					<td>Jeddi Boi</td>
-					<td>Department Head</td>
-					<td>Computer Science</td>
-				</tr>				
+				<tbody id="logs_tablebody"></tbody>			
 			</table>
+
+		</div>
 
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
@@ -218,7 +223,11 @@
 	</body>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/dataTable/jquery.dataTables.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/session/admin_check.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/view_logs.js"></script>
 </html>

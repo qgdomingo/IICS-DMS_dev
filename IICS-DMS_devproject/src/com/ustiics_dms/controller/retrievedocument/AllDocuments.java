@@ -16,49 +16,47 @@ import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Document;
+import com.ustiics_dms.utility.AesEncryption;
 
 
 @WebServlet("/AllDocuments")
 public class AllDocuments extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public AllDocuments() {
         super();
-
     }
-
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		List<Document> files = new ArrayList<Document>();
 	    response.setCharacterEncoding("UTF-8");
 		
-	    HttpSession session = request.getSession();
-	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
-			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveAllDocuments(acc.getEmail());
+		    HttpSession session = request.getSession();
+		    Account acc = (Account) session.getAttribute("currentCredentials");
+			
+			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveAllDocuments(acc.getEmail(), acc.getDepartment());
 			while(documentFiles.next()) 
 			{ 
 				files.add(new Document(
-						documentFiles.getString("id"),
-						documentFiles.getString("type"),
-						documentFiles.getString("thread_number"),
-						documentFiles.getString("reference_no"),
+						AesEncryption.encrypt(documentFiles.getString("type")),
+						AesEncryption.encrypt(documentFiles.getString("id")),
+						AesEncryption.encrypt(documentFiles.getString("thread_number")),
 						documentFiles.getString("source_recipient"),
 						documentFiles.getString("title"),
-						documentFiles.getString("action_required"),
 						documentFiles.getString("category"),
 						documentFiles.getString("file_name"),
 						documentFiles.getString("description"),
 						documentFiles.getString("created_by"),
 						documentFiles.getString("email"),
-						documentFiles.getString("status"),
 						documentFiles.getString("time_created"),
-						documentFiles.getString("department"),
+						documentFiles.getString("reference_no"),
+						documentFiles.getString("action_required"),
+						documentFiles.getString("status"),
 						documentFiles.getString("due_on"),
 						documentFiles.getString("note")
-						 ));	
+					));	
 			}
 			String json = new Gson().toJson(files);
 			
@@ -74,7 +72,7 @@ public class AllDocuments extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		doGet(request, response);
 	}
 
 }

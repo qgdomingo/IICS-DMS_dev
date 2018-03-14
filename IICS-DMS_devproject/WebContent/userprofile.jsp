@@ -213,7 +213,7 @@
 				</h3> 
 			</div>
 			<div class="modal-content">
-				<form class="ui form" method="POST" id="edit_profile_form">
+				<form class="ui form" method="POST" action="EditUserProfile" id="edit_profile_form">
 					<div class="two fields">
 						<div class="required field">
 							<label>Faculty No.:</label>
@@ -280,7 +280,7 @@
 				</h3> 
 			</div>
 			<div class="modal-content">
-				<form class="ui form" method="POST" id="change_password_form">
+				<form class="ui form" method="POST" action="ChangePassword" id="change_password_form">
 					<div class="ui message">
 						<div class="header">
 							Password Rules

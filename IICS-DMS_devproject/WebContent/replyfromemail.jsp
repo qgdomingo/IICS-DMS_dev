@@ -15,12 +15,12 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Message for the Director | IICS DMS</title>
+		<title>Send a Response to the Director | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-		<link rel="stylesheet" href="resource/semanticui/semantic.min.css">
-		<link rel="stylesheet" href="resource/css/master.css">
-		<link rel="stylesheet" href="resource/css/login.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/login.css">
 		
 		<!-- SITE ICON CONFIGS -->
 		<link rel="apple-touch-icon" sizes="180x180" href="${pageContext.request.contextPath}/resource/siteicon/apple-touch-icon.png">
@@ -43,48 +43,28 @@
 			<div class="fourteen wide computer fourteen wide table sixteen wide mobile column login-form-area">
 				<div class="messagepage-header">
 					<h2 class="ui header">
-					  <a href="index.jsp"><i class="red chevron left icon"></i></a> 
-					  Send a Message to the Director
+					  Send a Response to the Director
 					</h2>
 				</div>
 				<br>
 				
 			<!-- START OF MESSAGE FORM -->
-				<form class="ui equal width form" method="post" action="SendMailToDirector" enctype="multipart/form-data"
-					id="message_director_form">
+			<form class="ui equal width form" method="post" action="${pageContext.request.contextPath}/ReplyMailFromExternal" enctype="multipart/form-data"
+					id="response_director_form">
 				
 				<!-- SENDER'S INFORMATION --> 
 					<h3 class="ui dividing header">
 						<i class="user icon"></i>
 						<div class="content">Sender's Information</div>
 					</h3>
-					<div class="fields">
-						<div class="required field">
-							<label>First Name:</label>
-							<input name="first_name" type="text" placeholder="e.g. James"/>
-						</div>
-						<div class="required field">
-							<label>Last Name:</label>
-							<input name="last_name" type="text" placeholder="e.g. Gosling"/>
-						</div>
+					
+					<div class="ui segment">
+						<p class="element-rmb"><b>Sender: </b><span id="sender_info"></span></p>
+						<p class="element-rmb"><b>Contact Number: </b><span id="contact_info"></span></p>
+						<p class="element-rmb"><b>Affiliation: </b><span id="affiliation_info"></span></p>
 					</div>
-					<div class="fields">
-						<div class="required field">
-							<label>Email Address:</label>
-							<input name="email_address" type="text" placeholder="e.g. jamesgosling@java.com"/>
-							<p class="microcopy-hint">
-								We will use your email to send the Director's response. We won't send spam, promise!
-							</p>
-						</div>
-						<div class="required field">
-							<label>Contact Number:</label>
-							<input name="contact_number" type="text" placeholder="e.g. 09171234567"/>
-						</div>
-					</div>
-					<div class="required field">
-						<label>Affiliation:</label>
-						<input name="affiliation" type="text" placeholder="e.g. Dean of the Faculty of Java"/>
-					</div>
+					
+					<input name="thread_number" type="hidden" id="thread_number"/>
 					
 				<!-- MESSAGE BODY -->
 					<h3 class="ui dividing header">
@@ -139,9 +119,6 @@
 			<div class="modal-content">
 				<p id="successdia_content"></p>
 			</div>
-			<div class="actions center-text">
-				<button class="ui ok secondary button">Okay</button>
-			</div>
 		</div>
 		
 		<!-- FAIL MESSAGE MODAL -->
@@ -159,13 +136,12 @@
 				<button class="ui ok secondary button">Okay</button>
 			</div>
 		</div>
-		
-		
+				
 	</body>
-	<script src="resource/js/jquery-3.2.1.min.js"></script>
-	<script src="resource/semanticui/semantic.min.js"></script>
-	<script src="resource/js/jquery.form.min.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/session/session_check.js"></script>
-	<script src="resource/js/master.js"></script>
-	<script src="resource/js/mail/external_send_mail.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/session/session_check.js"></script> 
+	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/mail/external_response.js"></script>
 </html>

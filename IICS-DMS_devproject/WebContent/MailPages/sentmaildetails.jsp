@@ -232,6 +232,40 @@
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
 		
+		<!-- VIEW USER ACKNOWLEDGEMENT DETAILS MODAL -->
+		<div class="ui tiny modal" id="acknowledgement_dialog">
+			<div class="header neutral-modal">
+				<h3 class="ui header neutral-modal">
+					<i class="envelope icon"></i>
+					<div class="content">Acknowledgement Details</div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p class="element-rmb"><b>Status: </b><span id="view_mail_acknowledgment_status"></span></p>
+				<p class="element-rmb"><b>Acknowledge Timestamp: </b><span id="view_mail_acknowledgement_timestamp"></span></p>
+				<p><b>Acknowledge Remarks: </b><span id="view_mail_acknowledgement_remarks"></span></p>
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button">Close</button>
+			</div>
+		</div>
+		
+		<!-- VIEW NO USER ACKNOWLEDGEMENT MODAL -->
+		<div class="ui tiny modal" id="no_acknowledgement_dialog">
+			<div class="header neutral-modal">
+				<h3 class="ui header neutral-modal">
+					<i class="envelope icon"></i>
+					<div class="content">Not Acknowledged</div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p>This user has not acknowledged this mail.</p>
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button">Close</button>
+			</div>
+		</div>
+		
 		<!-- NOTIFICATIONS MODAL -->
 		<div class="ui tiny modal" id="notification_dialog">
 			<div class="header center-text">

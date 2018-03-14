@@ -321,7 +321,6 @@
 			</div>
 			<div class="actions center-text">
 				<button class="ui ok secondary button" id="viewoutgoing_close">Close</button>
-				
 			</div>
 		</div>
 		

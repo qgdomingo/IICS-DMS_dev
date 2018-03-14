@@ -142,7 +142,7 @@
 				</h3> 
 			</div>
 			<div class="modal-content">
-				<form class="ui form" method="POST" id="edit_profile_form">
+				<form class="ui form" method="POST" action="${pageContext.request.contextPath}/EditAdminProfile" id="edit_profile_form">
 					<div class="required field">
 						<label>Email:</label>
 						<input type="email" name="email" value="<%= acc.getEmail() %>"/>
@@ -184,7 +184,7 @@
 				</h3> 
 			</div>
 			<div class="modal-content">
-				<form class="ui form" method="POST" id="change_password_form">
+				<form class="ui form" method="POST" action="${pageContext.request.contextPath}/ChangePassword" id="change_password_form">
 					<div class="ui message">
 						<div class="header">
 							Password Rules
