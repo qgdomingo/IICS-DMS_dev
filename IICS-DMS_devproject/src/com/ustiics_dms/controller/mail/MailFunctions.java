@@ -36,18 +36,22 @@ public class MailFunctions {
 	
 	public static void saveMailInformation(String type, String[] recipient, String[] externalRecipient, String  subject, String message, String  name, String  sentBy, String department) throws Exception
 	{
+		
+		
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("INSERT INTO mail (iso_number, type, subject, file_data, sender_name, sent_by, school_year, department) VALUES (?,?,?,?,?,?,?,?)");
+		PreparedStatement prep = con.prepareStatement("INSERT INTO mail (iso_number, type, subject, file_data, checksum, sender_name, sent_by, school_year, department) VALUES (?,?,?,?,?,?,?,?,?)");
 		String isoNumber = getISONumber(department, type);
 		InputStream pdf = createPdf(recipient, subject, name, message, isoNumber, sentBy);
+		String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(pdf);
 		prep.setString(1, isoNumber);
 		prep.setString(2, type);
 		prep.setString(3, subject);
 		prep.setBinaryStream(4, pdf, pdf.available() );
-		prep.setString(5, name);
-		prep.setString(6, sentBy);
-		prep.setString(7, ManageTasksFunctions.getSchoolYear());
-		prep.setString(8, department);
+		prep.setString(5, md5);
+		prep.setString(6, name);
+		prep.setString(7, sentBy);
+		prep.setString(8, ManageTasksFunctions.getSchoolYear());
+		prep.setString(9, department);
 		prep.executeUpdate();
 		
 		if(recipient != null) {
@@ -453,9 +457,10 @@ public class MailFunctions {
 	    {
 	    	String fileName = rs.getString("iso_number") + ".pdf";
 	        Blob fileData = rs.getBlob("file_data");
+	    	InputStream dataStream = rs.getBinaryStream("file_data");
 	        String description = "";
 
-	        return new File(id, fileName, fileData, description);
+	        return new File(id, fileName, fileData, dataStream, description);
 	    }
 	    return null;
 	}
@@ -613,6 +618,23 @@ public class MailFunctions {
 		
 		prep.executeUpdate();
 		return isoNumber;
+	}
+	
+	public static String getCheckSum (int id) throws SQLException 
+	{
+			Connection con = DBConnect.getConnection();
+			
+
+	       PreparedStatement prep = con.prepareStatement("SELECT checksum FROM mail WHERE id = ?");
+	       prep.setInt(1, id);
+
+	       ResultSet rs = prep.executeQuery();
+	       
+	       if (rs.next()) 
+	       {
+	           return rs.getString("checksum");
+	       }
+	       return null;
 	}
 
 }

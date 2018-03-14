@@ -31,6 +31,14 @@ public class ViewPdf extends HttpServlet {
 			File file = MailFunctions.getPdf(id);
 			String contentType = this.getServletContext().getMimeType(file.getFileName());
 			
+			String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(file.getDataStream());
+			String checksum = MailFunctions.getCheckSum(id);
+			System.out.println(md5);
+			System.out.println(checksum);
+			/*if(!md5.equalsIgnoreCase(checksum))
+			 {
+				 response.sendRedirect("fileerror.jsp");
+			 }	*/
 			response.setHeader("Content-Type", contentType);
 			response.setHeader("Content-Length", String.valueOf(file.getFileData().length()));
 			response.setHeader("Content-Disposition", "inline; filename=\"" + file.getFileName() + "\"");

@@ -19,15 +19,18 @@ public class FileUploadFunctions {
 	public static void uploadPersonalDocument(String documentTitle, String category, FileItem item, String description, String fullName, String email) throws SQLException, IOException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("INSERT INTO personal_documents (title, category, file_name, file_data, description, created_by, email) VALUES (?,?,?,?,?,?,?)");
+			PreparedStatement prep = con.prepareStatement("INSERT INTO personal_documents (title, category, file_name, file_data, checksum, description, created_by, email) VALUES (?,?,?,?,?,?,?,?)");
+			
+			String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(item.getInputStream());
 			
 			prep.setString(1, documentTitle);
 			prep.setString(2, category);
-			prep.setString(3, item.getName());//file name
-			prep.setBinaryStream(4, item.getInputStream(),(int) item.getSize());//file data 
-			prep.setString(5, description);
-			prep.setString(6, fullName);
-			prep.setString(7, email);
+			prep.setString(3, item.getName());
+			prep.setBinaryStream(4, item.getInputStream(),(int) item.getSize());
+			prep.setString(5, md5);
+			prep.setString(6, description);
+			prep.setString(7, fullName);
+			prep.setString(8, email);
 
 			
 			prep.executeUpdate();
@@ -36,12 +39,12 @@ public class FileUploadFunctions {
 	public static String uploadIncomingDocument(String threadNumber, String referenceNo, String source, String documentTitle, String category, String actionRequired, FileItem item, String description, String fullName, String email, String department, String actionDue) throws SQLException, IOException
 	{
 			Connection con = DBConnect.getConnection();
-
-			String statement = "INSERT INTO incoming_documents (thread_number, reference_no, source_recipient, title, category, action_required, file_name, file_data, description, created_by, email, department, due_on) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(item.getInputStream());
+			String statement = "INSERT INTO incoming_documents (thread_number, reference_no, source_recipient, title, category, action_required, file_name, file_data, checksum, description, created_by, email, department, due_on) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			
 			if(actionRequired.equalsIgnoreCase("None")||actionRequired.equalsIgnoreCase("For Dissemination"))
 			{
-				statement = "INSERT INTO incoming_documents (thread_number, reference_no, source_recipient, title, category, action_required, file_name, file_data, description, created_by, email, department) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";		
+				statement = "INSERT INTO incoming_documents (thread_number, reference_no, source_recipient, title, category, action_required, file_name, file_data, checksum, description, created_by, email, department) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";		
 			}
 			
 			if(threadNumber.isEmpty())
@@ -60,14 +63,15 @@ public class FileUploadFunctions {
 			prep.setString(6, actionRequired);
 			prep.setString(7, item.getName());//file name
 			prep.setBinaryStream(8, item.getInputStream(),(int) item.getSize());//file data 
-			prep.setString(9, description);
-			prep.setString(10, fullName);
-			prep.setString(11, email);
-			prep.setString(12, department);
+			prep.setString(9, md5);
+			prep.setString(10, description);
+			prep.setString(11, fullName);
+			prep.setString(12, email);
+			prep.setString(13, department);
 			
 			if(!actionRequired.equalsIgnoreCase("None")&&!actionRequired.equalsIgnoreCase("For Dissemination"))
 			{
-				prep.setString(13, actionDue);
+				prep.setString(14, actionDue);
 			}
 			
 			prep.executeUpdate();
@@ -78,7 +82,8 @@ public class FileUploadFunctions {
 	public static void uploadOutgoingDocument(String threadNumber, String recipient, String documentTitle, String category, FileItem item, String description, String fullName, String email, String department) throws SQLException, IOException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("INSERT INTO outgoing_documents (thread_number, source_recipient, title, category, file_name, file_data, description, created_by, email, department) VALUES (?,?,?,?,?,?,?,?,?,?)");
+			String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(item.getInputStream());
+			PreparedStatement prep = con.prepareStatement("INSERT INTO outgoing_documents (thread_number, source_recipient, title, category, file_name, file_data, checksum, description, created_by, email, department) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
 			
 			if(threadNumber.isEmpty())
 			{
@@ -89,12 +94,13 @@ public class FileUploadFunctions {
 			prep.setString(2, recipient);
 			prep.setString(3, documentTitle);
 			prep.setString(4, category);
-			prep.setString(5, item.getName());//file name
-			prep.setBinaryStream(6, item.getInputStream(),(int) item.getSize());//file data 
-			prep.setString(7, description);
-			prep.setString(8, fullName);
-			prep.setString(9, email);
-			prep.setString(10, department);
+			prep.setString(5, item.getName());
+			prep.setBinaryStream(6, item.getInputStream(),(int) item.getSize());
+			prep.setString(7, md5);
+			prep.setString(8, description);
+			prep.setString(9, fullName);
+			prep.setString(10, email);
+			prep.setString(11, department);
 			
 			prep.executeUpdate();
 	}

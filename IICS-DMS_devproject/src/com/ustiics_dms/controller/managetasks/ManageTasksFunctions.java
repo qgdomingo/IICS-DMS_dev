@@ -1,6 +1,7 @@
 package com.ustiics_dms.controller.managetasks;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -225,18 +226,19 @@ public class ManageTasksFunctions {
 	public static void submitTask(String documentTitle, FileItem item, String description, String email, String id, String deadline) throws SQLException, IOException, ParseException
 	{
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("UPDATE tasks_assigned_to SET title = ?, file_name = ?, file_data = ?, description = ?, upload_date = ? , status = ? WHERE email = ? AND id = ?");
-		
+		PreparedStatement prep = con.prepareStatement("UPDATE tasks_assigned_to SET title = ?, file_name = ?, file_data = ?, checksum = ?, description = ?, upload_date = ? , status = ? WHERE email = ? AND id = ?");
+		String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(item.getInputStream());
 		prep.setString(1, documentTitle);
 		prep.setString(2, item.getName()); //file name
 		prep.setBinaryStream(3, item.getInputStream(),(int) item.getSize()); //file data 
-		prep.setString(4, description);
+		prep.setString(4, md5);
+		prep.setString(5, description);
 		String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-		prep.setString(5, timeStamp);
-		prep.setString(6, compareTime(timeStamp, deadline));
-		prep.setString(7, email);
+		prep.setString(6, timeStamp);
+		prep.setString(7, compareTime(timeStamp, deadline));
+		prep.setString(8, email);
 		id = AesEncryption.decrypt(id);
-		prep.setString(8, id);
+		prep.setString(9, id);
 		prep.executeUpdate();
 		
 		String des = getFullName(email) +" has submitted his/her task for " + getTaskTitle(id);
@@ -268,7 +270,7 @@ public class ManageTasksFunctions {
 			Connection con = DBConnect.getConnection();
 			
 
-	       PreparedStatement prep = con.prepareStatement("SELECT file_name, file_data, description FROM tasks_assigned_to WHERE id = ? AND email = ?");
+	       PreparedStatement prep = con.prepareStatement("SELECT file_name, file_data, checksum, description FROM tasks_assigned_to WHERE id = ? AND email = ?");
 	       prep.setInt(1, id);
 	       prep.setString(2, email);
 	       ResultSet rs = prep.executeQuery();
@@ -277,9 +279,27 @@ public class ManageTasksFunctions {
 	       {
 	           String fileName = rs.getString("file_name");
 	           Blob fileData = rs.getBlob("file_data");
-	           String description = rs.getString("Description");
+	           InputStream fileStream = rs.getBinaryStream("file_data");
+	           String description = rs.getString("description");
 
-	           return new File(id, fileName, fileData, description);
+	           return new File(id, fileName, fileData,  fileStream, description);
+	       }
+	       return null;
+	}
+	
+	public static String getCheckSum (int id, String email) throws SQLException 
+	{
+			Connection con = DBConnect.getConnection();
+			
+
+	       PreparedStatement prep = con.prepareStatement("SELECT checksum FROM tasks_assigned_to WHERE id = ? AND email = ?");
+	       prep.setInt(1, id);
+	       prep.setString(2, email);
+	       ResultSet rs = prep.executeQuery();
+	       
+	       if (rs.next()) 
+	       {
+	           return rs.getString("checksum");
 	       }
 	       return null;
 	}

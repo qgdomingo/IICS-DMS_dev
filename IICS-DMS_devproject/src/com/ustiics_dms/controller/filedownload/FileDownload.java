@@ -26,14 +26,20 @@ public class FileDownload extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setCharacterEncoding("UTF-8");
+		
 		
 		try {
 			int id = Integer.parseInt(AesEncryption.decrypt(request.getParameter("id")));
 			String type = AesEncryption.decrypt(request.getParameter("type"));
-			
 			File file = FileDownloadFunctions.getFile(id, type);
-			 
+
+			String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(file.getDataStream());
+			String checksum = FileDownloadFunctions.checkSum(id, type);
+			if(!md5.equalsIgnoreCase(checksum))
+			 {
+				 response.sendRedirect("fileerror.jsp");
+			 }	
+
 			String contentType = this.getServletContext().getMimeType(file.getFileName());
 			 
 			response.setHeader("Content-Type", contentType);
