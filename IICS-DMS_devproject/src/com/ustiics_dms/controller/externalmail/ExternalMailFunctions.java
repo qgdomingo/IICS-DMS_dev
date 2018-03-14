@@ -70,9 +70,9 @@ public class ExternalMailFunctions {
 	{
 		
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("INSERT INTO external_mail (id, first_name, last_name, email, contact_number, affiliation, subject, message, file_name, file_data) VALUES (?,?,?,?,?,?,?,?,?,?)");
+		PreparedStatement prep = con.prepareStatement("INSERT INTO external_mail (thread_number, first_name, last_name, email, contact_number, affiliation, subject, message, file_name, file_data) VALUES (?,?,?,?,?,?,?,?,?,?)");
 		
-		ResultSet rs = getExternalMail(threadNumber);
+		ResultSet rs = getExternalMailUsingThreadNo(threadNumber);
 		
 		if(rs.next())
 		{
@@ -120,6 +120,17 @@ public class ExternalMailFunctions {
 		return rs;
 		
 	}
+	
+	public static ResultSet getExternalMailUsingThreadNo(String threadNumber) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT * FROM external_mail WHERE thread_number = ?");
+		prep.setString(1, threadNumber);
+		ResultSet rs = prep.executeQuery();
+		
+		return rs;
+		
+	}
 
 	public static int getCounter() throws SQLException
 	{
@@ -136,10 +147,21 @@ public class ExternalMailFunctions {
 		return rs.getInt("counter");
 		
 	}
-	public static ResultSet getExternalUserDetails(String threadNo) throws SQLException
+	public static ResultSet getExternalUserDetails(String id) throws SQLException
 	{
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("SELECT * FROM external_mail WHERE thread_number = ?");
+		PreparedStatement prep = con.prepareStatement("SELECT * FROM external_mail WHERE id = ?");
+		prep.setString(1, id);
+		ResultSet rs = prep.executeQuery();
+		
+		return rs;
+		
+	}
+	
+	public static ResultSet getExternalUserDetailsThread(String threadNo) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT thread_number, first_name, last_name, email, contact_number, affiliation, subject FROM external_mail WHERE thread_number = ?");
 		prep.setString(1, threadNo);
 		ResultSet rs = prep.executeQuery();
 		
@@ -334,5 +356,15 @@ public class ExternalMailFunctions {
 		String[] returnEmailList = emailList.toArray(new String[emailList.size()]);
 		
 		return returnEmailList;
+	}
+	
+	public static void updateReadStatus(String id) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("UPDATE external_mail SET status = ? WHERE id = ? ");
+		prep.setString(1, "Read");
+		prep.setString(2, id);
+		
+		prep.executeUpdate();
 	}
 }

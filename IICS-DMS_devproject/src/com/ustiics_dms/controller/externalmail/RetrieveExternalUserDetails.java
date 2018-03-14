@@ -23,13 +23,10 @@ import com.ustiics_dms.utility.AesEncryption;
 public class RetrieveExternalUserDetails extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public RetrieveExternalUserDetails() {
         super();
-        
     }
 
-	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		List<ExternalUser> external = new ArrayList<ExternalUser>();
@@ -37,24 +34,19 @@ public class RetrieveExternalUserDetails extends HttpServlet {
 		
 		try {
 			
-			String id = AesEncryption.decrypt(request.getParameter("id"));
+			String id = AesEncryption.decrypt(request.getParameter("threadNo"));
 			ResultSet externalMail = (ResultSet) ExternalMailFunctions.getExternalUserDetails(id);
 			
 			if(externalMail.next())
 			{
 				external.add(new ExternalUser(
-						externalMail.getString("id"),
 						externalMail.getString("thread_number"),
 						externalMail.getString("first_name"),
 						externalMail.getString("last_name"),
 						externalMail.getString("email"),
 						externalMail.getString("contact_number"),
 						externalMail.getString("affiliation"),
-						externalMail.getString("subject"),
-						externalMail.getString("message"),
-						externalMail.getString("file_name"),
-						externalMail.getString("status"),
-						externalMail.getString("sent_timestamp")
+						externalMail.getString("subject")
 						 ));		
 			}
 			String json = new Gson().toJson(external);
@@ -69,9 +61,7 @@ public class RetrieveExternalUserDetails extends HttpServlet {
 		}
 	}
 
-	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		doGet(request, response);
 	}
 

@@ -2,13 +2,6 @@
  * 
  */
 
-/*
- * VARIABLES
- */
-	// for progress bar
-    var bar = $('.bar');
-    var percent = $('.label');
-
 	$(document).ready( function() {
 	    var url = document.location.href,
         params = url.split('?')[1].split('&'),
@@ -17,47 +10,53 @@
 	         tmp = params[i].split('=');
 	         data[tmp[0]] = tmp[1];
 	    }
-	    threadNumber = decodeURIComponent(data.thread_number);
+	    exMailID = decodeURIComponent(data.id);
 	    
-	    getMailInformation(threadNumber);
+	    getMailInformation(exMailID);
 	});
 	
 	function getMailInformation(id) {
 		
 		var data = { id: id }
 		
-		$.get(getContextPath() + '/RetrieveExternalUserDetailsThreadNo', $.param(data), function(response) {
+		$.get(getContextPath() + '/RetrieveExternalUserDetails', $.param(data), function(response) {
 			$('#sender_info').text(response[0].firstName + ' ' + response[0].lastName + ' (' + response[0].email + ')');
 			$('#contact_info').text(response[0].contactNumber);
 			$('#affiliation_info').text(response[0].affiliation);
+			$('#subject_info').text('RE: ' + response[0].subject);
 			$('#thread_number').val(response[0].threadNumber);
 		});
 		
 	}
+	
+/*
+ * VARIABLES
+ */
+	// for progress bar
+    var bar = $('.bar');
+    var percent = $('.label');
     
-	/* SUBMIT - Response Director Form */
-	$('#response_director_form').ajaxForm({
-		beforeSubmit: isResponseDirectorFormValid,
+    /* SUBMIT - Message Director Form */
+	$('#response_external_form').ajaxForm({
+		beforeSubmit: isMessageDirectorFormValid,
 		uploadProgress: function(event, position, total, percentComplete) {
 			 updateUploadProgress(percentComplete);
 	    },
 		success: function(response) {  
 			closeUploadProgress();
-			clearResponseDirectorForm();
-			callSuccessModal('Message Successfully Sent', 'Your response has been sent to the Director. You will be receive ' 
-					+ ' a reply through the email address you entered. Redirecting you to the login page.');
-			setTimeout(function(){  window.location.href = getContextPath() + '/index.jsp'; }, 3000);
+			callSuccessModal('Message Successfully Sent', 'Your message has been sent to the External User. Redirecting back to the inbox page');
+			setTimeout(function(){  window.location.href = getContextPath() + '/mail/externalinbox.jsp'; }, 3000);
+			
 		},
 		error: function(response) {
 			closeUploadProgress();
-			callFailRequestModal();
+			callFailModal('Message Send Failed', 'An error has occured while processing your request.');
 			deactivatePageLoading();
 		}
 	});
 
-
-	/* FORM VALIDATION - Response Director Form */
-	$('#response_director_form').form({
+	/* FORM VALIDATION - Message Director Form */
+	$('#response_external_form').form({
 		fields: {
 			subject: {
 				identifier: 'subject',
@@ -81,9 +80,9 @@
 		}
 	});
 	
-	/* BOOLEAN VALIDATION - Response Director Form */
-	function isResponseDirectorFormValid() {
-		if( $('#response_director_form').form('is valid') ) {
+	/* BOOLEAN VALIDATION - Message Director Form */
+	function isMessageDirectorFormValid() {
+		if( $('#response_external_form').form('is valid') ) {
 			activatePageLoading('Sending Message');
 			openAndInitializeUploadProgress();
 			return true;
@@ -94,9 +93,9 @@
 	}
 	
 	/* CLEAR - Message  */
-	function clearResponseDirectorForm() {
-		removeCSSClass('#response_director_form', 'error');		
-	  	$('#response_director_form').form('reset');
+	function clearMessageDirectorForm() {
+		removeCSSClass('#message_director_form', 'error');		
+	  	$('#message_director_form').form('reset');
 	}
 	
 /*

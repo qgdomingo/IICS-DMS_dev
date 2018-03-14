@@ -146,10 +146,10 @@
 				Internal Sent Mail
 			</a>
 			<a class="item active" href="${pageContext.request.contextPath}/mail/externalsentmail.jsp">
-				<i class="folder openicon"></i>
+				<i class="folder open icon"></i>
 				External Sent Mail
-			</a>
-		</div>
+			</a> 
+		</div> 
 
 		<div class="ui segment">
 			<div class="ui dimmer" id="sent_mail_loading">
@@ -256,10 +256,10 @@
  					</div>
 				</form>
 				
-				<button class="ui fluid blue small button" type="button" id="view_thread_button">
+				<!-- <button class="ui fluid blue small button" type="button" id="view_thread_button">
 					<i class="folder icon"></i>
 					View Mail Thread
-				</button>
+				</button> -->
 			</div>
 			<div class="actions center-text">
 				<button class="ui ok secondary button">Close</button>

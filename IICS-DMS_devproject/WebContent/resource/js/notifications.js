@@ -97,6 +97,9 @@
 			case 'Calendar Page':
 				returnPageLink = getContextPath() + '/calendar/viewcalendar.jsp';
 				break;
+			case 'External Mail Page':
+				returnPageLink = getContextPath() + '/mail/externalinbox.jsp';
+				break;
 		}
 		
 		return returnPageLink;

@@ -18,6 +18,8 @@
 		} 
 		else if(userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) {
 			response.sendRedirect(request.getContextPath() + "/home.jsp");
+		} else if(userType.equalsIgnoreCase("Faculty Secretary") || userType.equalsIgnoreCase("Faculty")) {
+			response.sendRedirect(request.getContextPath() + "/mail/requestor.jsp");
 		}
 		
 		// Restriction Case 1 - not allowed for Faculty, Supervisor and Staff
@@ -152,7 +154,6 @@
 		
 <!-- ACTUAL PAGE CONTENTS -->
 		
-		<% if(userType.equalsIgnoreCase("Director") || userType.equalsIgnoreCase("Department Head")) { %>
 		<div class="ui segment" id="request_segment">
 			<div class="ui dimmer" id="request_loading">
 				<div class="ui text loader">Retrieving Request Mail</div>
@@ -176,6 +177,7 @@
 							<option value="">Mail Type</option>
 							<option value="Memo">Memo</option>
 							<option value="Letter">Letter</option>
+							<option value="Notice Of Meeting">Notice of Meeting</option>
 						</select>
 					</div>	
 						
@@ -213,8 +215,8 @@
 				<thead>
 					<tr>
 						<th>Sender</th>
-						<th>Subject</th>
 						<th>Type</th>
+						<th>Subject</th>
 						<th>Status</th>
 						<th>Timestamp</th>
 					</tr>
@@ -222,8 +224,6 @@
 				<tbody id="request_tablebody"></tbody>			
 			</table>
 		</div>
-		<% } %>
-		
 		
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
@@ -238,30 +238,63 @@
 			</div>
 			<div class="modal-content">
 				<div class="ui stackable grid">
-					<div class="eleven wide column">
+					<div class="eight wide column">
+						<p class="element-rmb"><b>Type: </b><span id="view_mail_type"></span></p>
+						<p class="element-rmb"><b>Timestamp: </b><span id="view_mail_timestamp"></span></p>
 						<p class="element-rmb"><b>Sender: </b><span id="view_mail_sender"></span></p>
 						<p class="element-rmb"><b>Status: </b><span id="view_mail_status"></span></p>
-						<p class="element-rmb"><b>Mail Type: </b><span id="view_mail_type"></span></p>
-						<p><b>Mail Timestamp: </b><span id="view_mail_timestamp"></span></p>
-						
-						<h5 class="ui horizontal header divider">
-		  					<i class="envelope icon"></i>
-		  					Message
+				
+						<h5 class="ui dividing header">
+		  					Mail Recipients
 						</h5> 
 						
 						<p class="element-rmb"><b>Recipient: </b><span id="view_mail_recipient"></span></p>
 						<p class="element-rmb"><b>External Recipient: </b><span id="view_mail_external_recipient"></span></p>
-						<p><b>Subject: </b><span id="view_mail_subject"></span></p>
+						
+						<h5 class="ui dividing header">
+		  					<span id="view_mail_type_label"></span> Content
+						</h5> 
 						
 						<div class="ui form element-mb">
+							
+							<div class="field">
+								<label>Addressee:</label>
+								<input type="text" id="view_mail_addressee" readonly/>
+							</div>	
+							
+							<div class="field" id="view_mail_line2_field">
+								<label>Addressee Line 2:</label>
+								<input type="text" id="view_mail_line2" readonly/>
+							</div>	
+							
+							<div class="field" id="view_mail_line3_field">
+								<label>Addressee Line 3:</label>
+								<input type="text" id="view_mail_line3" readonly/>
+							</div>	
+							
+							<div class="field" id="view_mail_from_field">
+								<label>From:</label>
+								<input type="text" id="view_mail_from" readonly/>
+							</div>	
+							
+							<div class="field">
+								<label>Subject:</label>
+								<input type="text" id="view_mail_subject" readonly/>
+							</div>		
+
 							<div class="field">
 								<label>Message:</label>	
 								<textarea rows="5" id="view_mail_message" readonly></textarea>
 							</div>
+							
+							<div class="field">
+								<label>Closing Remark:</label>
+								<input type="text" id="view_mail_closingremark" readonly/>
+							</div>
 						</div>
 					</div>
 					
-					<div class="five wide column">
+					<div class="eight wide column">
 						<!-- NOTE FORM -->
 						<form class="ui form" action="${pageContext.request.contextPath}/EditRequestNote" method="POST" id="edit_note_form">
 							<input type="hidden" name="id" id="view_mail_note_id">
@@ -270,7 +303,7 @@
 								<label>Note:</label>
 								<textarea name="note" rows="2" id="view_mail_note"></textarea>
 							</div>
-							<button type="submit" name="button_choice" value="Edit Note" class="ui tiny fluid orange button">
+							<button type="submit" class="ui tiny fluid orange button">
 								<i class="pencil icon"></i>
 								Edit Note
 							</button>
@@ -296,7 +329,7 @@
 								Approve Mail Request
 							</button>
 							<div class="ui compact segment element-rmt" id="mark_as_done_conf">
-								<h4>Are you sure you want to approve this document?</h4>
+								<h4>Are you sure you want to approve this mail?</h4>
 								<div class="ui buttons">
 							 		<button name="button_choice" value="Mark as Done" class="ui green button" type="submit">Yes</button>
 							  		<div class="or"></div>
@@ -312,7 +345,6 @@
 				<button class="ui ok secondary button">Close</button>
 			</div>
 		</div>
-		
 		
 		<!-- NOTIFICATIONS MODAL -->
 		<div class="ui tiny modal" id="notification_dialog">

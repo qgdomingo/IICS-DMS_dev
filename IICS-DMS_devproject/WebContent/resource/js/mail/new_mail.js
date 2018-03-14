@@ -9,6 +9,8 @@
 		if( ! ($('#user_type').val() == 'Faculty') ) {
 			getListOfUsers('#internal_letter_to');
 			getListOfUsers('#internal_memo_notice_to');
+			getExternalTo('#external_letter_to');
+			getExternalTo('#external_memo_notice_to');
 		}
 	});
 	

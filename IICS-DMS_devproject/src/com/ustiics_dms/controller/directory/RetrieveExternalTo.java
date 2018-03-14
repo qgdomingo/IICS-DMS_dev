@@ -1,4 +1,4 @@
-package com.ustiics_dms.controller.mail;
+package com.ustiics_dms.controller.directory;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -15,52 +15,35 @@ import javax.servlet.http.HttpSession;
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.model.Account;
-import com.ustiics_dms.model.Mail;
-import com.ustiics_dms.model.RequestMail;
+import com.ustiics_dms.model.GroupList;
 
-
-@WebServlet("/RetrieveRequesterMail")
-public class RetrieveRequesterMail extends HttpServlet {
+@WebServlet("/RetrieveExternalTo")
+public class RetrieveExternalTo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public RetrieveRequesterMail() {
+    public RetrieveExternalTo() {
         super();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		List<RequestMail> mail = new ArrayList<RequestMail>();
-	    response.setCharacterEncoding("UTF-8");
+		List<GroupList> users = new ArrayList<GroupList>();
+		response.setCharacterEncoding("UTF-8");
 		
 		try {
-			
 			HttpSession session = request.getSession();
 			Account acc = (Account) session.getAttribute("currentCredentials");
 			
-			ResultSet requestInfo = (ResultSet) MailFunctions.getRequesterMail(acc.getEmail());
-			
-			while(requestInfo.next())
-			{ 
-				mail.add(new RequestMail(
-						requestInfo.getString("id"),
-						requestInfo.getString("type"),
-						requestInfo.getString("sender_name"),
-						requestInfo.getString("sent_by"),
-						requestInfo.getString("status"),
-						requestInfo.getString("date_created"),
-						requestInfo.getString("recipient"),
-						requestInfo.getString("external_recipient"),
-						requestInfo.getString("address_line1"),
-						requestInfo.getString("address_line2"),
-						requestInfo.getString("address_line3"),
-						requestInfo.getString("subject"),
-						requestInfo.getString("message"),
-						requestInfo.getString("closing_remarks"),
-						requestInfo.getString("note")
-				));		
+			ResultSet groupRS = (ResultSet) RetrieveUsersFunctions.retrieveExternalTo();
+
+			while(groupRS.next()) { 
+				users.add(new GroupList(groupRS.getString("group_name"),
+										groupRS.getString("first_name"),
+										groupRS.getString("last_name"),
+										groupRS.getString("email"))
+						 );	
 			}
-			
-			String json = new Gson().toJson(mail);
+			String json = new Gson().toJson(users);
 			
 		    response.setContentType("application/json");
 		    response.setStatus(HttpServletResponse.SC_OK);
@@ -71,7 +54,6 @@ public class RetrieveRequesterMail extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
-
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);

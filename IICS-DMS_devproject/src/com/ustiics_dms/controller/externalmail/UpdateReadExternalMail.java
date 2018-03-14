@@ -6,6 +6,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.ustiics_dms.model.Account;
+import com.ustiics_dms.utility.AesEncryption;
 
 @WebServlet("/UpdateReadExternalMail")
 public class UpdateReadExternalMail extends HttpServlet {
@@ -20,9 +24,24 @@ public class UpdateReadExternalMail extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO UPDATE STATUS AS READ OF THE EXTERNAL MAIL
-		// Given data: Encrypted External Mail ID
-		// Update the status of External Mail to Read
+		response.setCharacterEncoding("UTF-8");
+		
+		try {
+			HttpSession session = request.getSession();
+		    Account acc = (Account) session.getAttribute("currentCredentials");
+		    
+			String mailID = AesEncryption.decrypt(request.getParameter("id"));
+			ExternalMailFunctions.updateReadStatus(mailID);
+			
+			response.setContentType("text/plain");
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write("success");
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+
 	}
 
 }

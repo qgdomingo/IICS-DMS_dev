@@ -76,4 +76,15 @@ public class RetrieveUsersFunctions {
 		return result;
 	}
 	
+	public static ResultSet retrieveExternalTo() throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		String statement = "SELECT group_name, email, first_name, last_name FROM group_list";
+		
+		PreparedStatement prep = con.prepareStatement(statement);
+		ResultSet result = prep.executeQuery();
+
+		return result;
+	}
+	
 }

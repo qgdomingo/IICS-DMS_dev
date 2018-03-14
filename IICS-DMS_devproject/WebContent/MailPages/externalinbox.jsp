@@ -254,16 +254,17 @@
  					</div>
 				</form>
 				
-				<div class="two ui buttons">
-					<button class="ui fluid green small button" type="button" id="reply_button">
-						<i class="reply icon"></i>
-						Send Response
-					</button>
+				<button class="ui fluid green small button" type="button" id="reply_button">
+					<i class="reply icon"></i>
+					Send Response
+				</button>
+				
+				<!-- <div class="two ui buttons">
 					<button class="ui fluid blue small button" type="button" id="view_thread_button">
 						<i class="folder icon"></i>
 						View Mail Thread
 					</button>
-				</div>
+				</div>  -->
 
 			</div>
 			<div class="actions center-text">

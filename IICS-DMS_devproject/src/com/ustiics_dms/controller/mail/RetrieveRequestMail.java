@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.model.Account;
-import com.ustiics_dms.model.Mail;
+import com.ustiics_dms.model.RequestMail;
 
 
 @WebServlet("/RetrieveRequestMail")
@@ -28,7 +28,7 @@ public class RetrieveRequestMail extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		List<Mail> mail = new ArrayList<Mail>();
+		List<RequestMail> mail = new ArrayList<RequestMail>();
 	    response.setCharacterEncoding("UTF-8");
 		
 		try {
@@ -39,20 +39,23 @@ public class RetrieveRequestMail extends HttpServlet {
 			
 			while(requestInfo.next())
 			{ 
-				mail.add(new Mail(
+				mail.add(new RequestMail(
 						requestInfo.getString("id"),
 						requestInfo.getString("type"),
-						requestInfo.getString("recipient"),
-						requestInfo.getString("external_recipient"),
-						requestInfo.getString("subject"),
-						requestInfo.getString("message"),
 						requestInfo.getString("sender_name"),
 						requestInfo.getString("sent_by"),
-						requestInfo.getString("date_created"),
 						requestInfo.getString("status"),
-						requestInfo.getString("note"),
-						requestInfo.getString("department")
-						 ));		
+						requestInfo.getString("date_created"),
+						requestInfo.getString("recipient"),
+						requestInfo.getString("external_recipient"),
+						requestInfo.getString("address_line1"),
+						requestInfo.getString("address_line2"),
+						requestInfo.getString("address_line3"),
+						requestInfo.getString("subject"),
+						requestInfo.getString("message"),
+						requestInfo.getString("closing_remarks"),
+						requestInfo.getString("note")
+				));		
 			}
 			
 			String json = new Gson().toJson(mail);

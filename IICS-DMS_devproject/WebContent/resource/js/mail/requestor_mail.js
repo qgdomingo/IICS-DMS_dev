@@ -5,9 +5,6 @@
 	$(document).ready( function() {
 		getRequestMail();
 		
-		$('#note_orange_message').hide();
-		$('#note_green_message').hide();
-		$('#mark_as_done_conf').hide();
 	});
 
 /*
@@ -152,83 +149,7 @@
 		$('#view_mail_message').val(selectedData.message);
 		$('#view_mail_closingremark').val(selectedData.closingRemark);
 		
-		$('#view_mail_note_id').val(selectedData.id);
 		$('#view_mail_note').val(selectedData.note);
-		$('#view_mail_done_id').val(selectedData.id);
-	}
-	
-/*
- * EDIT NOTE
- */
-	
-	/* SUBMIT - Update Mail Note */
-	$('#edit_note_form').ajaxForm({
-		success: function(response) {
-			localRequestMailData[selectedID]['note'] = $('#view_mail_note').val();
- 			$('#note_green_message').show();
-		},
-		error: function(response) { 
-			$('#note_orange_message').show();
-		}
-	});
-	
-	/* CLICK - Hide the Orange Message */
-	$('#close_note_orange_message').on('click', function() {
-		$('#note_orange_message').hide();
-	});
-	
-	/* CLICK - Hide the Green Message */
-	$('#close_note_green_message').on('click', function() {
-		$('#note_green_message').hide();
-	});
-	
-	function hideNoteMessages() {
-		$('edit_note_form').form('reset');
-		$('#note_orange_message').hide();
-		$('#note_green_message').hide();
-	}
-	
-/*
- * MARK AS DONE
- */
-	/* CLICK - Mark as Done: Show Confirmation */
-	$('#mark_as_done_btn').click( function() {
-		$('#mark_as_done_conf').show();
-		$(this).prop("disabled", true);
-	});
-	
-	/* CLICK - Mark as Done: Cancel Confirmation */
-	$('#mark_as_done_no').click( function() {
-		$('#mark_as_done_conf').hide();
-		$('#mark_as_done_btn').prop("disabled", false);
-	});
-	
-	/* SUBMIT - Mark Document as Done */
-	$('#mark_as_done_form').ajaxForm({
-		beforeSubmit: initializePageForMarkAsDone,
-		success: function(response) {  
-			callSuccessModal('Mail Approval Success', 'This mail has been approved. Refreshing page to update data.');
-			
-			setTimeout(function(){  window.location.reload(); }, 2000);
-		},
-		error: function(response) { 
-			deactivatePageLoading();
-			callFailModal('Mail Approval Failed', 'The request has resulted into an error. Please try again.');
-		}
-	});
-	
-	/* ON SUBMIT - Hide Modal and Activate Loading */
-	function initializePageForMarkAsDone() {
-		$('#view_mail_dialog').modal('hide');
-		activatePageLoading('Updating Mail Status');
-		return true;
-	}
-	
-	/* Fix Elements on Modal Hide */
-	function reinitializeMarkAsDone() {
-		$('#mark_as_done_form').hide();
-		$('#mark_as_done_conf').hide();
-		$('#mark_as_done_btn').prop("disabled", false);
 	}
 	
 /*

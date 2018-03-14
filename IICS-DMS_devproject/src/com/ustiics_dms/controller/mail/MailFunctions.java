@@ -230,7 +230,8 @@ public class MailFunctions {
 	public static ResultSet getRequestMail(String department) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM request WHERE department = ? AND status = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT id, type, recipient, external_recipient, subject, message, sender_name, sent_by, "
+					+ "date_created, status, note, address_line1, address_line2, address_line3, closing_remarks FROM request WHERE department = ? AND status = ?");
 			
 			prep.setString(1, department);
 			prep.setString(2, "Pending");
@@ -242,12 +243,12 @@ public class MailFunctions {
 	public static ResultSet getRequesterMail(String email) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM request WHERE sent_by = ?");
+			PreparedStatement prep = con.prepareStatement("SELECT id, type, recipient, external_recipient, subject, message, sender_name, sent_by, "
+					+ "date_created, status, note, address_line1, address_line2, address_line3, closing_remarks FROM request WHERE sent_by = ?");
 			
 			prep.setString(1, email);
 			ResultSet rs = prep.executeQuery();
 		
-
 			return rs;
 	}
 	
@@ -270,7 +271,7 @@ public class MailFunctions {
 			String head = FileUploadFunctions.getGroupHead(department);
 			String des = head +" has approved your mail request, "+ subject;
 			NotificationFunctions.addNotification("Request Mail Page", des, sentBy);
-			//deleteRequest(id);
+			deleteRequest(id);
 
 	}
 	

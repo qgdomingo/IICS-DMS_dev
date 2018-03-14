@@ -28,18 +28,7 @@ public class RetrieveExternalSentMail extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO: GET EXTERNAL SENT MAIL
-		// DATA NEEDED:
-		// in one String - RECIPIENT full name + email-ok
-		// recipient affiliation-ok
-		// recipient contact number-ok
-		// in one String - Sender full name + email-ok
-		// sent timestamp
-		// subject
-		// message
-		// mail ID
-		// mail file name
-		// thread number
+
 		List<SentExternalMail> external = new ArrayList<SentExternalMail>();
 	    response.setCharacterEncoding("UTF-8");
 		
@@ -61,15 +50,15 @@ public class RetrieveExternalSentMail extends HttpServlet {
 					String senderName = ManageTasksFunctions.getFullName(externalMail.getString("sent_by")) + " " + externalMail.getString("sent_by");
 					external.add(new SentExternalMail(
 							recipientName,
-							externalMail.getString("affiliation"),
-							externalMail.getString("contact_number"),
+							rs.getString("affiliation"),
+							rs.getString("contact_number"),
 							senderName,
-							externalMail.getString("date_created"),
-							externalMail.getString("subject"),
-							externalMail.getString("message"),
+							rs.getString("sent_timestamp"),
+							rs.getString("subject"),
+							rs.getString("message"),
 							externalMail.getString("id"),
-							externalMail.getString("file_name"),
-							externalMail.getString("thread_number")
+							rs.getString("file_name"),
+							rs.getString("thread_number")
 							 ));	
 				}
 			}

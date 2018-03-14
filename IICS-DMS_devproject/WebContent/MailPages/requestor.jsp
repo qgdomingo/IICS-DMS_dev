@@ -4,6 +4,8 @@
 <%
 	Account acc = new Account();
 	String userType = "";
+	
+	boolean restrictionCase1 = false;
 
 	if(request.getSession(false) == null || request.getSession(false).getAttribute("currentCredentials") == null) {
 		response.sendRedirect(request.getContextPath() + "/index.jsp");
@@ -13,18 +15,28 @@
 		
 		if( (userType.equalsIgnoreCase("Administrator")) ) {
 			response.sendRedirect(request.getContextPath() + "/admin/manageusers.jsp");
-		} else if ( !(userType.equalsIgnoreCase("Director")) ) {
+		} 
+		else if(userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff")) {
 			response.sendRedirect(request.getContextPath() + "/home.jsp");
+		} else if(userType.equalsIgnoreCase("Director") || userType.equalsIgnoreCase("Department Head")) {
+			response.sendRedirect(request.getContextPath() + "/mail/request.jsp");
+		}
+		
+		// Restriction Case 1 - not allowed for Faculty, Supervisor and Staff
+		if(userType.equalsIgnoreCase("Faculty")) { 
+			restrictionCase1 = true;
 		}
 	}
 %>
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Reply Mail | IICS DMS</title>
+		<title>Mail Requests | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/generalpages.css">
 		
@@ -59,7 +71,7 @@
 			<a class="item" href="${pageContext.request.contextPath}/home.jsp">
 		      <i class="large home icon side"></i>Home
 		    </a>
-		    <a class="item" href="${pageContext.request.contextPath}/files/fileupload.jsp">
+		   	<a class="item" href="${pageContext.request.contextPath}/files/fileupload.jsp">
 		      <i class="large cloud upload alternate icon side"></i>Upload Document
 		    </a>
 		    <a class="item" href="${pageContext.request.contextPath}/files/personaldocs.jsp">
@@ -75,15 +87,17 @@
 		   		Mail
 		   		<div class="menu">
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/newmail.jsp">
-			    		<i class="large pencil alternate icon side"></i>Create Mail
+			    		<i class="large write icon side"></i>Create Mail
 			    	</a>
-			    	<a class="item active" href="${pageContext.request.contextPath}/mail/inbox.jsp">
+			    	<a class="item" href="${pageContext.request.contextPath}/mail/inbox.jsp">
 			    		<i class="large inbox icon side"></i>Inbox
 			    	</a>
+	<% if(!restrictionCase1) { %>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/sentmail.jsp">
 			    		<i class="large send icon side"></i>Sent Mail
 			    	</a>
-			    	<a class="item" href="${pageContext.request.contextPath}/mail/requests.jsp">
+	<%  } %>
+			    	<a class="item active" href="${pageContext.request.contextPath}/mail/requests.jsp">
 			    		<i class="large envelope square icon side"></i>Mail Requests
 			    	</a>
 			    	<a class="item" href="${pageContext.request.contextPath}/mail/exportedmail.jsp">
@@ -91,6 +105,7 @@
 			    	</a>
 		    	</div>
 		    </div>
+	<% if(!restrictionCase1) { %>
 			<div class="item">
 		   		Reports
 		   		<div class="menu">
@@ -99,11 +114,12 @@
 			    	</a>
 		    	</div>
 		    </div>
+	<%  } %>
 		    <a class="item mobile only" id="logout_btn2">
 		      <i class="large power icon side"></i>Logout
 		    </a>
 		</div>
-		
+				
 		<!-- PAGE CONTENTS -->
 		<div class="pusher page-content-spacing page-background">
 		
@@ -113,8 +129,8 @@
 					<i class="large sidebar icon"></i>
 				</a>
 				<div class="item">
-					<i class="large inbox icon"></i>
-					External Inbox
+					<i class="large envelope square icon"></i>
+					Mail Requests
 				</div>
 				<div class="right menu">
 					<a class="item user-account-bgcolor mobile hidden" href="${pageContext.request.contextPath}/userprofile.jsp">
@@ -137,74 +153,156 @@
 			</div>
 		
 <!-- ACTUAL PAGE CONTENTS -->
-
-		<h3 class="ui dividing header element-rmt">
-			<a href="${pageContext.request.contextPath}/mail/externalinbox.jsp">
-				<i class="black chevron left icon"></i>
-			</a> 
-			Reply to External Mail
-		</h3>
-
-		<!-- START OF MESSAGE FORM -->
-			<form class="ui equal width form" method="post" action="${pageContext.request.contextPath}/RespondToExternalMail" enctype="multipart/form-data"
-					id="response_external_form">
-				
-				<!-- SENDER'S INFORMATION --> 
-					<h3 class="ui dividing header">
-						<i class="user icon"></i>
-						<div class="content">Sender's Information</div>
-					</h3>
-					
-					<div class="ui segment">
-						<p class="element-rmb"><b>Sender: </b><span id="sender_info"></span></p>
-						<p class="element-rmb"><b>Contact Number: </b><span id="contact_info"></span></p>
-						<p class="element-rmb"><b>Affiliation: </b><span id="affiliation_info"></span></p>
-						<p class="element-rmb"><b>Subject: </b><span id="subject_info"></span></p>
-					</div>
-					
-					<input name="thread_number" type="hidden" id="thread_number"/>
-					
-				<!-- MESSAGE BODY -->
-					<h3 class="ui dividing header">
-						<i class="mail icon"></i>
-						<div class="content">Message</div>
-					</h3>
-					<div class="required field">
-						<label>Subject:</label>
-						<input name="subject" type="text"/>
-					</div>
-					<div class="required field">
-						<label>Message:</label>
-						<textarea rows="5" name="message"></textarea>
-					</div>
-					<div class="inline field">
-						<label>Attachment:</label>
-						<input type="file" name="file"/>
-					</div>
-					
-					<p>CAPTCHA</p>
-					
-					<br>
-					
-					<div class="ui error message"></div>
-					
-					<button class="fluid ui large green button" type="submit">
-						<i class="send icon"></i>
-						Send Message
-					</button>
-				</form>
 		
-			
+		<div class="ui segment" id="request_segment">
+			<div class="ui dimmer" id="request_loading">
+				<div class="ui text loader">Retrieving Request Mail</div>
+			</div>
+		
+			<!-- SEARCH AREA -->
+			<form class="ui form">
+				<div class="five fields">
+						
+					<!-- SEARCH BOX -->
+					<div class="field">
+						<div class="ui icon input">
+							<input type="text" placeholder="Seach Mail Request" id="search_mail"/>
+							<i class="search icon"></i>
+						</div>
+					</div>
+						
+					<!-- MAIL TYPE BOX -->
+					<div class="field">
+						<select class="ui fluid dropdown" id="search_type">
+							<option value="">Mail Type</option>
+							<option value="Memo">Memo</option>
+							<option value="Letter">Letter</option>
+						</select>
+					</div>	
+						
+					<!-- MAIL SENT FROM -->
+					<div class="field">
+						<div class="ui calendar" id="search_sentfrom_calendar">
+							<div class="ui icon input">
+								<input type="text" placeholder="Received From" id="search_sentfrom"/>
+								<i class="calendar icon"></i>
+							</div>
+						</div>
+					</div>
+								
+					<!-- MAIL SENT TO -->
+					<div class="field">
+						<div class="ui calendar" id="search_sentto_calendar">
+							<div class="ui icon input">
+								<input type="text" placeholder="Received To" id="search_sentto"/>
+								<i class="calendar icon"></i>
+							</div>
+						</div>
+					</div>
+																		
+					<!-- SEARCH BUTTON -->
+					<div class="field">
+						<button class="ui grey button" type="button" id="clear_search">
+							Clear Search
+						</button>
+					</div>
+				</div>
+			</form>
+					
+			<!-- TABLE AREA -->
+			<table class="ui compact selectable table" id="request_table">
+				<thead>
+					<tr>
+						<th>Sender</th>
+						<th>Subject</th>
+						<th>Type</th>
+						<th>Status</th>
+						<th>Timestamp</th>
+					</tr>
+				</thead>
+				<tbody id="request_tablebody"></tbody>			
+			</table>
+		</div>
+		
 <!-- END OF ACTUAL PAGE CONTENTS -->
 		</div>
 		
-		<!-- PROGRESS MODAL -->
-		<div class="ui small modal" id="progressbar_modal">
-			<div class="ui indicating progress" data-percent="0" id="upload_progress_bar">
-			  <div class="bar">
-			  	<div class="progress"></div>
-			  </div>
-			  <div class="label">Uploading Document</div>
+		<!-- VIEW REQUEST MAIL -->
+		<div class="ui modal" id="view_mail_dialog">
+			<div class="header neutral-modal">
+				<h3 class="ui header neutral-modal">
+					<i class="envelope icon"></i>
+					View Request Mail
+				</h3>
+			</div>
+			<div class="modal-content">
+
+						<p class="element-rmb"><b>Type: </b><span id="view_mail_type"></span></p>
+						<p class="element-rmb"><b>Timestamp: </b><span id="view_mail_timestamp"></span></p>
+						<p class="element-rmb"><b>Sender: </b><span id="view_mail_sender"></span></p>
+						<p class="element-rmb"><b>Status: </b><span id="view_mail_status"></span></p>
+				
+						<h5 class="ui dividing header">
+		  					Mail Recipients
+						</h5> 
+						
+						<p class="element-rmb"><b>Recipient: </b><span id="view_mail_recipient"></span></p>
+						<p class="element-rmb"><b>External Recipient: </b><span id="view_mail_external_recipient"></span></p>
+						
+						<h5 class="ui dividing header">
+		  					<span id="view_mail_type_label"></span> Content
+						</h5> 
+						
+						<div class="ui form element-mb">
+							
+							<div class="field">
+								<label>Addressee:</label>
+								<input type="text" id="view_mail_addressee" readonly/>
+							</div>	
+							
+							<div class="field" id="view_mail_line2_field">
+								<label>Addressee Line 2:</label>
+								<input type="text" id="view_mail_line2" readonly/>
+							</div>	
+							
+							<div class="field" id="view_mail_line3_field">
+								<label>Addressee Line 3:</label>
+								<input type="text" id="view_mail_line3" readonly/>
+							</div>	
+							
+							<div class="field" id="view_mail_from_field">
+								<label>From:</label>
+								<input type="text" id="view_mail_from" readonly/>
+							</div>	
+							
+							<div class="field">
+								<label>Subject:</label>
+								<input type="text" id="view_mail_subject" readonly/>
+							</div>		
+
+							<div class="field">
+								<label>Message:</label>	
+								<textarea rows="5" id="view_mail_message" readonly></textarea>
+							</div>
+							
+							<div class="field">
+								<label>Closing Remark:</label>
+								<input type="text" id="view_mail_closingremark" readonly/>
+							</div>
+						</div>
+						
+						<form class="ui form" >
+						
+							<div class="field element-rmb">
+								<label>Note:</label>
+								<textarea name="note" rows="2" id="view_mail_note" readonly></textarea>
+							</div>
+							
+						</form>
+
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button">Close</button>
 			</div>
 		</div>
 		
@@ -283,10 +381,13 @@
 	</body>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/session/non_admin_check.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/dataTable/jquery.dataTables.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/session/non_staff_check.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/mail/external_send_reply.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/mail/requestor_mail.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/notifications.js"></script>
 </html>

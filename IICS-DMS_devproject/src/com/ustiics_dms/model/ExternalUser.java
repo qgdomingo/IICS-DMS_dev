@@ -33,7 +33,18 @@ public class ExternalUser {
 		this.status = status;
 		this.timestamp = timestamp;
 	}
-
+	
+	public ExternalUser(String threadNumber, String firstName, String lastName, String email,
+			String contactNumber, String affiliation, String subject) {
+		super();
+		this.threadNumber = threadNumber;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.contactNumber = contactNumber;
+		this.affiliation = affiliation;
+		this.subject = subject;
+	}
 
 	public String getId() {
 		return id;

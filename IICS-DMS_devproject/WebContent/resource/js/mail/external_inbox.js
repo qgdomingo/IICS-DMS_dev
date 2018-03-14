@@ -58,8 +58,7 @@
 			{
 				localExternalInboxMailData = response;
 				$.each(response, (index, mail) => {
-					// class="'+setRowAsUnread(mail.status)+'"
-					$('<tr id="'+index+'">').appendTo('#external_inbox_tablebody')
+					$('<tr id="'+index+'"class="'+setRowAsUnread(mail.status)+'">').appendTo('#external_inbox_tablebody')
 						.append($('<td>').text(mail.firstName + ' ' + mail.lastName + ' (' + mail.email+ ')'))
 						.append($('<td>').text(mail.affiliation))
 						.append($('<td>').text(mail.subject))
@@ -104,11 +103,11 @@
 			selectedID = $(this).attr('id');
 			getMailData(selectedID);
 			
-//			if(localExternalInboxMailData[selectedID].status == 'Unread') {
-//				setMailAsRead(selectedID);
-//				$(this).removeClass('active');
-//				$(this).removeClass('unread_mail');
-//			}
+			if(localExternalInboxMailData[selectedID].status == 'Unread') {
+				setMailAsRead(selectedID);
+				$(this).removeClass('active');
+				$(this).removeClass('unread_mail');
+			}
 			
 			$('#view_mail_dialog').modal({
 				closable: false,
@@ -143,16 +142,16 @@
 		}
 	}
 	
-//	/* SET as READ - Inbox Row */
-//	function setMailAsRead(mailID) {
-//		var data = {
-//			id: localInboxMailData[mailID].id
-//		}
-//		
-//		$.post(getContextPath() + '/UpdateReadTimeStamp', $.param(data), function(response) {
-//			localInboxMailData[mailID].acknowledgementStatus = 'Read';
-//		});
-//	}
+	/* SET as READ - Inbox Row */
+	function setMailAsRead(mailID) {
+		var data = {
+			id: localExternalInboxMailData[mailID].id
+		}
+		
+		$.post(getContextPath() + '/UpdateReadExternalMail', $.param(data), function(response) {
+			localExternalInboxMailData[mailID].acknowledgementStatus = 'Read';
+		});
+	}
 	
 	$('#reply_button').click(function() {
 		var url = getContextPath() + '/mail/replymail.jsp?id=' 

@@ -34,8 +34,6 @@ public class ReplyMailFromExternal extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		
 		try {
-			HttpSession session = request.getSession();
-			Account acc = (Account)session.getAttribute("currentCredentials");
 			multifiles = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 
 			int counter = 0;
@@ -56,14 +54,18 @@ public class ReplyMailFromExternal extends HttpServlet {
 	            }
             }
 			
-			String threadNumber =  AesEncryption.decrypt(tempStorage[0]);
+			String threadNumber = tempStorage[0];
 			String subject = tempStorage[1];
 			String message = tempStorage[2];
 
 			ExternalMailFunctions.SendMailToDirector(threadNumber, message, fileData);
-
+			
+			 response.setContentType("text/plain");
+			 response.setStatus(HttpServletResponse.SC_OK);
+			 response.getWriter().write("success");
 		}catch(Exception e) {
 			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		
 	}
