@@ -1,5 +1,6 @@
 package com.ustiics_dms.controller.archivedocument;
 
+import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,9 +8,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.ustiics_dms.databaseconnection.DBConnect;
+import com.ustiics_dms.model.File;
 
 public class ArchiveDocumentFunctions
 {
@@ -113,7 +117,7 @@ public class ArchiveDocumentFunctions
 	{
 			Connection con = DBConnect.getConnection();
 			
-			PreparedStatement prep = con.prepareStatement("INSERT INTO archived_folder (id, archive_title, academic_year) VALUES (?,?,?)");
+			PreparedStatement prep = con.prepareStatement("INSERT INTO archived_folder (archive_title, academic_year) VALUES (?,?)");
 			
 			String year = getAcadYear();
 			int counter = getArchiveFolderCounter();
@@ -121,9 +125,8 @@ public class ArchiveDocumentFunctions
 			
 			String title = "ARCHIVE" + zeroes + counter + "_AY" + year;
 			//ARCHIVE001_AY17-18
-			prep.setInt(1, counter);
-			prep.setString(2, title);
-			prep.setString(3, getAcademicYear());
+			prep.setString(1, title);
+			prep.setString(2, getAcademicYear());
 			
 			prep.executeUpdate();
 	}
@@ -231,5 +234,62 @@ public class ArchiveDocumentFunctions
 		prep.setString(2, id);
 		prep.executeUpdate();
 		
+	}
+	
+	public static File getFile (int id) throws SQLException 
+	{
+		   Connection con = DBConnect.getConnection();
+		   
+			
+	       PreparedStatement prep = con.prepareStatement("SELECT file_name, file_data, description FROM archived_documents WHERE id = ?");
+	       prep.setInt(1, id);
+	       
+	       ResultSet rs = prep.executeQuery();
+	       
+	       if (rs.next()) 
+	       {
+	           String fileName = rs.getString("file_name");
+	           Blob fileData = rs.getBlob("file_data");
+	           String description = rs.getString("description");
+
+	           return new File(id, fileName, fileData, description);
+	       }
+	       return null;
+	}
+	
+	public static List <File> getBinaryStream (int id) throws SQLException 
+	{
+		   Connection con = DBConnect.getConnection();
+		   
+		   List <File> archiveFiles = new ArrayList <File> ();
+	       PreparedStatement prep = con.prepareStatement("SELECT file_name, file_data, description FROM archived_documents WHERE folder_id = ?");
+	       prep.setInt(1, id);
+	       
+	       ResultSet rs = prep.executeQuery();
+	       
+	       while(rs.next()) 
+	       {
+	           String fileName = rs.getString("file_name");
+	           InputStream fileData = rs.getBinaryStream("file_data");
+	           String description = rs.getString("description");
+
+	           archiveFiles.add( new File(id, fileName, fileData, description));
+	       }
+	       return archiveFiles;
+	}
+	
+	public static String getArchiveFolderName(String id) throws SQLException
+	{
+		   Connection con = DBConnect.getConnection();
+		   	
+	       PreparedStatement prep = con.prepareStatement("SELECT archive_title FROM archived_folder WHERE id = ?");
+	       
+	       prep.setString(1, id);
+	       
+	       ResultSet rs = prep.executeQuery();
+	       
+	       rs.next();
+	       
+	       return rs.getString("archive_title");
 	}
 }

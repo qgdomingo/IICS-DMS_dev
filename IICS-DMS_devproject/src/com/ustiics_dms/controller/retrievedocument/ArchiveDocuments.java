@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
 import com.ustiics_dms.controller.manageuser.ManageUserFunctions;
 import com.ustiics_dms.model.Account;
+import com.ustiics_dms.model.Archive;
 import com.ustiics_dms.model.Document;
 
 
@@ -31,26 +32,23 @@ public class ArchiveDocuments extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<Document> documents = new ArrayList<Document>();
+		List<Archive> documents = new ArrayList<Archive>();
 	    response.setCharacterEncoding("UTF-8");
 		
 	    HttpSession session = request.getSession();
 	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
 			
-			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveArchivedDocuments();
+			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveArchivedFolders();
 			
 			while(documentFiles.next()) 
 			{ 
-				documents.add(new Document(
+				documents.add(new Archive(
 						documentFiles.getString("id"),
-						documentFiles.getString("type"),
-						documentFiles.getString("title"),
-						documentFiles.getString("category"),
-						documentFiles.getString("file_name"),
-						documentFiles.getString("description"),
-						documentFiles.getString("created_by"),
-						documentFiles.getString("time_created")
+						documentFiles.getString("archive_title"),
+						documentFiles.getString("status"),
+						documentFiles.getString("archive_timestamp"),
+						documentFiles.getString("academic_year")
 						 ));	
 			}
 			String json = new Gson().toJson(documents);
