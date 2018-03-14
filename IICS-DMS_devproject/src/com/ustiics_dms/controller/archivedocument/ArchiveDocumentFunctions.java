@@ -5,6 +5,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.ustiics_dms.databaseconnection.DBConnect;
 
@@ -14,7 +17,13 @@ public class ArchiveDocumentFunctions
 	public static void transferToArchived() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("INSERT INTO archived_documents (type, title, category, file_name, file_data, description, created_by, academic_year) VALUES (?,?,?,?,?,?,?,?)");
+			
+			int counter = getArchiveFolderCounter();
+			
+			createFolder();
+			PreparedStatement prep = con.prepareStatement("INSERT INTO archived_documents (folder_id, type, source_recipient, title, "
+					+ "category, file_name, file_data, description, uploaded_by, email, upload_date, department, reference_no,"
+					+ " academic_year) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			
 			ResultSet currentDocuments = getCurrentDocuments();
 			
@@ -22,19 +31,36 @@ public class ArchiveDocumentFunctions
 			
 			while(currentDocuments.next())
 		    {
+				String type = currentDocuments.getString("type");
+				
+				String refValue = "N/A";
+				
+				if(type.equals("Incoming"))
+				{
+					refValue = currentDocuments.getString("reference_no");
+				}
+				
 				Blob tempBlob = currentDocuments.getBlob("file_data");
-				prep.setString(1, currentDocuments.getString("type"));
-				prep.setString(2, currentDocuments.getString("title"));
-				prep.setString(3, currentDocuments.getString("category"));
-				prep.setString(4, currentDocuments.getString("file_name"));//file name
-				prep.setBinaryStream(5, tempBlob.getBinaryStream(),(int) tempBlob.length());//file data 
-				prep.setString(6, currentDocuments.getString("description"));
-				prep.setString(7, currentDocuments.getString("created_by"));
-				prep.setString(8, academicYear);
+				
+				prep.setInt(1, counter);
+				prep.setString(2, type);
+				prep.setString(3, currentDocuments.getString("source_recipient"));
+				prep.setString(4, currentDocuments.getString("title"));
+				prep.setString(5, currentDocuments.getString("category"));
+				prep.setString(6, currentDocuments.getString("file_name"));
+				prep.setBinaryStream(7, tempBlob.getBinaryStream(),(int) tempBlob.length());
+				prep.setString(8, currentDocuments.getString("description"));
+				prep.setString(9, currentDocuments.getString("created_by"));
+				prep.setString(10, currentDocuments.getString("email"));
+				prep.setString(11, currentDocuments.getString("time_created"));
+				prep.setString(12, refValue);
+				prep.setString(13, currentDocuments.getString("department"));
+				prep.setString(14, academicYear);
+				
 				prep.executeUpdate();
 		    }
 			
-			deleteCurrentDocuments();
+			//deleteCurrentDocuments();
 			
 			
 	}
@@ -42,7 +68,12 @@ public class ArchiveDocumentFunctions
 	private static ResultSet getCurrentDocuments() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM documents");
+			PreparedStatement prep = con.prepareStatement(
+					"SELECT type, source_recipient, title, category, file_name, file_data, description, created_by, email, "
+					+ "time_created, department, reference_no FROM incoming_documents"
+					+ " UNION "
+					+ "SELECT type, source_recipient, title, category, file_name, file_data, description, created_by, email, "
+					+ "time_created, department, null FROM outgoing_documents ORDER BY time_created DESC" );
 
 			ResultSet rs = prep.executeQuery();
 			
@@ -52,27 +83,153 @@ public class ArchiveDocumentFunctions
 	private static String getAcademicYear() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT * FROM academic_year");
+			PreparedStatement prep = con.prepareStatement("SELECT * FROM academic_year WHERE status = ?");
+			prep.setString(1, "Current");
 
 			ResultSet rs = prep.executeQuery();
-			rs.next();
 			
-			String academicYear = "";
-			academicYear += rs.getString("start_month") + " ";
-			academicYear += rs.getString("start_year") +"-";
-			academicYear += rs.getString("end_month") + " ";
-			academicYear += rs.getString("end_year");
+			if(rs.next())
+			{
+				return rs.getString("start_year") + "-" + rs.getString("end_year");
+			}
 
-			return academicYear;
+			return null;
 	}
 	
 	private static void deleteCurrentDocuments() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("DELETE FROM documents");
+			
+			PreparedStatement prep = con.prepareStatement("DELETE FROM incoming_documents");
 
 			prep.executeUpdate();
 			
+			prep = con.prepareStatement("DELETE FROM outgoing_documents");
+			
+			prep.executeUpdate();
+	}
+	
+	private static void createFolder() throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			
+			PreparedStatement prep = con.prepareStatement("INSERT INTO archived_folder (id, archive_title, academic_year) VALUES (?,?,?)");
+			
+			String year = getAcadYear();
+			int counter = getArchiveFolderCounter();
+			String zeroes = appendZeroes(counter);
+			
+			String title = "ARCHIVE" + zeroes + counter + "_AY" + year;
+			//ARCHIVE001_AY17-18
+			prep.setInt(1, counter);
+			prep.setString(2, title);
+			prep.setString(3, getAcademicYear());
+			
+			prep.executeUpdate();
+	}
+	
+	public static String getAcadYear() throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			PreparedStatement prep = con.prepareStatement("SELECT start_year, end_year FROM academic_year WHERE status = ?");
+			prep.setString(1, "Current");
+
+			ResultSet rs = prep.executeQuery();
+			
+			rs.next();
+			
+			String start = rs.getString("start_year").substring(2);
+			String end = rs.getString("end_year").substring(2);
+			String year = start + "-" + end;
+			return year;
+	}
+	
+	public static String appendZeroes(int word)
+	{
+			int zeroes = 3 - String.valueOf(word).length();
+			String append = "";
+			for(int ct = 0 ; ct < zeroes ; ct ++)
+			{
+				append += "0";
+			}
+			
+			return append;
+	}
+	
+	private static int getArchiveFolderCounter() throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			
+			PreparedStatement prep = con.prepareStatement("SELECT COUNT(*) FROM archived_folder WHERE academic_year = ?");
+			prep.setString(1, getAcademicYear());
+
+			ResultSet rs = prep.executeQuery();
+			
+			int counter = 0;
+			if(rs.next())
+			{
+				counter = rs.getInt("COUNT(*)") + 1;
+			}
+
+			return counter;
+	}
+	
+	public static void updateArchiveDate(String timestamp) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		
+		PreparedStatement prep = con.prepareStatement("UPDATE archive_date set date = ?");
+		prep.setString(1, timestamp);
+
+		prep.executeUpdate();
+		
 	}
 
+	public static boolean compareTime () throws SQLException, ParseException 
+	{
+		   Connection con = DBConnect.getConnection();
+		   String current = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		   PreparedStatement prep = con.prepareStatement("SELECT date FROM archive_date");
+		   ResultSet rs = prep.executeQuery();
+		   String archive = "";
+		   if(rs.next())
+		   {
+			   archive = rs.getString("date");
+		   }
+		   
+		   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		   Date currentDate = sdf.parse(current);
+	       Date archiveDate = sdf.parse(archive);
+	       
+	       boolean result = false;
+	       if(currentDate.after(archiveDate))
+	       {
+	    	   result = true;
+	       }
+
+	       
+	       return result;
+	}
+	
+	public static void updateFolderToEnable(String id) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		
+		PreparedStatement prep = con.prepareStatement("UPDATE archived_folder set status = ? WHERE id = ?");
+		prep.setString(1, "Enabled");
+		prep.setString(2, id);
+		prep.executeUpdate();
+		
+	}
+	
+	public static void updateFolderToDisable(String id) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		
+		PreparedStatement prep = con.prepareStatement("UPDATE archived_folder set status = ? WHERE id = ?");
+		prep.setString(1, "Disabled");
+		prep.setString(2, id);
+		prep.executeUpdate();
+		
+	}
 }

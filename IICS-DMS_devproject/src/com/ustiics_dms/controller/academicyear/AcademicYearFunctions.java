@@ -23,9 +23,31 @@ public class AcademicYearFunctions {
 			prep = con.prepareStatement("INSERT INTO academic_year (start_year, end_year, status) VALUES (?,?,?)");
 
 			prep.setInt(1, yearStart);
+			
 			prep.setInt(2, yearEnd);
+			
 			prep.setString(3, "Current");
 		
+			prep.executeUpdate();
+			
+			setCounterToZero();
+			
+	}
+	
+	public static void setCounterToZero() throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			
+			PreparedStatement prep = con.prepareStatement("UPDATE external_list SET counter = ?");
+			
+			prep.setInt(1, 0);
+			
+			prep.executeUpdate();
+			
+			prep = con.prepareStatement("UPDATE iso_counter SET counter = ?");
+			
+			prep.setInt(1, 0);
+			
 			prep.executeUpdate();
 			
 	}

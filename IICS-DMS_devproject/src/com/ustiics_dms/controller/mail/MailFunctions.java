@@ -4,34 +4,26 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Array;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
-import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.FontSelector;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.ustiics_dms.controller.fileupload.FileUploadFunctions;
 import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
@@ -254,27 +246,11 @@ public class MailFunctions {
 			requestInfo.next();
 			
 			String subject = requestInfo.getString("subject");
-			String name = requestInfo.getString("sender_name");
 			String department = requestInfo.getString("department");
 			String sentBy = requestInfo.getString("sent_by");
-			/*
-			ResultSet requestInfo = getRequestInformation(id);
-			
-			requestInfo.next();
-			
-			String type = requestInfo.getString("type");
-			String recipient = "mangkanor@gmail.com";//requestInfo.getString("recipient");
-			String externalRecipient = requestInfo.getString("external_recipient");
-			String subject = requestInfo.getString("subject");
-			String message = requestInfo.getString("message");
-			String name = requestInfo.getString("sender_name");
-			String sentBy = requestInfo.getString("sent_by");
-			String department = requestInfo.getString("department");
-			
-			approveRequest(type, recipient, externalRecipient, subject, message, name, sentBy, department);
-			*/
 			String head = FileUploadFunctions.getGroupHead(department);
 			String des = head +" has approved your mail request, "+ subject;
+			
 			NotificationFunctions.addNotification("Request Mail Page", des, sentBy);
 			//deleteRequest(id);
 
