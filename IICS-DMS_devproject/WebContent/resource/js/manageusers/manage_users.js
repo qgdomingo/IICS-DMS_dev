@@ -6,7 +6,6 @@
 	$(document).ready(() => {
 		hideButtons();
 		retriveUserList();
-		resetSearchFields();
 		
 		$('#userstable_filter').hide();
 	});
@@ -129,6 +128,7 @@
 		$('#edit_title').val(localDataReference.title);
 		$('#edit_firstname').val(existingData[1]);
 		$('#edit_lastname').val(existingData[2]);
+		//TODO $('#edit_middleinitial').val()
 		$('#edit_email').val(existingData[3]);
 		$('#edit_cellphone_number').val(localDataReference.contactNumber);
 		$('#edit_usertype').dropdown('set selected', existingData[4]);
@@ -208,7 +208,6 @@
 		if(!isUsersTableEmpty) table.search('').draw();
 	}
 	
-
 /*
  * FORM CLEANERS
 */	

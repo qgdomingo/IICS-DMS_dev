@@ -214,20 +214,24 @@
 							<label>Faculty No.</label>
 							<input type="text" name="faculty_no"/>
 						</div>
-						<div class="field">
+						<div class="required field">
 							<label>Title:</label>
 							<input type="text" name="title"/>
 						</div>
 					</div>
 					
-					<div class="two fields">
-						<div class="required field">
+					<div class="three fields">
+						<div class="required six wide field"">
 							<label>First Name</label>
 							<input type="text" name="first_name"/>
 						</div>
-						<div class="required field">
+						<div class="required six wide field">
 							<label>Last Name</label>
 							<input type="text" name="last_name"/>
+						</div>
+						<div class="required four wide field">
+							<label>Middle Initial</label>
+							<input type="text" name="middle_initial"/>
 						</div>
 					</div>
 					
@@ -303,20 +307,24 @@
 							<label>Faculty No.</label>
 							<input type="text" name="faculty_no" id="edit_facultyno"/>
 						</div>
-						<div class="field">
+						<div class="required field">
 							<label>Title:</label>
 							<input type="text" name="title" id="edit_title"/>
 						</div>
 					</div>
 					
-					<div class="two fields">
-						<div class="required field">
+					<div class="three fields">
+						<div class="required six wide field">
 							<label>First Name</label>
 							<input type="text" name="first_name" id="edit_firstname"/>
 						</div>
-						<div class="required field">
+						<div class="required six wide field">
 							<label>Last Name</label>
 							<input type="text" name="last_name" id="edit_lastname"/>
+						</div>
+						<div class="required four wide field">
+							<label>Middle Initial</label>
+							<input type="text" name="middle_initial" id="edit_middleinitial"/>
 						</div>
 					</div>
 					

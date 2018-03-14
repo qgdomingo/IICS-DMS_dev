@@ -25,38 +25,29 @@ import com.ustiics_dms.utility.AesEncryption;
 public class CheckArchiveDate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public CheckArchiveDate() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
- protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	response.setCharacterEncoding("UTF-8");
+    	
 		try {
 			HttpSession session = request.getSession();
 		    Account acc = (Account) session.getAttribute("currentCredentials");
-		    	
-
-			
+		    
 			boolean result = ArchiveDocumentFunctions.compareTime();	
 			
-			
-			String json = new Gson().toJson(result);
-			
-		    response.setContentType("application/json");
+		    response.setContentType("text/plain");
 		    response.setStatus(HttpServletResponse.SC_OK);
-		    response.getWriter().write(json);
-	
+		    response.getWriter().write(String.valueOf(result));
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		doGet(request, response);
 	}
 

@@ -481,7 +481,7 @@ public class MailFunctions {
 	public static ResultSet getGeneratedISONumbers(String department) throws SQLException 
 	{
 		  Connection con = DBConnect.getConnection();
-	      PreparedStatement prep = con.prepareStatement("SELECT iso_number, purpose, type, generated_by, department FROM generated_iso_numbers WHERE department= ?");
+	      PreparedStatement prep = con.prepareStatement("SELECT iso_number, purpose, type, generated_by, generate_date, school_year FROM generated_iso_numbers WHERE department= ?");
 	      prep.setString(1, department);
 	      return prep.executeQuery();
 	}
@@ -604,12 +604,13 @@ public class MailFunctions {
 	{
 		String isoNumber = getISONumber(department, type);
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("INSERT into generated_iso_numbers (iso_number, type, generated_by, department, purpose) VALUES (?,?,?,?,?)");
+		PreparedStatement prep = con.prepareStatement("INSERT into generated_iso_numbers (iso_number, type, generated_by, department, purpose, school_year) VALUES (?,?,?,?,?,?)");
 		prep.setString(1, isoNumber);
 		prep.setString(2, type);
 		prep.setString(3, generated_by);
 		prep.setString(4, department);
 		prep.setString(5, purpose);
+		prep.setString(6, ManageTasksFunctions.getSchoolYear());
 		
 		prep.executeUpdate();
 		return isoNumber;
