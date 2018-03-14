@@ -21,7 +21,7 @@
 /*
  * DOCUMENT ON READY FUNCTION
  */
-	$(document).ready(() => {
+	$(document).ready( function() {
 	    var url = document.location.href,
         params = url.split('?')[1].split('&'),
         data = {}, tmp;

@@ -12,12 +12,14 @@ public class ExternalMail {
 	private String subject;
 	private String message;
 	private String fileName;
+	private String timestamp;
+	private String status;
 	
-	public ExternalMail(String id, String threadNumber, String firstName, String lastName, String email,
-			String contactNumber, String affiliation, String subject, String message, String fileName) {
+	public ExternalMail(String id, String firstName, String lastName, String email, String contactNumber, 
+			String affiliation, String subject, String message, String fileName, String timestamp,
+			String status) {
 		super();
 		this.id = id;
-		this.threadNumber = threadNumber;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
@@ -26,6 +28,8 @@ public class ExternalMail {
 		this.subject = subject;
 		this.message = message;
 		this.fileName = fileName;
+		this.timestamp = timestamp;
+		this.status = status;
 	}
 
 	public String getId() {
@@ -106,6 +110,22 @@ public class ExternalMail {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+	public String getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(String timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 	

@@ -4,7 +4,7 @@
 <%
 	Account acc = new Account();
 	String userType = "";
-	
+
 	if(request.getSession(false) == null || request.getSession(false).getAttribute("currentCredentials") == null) {
 		response.sendRedirect(request.getContextPath() + "/index.jsp");
 	} else {
@@ -13,17 +13,15 @@
 		
 		if( (userType.equalsIgnoreCase("Administrator")) ) {
 			response.sendRedirect(request.getContextPath() + "/admin/manageusers.jsp");
-		} 
-		else if(!userType.equalsIgnoreCase("Director")) {
+		} else if ( !(userType.equalsIgnoreCase("Director")) ) {
 			response.sendRedirect(request.getContextPath() + "/home.jsp");
 		}
-		
 	}
 %>
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>External Inbox | IICS DMS</title>
+		<title>Inbox | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
@@ -118,7 +116,7 @@
 				</a>
 				<div class="item">
 					<i class="large inbox icon"></i>
-					Inbox
+					External Inbox
 				</div>
 				<div class="right menu">
 					<a class="item user-account-bgcolor mobile hidden" href="${pageContext.request.contextPath}/userprofile.jsp">
@@ -142,10 +140,9 @@
 		
 <!-- ACTUAL PAGE CONTENTS -->
 
-		<% if(userType.equalsIgnoreCase("Director")) { %>
 		<div class="ui secondary pointing menu element-rmt">
 			<a class="item" href="${pageContext.request.contextPath}/mail/inbox.jsp">
-				<i class="folder icon"></i>
+				<i class="folder open icon"></i>
 				Internal Inbox
 			</a>
 			<a class="item active" href="${pageContext.request.contextPath}/mail/externalinbox.jsp">
@@ -153,63 +150,125 @@
 				External Inbox
 			</a>
 		</div>
-		<% } %>
 
-		<!-- SEARCH AREA -->
-		<form class="ui form">
-			<div class="four fields">
-					
-				<!-- SEARCH BOX -->
-				<div class="field">
-					<div class="ui icon input">
-						<input type="text" placeholder="Seach Mail" id="search_mail"/>
-						<i class="search icon"></i>
-					</div>
-				</div>
-						
-				<!-- MAIL SENT FROM -->
-				<div class="field">
-					<div class="ui calendar" id="search_sentfrom_calendar">
-						<div class="ui icon input">
-							<input type="text" placeholder="Upload To" id="search_sentfrom"/>
-							<i class="calendar icon"></i>
-						</div>
-					</div>
-				</div>
-							
-				<!-- MAIL SENT TO -->
-				<div class="field">
-					<div class="ui calendar" id="search_sentto_calendar">
-						<div class="ui icon input">
-							<input type="text" placeholder="Upload To" id="search_sentto"/>
-							<i class="calendar icon"></i>
-						</div>
-					</div>
-				</div>
-									
-				<!-- SEARCH BUTTON -->
-				<div class="field">
-					<button class="ui grey button" type="button" id="clear_search">
-						Clear Search
-					</button>
-				</div>
+		<div class="ui segment">
+			<div class="ui dimmer" id="inbox_loading">
+				<div class="ui text loader">Retrieving External Inbox</div>
 			</div>
-		</form>
-				
-		<!-- TABLE AREA -->
-		<table class="ui compact selectable table" id="external_inbox_table">
-			<thead>
-				<tr>
-					<th>Sender</th>
-					<th>Affiliation</th>
-					<th>Subject</th>
-					<th>Timestamp</th>
-				</tr>
-			</thead>
-			<tbody id="external_inbox_tablebody"></tbody>			
-		</table>	
+		
+			<!-- SEARCH AREA -->
+			<form class="ui form">
+				<div class="four fields">
+						
+					<!-- SEARCH BOX -->
+					<div class="field">
+						<div class="ui icon input">
+							<input type="text" placeholder="Seach Mail" id="search_mail"/>
+							<i class="search icon"></i>
+						</div>
+					</div>
+						
+					<!-- MAIL SENT FROM -->
+					<div class="field">
+						<div class="ui calendar" id="search_sentfrom_calendar">
+							<div class="ui icon input">
+								<input type="text" placeholder="Received From" id="search_sentfrom"/>
+								<i class="calendar icon"></i>
+							</div>
+						</div>
+					</div>
+								
+					<!-- MAIL SENT TO -->
+					<div class="field">
+						<div class="ui calendar" id="search_sentto_calendar">
+							<div class="ui icon input">
+								<input type="text" placeholder="Received To" id="search_sentto"/>
+								<i class="calendar icon"></i>
+							</div>
+						</div>
+					</div>
+																		
+					<!-- SEARCH BUTTON -->
+					<div class="field">
+						<button class="ui grey button" type="button" id="clear_search">
+							Clear Search
+						</button>
+					</div>
+				</div>
+			</form>
+					
+			<!-- TABLE AREA -->
+			<table class="ui compact selectable table" id="external_inbox_table">
+				<thead>
+					<tr>
+						<th>Sender</th>
+						<th>Affiliation</th>
+						<th>Subject</th>
+						<th>Timestamp</th>
+					</tr>
+				</thead>
+				<tbody id="external_inbox_tablebody"></tbody>			
+			</table>	
+		
+		</div>
 			
 <!-- END OF ACTUAL PAGE CONTENTS -->
+		</div>
+		
+		<!-- VIEW MAIL -->
+		<div class="ui small modal" id="view_mail_dialog">
+			<div class="header neutral-modal">
+				<h3 class="ui header neutral-modal">
+					<i class="envelope icon"></i>
+					View Mail
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p class="element-rmb"><b>Sender: </b><span id="view_mail_sender"></span></p>
+				<p class="element-rmb"><b>Affiliation: </b><span id="view_mail_affiliation"></span></p>
+				<p class="element-rmb"><b>Contact Number: </b><span id="view_mail_contact"></span></p>
+				<p class="element-rmb"><b>Mail Timestamp: </b><span id="view_mail_timestamp"></span></p>
+				
+				<h5 class="ui horizontal header divider">
+  					<i class="envelope icon"></i>
+  					Message
+				</h5>
+				
+				<p><b>Subject: </b><span id="view_mail_subject"></span></p>
+				
+				<div class="ui form element-mb">
+					<div class="field">
+						<label>Message:</label>	
+						<textarea rows="5" id="view_mail_message" readonly></textarea>
+					</div>
+				</div>
+				
+				<form class="ui form element-mb" method="GET" action="" id="view_attachment_form">
+					<input type="hidden" name="id" id="view_attachment_id">
+					
+					<div class="inline field">
+   						<label><b>File Name: </b><span id="view_mail_file_name"></span></label>
+   						<button class="ui small button" type="submit">
+							<i class="paperclip icon"></i>View Attachment
+						</button>
+ 					</div>
+				</form>
+				
+				<div class="two ui buttons">
+					<button class="ui fluid green small button" type="button" id="reply_button">
+						<i class="reply icon"></i>
+						Send Response
+					</button>
+					<button class="ui fluid blue small button" type="button" id="view_thread_button">
+						<i class="folder icon"></i>
+						View Mail Thread
+					</button>
+				</div>
+
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button">Close</button>
+			</div>
 		</div>
 		
 		<!-- NOTIFICATIONS MODAL -->
@@ -294,5 +353,6 @@
 	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/mail/external_inbox.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/notifications.js"></script>
 </html>

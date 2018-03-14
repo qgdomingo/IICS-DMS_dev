@@ -47,7 +47,7 @@ public class Thread extends HttpServlet {
 				files.add(new Document(
 						AesEncryption.encrypt(documentFiles.getString("id")),
 						AesEncryption.encrypt(documentFiles.getString("type")),
-						documentFiles.getString("thread_number"),
+						AesEncryption.encrypt(documentFiles.getString("thread_number")),
 						documentFiles.getString("reference_no"),
 						documentFiles.getString("source_recipient"),
 						documentFiles.getString("title"),

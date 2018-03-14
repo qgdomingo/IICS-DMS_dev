@@ -7,17 +7,14 @@
  * VARIABLES
  */
 
-	var localTaskData;
+	var localUsersData;
 	var sentToUsersTable;
 	
 	var tempTaskStatus;
+	var selectedID;
 	var mailID;
 	
-	var isAssignedTaskTableEmpty = true;
-	
-	var isNewlyLoadedDirectory = true;
-	var today = new Date();
-	
+	var isSentToUsersTableEmpty = true;
 
 /*
  * DOCUMENT ON READY FUNCTION
@@ -30,185 +27,145 @@
 	         tmp = params[i].split('=');
 	         data[tmp[0]] = tmp[1];
 	    }
-	    taskDataID = decodeURIComponent(data.id);
+	    mailID = decodeURIComponent(data.id);
 	    
-	    retrieveCreatedTaskDetails(taskDataID);
-	    retrieveAssignedTasks(taskDataID);
-	    
-	    // Populate Edit Task Form
-	    getListOfUsers('#edittask_assignto');
-	    retrieveCategory('#edittask_category');
+	    retrieveMailDetails(mailID);
+	    retrieveSentToUsers(mailID);
 	});
 	
 /*
  * FUNCTIONS
  */
 	
-//	/* GET - Created Task Details */
-//	function retrieveCreatedTaskDetails(id) {
-//		var data = { id: id }
-//		
-//		$.post(getContextPath() + '/RetrieveSpecificCreatedTask', $.param(data), (response) => {
-//			if(response) {
-//				localTaskData = response;
-//				$('#createdtask_title').text(response[0]);
-//				$('#createdtask_category').text(response[1]);
-//				$('#createdtask_datecreated').text(response[2]);
-//				$('#createdtask_status').text(response[3]);
-//				$('#createdtask_deadline').text(response[4]);
-//				$('#createdtask_instructions').text(response[5]);
-//			}
-//			else {
-//				callFailRequestModal();
-//			}
-//		}).fail( (response) => {
-//			callFailRequestModal();
-//		});
-//		
-//	}
-//	
-//	/* GET - Assigned Tasks */
-//	function retrieveAssignedTasks(id) {
-//		addCSSClass('#createdtaskdetails_loading', 'active');	
-//		var data = { id: id } 
-//		
-//		$.post(getContextPath() + '/RetrieveAssignedToTasks', $.param(data), (responseJson) => {
-//			if(!responseJson.length == 0)
-//			{
-//				$.each(responseJson, (index, taskassign) => {
-//					localAssignedUsers.push(taskassign.email);
-//					
-//					$('<tr id="'+index+'">').appendTo('#assignedtask_tablebody')		
-//						.append($('<td>').text(taskassign.name + ' ('+taskassign.email+')'))
-//						.append($('<td>').text(taskassign.title))
-//						.append($('<td>').text(taskassign.dateUploaded))
-//						.append($('<td>').text(taskassign.status))
-//				});
-//
-//				// bind events and classes to the table after all data received
-//				assignedToTasksTable = $('#assignedtask_table').DataTable({
-//					'order': [[0, 'asc']]
-//				});
-//				
-//				isAssignedTaskTableEmpty = false;
-//				selectTaskAssigned();
-//				removeCSSClass('#createdtaskdetails_loading', 'active');	
-//			}
-//			else if(responseJson.length == 0)
-//			{
-//				$('<tr>').appendTo('#assignedtask_tablebody')
-//				.append($('<td class="center-text" colspan="4">')
-//						.text("You did not assign the task to anyone. Click on Edit Task to assign to a user."));
-//				removeCSSClass('#viewcreatedtask_table_loading', 'active');
-//			}
-//			else
-//			{
-//				$('<tr>').appendTo('#assignedtask_tablebody')
-//				.append($('<td class="center-text" colspan="4">')
-//						.text("Unable to retrieve tasks assigned."));
-//				removeCSSClass('#viewcreatedtask_table_loading', 'active');
-//			}
-//		})
-//		.fail ((response) => {
-//			$('<tr>').appendTo('#assignedtask_tablebody')
-//			.append($('<td class="center-text" colspan="4">')
-//					.text("Unable to retrieve tasks assigned."));
-//			removeCSSClass('#viewcreatedtask_table_loading', 'active');
-//		});
-//	}
-//	
-//	/* SELECT ROW - Task Assigned To */
-//	function selectTaskAssigned() {
-//		$('#assignedtask_table tbody').on('dblclick', 'tr', function () {
-//			$(this).toggleClass('active');
-//			
-//			tempTaskStatus = assignedToTasksTable.rows('.active').data()[0][3];
-//			tempEmailString = assignedToTasksTable.rows('.active').data()[0][0];
-//			
-//			if(tempTaskStatus == 'No Submission') {
-//				openNoTaskSubmissionModal();
-//			}
-//			else {
-//				email = getEmailFromString(tempEmailString);
-//				openTaskSubmission(email);
-//			}
-//			
-//			$(this).toggleClass('active');
-//	    });
-//	}
-//
-//	/* GET - Submission Data of Task */
-//	function getMyTaskSubmission(email) {
-//		addCSSClass('#submissiondetails_loading', 'active');
-//		
-//		var data = {
-//			id: taskDataID,
-//			email: email
-//		}
-//		
-//		$.post(getContextPath() + '/RetrieveSpecificTask', $.param(data), (responseData) => {
-//			if(responseData)
-//			{
-//				$('#submission_title').text(responseData[0]);
-//				$('#submission_submissiondate').text(responseData[1]);
-//				$('#submission_viewstatus').text(responseData[2]);
-//				$('#submission_file').text(responseData[3]);
-//				$('#submission_description').text(responseData[4]);
-//				$('#submission_download_id').val(responseData[5]);
-//				$('#submission_download_email').val(responseData[6]);
-//				$('#submission_uploadedby').text(responseData[7]);
-//				removeCSSClass('#submissiondetails_loading', 'active');
-//			}
-//			else
-//			{
-//				callFailModal('Uh-oh!','We are unable to retrieve submission details.');
-//				removeCSSClass('#submissiondetails_loading', 'active');
-//			}
-//		})
-//		.fail((response) => {
-//			callFailRequestModal();
-//			removeCSSClass('#submissiondetails_loading', 'active');
-//		});
-//	}
-//	
-//	/* SET and OPEN MODAL - Information for the View Task Submission */
-//	function openTaskSubmission(email) {
-//		getMyTaskSubmission(email);
-//		$('#submission_dialog').modal({
-//			closable: false
-//		}).modal('show');
-//	}
-//	
-//	/* OPEN MODAL - No Task Submission */
-//	function openNoTaskSubmissionModal() {
-//    	$('#nosubmission_dialog').modal({
-//			closable: false
-//		}).modal('show');
-//	}
-//
-///*
-// * SEARCH FUCTION
-// */	
-//	$('#search_filter').on('input', function() {
-//		if(!isAssignedTaskTableEmpty) assignedToTasksTable.search( $(this).val() ).draw();
-//	});
-//		
-//	$('#upload_date_filter_calendar').calendar({
-//		type: 'date',
-//		formatter: dateFormat,
-//		today: true,
-//		onChange: ((date, text, mode) => {
-//			if(!isAssignedTaskTableEmpty) assignedToTasksTable.column(2).search( text ).draw();
-//		}) 
-//	});
-//	
-//	$('#status_filter').on('change', function() {
-//		if(!isAssignedTaskTableEmpty) assignedToTasksTable.column(3).search( $(this).val() ).draw();
-//	});
-//	
-//	$('#clear_filter').click(() => {
-//		$('#search_filter').val('');
-//		$('#upload_date_filter_calendar').calendar('clear');
-//		$('#status_filter').dropdown('restore defaults');
-//	})
-//	
+	/* GET - Mail Details */
+	function retrieveMailDetails(id) {
+		var data = { id: id }
+		
+		$.post(getContextPath() + '/RetrieveSentMailInformation', $.param(data), (response) => {
+			if(!response.length == 0) {
+				var data = response[0];
+				$('#view_mail_sender').text(data.senderName + ' (' + data.senderEmail + ')');
+				$('#view_mail_subject').text(data.subject);
+				$('#view_mail_type').text(data.type);
+				$('#view_mail_acad_year').text(data.schoolYear);
+				$('#view_mail_iso_number').text(data.isoNumber);
+				$('#view_mail_timestamp').text(data.dateCreated);
+				$('#view_mail_id').val(data.id);
+			}
+			else {
+				callFailModal('No Mail Data Retrieved', 'No Data for this mail was found.');
+			}
+		}).fail( (response) => {
+			callFailModal('Unable to Retrieve Mail Data', 'An error has occured on fetching mail data.' 
+					+ ' Please try refreshing the page.');
+		});
+		
+	}
+	
+	/* GET - Sent To Users List */
+	function retrieveSentToUsers(id) {
+		addCSSClass('#sent_mail_loading', 'active');	
+		var data = { id: id } 
+		
+		$('#sent_mail_to_tablebody').empty();
+		$.post(getContextPath() + '/RetrieveSentMailToUsers', $.param(data), (responseJson) => {
+			if(!responseJson.length == 0)
+			{
+				localUsersData = responseJson;
+				$.each(responseJson, (index, user) => {
+					$('<tr id="'+index+'">').appendTo('#sent_mail_to_tablebody')		
+						.append($('<td>').text(user.senderName))
+						.append($('<td>').text(user.acknowledgementStatus))
+						.append($('<td>').text(user.acknowledgementTimestamp))
+				});
+
+				// bind events and classes to the table after all data received
+				sentToUsersTable = $('#sent_mail_to_table').DataTable({
+					'order': [[2, 'desc']]
+				});
+				
+				isSentToUsersTableEmpty = false;
+				selectUserSentDetails();
+				removeCSSClass('#sent_mail_loading', 'active');	
+			}
+			else if(responseJson.length == 0)
+			{
+				$('<tr>').appendTo('#sent_mail_to_tablebody')
+				.append($('<td class="center-text" colspan="3">')
+						.text("This mail was not sent to anyone."));
+				removeCSSClass('#sent_mail_loading', 'active');
+			}
+		})
+		.fail ((response) => {
+			$('<tr>').appendTo('#sent_mail_to_tablebody')
+			.append($('<td class="error center-text" colspan="3">')
+					.text("Unable to retrieve users."));
+			removeCSSClass('#sent_mail_loading', 'active');
+		});
+	}
+	
+	/* SELECT ROW - Sent Mail */
+	function selectUserSentDetails() {
+		$('#sent_mail_to_table tbody').on('dblclick', 'tr', function () {
+			selectedID = $(this).attr('id');
+			
+			if(localUsersData[selectedID].acknowledgementStatus == 'Acknowledged') {
+				setData(selectedID);
+				openAcknowledgementModal();
+			}
+			else {
+				openNoAcknowledgementModal();
+			}
+	    });
+	}
+
+	/* OPEN MODAL - Acknowledgement Details */
+	function openAcknowledgementModal() {
+		$('#acknowledgement_dialog').modal({
+			closable: false,
+			onHidden: function() {
+				$('#view_mail_acknowledgement_remarks').text('');
+			}
+		}).modal('show');
+	}
+
+	function setData(id) {
+		var selectedData = localUsersData[id];
+		$('#view_mail_acknowledgment_status').text(selectedData.acknowledgementStatus);
+		$('#view_mail_acknowledgement_timestamp').text(selectedData.acknowledgementTimestamp);
+		$('#view_mail_acknowledgement_remarks').text(selectedData.acknowledgementRemarks);
+	}
+	
+	/* OPEN MODAL - No Acknowledgement */
+	function openNoAcknowledgementModal() {
+    	$('#no_acknowledgement_dialog').modal({
+			closable: false
+		}).modal('show');
+	}
+
+/*
+ * SEARCH FUCTION
+ */	
+	$('#search_user').on('input', function() {
+		if(!isSentToUsersTableEmpty) sentToUsersTable.search( $(this).val() ).draw();
+	});
+		
+	$('#search_status').on('change', function() {
+		if(!isSentToUsersTableEmpty) sentToUsersTable.column(1).search( $(this).val() ).draw();
+	});
+	
+	$('#search_acknowledge_date_calendar').calendar({
+		type: 'date',
+		formatter: dateFormat,
+		today: true,
+		onChange: ((date, text, mode) => {
+			if(!isSentToUsersTableEmpty) sentToUsersTable.column(2).search( text ).draw();
+		}) 
+	});
+	
+	$('#clear_search').click(() => {
+		$('#search_user').val('');
+		$('#search_acknowledge_date_calendar').calendar('clear');
+		$('#search_status').dropdown('restore defaults');
+	});
+	

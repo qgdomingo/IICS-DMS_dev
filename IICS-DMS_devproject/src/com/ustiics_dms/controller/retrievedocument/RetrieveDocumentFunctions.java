@@ -47,17 +47,18 @@ public class RetrieveDocumentFunctions {
 			return result;
 	}
 	
-	public static ResultSet retrieveAllDocuments(String email) throws SQLException
+	public static ResultSet retrieveAllDocuments(String email, String department) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT type, id, reference_no, source_recipient, title, category, action_required, file_name, description, created_by, email, status,  time_created, department, note  FROM incoming_documents WHERE email = ? " + 
+			PreparedStatement prep = con.prepareStatement(
+					"SELECT type, id, thread_number, source_recipient, title, category, file_name, description, created_by, email, time_created, reference_no, action_required, status, due_on, note FROM incoming_documents WHERE department = ? " + 
 					"UNION" + 
-					" SELECT type, id, reference_no, source_recipient, title, category, null, file_name, description, created_by, email, null, time_created, department, null  FROM outgoing_documents WHERE email = ? " + 
+					" SELECT type, id, thread_number, source_recipient, title, category, file_name, description, created_by, email, time_created, null, null, null, null, null  FROM outgoing_documents WHERE department = ? " + 
 					"UNION" + 
-					" SELECT type, id, null, null, title, category, null,  file_name, description, created_by, email, null, time_created , null, null FROM personal_documents WHERE email = ? ORDER BY time_created ASC");
+					" SELECT type, id, null, null, title, category, file_name, description, created_by, email, time_created, null, null, null, null, null FROM personal_documents WHERE email = ? ORDER BY time_created DESC");
 			
-			prep.setString(1,  email);
-			prep.setString(2,  email);
+			prep.setString(1,  department);
+			prep.setString(2,  department);
 			prep.setString(3,  email);
 			ResultSet result = prep.executeQuery();
 

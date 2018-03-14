@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -24,6 +25,8 @@ import javax.mail.util.ByteArrayDataSource;
 import org.apache.commons.fileupload.FileItem;
 
 import com.ustiics_dms.controller.logs.LogsFunctions;
+import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
+import com.ustiics_dms.controller.notifications.NotificationFunctions;
 import com.ustiics_dms.databaseconnection.DBConnect;
 import com.ustiics_dms.model.File;
 import com.ustiics_dms.utility.AesEncryption;
@@ -43,15 +46,23 @@ public class ExternalMailFunctions {
 		prep.setString(6, affiliation);
 		prep.setString(7, subject);
 		prep.setString(8, message);
-		prep.setString(9, fileData.getName());
-		prep.setBinaryStream(10, fileData.getInputStream(), (int) fileData.getSize());
+		
+		if(fileData != null) {
+			prep.setString(9, fileData.getName());
+			prep.setBinaryStream(10, fileData.getInputStream(), (int) fileData.getSize());
+		}
+		else {
+			prep.setString(9, null);
+			prep.setBinaryStream(10, null);
+		}
 
 		prep.executeUpdate();
 		
 		String fullName = firstName + " " + lastName;
 		LogsFunctions.addLog("System", "External Sent to Director", emailAddress, fullName, "External", "None", subject);
 		
-
+		String des = fullName +", external user, has sent you a mail, " + subject;
+		NotificationFunctions.addNotification("External Mail Page", des, getDirectorRecipient());
 	}
 	
 	public static void SendMailToDirector (String threadNumber, String message, FileItem fileData) throws SQLException, IOException 
@@ -80,12 +91,21 @@ public class ExternalMailFunctions {
 			prep.setString(6, affiliation);
 			prep.setString(7, subject);
 			prep.setString(8, message);
-			prep.setString(9, fileData.getName());
-			prep.setBinaryStream(10, fileData.getInputStream(), (int) fileData.getSize());
+			
+			if(fileData != null) {
+				prep.setString(9, fileData.getName());
+				prep.setBinaryStream(10, fileData.getInputStream(), (int) fileData.getSize());
+			}
+			else {
+				prep.setString(9, null);
+				prep.setBinaryStream(10, null);
+			}
 		
 			prep.executeUpdate();
 		
 			LogsFunctions.addLog("System", "External Reply to Director", email, fullName, "External", "None", subject);
+			String des = fullName +", external user, has sent you a mail reply, " + subject;
+			NotificationFunctions.addNotification("External Mail Page", des, getDirectorRecipient());
 		}
 	}
 	
@@ -118,7 +138,7 @@ public class ExternalMailFunctions {
 	public static ResultSet getExternalMail() throws SQLException
 	{
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("SELECT id, first_name, last_name, email, contact_number, affiliation, subject, message, file_name FROM external_mail");
+		PreparedStatement prep = con.prepareStatement("SELECT id, first_name, last_name, email, contact_number, affiliation, subject, message, file_name, sent_timestamp, status FROM external_mail");
 
 		ResultSet rs = prep.executeQuery();
 		
@@ -126,73 +146,61 @@ public class ExternalMailFunctions {
 		
 	}
 	
-	public static void send(String to, String subject, String msg, String threadNumber, int id, final String user,final String pass)
+	public static void send(String to, String subject, String msg, String threadNumber, int id, final String user,final String pass, String contextPath) throws Exception
     { 
   
-     Properties props = new Properties();
+	    Properties props = new Properties();
+	
+	    props.put("mail.smtp.host", "smtp.gmail.com");
+	    //below mentioned mail.smtp.port is optional
+	    props.put("mail.smtp.port", "587");		
+	    props.put("mail.smtp.auth", "true");
+	    props.put("mail.smtp.starttls.enable", "true");
+	     
+	    /* Pass Properties object(props) and Authenticator object   
+	          for authentication to Session instance 
+	       */
 
-     props.put("mail.smtp.host", "smtp.gmail.com");
-     //below mentioned mail.smtp.port is optional
-     props.put("mail.smtp.port", "587");		
-     props.put("mail.smtp.auth", "true");
-     props.put("mail.smtp.starttls.enable", "true");
-     
-     /* Pass Properties object(props) and Authenticator object   
-           for authentication to Session instance 
-        */
-
-    Session session = Session.getInstance(props,new javax.mail.Authenticator()
-    {
-  	  protected PasswordAuthentication getPasswordAuthentication() 
-  	  {
-  	 	 return new PasswordAuthentication(user,pass);
-  	  }
-   });
+	    Session session = Session.getInstance(props,new javax.mail.Authenticator()
+	    {
+		  	  protected PasswordAuthentication getPasswordAuthentication() 
+		  	  {
+		  	 	 return new PasswordAuthentication(user,pass);
+		  	  }
+	    });
     
-   try
-   {
-	   
-	   File file = ExternalMailFunctions.getPdf(id);
-	 
-	   MimeMessage message = new MimeMessage(session);
-       message.setFrom(new InternetAddress(user));
-       message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
-       message.setSubject(subject);
-
-
-        int length = (int) file.getFileData().length();
-        byte[] data = file.getFileData().getBytes(1, length);
-       
-        Multipart multipart = new MimeMultipart();
-        
-        MimeBodyPart messageContent = new MimeBodyPart();
-        messageContent.setText("http://localhost:8080/IICS-DMS_devproject/mail/replyfromemail.jsp?thread_number=" + threadNumber);
-        MimeBodyPart attachment = new MimeBodyPart();
-        attachment = new MimeBodyPart();
-        DataSource source = new ByteArrayDataSource( data , "application/octet-stream");
-        attachment.setDataHandler(new DataHandler(source));
-        attachment.setFileName(file.getFileName());
-        
-        multipart.addBodyPart(messageContent);
-        multipart.addBodyPart(attachment);
-
-        message.setContent(multipart);
-        Transport.send(message);
-	}
- 
-  
-    catch(Exception e)
-    {
-    	e.printStackTrace();
-
+		   File file = ExternalMailFunctions.getPdf(id);
+		 
+		   MimeMessage message = new MimeMessage(session);
+	       message.setFrom(new InternetAddress(user));
+	       message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
+	       message.setSubject(subject);
+	
+	       int length = (int) file.getFileData().length();
+	       byte[] data = file.getFileData().getBytes(1, length);
+	       
+	       Multipart multipart = new MimeMultipart();
+	        
+	       MimeBodyPart messageContent = new MimeBodyPart();
+	       messageContent.setText(contextPath + "/replyfromemail.jsp?thread_number=" + threadNumber);
+	       MimeBodyPart attachment = new MimeBodyPart();
+	       attachment = new MimeBodyPart();
+	       DataSource source = new ByteArrayDataSource( data , "application/octet-stream");
+	       attachment.setDataHandler(new DataHandler(source));
+	       attachment.setFileName(file.getFileName());
+	        
+	       multipart.addBodyPart(messageContent);
+	       multipart.addBodyPart(attachment);
+	
+	       message.setContent(multipart);
+	       Transport.send(message);
     }
-   }
 	
 	public static File getPdf (int id) throws SQLException 
 	{
 		   Connection con = DBConnect.getConnection();
 			
-	       PreparedStatement prep = con.prepareStatement("SELECT * FROM sent_external_mail WHERE id = ?");
+	       PreparedStatement prep = con.prepareStatement("SELECT file_name, file_data FROM sent_external_mail WHERE id = ?");
 	       prep.setInt(1, id);
 	       
 	       ResultSet rs = prep.executeQuery();
@@ -218,7 +226,7 @@ public class ExternalMailFunctions {
 			return rs.getInt("Auto_increment")-1;
 	}
 	
-	public static void saveSentExternalMail(String threadNumber, String subject, String message, FileItem fileData, String sentBy) throws SQLException, IOException
+	public static void saveSentExternalMail(String threadNumber, String subject, String message, FileItem fileData, String sentBy, String contextPath) throws Exception
 	{
 		Connection con = DBConnect.getConnection();
 		
@@ -234,7 +242,7 @@ public class ExternalMailFunctions {
 
 		prep.executeUpdate();
 		threadNumber = AesEncryption.encrypt(threadNumber);
-		ExternalMailFunctions.send(recipient, subject, message, threadNumber , ExternalMailFunctions.getIncrement(), "iics2014dmsystem@gmail.com", "bluespace09");
+		ExternalMailFunctions.send(recipient, subject, message, threadNumber , ExternalMailFunctions.getIncrement(), "iics2014dmsystem@gmail.com", "bluespace09", contextPath);
 	}
 	
 	public static String getName(String id) throws SQLException
@@ -283,5 +291,22 @@ public class ExternalMailFunctions {
 		
 		return subject;
 		
+	}
+	
+	public static String[] getDirectorRecipient() throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		ArrayList<String> emailList = new ArrayList<String>();
+		PreparedStatement prep = con.prepareStatement("SELECT email FROM accounts WHERE user_type = ?");
+		prep.setString(1, "Director");
+		ResultSet rs = prep.executeQuery();
+		
+		while(rs.next())
+		{
+			emailList.add(rs.getString("email"));
+		}
+		String[] returnEmailList = emailList.toArray(new String[emailList.size()]);
+		
+		return returnEmailList;
 	}
 }

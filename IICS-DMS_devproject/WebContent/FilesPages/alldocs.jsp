@@ -199,10 +199,9 @@
 		</div>
 		
 		<br>
-			
 				
 		<!-- AREA FOR ALL DOCUMENTS -->
-		<div id="alldocs_table">
+		<div>
 			<h3 class="ui dividing header">
 				<i class="copy icon"></i>
 				<div class="content">
@@ -220,67 +219,248 @@
 			
 			<!-- SEARCH AREA -->
 			<form class="ui form">
-				<div class="five fields">
+				<div class="six fields">
 					
 					<!-- SEARCH BOX -->
 					<div class="field">
 						<div class="ui icon input">
-							<input type="text" placeholder="Seach Document.."/>
+							<input type="text" placeholder="Seach Document" id="search_documents"/>
 							<i class="search icon"></i>
 						</div>
 					</div>
 						
-					<!-- UPLOAD TIMESTAMP RANGE BOX -->
-					<div class="field">
-						<input type="text" placeholder="Upload Timestamp"/>
-					</div>
-						
 					<!-- DOCUMENT TYPE DROPDOWN -->
 					<div class="field">
-						<select class="ui fluid dropdown">
-				  			<option value="">Select Document Type</option>
+						<select class="ui fluid dropdown" id="search_type">
+				  			<option value="">Document Type</option>
 				  			<option value="Personal">Personal</option>
 				  			<option value="Incoming">Incoming</option>
 				  			<option value="Outgoing">Outgoing</option>
 						</select>
 					</div>
 						
+					<!-- UPLOAD FROM DATE BOX -->
+					<div class="field">
+						<div class="ui calendar" id="search_uploadfrom_calendar">
+							<div class="ui icon input">
+								<input type="text" placeholder="Upload From" id="search_uploadfrom"/>
+								<i class="calendar icon"></i>
+							</div>
+						</div>
+					</div>
+					
+					<!-- UPLOAD TO DATE BOX -->
+					<div class="field">
+						<div class="ui calendar" id="search_uploadto_calendar">
+							<div class="ui icon input">
+								<input type="text" placeholder="Upload To" id="search_uploadto"/>
+								<i class="calendar icon"></i>
+							</div>
+						</div>
+					</div>
+							
 					<!-- CATEGORY DROPDOWN -->
 					<div class="field">
-						<select class="ui fluid dropdown" name="category">
-							<option value="">Select Category..</option>
-							<option value="memo">Memo</option>
-							<option value="letter">Letter</option>
+						<select class="ui fluid dropdown" id="search_category">
+							<option value="">Category</option>
 						</select>
 					</div>
 						
 					<!-- SEARCH BUTTON -->
 					<div class="field">
-						<button class="ui grey button" type="button">
-							Search
+						<button class="ui grey button" type="button" id="search_clear">
+							Clear Search
 						</button>
 					</div>
 				</div>
 			</form>
 				
 			<!-- TABLE AREA -->
-			<table class="ui compact selectable table">
+			<table class="ui compact selectable table" id="alldocs_table">
 				<thead>
 					<tr>
+						<th>Type</th>
 						<th>Document Title</th>
+						<th>Category</th>
 						<th>Uploader</th>
 						<th>Upload Timestamp</th>
-						<th>Document Type</th>
-						<th>Category</th>
 					</tr>
 				</thead>
-				<tbody></tbody>				
+				<tbody id="alldocs_tablebody"></tbody>				
 			</table>
 			
 		</div>
 	</div>
 	
 <!-- END OF ACTUAL PAGE CONTENTS -->
+		</div>
+		
+		<!-- VIEW - PERSONAL DOCUMENT -->
+		<div class="ui tiny modal" id="viewpersonal_dialog">
+			<div class="header neutral-modal">
+				<h3 class="ui header neutral-modal">
+					<i class="file icon"></i>
+					<div class="content" id="viewpersonal_title"></div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p class="element-rmb"><b>Uploaded By: </b><span id="viewpersonal_uploadedby"></span></p>
+				<p class="element-rmb"><b>Upload Date: </b><span id="viewpersonal_uploaddate"></span></p>
+				<p class="element-rmb"><b>Category: </b><span id="viewpersonal_category"></span></p>
+				<p class="element-rmb"><b>Document Type: </b><span id="viewpersonal_type"></span></p>
+				<p class="element-rmb"><b>File Name: </b><span id="viewpersonal_file"></span></p>
+				<p><b>Description: </b><span id="viewpersonal_description"></span></p>
+				
+				<form method="GET" action="${pageContext.request.contextPath}/FileDownload">
+					<input type="hidden" name="id" id="viewpersonal_download_id">
+					<input type="hidden" name="type" id="viewpersonal_download_type">
+					<button class="ui fluid small button" type="submit">
+						<i class="file icon"></i>View File
+					</button>
+				</form>
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button" id="viewpersonal_close">Close</button>
+			</div>
+		</div>
+		
+		<!-- VIEW - OUTGOING DOCUMENT -->
+		<div class="ui tiny modal" id="viewoutgoing_dialog">
+			<div class="header neutral-modal">
+				<h3 class="ui header neutral-modal">
+					<i class="file icon"></i>
+					<div class="content" id="viewoutgoing_title"></div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<p class="element-rmb"><b>Document Recipient: </b><span id="viewoutgoing_recipient"></span></p>
+				<br>
+				<h5 class="ui horizontal header divider element-rmb element-rmt">
+				  <i class="info circle icon"></i>
+				  File Details
+				</h5>
+				<p class="element-rmb"><b>Uploaded By: </b><span id="viewoutgoing_uploadedby"></span></p>
+				<p class="element-rmb"><b>Upload Date: </b><span id="viewoutgoing_uploaddate"></span></p>
+				<p class="element-rmb"><b>Category: </b><span id="viewoutgoing_category"></span></p>
+				<p class="element-rmb"><b>Document Type: </b><span id="viewoutgoing_type"></span></p>
+				<p class="element-rmb"><b>File Name: </b><span id="viewoutgoing_file"></span></p>
+				<p><b>Description: </b><span id="viewoutgoing_description"></span></p>
+				
+				<form method="GET" action="${pageContext.request.contextPath}/FileDownload">
+					<input type="hidden" name="id" id="viewoutgoing_download_id">
+					<input type="hidden" name="type" id="viewoutgoing_download_type">
+					<input type="hidden" id="viewoutgoing_threadno">
+					<div class="two ui buttons">
+						<button class="ui small button" type="submit">
+							<i class="file icon"></i>View File
+						</button>
+						<button class="ui small blue button" type="button" id="viewoutgoing_view_thread">
+							<i class="folder icon"></i>View Thread
+						</button>
+					</div>
+				</form>
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button" id="viewoutgoing_close">Close</button>
+			</div>
+		</div>
+		
+		<!-- VIEW - INCOMING DOCUMENT -->
+		<div class="ui modal" id="viewincoming_dialog">
+			<div class="header neutral-modal">
+				<h3 class="ui header neutral-modal">
+					<i class="file icon"></i>
+					<div class="content" id="viewincoming_title"></div>
+				</h3>
+			</div>
+			<div class="modal-content">
+				<div class="ui stackable grid">
+					<div class="eight wide column">
+						<p class="element-rmb"><b>Document Source: </b><span id="viewincoming_source"></span></p>
+						<p class="element-rmb"><b>Reference No.: </b><span id="viewincoming_refno"></span></p>
+						<p class="element-rmb"><b>Action Required: </b><span id="viewincoming_action"></span></p>
+						<p class="element-rmb"><b>Action Due: </b><span id="viewincoming_due"></span></p>
+						<p class="element-rmb"><b>Status: </b><span id="viewincoming_status"></span></p>
+						<br>
+						<h5 class="ui horizontal header divider element-rmb element-rmt">
+						  <i class="info circle icon"></i>
+						  File Details
+						</h5>
+						<p class="element-rmb"><b>Uploaded By: </b><span id="viewincoming_uploadedby"></span></p>
+						<p class="element-rmb"><b>Upload Date: </b><span id="viewincoming_uploaddate"></span></p>
+						<p class="element-rmb"><b>Category: </b><span id="viewincoming_category"></span></p>
+						<p class="element-rmb"><b>Document Type: </b><span id="viewincoming_type"></span></p>
+						<p class="element-rmb"><b>File Name: </b><span id="viewincoming_file"></span></p>
+						<p><b>Description: </b><span id="viewincoming_description"></span></p>
+						
+						<form method="GET" action="${pageContext.request.contextPath}/FileDownload">
+							<input type="hidden" name="id" id="viewincoming_download_id">
+							<input type="hidden" name="type" id="viewincoming_download_type">
+							<input type="hidden" id="viewincoming_threadno">
+							<div class="two ui buttons">
+								<button class="ui small button" type="submit">
+									<i class="file icon"></i>View File
+								</button>
+								<button class="ui small blue button" type="button" id="viewincoming_view_thread">
+									<i class="folder icon"></i>View Thread
+								</button>
+							</div>
+						</form>
+					</div>
+					
+					<div class="eight wide column">
+						<!-- NOTE FORM -->
+						<form class="ui form" action="${pageContext.request.contextPath}/UpdateStatus" method="POST" id="edit_note_form">
+							<input type="hidden" name="id" id="viewincoming_note_id">
+							<input type="hidden" name="type" id="viewincoming_note_type">
+						
+							<div  class="field element-rmb">
+								<label>Note:</label>
+								<textarea name="note" rows="2" id="view_incoming_note"></textarea>
+							</div>
+							<button type="submit"name="button_choice" value="Edit Note" class="ui tiny fluid orange button">
+								<i class="pencil icon"></i>
+								Edit Note
+							</button>
+							
+							<div class="ui orange message" id="note_orange_message">
+								<i class="close icon" id="close_note_orange_message"></i>
+								<div class="header">Note update failed.</div>
+							</div>
+							<div class="ui green message" id="note_green_message">
+								<i class="close icon" id="close_note_green_message"></i>
+								<div class="header">Note updated!</div>
+							</div>
+						</form>
+						
+						<br>
+						
+						<!-- SET DOCUMENT AS DONE FORM -->
+						<form class="ui form" action="${pageContext.request.contextPath}/UpdateStatus" method="POST" id="mark_as_done_form">
+							<input type="hidden" name="id" id="viewincoming_done_id">
+							<input type="hidden" name="type" id="viewincoming_done_type">
+						
+							<button class="ui tiny fluid green button" type="button" id="mark_as_done_btn">
+								<i class="check icon"></i>
+								Mark as Done
+							</button>
+							<div class="ui compact segment element-rmt" id="mark_as_done_conf">
+								<h4>Are you sure you want to set this document as done?</h4>
+								<div class="ui buttons">
+							 		<button type="submit"name="button_choice" value="Mark as Done" class="ui green button" type="submit">Yes</button>
+							  		<div class="or"></div>
+							  		<button class="ui button" type="button" id="mark_as_done_no">No</button>
+								</div>
+							</div>
+							
+						</form>
+					</div>
+				
+				</div>
+			</div>
+			<div class="actions center-text">
+				<button class="ui ok secondary button" id="viewincoming_close">Close</button>
+			</div>
 		</div>
 		
 		<!-- NOTIFICATIONS MODAL -->
@@ -362,7 +542,10 @@
 	<script src="${pageContext.request.contextPath}/resource/dataTable/jquery.dataTables.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/dataTable/dataTables.semanticui.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/categories.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/documents/view_all_documents.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/notifications.js"></script>
 </html>
