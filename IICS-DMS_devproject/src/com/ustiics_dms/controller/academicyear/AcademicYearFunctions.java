@@ -65,6 +65,19 @@ public class AcademicYearFunctions {
 			return rs;
 	}
 	
+	public static String getAcademicYearMail() throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			
+			PreparedStatement prep = con.prepareStatement("SELECT start_year, end_year FROM academic_year WHERE status = ?");
+			
+			prep.setString(1, "Current");
+			
+			ResultSet rs = prep.executeQuery();
+			rs.next();
+			return "A.Y. " + rs.getString("start_year") + "-" + rs.getString("end_year");
+	}
+	
 	public static ResultSet getAllAcademicYear() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();

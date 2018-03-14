@@ -31,7 +31,8 @@ public class ExternalMail {
 		this.timestamp = timestamp;
 		this.status = status;
 	}
-
+	
+	
 	public String getId() {
 		return id;
 	}

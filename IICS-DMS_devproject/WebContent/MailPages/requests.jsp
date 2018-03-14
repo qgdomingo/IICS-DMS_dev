@@ -263,7 +263,7 @@
 					
 					<div class="five wide column">
 						<!-- NOTE FORM -->
-						<form class="ui form" action="${pageContext.request.contextPath}/" method="POST" id="edit_note_form">
+						<form class="ui form" action="${pageContext.request.contextPath}/EditRequestNote" method="POST" id="edit_note_form">
 							<input type="hidden" name="id" id="view_mail_note_id">
 						
 							<div  class="field element-rmb">
@@ -288,7 +288,7 @@
 						<br>
 						
 						<!-- SET DOCUMENT AS DONE FORM -->
-						<form class="ui form" action="${pageContext.request.contextPath}/" method="POST" id="mark_as_done_form">
+						<form class="ui form" action="${pageContext.request.contextPath}/ApproveRequestMail" method="POST" id="mark_as_done_form">
 							<input type="hidden" name="id" id="view_mail_done_id">
 						
 							<button class="ui tiny fluid green button" type="button" id="mark_as_done_btn">
@@ -298,7 +298,7 @@
 							<div class="ui compact segment element-rmt" id="mark_as_done_conf">
 								<h4>Are you sure you want to approve this document?</h4>
 								<div class="ui buttons">
-							 		<button type="submit"name="button_choice" value="Mark as Done" class="ui green button" type="submit">Yes</button>
+							 		<button name="button_choice" value="Mark as Done" class="ui green button" type="submit">Yes</button>
 							  		<div class="or"></div>
 							  		<button class="ui button" type="button" id="mark_as_done_no">No</button>
 								</div>

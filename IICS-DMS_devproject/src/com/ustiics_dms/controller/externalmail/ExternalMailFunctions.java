@@ -1,6 +1,7 @@
 package com.ustiics_dms.controller.externalmail;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,8 +37,8 @@ public class ExternalMailFunctions {
 	public static void SendMailToDirector (String firstName, String lastName, String emailAddress, String contactNumber, String affiliation, String subject, String message, FileItem fileData) throws SQLException, IOException 
 	{
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("INSERT INTO external_mail (id, first_name, last_name, email, contact_number, affiliation, subject, message, file_name, file_data) VALUES (?,?,?,?,?,?,?,?,?,?)");
-		
+		PreparedStatement prep = con.prepareStatement("INSERT INTO external_mail (thread_number, first_name, last_name, email, contact_number, affiliation, subject, message, file_name, file_data) VALUES (?,?,?,?,?,?,?,?,?,?)");
+
 		prep.setInt(1, getCounter());
 		prep.setString(2, firstName);
 		prep.setString(3, lastName);
@@ -135,10 +136,32 @@ public class ExternalMailFunctions {
 		return rs.getInt("counter");
 		
 	}
+	public static ResultSet getExternalUserDetails(String threadNo) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT * FROM external_mail WHERE thread_number = ?");
+		prep.setString(1, threadNo);
+		ResultSet rs = prep.executeQuery();
+		
+		return rs;
+		
+	}
+	
 	public static ResultSet getExternalMail() throws SQLException
 	{
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("SELECT id, first_name, last_name, email, contact_number, affiliation, subject, message, file_name, sent_timestamp, status FROM external_mail");
+		PreparedStatement prep = con.prepareStatement("SELECT *  FROM external_mail");
+
+		ResultSet rs = prep.executeQuery();
+		
+		return rs;
+		
+	}
+	
+	public static ResultSet getSentExternalMail() throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT *  FROM sent_external_mail");
 
 		ResultSet rs = prep.executeQuery();
 		
@@ -182,6 +205,7 @@ public class ExternalMailFunctions {
 	       Multipart multipart = new MimeMultipart();
 	        
 	       MimeBodyPart messageContent = new MimeBodyPart();
+
 	       messageContent.setText(contextPath + "/replyfromemail.jsp?thread_number=" + threadNumber);
 	       MimeBodyPart attachment = new MimeBodyPart();
 	       attachment = new MimeBodyPart();
@@ -209,9 +233,10 @@ public class ExternalMailFunctions {
 	       {
 	           String fileName = rs.getString("file_name");
 	           Blob fileData = rs.getBlob("file_data");
+	           InputStream dataStream = rs.getBinaryStream("file_data");
 	           String description = "";
 
-	           return new File(id, fileName, fileData, description);
+	           return new File(id, fileName, fileData, dataStream, description);
 	       }
 	       return null;
 	}
@@ -232,7 +257,7 @@ public class ExternalMailFunctions {
 		
 		PreparedStatement prep = con.prepareStatement("INSERT INTO sent_external_mail (thread_number, recipient, subject, message, file_name, file_data, sent_by) VALUES (?,?,?,?,?,?,?)");
 		String recipient = getEmail(threadNumber);
-		prep.setString(1, threadNumber);
+		prep.setString(1, AesEncryption.decrypt(threadNumber));
 		prep.setString(2, recipient);
 		prep.setString(3, subject);
 		prep.setString(4, message);
@@ -264,15 +289,16 @@ public class ExternalMailFunctions {
 	public static String getEmail(String id) throws SQLException
 	{
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("SELECT email FROM external_mail WHERE id = ?");
-		prep.setString(1, id);
+		PreparedStatement prep = con.prepareStatement("SELECT email FROM external_mail WHERE thread_number = ?");
+		String decryptedId = AesEncryption.decrypt(id);
+		prep.setString(1, decryptedId);
 		
 		ResultSet rs = prep.executeQuery();
 		
 		rs.next();
 		
 		String email = rs.getString("email");
-		System.out.println(email);
+
 		return email;
 		
 	}

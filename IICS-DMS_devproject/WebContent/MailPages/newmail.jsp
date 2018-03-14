@@ -173,7 +173,7 @@
 				
 			<!-- FORM FOR LETTER -->
 				<form class="ui form" method="post" action="${pageContext.request.contextPath}/ForwardMail" id="letter_form"> 
-					<input type="hidden" name="type" id="mail_type" />
+					<input type="hidden" name="type" id="mail_letter_type" />
 				
 				<% if(!restrictionCase1) { %>
 					<h3 class="ui diving header">
@@ -224,7 +224,7 @@
 							<input type="text" placeholder="Header Line 2" name="addressee_line2" />
 						</div>
 						<div class="field">
-							<input type="text" placeholder="Header Line 3" name="addressee_line2" />
+							<input type="text" placeholder="Header Line 3" name="addressee_line3" />
 						</div>
 					</div>
 					
@@ -273,7 +273,7 @@
 				
 			<!-- FORM FOR MEMO AND NOTICE -->
 				<form class="ui form" method="post" action="${pageContext.request.contextPath}/ForwardMail" id="memo_notice_form"> 
-					<input type="hidden" name="type" id="mail_type" />
+					<input type="hidden" name="type" id="mail_memo_notice_type" />
 				
 				<% if(!restrictionCase1) { %>
 					<h3 class="ui diving header">
