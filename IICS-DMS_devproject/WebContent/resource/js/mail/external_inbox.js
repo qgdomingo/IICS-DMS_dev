@@ -209,5 +209,6 @@
 		$('#search_mail').val('');
 		$('#search_sentfrom_calendar').calendar('clear');
 		$('#search_sentto_calendar').calendar('clear');
+		if(!isExternalInboxMailTableEmpty) externalInboxMailTable.search('').draw();
 	}
 	

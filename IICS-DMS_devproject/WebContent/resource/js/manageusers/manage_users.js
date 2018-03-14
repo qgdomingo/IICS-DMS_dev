@@ -205,6 +205,7 @@
 		$('#search_usertype').dropdown('restore defaults');
 		$('#search_department').dropdown('restore defaults');
 		$('#search_status').dropdown('restore defaults');
+		if(!isUsersTableEmpty) table.search('').draw();
 	}
 	
 

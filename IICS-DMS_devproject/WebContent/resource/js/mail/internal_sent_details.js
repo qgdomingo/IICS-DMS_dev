@@ -167,5 +167,6 @@
 		$('#search_user').val('');
 		$('#search_acknowledge_date_calendar').calendar('clear');
 		$('#search_status').dropdown('restore defaults');
+		if(!isSentToUsersTableEmpty) sentToUsersTable.search('').draw();
 	});
 	

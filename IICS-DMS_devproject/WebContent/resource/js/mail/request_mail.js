@@ -308,5 +308,6 @@
 		$('#search_type').dropdown('restore defaults');
 		$('#search_sentfrom_calendar').calendar('clear');
 		$('#search_sentto_calendar').calendar('clear');
+		if(!isRequestMailTableEmpty) requestMailTable.search('').draw();
 	}
 	

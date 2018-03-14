@@ -130,4 +130,5 @@
 		$('#search_event').val('');
 		$('#search_datefrom_calendar').calendar('clear');
 		$('#search_dateto_calendar').calendar('clear');
+		if(!isEventListTableEmpty) eventListTable.search('').draw();
 	});

@@ -125,11 +125,23 @@
 		$('#alldocs_table tbody').on('dblclick', 'tr', function () {
 			selectedID = $(this).attr('id');
 			selectedType = localAllDocsData[selectedID].type;
+
 		   	if(selectedType == 'oFiucZA+akmNSB/GHfGpJw==') {
-		   		
+		   		getPersonalDocumentsData(selectedID);
+			    $('#viewpersonal_dialog').modal({
+					closable: false,
+					autofocus: false,
+					observeChanges: true
+				}).modal('show');
 		   	}
 		   	else if(selectedType == 'V2m+nDkHv8hyhX08f1QpBg==') {
+		   		getOutgoingDocumentsData(selectedID);
 		   		
+			    $('#viewoutgoing_dialog').modal({
+					closable: false,
+					autofocus: false,
+					observeChanges: true
+				}).modal('show');
 		   	}
 		   	else if(selectedType == 'JfkL3LhppTMte3SuOtRe/A==') {
 		   		getIncomingDocumentsData(selectedID);
@@ -148,7 +160,47 @@
 		});
 	}
 	
-	/* GET - Populate Dialog For View File */
+	/* GET - Populate Dialog For View Outgoing File */
+	function getOutgoingDocumentsData(id) {
+		var selectedData = localAllDocsData[id];
+		$('#viewoutgoing_title').text(selectedData['title']);
+		$('#viewoutgoing_recipient').text(selectedData['sourceRecipient']);
+		$('#viewoutgoing_uploadedby')
+			.text(selectedData['createdBy'] + ' <' + selectedData['email'] + '>');
+		$('#viewoutgoing_uploaddate').text(selectedData['timeCreated']);
+		$('#viewoutgoing_category').text(selectedData['category']);
+		$('#viewoutgoing_type').text('Outgoing');
+		$('#viewoutgoing_file').text(selectedData['fileName']);
+		$('#viewoutgoing_description').text(selectedData['description']);
+		$('#viewoutgoing_download_id').val(selectedData['id']);
+		$('#viewoutgoing_download_type').val(selectedData['type']);
+		$('#viewoutgoing_threadno').val(selectedData['threadNumber']);
+	}
+	
+	/* VIEW THREAD - Outgoing View */
+	$('#viewoutgoing_view_thread').click(function() {
+		var url = getContextPath() + '/files/thread.jsp?id=' 
+			+ encodeURIComponent($('#viewoutgoing_threadno').val())
+			+ '&origin=2';
+			
+		document.location.href = url;
+	});
+	
+	/* GET - Populate Dialog For View Personal File */
+	function getPersonalDocumentsData(id) {
+		var selectedData = localAllDocsData[id];
+		$('#viewpersonal_title').text(selectedData['title']);
+		$('#viewpersonal_uploadedby').text(selectedData['createdBy']);
+		$('#viewpersonal_uploaddate').text(selectedData['timeCreated']);
+		$('#viewpersonal_category').text(selectedData['category']);
+		$('#viewpersonal_type').text('Personal');
+		$('#viewpersonal_file').text(selectedData['fileName']);
+		$('#viewpersonal_download_id').val(selectedData['id']);
+		$('#viewpersonal_download_type').val(selectedData['type']);
+		$('#viewpersonal_description').text(selectedData['description']);
+	}
+	
+	/* GET - Populate Dialog For View Incoming File */
 	function getIncomingDocumentsData(id) {
 		var selectedData = localAllDocsData[id];
 		$('#viewincoming_title').text(selectedData['title']);
@@ -179,7 +231,7 @@
 		}
 	}
 	
-	/* VIEW THREAD */
+	/* VIEW THREAD - Incoming */
 	$('#viewincoming_view_thread').click(function() {
 		var url = getContextPath() + '/files/thread.jsp?id=' 
 			+ encodeURIComponent($('#viewincoming_threadno').val())
@@ -302,7 +354,7 @@
 	});
 	
 	/* CLEAR SEARCH EVENT */
-	$('#search_clear').click(() => {
+	$('#search_clear').click( function() {
 		clearAllDocsSearch();
 	});
 		
@@ -313,4 +365,5 @@
 		$('#search_uploadfrom_calendar').calendar('clear');
 		$('#search_uploadto_calendar').calendar('clear');
 		$('#search_category').dropdown('restore defaults');
+		if(!isAllDocsTableEmpty) allDocsTable.search('').draw();
 	}

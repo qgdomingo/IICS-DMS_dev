@@ -14,6 +14,7 @@
 		retrieveCategory('#taskscreated_category');
 		retrieveCategory('#addtask_category');
 		retrieveTasksCreated();
+		getAcadYearList('#search_acad_year');
 	});
 
 /*
@@ -36,6 +37,7 @@
 						.append($('<td>').text(mytask.deadline))
 						.append($('<td>').text(mytask.category))
 						.append($('<td>').text(mytask.status))
+						.append($('<td>').text(mytask.schoolYear))
 				});
 				
 				// bind events and classes to the table after all data received
@@ -49,14 +51,14 @@
 			else if(responseData.length == 0)
 			{
 				$('<tr>').appendTo('#taskscreated_tablebody')
-					.append($('<td class="center-text" colspan="5">')
+					.append($('<td class="center-text" colspan="6">')
 							.text("You do not have tasks you created. Click on 'Add Task' to add one."));
 				removeCSSClass('#taskscreated_loading', 'active');	
 			}
 			else
 			{
 				$('<tr>').appendTo('#taskscreated_tablebody')
-				.append($('<td class="center-text error" colspan="5">')
+				.append($('<td class="center-text error" colspan="6">')
 						.text("Unable to retrieve list of the tasks you created. :("));
 				removeCSSClass('#taskscreated_loading', 'active');
 				callFailRequestModal();
@@ -64,7 +66,7 @@
 		})
 		.fail((response) => {
 			$('<tr>').appendTo('#taskscreated_tablebody')
-			.append($('<td class="center-text error" colspan="5">')
+			.append($('<td class="center-text error" colspan="6">')
 					.text("Unable to retrieve list of the tasks you created. :("));
 			removeCSSClass('#taskscreated_loading', 'active');
 			callFailRequestModal();
@@ -104,6 +106,7 @@
 			+ '<td>' + newData[3] + '</td>'
 			+ '<td>' + newData[4] + '</td>'
 			+ '<td>' + newData[5] + '</td>'
+			+ '<td>' + newData[6] + '</td>'
 		+ '</tr>';
 		
 		return rowString;
@@ -141,7 +144,12 @@
 	$('#taskscreated_status').on('change', function() {
 		if(!isCreatedTasksTableEmpty) createdTasksTable.column(4).search( $(this).val() ).draw();
 	});
-			
+		
+	/* SEARCH - Academic Year */
+	$('#search_acad_year').on('change', function() {
+		if(!isCreatedTasksTableEmpty) createdTasksTable.column(5).search( $(this).val() ).draw();
+	});
+	
 	$('#taskscreated_clear').click(() => {
 		resetTasksCreatedSearchFields();
 	})
@@ -152,4 +160,6 @@
 		$('#taskscreated_deadline_calendar').calendar('clear');
 		$('#taskscreated_category').dropdown('restore defaults');
 		$('#taskscreated_status').dropdown('restore defaults');
+		$('#search_acad_year').dropdown('restore defaults');
+		if(!isCreatedTasksTableEmpty) createdTasksTable.search('').draw();
 	}

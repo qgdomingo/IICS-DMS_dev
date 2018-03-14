@@ -233,6 +233,7 @@
 		$('#search_filter').val('');
 		$('#event_response_timestamp_calendar').calendar('clear');
 		$('#response_status_filter').dropdown('restore defaults');
+		if(!isInvitedUsersTableEmpty) invitedUsersTable.search('').draw();
 	});
 		
 	

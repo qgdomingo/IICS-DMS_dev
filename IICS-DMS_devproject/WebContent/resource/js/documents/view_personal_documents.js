@@ -190,4 +190,5 @@
 		$('#search_uploadfrom_calendar').calendar('clear');
 		$('#search_uploadto_calendar').calendar('clear');
 		$('#search_category').dropdown('restore defaults');
+		if(!isPersonalDocsTableEmpty) personalDocsTable.search('').draw();
 	}
