@@ -30,10 +30,10 @@ public class ArchiveDocument extends HttpServlet {
 		{
 			String button = request.getParameter("archive");
 			
-//			if(button.equals("archive"))
-//			{
+			if(button.equals("archive"))
+			{
 				ArchiveDocumentFunctions.transferToArchived();
-//			}
+			}
 			
 
 		} 
