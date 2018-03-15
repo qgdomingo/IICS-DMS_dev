@@ -243,8 +243,9 @@
 					</div>
 				</div>
 				
-				<form class="ui form element-mb" method="GET" action="" id="view_attachment_form">
+				<form class="ui form element-mb" method="GET" action="${pageContext.request.contextPath}/RetrieveExternalMailAttachment" id="view_attachment_form">
 					<input type="hidden" name="id" id="view_attachment_id">
+					<input type="hidden" name="type" id="view_attachment_type">
 					
 					<div class="inline field">
    						<label><b>File Name: </b><span id="view_mail_file_name"></span></label>

@@ -135,6 +135,7 @@
 			
 		if( !(selectedData.fileName == '') ) {
 			$('#view_attachment_id').val(selectedData.id);
+			$('#view_attachment_type').val(selectedData.type);
 			$('#view_mail_file_name').text(selectedData.fileName);
 		}
 		else {

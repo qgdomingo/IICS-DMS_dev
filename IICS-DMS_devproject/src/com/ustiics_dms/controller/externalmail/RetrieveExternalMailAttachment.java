@@ -25,7 +25,8 @@ public class RetrieveExternalMailAttachment extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		try {
-			int id = Integer.parseInt(AesEncryption.decrypt(request.getParameter("id")));
+			// AesEncryption.decrypt(
+			int id = Integer.parseInt(request.getParameter("id"));
 			String type = request.getParameter("type");
 			File file = ExternalMailFunctions.getPdf(id, type);
 			String contentType = this.getServletContext().getMimeType(file.getFileName());

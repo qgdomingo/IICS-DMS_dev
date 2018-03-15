@@ -111,6 +111,7 @@
 		$('#view_mail_timestamp').text(selectedData.timeStamp);
 		$('#view_mail_subject').text(selectedData.subject);
 		$('#view_mail_message').text(selectedData.message);
+		$('#view_attachment_type').val(selectedData.type);
 		$('#view_attachment_id').val(selectedData.mailID);
 		$('#view_mail_file_name').text(selectedData.fileName)
 	}

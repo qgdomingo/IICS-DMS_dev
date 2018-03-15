@@ -14,6 +14,7 @@ public class ExternalMail {
 	private String fileName;
 	private String timestamp;
 	private String status;
+	private String type;
 	
 	public ExternalMail(String id, String firstName, String lastName, String email, String contactNumber, 
 			String affiliation, String subject, String message, String fileName, String timestamp,
@@ -30,6 +31,7 @@ public class ExternalMail {
 		this.fileName = fileName;
 		this.timestamp = timestamp;
 		this.status = status;
+		this.type = "Internal to External";
 	}
 	
 	
