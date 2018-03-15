@@ -191,7 +191,7 @@ public class ExternalMailFunctions {
 		
 	}
 	
-	public static void send(String to, String subject, String msg, String threadNumber, int id, final String user,final String pass, String contextPath) throws Exception
+	public static void send(String type,String to, String subject, String msg, String threadNumber, int id, final String user,final String pass, String contextPath) throws Exception
     { 
   
 	    Properties props = new Properties();
@@ -214,7 +214,7 @@ public class ExternalMailFunctions {
 		  	  }
 	    });
     
-		   File file = ExternalMailFunctions.getPdf(id);
+		   File file = ExternalMailFunctions.getPdf(id,type);
 		 
 		   MimeMessage message = new MimeMessage(session);
 	       message.setFrom(new InternetAddress(user));
@@ -242,17 +242,23 @@ public class ExternalMailFunctions {
 	       Transport.send(message);
     }
 	
-	public static File getPdf (int id) throws SQLException 
+	public static File getPdf (int id, String type) throws SQLException 
 	{
 		   Connection con = DBConnect.getConnection();
 			
-	       PreparedStatement prep = con.prepareStatement("SELECT file_name, file_data FROM sent_external_mail WHERE id = ?");
+	       PreparedStatement prep = con.prepareStatement("SELECT file_name, file_data FROM sent_external_mail WHERE id = ? AND type = ?" + 
+	       		" UNION " + 
+	       		"SELECT file_name, file_data FROM external_mail WHERE id = ? AND type = ? ");
+
 	       prep.setInt(1, id);
-	       
+	       prep.setString(2, type);
+	       prep.setInt(3, id);
+	       prep.setString(4, type);
 	       ResultSet rs = prep.executeQuery();
 	       
 	       if (rs.next()) 
 	       {
+	    	   
 	           String fileName = rs.getString("file_name");
 	           Blob fileData = rs.getBlob("file_data");
 	           InputStream dataStream = rs.getBinaryStream("file_data");
@@ -273,7 +279,7 @@ public class ExternalMailFunctions {
 			return rs.getInt("Auto_increment")-1;
 	}
 	
-	public static void saveSentExternalMail(String threadNumber, String subject, String message, FileItem fileData, String sentBy, String contextPath) throws Exception
+	public static void saveSentExternalMail(String type,String threadNumber, String subject, String message, FileItem fileData, String sentBy, String contextPath) throws Exception
 	{
 		Connection con = DBConnect.getConnection();
 		
@@ -289,7 +295,7 @@ public class ExternalMailFunctions {
 
 		prep.executeUpdate();
 		threadNumber = AesEncryption.encrypt(threadNumber);
-		ExternalMailFunctions.send(recipient, subject, message, threadNumber , ExternalMailFunctions.getIncrement(), "iics2014dmsystem@gmail.com", "bluespace09", contextPath);
+		ExternalMailFunctions.send(type,recipient, subject, message, threadNumber , ExternalMailFunctions.getIncrement(), "iics2014dmsystem@gmail.com", "bluespace09", contextPath);
 	}
 	
 	public static String getName(String id) throws SQLException
@@ -367,4 +373,6 @@ public class ExternalMailFunctions {
 		
 		prep.executeUpdate();
 	}
+	
+	
 }

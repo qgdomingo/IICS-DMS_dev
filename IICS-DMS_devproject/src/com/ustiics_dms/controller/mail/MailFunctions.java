@@ -193,6 +193,41 @@ public class MailFunctions {
 	}
 	
 	//Requests
+	public static void forwardRequestMail(String id, String type, String[] recipient, String[] externalRecipient, String  subject, String  message, String  name, String  sentBy, String userType, String department, String addressLine1, String addressLine2, String addressLine3, String closingRemarks) throws SQLException
+	{
+		String recipientString = "";
+		
+		if(recipient != null) {
+			recipientString = String.join(",", recipient);
+		} 
+			
+		String externalRecipientString =  "";
+		
+		if(externalRecipient != null) {
+			externalRecipientString = String.join(",", externalRecipient);
+		} 
+		
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("UPDATE request SET type = ? recipient = ? external_recipient = ? subject = ? message = ? sender_name = ? sent_by = ? department =? address_line1 = ? address_line2 = ? address_line3 = ? closing_remarks = ? WHERE id = ? ");
+		prep.setString(1, type);
+		prep.setString(2, recipientString);
+		prep.setString(3, externalRecipientString);
+		prep.setString(4, subject);
+		prep.setString(5, message);
+		prep.setString(6, name);
+		prep.setString(7, sentBy);
+		prep.setString(8, department);
+		prep.setString(9, addressLine1);
+		prep.setString(10, addressLine2);
+		prep.setString(11, addressLine3);
+		prep.setString(12, closingRemarks);
+		prep.setString(13, id);
+		prep.executeUpdate();
+
+		String des = name +" sent you a mail request, "+ subject + ", for your approval.";
+		NotificationFunctions.addNotification("Request Mail Page", des, getToSendRequestApprovers(sentBy, userType, department));
+	}
+	
 	public static void forwardRequestMail(String type, String[] recipient, String[] externalRecipient, String  subject, String  message, String  name, String  sentBy, String userType, String department, String addressLine1, String addressLine2, String addressLine3, String closingRemarks) throws SQLException
 	{
 		String recipientString = "";

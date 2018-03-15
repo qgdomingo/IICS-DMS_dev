@@ -11,6 +11,7 @@ public class SentExternalMail {
 				// mail ID
 				// mail file name
 				// thread number
+	private String type;
 	private String recipientName;
 	private String affiliation;
 	private String recipientContactNo;
@@ -25,6 +26,7 @@ public class SentExternalMail {
 	public SentExternalMail(String recipientName, String affiliation, String recipientContactNo, String senderName,
 			String timeStamp, String subject, String message, String mailID, String fileName, String threadNumber) {
 		super();
+		this.type = "Internal to External";
 		this.recipientName = recipientName;
 		this.affiliation = affiliation;
 		this.recipientContactNo = recipientContactNo;

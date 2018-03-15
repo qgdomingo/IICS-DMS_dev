@@ -2,6 +2,7 @@ package com.ustiics_dms.model;
 
 public class ExternalUser {
 
+	private String type;
 	private String id;
 	private String threadNumber;
 	private String firstName;
@@ -20,6 +21,7 @@ public class ExternalUser {
 			String contactNumber, String affiliation, String subject, String message, String fileName, String status,
 			String timestamp) {
 		super();
+		this.type = "External to Internal";
 		this.id = id;
 		this.threadNumber = threadNumber;
 		this.firstName = firstName;
