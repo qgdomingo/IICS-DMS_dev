@@ -287,6 +287,21 @@ public class MailFunctions {
 			return rs;
 	}
 	
+	public static void sendRequestMail (String id) throws Exception
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT * FROM request WHERE id = ?");
+		prep.setString(1, id);
+		ResultSet rs = prep.executeQuery();
+		
+		if(rs.next())
+		{
+			//String type, String[] recipient, String[] externalRecipient, String  subject, String message, String  name, String  sentBy, String department, String addressLine1, String addressLine2, String addressLine3, String closingLine
+			saveMailInformation(rs.getString("type"), null, null, rs.getString("subject"), rs.getString("message"), rs.getString("sender_name"), rs.getString("sent_by"), rs.getString("department"), rs.getString("address_line1"), rs.getString("address_line2"), rs.getString("address_line3"), rs.getString("closing_remarks"));
+			
+		}
+	}
+	
 	public static void approveRequestMail(String id) throws SQLException, IOException, DocumentException
 	{
 			Connection con = DBConnect.getConnection();
