@@ -31,7 +31,7 @@ public class ExternalMail {
 		this.fileName = fileName;
 		this.timestamp = timestamp;
 		this.status = status;
-		this.type = "Internal to External";
+		this.type = "External to Internal";
 	}
 	
 	

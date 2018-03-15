@@ -320,7 +320,7 @@ public class ExternalMailFunctions {
 		PreparedStatement prep = con.prepareStatement("SELECT email FROM external_mail WHERE thread_number = ?");
 		String decryptedId = AesEncryption.decrypt(id);
 		prep.setString(1, decryptedId);
-		
+
 		ResultSet rs = prep.executeQuery();
 		
 		rs.next();
