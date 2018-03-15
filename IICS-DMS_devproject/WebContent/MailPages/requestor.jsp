@@ -242,63 +242,82 @@
 						<p class="element-rmb"><b>Sender: </b><span id="view_mail_sender"></span></p>
 						<p class="element-rmb"><b>Status: </b><span id="view_mail_status"></span></p>
 				
+					<form class="ui form element-mb" action="" method="">	
+				
 						<h5 class="ui dividing header">
 		  					Mail Recipients
 						</h5> 
 						
-						<p class="element-rmb"><b>Recipient: </b><span id="view_mail_recipient"></span></p>
-						<p class="element-rmb"><b>External Recipient: </b><span id="view_mail_external_recipient"></span></p>
+						<div class="field">
+							<label>Recipient:</label>
+							<input type="text" name="internal_to" id="view_mail_recipient" />
+						</div>
+						
+						<div class="field">
+							<label>External Recipient:</label>
+							<input type="text" name="external_to" id="view_mail_external_recipient" />
+						</div>
 						
 						<h5 class="ui dividing header">
 		  					<span id="view_mail_type_label"></span> Content
 						</h5> 
 						
-						<div class="ui form element-mb">
-							
-							<div class="field">
-								<label>Addressee:</label>
-								<input type="text" id="view_mail_addressee" readonly/>
-							</div>	
-							
-							<div class="field" id="view_mail_line2_field">
-								<label>Addressee Line 2:</label>
-								<input type="text" id="view_mail_line2" readonly/>
-							</div>	
-							
-							<div class="field" id="view_mail_line3_field">
-								<label>Addressee Line 3:</label>
-								<input type="text" id="view_mail_line3" readonly/>
-							</div>	
-							
-							<div class="field" id="view_mail_from_field">
-								<label>From:</label>
-								<input type="text" id="view_mail_from" readonly/>
-							</div>	
-							
-							<div class="field">
-								<label>Subject:</label>
-								<input type="text" id="view_mail_subject" readonly/>
-							</div>		
+						<div class="field">
+							<label>Addressee:</label>
+							<input type="text" name="addressee_line1" id="view_mail_addressee"/>
+						</div>	
+						
+						<div class="field" id="view_mail_line2_field">
+							<label>Addressee Line 2:</label>
+							<input type="text" name="addressee_line2" id="view_mail_line2"/>
+						</div>	
+						
+						<div class="field" id="view_mail_line3_field">
+							<label>Addressee Line 3:</label>
+							<input type="text" name="addressee_line3" id="view_mail_line3"/>
+						</div>	
+						
+						<div class="field" id="view_mail_from_field">
+							<label>From:</label>
+							<input type="text" name="from" id="view_mail_from"/>
+						</div>	
+						
+						<div class="field">
+							<label>Subject:</label>
+							<input type="text" name="subject" id="view_mail_subject"/>
+						</div>		
 
-							<div class="field">
-								<label>Message:</label>	
-								<textarea rows="5" id="view_mail_message" readonly></textarea>
-							</div>
-							
-							<div class="field">
-								<label>Closing Remark:</label>
-								<input type="text" id="view_mail_closingremark" readonly/>
-							</div>
+						<div class="field">
+							<label>Message:</label>	
+							<textarea rows="5" name="message" id="view_mail_message"></textarea>
 						</div>
 						
-						<form class="ui form" >
+						<div class="field">
+							<label>Closing Remark:</label>
+							<input type="text" name="closing_line" id="view_mail_closingremark"/>
+						</div>
 						
-							<div class="field element-rmb">
-								<label>Note:</label>
-								<textarea name="note" rows="2" id="view_mail_note" readonly></textarea>
-							</div>
-							
-						</form>
+						<div class="field element-rmb">
+							<label>Note:</label>
+							<textarea name="note" rows="2" id="view_mail_note" readonly></textarea>
+						</div>
+						
+						<button class="ui orange button" name="submit_btn" value="edit" type="submit" id="submit_edit">
+							<i class="edit icon"></i>
+							Edit Mail
+						</button>
+						
+						<button class="ui green button" name="submit_btn" value="send" type="submit" id="submit_send">
+							<i class="check icon"></i>
+							Send Mail
+						</button>
+						
+						<button class="ui blue button" name="submit_btn" value="export" type="submit" id="submit_download">
+							<i class="download icon"></i>
+							Export Mail
+						</button>
+				</form>		
+				
 
 			</div>
 			<div class="actions center-text">

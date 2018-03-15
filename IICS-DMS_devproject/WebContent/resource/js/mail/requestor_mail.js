@@ -53,7 +53,7 @@
 	function getRequestMail() {
 		addCSSClass('#request_loading', 'active');
 			
-		$.get(getContextPath() + '/RetrieveRequestMail', function(response) {
+		$.get(getContextPath() + '/RetrieveRequesterMail', function(response) {
 			$('#request_tablebody').empty();
 			
 			if(!response.length == 0) 
@@ -123,8 +123,8 @@
 		$('#view_mail_sender').text(selectedData.senderName + ' (' + selectedData.sentBy + ')');
 		$('#view_mail_status').text(selectedData.status);
 		
-		$('#view_mail_recipient').text(selectedData.recipient);
-		$('#view_mail_external_recipient').text(selectedData.externalRecipient);
+		$('#view_mail_recipient').val(selectedData.recipient);
+		$('#view_mail_external_recipient').val(selectedData.externalRecipient);
 		
 		$('#view_mail_addressee').val(selectedData.addressLine1);
 		
@@ -150,6 +150,17 @@
 		$('#view_mail_closingremark').val(selectedData.closingRemark);
 		
 		$('#view_mail_note').val(selectedData.note);
+		
+		if(selectedData.status == 'Pending') {
+			$('#submit_edit').show();
+			$('#submit_send').hide();
+			$('#submit_download').hide();
+		}
+		else if(selectedData.status = 'Approved') {
+			$('#submit_edit').hide();
+			$('#submit_send').show();
+			$('#submit_download').show();
+		}
 	}
 	
 /*
