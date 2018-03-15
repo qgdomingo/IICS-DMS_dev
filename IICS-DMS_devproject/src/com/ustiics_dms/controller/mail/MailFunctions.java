@@ -298,8 +298,12 @@ public class MailFunctions {
 		{
 			//String type, String[] recipient, String[] externalRecipient, String  subject, String message, String  name, String  sentBy, String department, String addressLine1, String addressLine2, String addressLine3, String closingLine
 			saveMailInformation(rs.getString("type"), null, null, rs.getString("subject"), rs.getString("message"), rs.getString("sender_name"), rs.getString("sent_by"), rs.getString("department"), rs.getString("address_line1"), rs.getString("address_line2"), rs.getString("address_line3"), rs.getString("closing_remarks"));
+			deleteRequest(id);
+			int latestID = MailFunctions.getIncrement();
 			
+			MailFunctions.addExportedMail (latestID, rs.getString("sent_by"));
 		}
+		
 	}
 	
 	public static void approveRequestMail(String id) throws SQLException, IOException, DocumentException
@@ -321,7 +325,7 @@ public class MailFunctions {
 			String head = FileUploadFunctions.getGroupHead(department);
 			String des = head +" has approved your mail request, "+ subject;
 			NotificationFunctions.addNotification("Request Mail Page", des, sentBy);
-			deleteRequest(id);
+			
 
 	}
 	
