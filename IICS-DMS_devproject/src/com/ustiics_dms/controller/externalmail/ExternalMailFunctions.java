@@ -279,7 +279,7 @@ public class ExternalMailFunctions {
 			return rs.getInt("Auto_increment")-1;
 	}
 	
-	public static void saveSentExternalMail(String type,String threadNumber, String subject, String message, FileItem fileData, String sentBy, String contextPath) throws Exception
+	public static void saveSentExternalMail(String type, String threadNumber, String subject, String message, FileItem fileData, String sentBy, String contextPath) throws Exception
 	{
 		Connection con = DBConnect.getConnection();
 		

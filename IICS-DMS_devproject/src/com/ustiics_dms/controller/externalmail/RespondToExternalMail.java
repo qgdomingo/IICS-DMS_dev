@@ -64,7 +64,7 @@ public class RespondToExternalMail extends HttpServlet {
 			String message = tempStorage[2];
 			System.out.println(threadNumber);
 			threadNumber = AesEncryption.encrypt(threadNumber);
-			ExternalMailFunctions.saveSentExternalMail(type, threadNumber, subject, message, fileData, acc.getEmail(), request.getServerName() + ":" +request.getServerPort() + request.getContextPath());
+			ExternalMailFunctions.saveSentExternalMail("Internal to External", threadNumber, subject, message, fileData, acc.getEmail(), request.getServerName() + ":" +request.getServerPort() + request.getContextPath());
 			
 			LogsFunctions.addLog("System", "External Mail", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), subject);
 			
