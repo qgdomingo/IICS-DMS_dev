@@ -22,11 +22,6 @@ import com.ustiics_dms.controller.notifications.NotificationFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.utility.SessionChecking;
 
-
-
-/**
- * Servlet implementation class FileUpload
- */
 @WebServlet("/FileUpload")
 public class FileUpload extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -108,11 +103,19 @@ public class FileUpload extends HttpServlet {
 				referenceNo = tempStorage[7];
 				threadNo = tempStorage[8];
 				
+				//checking of incoming reference number 
+				if(FileUploadFunctions.checkIfExistingReferenceNo(documentSource, referenceNo)) {
+					response.setContentType("text/plain");
+					response.setStatus(HttpServletResponse.SC_OK);
+					response.getWriter().write("invalid ref no");
+					return;
+				}
+				
 				returningReferenceNo = FileUploadFunctions.uploadIncomingDocument(threadNo, referenceNo, documentSource, documentTitle, category, actionRequired, fileData, description, fullName, acc.getEmail(),acc.getDepartment(), actionDue);
 				
 				String des = ManageTasksFunctions.getFullName(acc.getEmail()) +" has uploaded a new incoming document, " + documentTitle;
 
-				NotificationFunctions.addNotification("Incoming Documents Page", des, FileUploadFunctions.getGroupByDepartment(acc.getDepartment(), acc.getEmail()));
+				NotificationFunctions.addNotification("Incoming Documents Page", des, FileUploadFunctions.getGroupByDepartmentNoFaculty(acc.getDepartment(), acc.getEmail()));
 
 				LogsFunctions.addLog("System", "Upload Incoming", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), documentTitle);
 
@@ -129,7 +132,7 @@ public class FileUpload extends HttpServlet {
 				
 				String des = ManageTasksFunctions.getFullName(acc.getEmail()) +" has uploaded a new outgoing document, " + documentTitle;
 
-				NotificationFunctions.addNotification("Outgoing Documents Page", des, FileUploadFunctions.getGroupByDepartment(acc.getDepartment(), acc.getEmail()));
+				NotificationFunctions.addNotification("Outgoing Documents Page", des, FileUploadFunctions.getGroupByDepartmentNoFaculty(acc.getDepartment(), acc.getEmail()));
 
 				LogsFunctions.addLog("System", "Upload Outgoing", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), documentTitle);
 

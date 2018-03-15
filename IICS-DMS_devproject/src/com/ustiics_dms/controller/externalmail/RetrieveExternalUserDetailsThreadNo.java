@@ -9,9 +9,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
+import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.ExternalUser;
 import com.ustiics_dms.utility.AesEncryption;
 
@@ -28,10 +30,12 @@ public class RetrieveExternalUserDetailsThreadNo extends HttpServlet {
 	    response.setCharacterEncoding("UTF-8");
 		
 		try {
+			HttpSession session = request.getSession();
+			Account acc = (Account) session.getAttribute("currentCredentials");
 			
-			String id = AesEncryption.decrypt(AesEncryption.decrypt(request.getParameter("id")));
+			String id = AesEncryption.decrypt(AesEncryption.decrypt(request.getParameter("threadNumber")));
 			ResultSet externalMail = (ResultSet) ExternalMailFunctions.getExternalUserDetailsThread(id);
-			System.out.println(id);
+
 			if(externalMail.next())
 			{
 				external.add(new ExternalUser(

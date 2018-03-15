@@ -15,7 +15,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Send a Response to the Director | IICS DMS</title>
+		<title>Send a Reply to the Director | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
@@ -43,34 +43,35 @@
 			<div class="fourteen wide computer fourteen wide table sixteen wide mobile column login-form-area">
 				<div class="messagepage-header">
 					<h2 class="ui header">
-					  Send a Response to the Director
+					  Send a Reply to the Director
 					</h2>
 				</div>
 				<br>
 				
 			<!-- START OF MESSAGE FORM -->
 			<form class="ui equal width form" method="post" action="${pageContext.request.contextPath}/ReplyMailFromExternal" enctype="multipart/form-data"
-					id="response_director_form">
+					id="reply_to_director_form">
 				
 				<!-- SENDER'S INFORMATION --> 
-					<h3 class="ui dividing header">
+					<h4 class="ui dividing header">
 						<i class="user icon"></i>
 						<div class="content">Sender's Information</div>
-					</h3>
+					</h4>
 					
 					<div class="ui segment">
 						<p class="element-rmb"><b>Sender: </b><span id="sender_info"></span></p>
 						<p class="element-rmb"><b>Contact Number: </b><span id="contact_info"></span></p>
 						<p class="element-rmb"><b>Affiliation: </b><span id="affiliation_info"></span></p>
+						<p class="element-rmb"><b>Reply to Subject: </b><span id="subject_info"></span></p>
 					</div>
 					
 					<input name="thread_number" type="hidden" id="thread_number"/>
 					
 				<!-- MESSAGE BODY -->
-					<h3 class="ui dividing header">
+					<h4 class="ui dividing header">
 						<i class="mail icon"></i>
 						<div class="content">Message</div>
-					</h3>
+					</h4>
 					<div class="required field">
 						<label>Subject:</label>
 						<input name="subject" type="text"/>
@@ -143,5 +144,5 @@
 	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/session/session_check.js"></script> 
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/mail/external_response.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/externalmail/external_response.js"></script>
 </html>

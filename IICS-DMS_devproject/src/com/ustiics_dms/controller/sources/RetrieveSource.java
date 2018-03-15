@@ -31,9 +31,9 @@ public class RetrieveSource extends HttpServlet {
 		List<Sources> sources = new ArrayList<Sources>();
 	    response.setCharacterEncoding("UTF-8");
 		
-	    HttpSession session = request.getSession();
-	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
+		    HttpSession session = request.getSession();
+		    Account acc = (Account) session.getAttribute("currentCredentials");
 			
 			ResultSet source = (ResultSet) SourcesFunctions.getSourcesList();
 			

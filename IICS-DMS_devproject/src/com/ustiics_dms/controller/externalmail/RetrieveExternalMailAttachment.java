@@ -23,6 +23,7 @@ public class RetrieveExternalMailAttachment extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setCharacterEncoding("UTF-8");
 		
 		try {
 			// AesEncryption.decrypt(

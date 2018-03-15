@@ -47,6 +47,7 @@ public class ForwardMail extends HttpServlet {
 			String message = request.getParameter("message");
 			String button = request.getParameter("submit");
 			String closingLine = request.getParameter("closing_line");
+			String paperSize = request.getParameter("paper_size");
 
 			if(button.equalsIgnoreCase("Send Mail"))
 			{
@@ -90,7 +91,7 @@ public class ForwardMail extends HttpServlet {
 				response.setStatus(HttpServletResponse.SC_OK);
 				response.getWriter().write("success");
 			}
-			else if(button.equalsIgnoreCase("Mail Request") && acc.getUserType().equals("Faculty") || acc.getUserType().equals("Faculty Secretary"))
+			else if(button.equalsIgnoreCase("Mail Request"))
 			{
 				if(type.equalsIgnoreCase("Letter"))
 				{
@@ -98,7 +99,7 @@ public class ForwardMail extends HttpServlet {
 					String addressLine2 = request.getParameter("addressee_line2");
 					String addressLine3 = request.getParameter("addressee_line3");
 
-					MailFunctions.forwardRequestMail(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getUserType(), acc.getDepartment(), addressLine1, addressLine2, addressLine3, closingLine);
+					MailFunctions.forwardRequestMail(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getUserType(), acc.getDepartment(), addressLine1, addressLine2, addressLine3, closingLine, paperSize);
 				}
 				else if(type.equalsIgnoreCase("Memo"))
 				{
@@ -106,7 +107,7 @@ public class ForwardMail extends HttpServlet {
 					String from = request.getParameter("from");
 					String subjectName = request.getParameter("subject");
 					
-					MailFunctions.forwardRequestMail(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getUserType(), acc.getDepartment(), addressee, from, subjectName, closingLine);
+					MailFunctions.forwardRequestMail(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getUserType(), acc.getDepartment(), addressee, from, subjectName, closingLine, paperSize);
 				}
 				else if(type.equalsIgnoreCase("Notice Of Meeting"))
 				{
@@ -114,7 +115,7 @@ public class ForwardMail extends HttpServlet {
 					String from = request.getParameter("from");
 					String subjectName = request.getParameter("subject");
 					
-					MailFunctions.forwardRequestMail(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getUserType(), acc.getDepartment(), addressee, from, subjectName, closingLine);
+					MailFunctions.forwardRequestMail(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getUserType(), acc.getDepartment(), addressee, from, subjectName, closingLine, paperSize);
 				}
 				
 				response.setStatus(HttpServletResponse.SC_OK);
@@ -133,7 +134,7 @@ public class ForwardMail extends HttpServlet {
 					addressLine2 = request.getParameter("addressee_line2");
 					addressLine3 = request.getParameter("addressee_line3");
 					
-					MailFunctions.saveMailInformation(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, addressLine2, addressLine3, closingLine);
+					MailFunctions.saveMailInformation(type, null, null, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, addressLine2, addressLine3, closingLine);
 				}
 				else if(type.equalsIgnoreCase("Memo"))
 				{
@@ -141,7 +142,7 @@ public class ForwardMail extends HttpServlet {
 					String from = request.getParameter("from");
 					String subjectName = request.getParameter("subject");
 					
-					MailFunctions.saveMailInformation(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressee, from, subjectName, closingLine);
+					MailFunctions.saveMailInformation(type, null, null, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressee, from, subjectName, closingLine);
 				}
 				else if(type.equalsIgnoreCase("Notice Of Meeting"))
 				{
@@ -149,7 +150,7 @@ public class ForwardMail extends HttpServlet {
 					String from = request.getParameter("from");
 					String subjectName = request.getParameter("subject");
 					
-					MailFunctions.saveMailInformation(type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressee, from, subjectName, closingLine);
+					MailFunctions.saveMailInformation(type, null, null, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressee, from, subjectName, closingLine);
 				}
 				
 				int latestID = MailFunctions.getIncrement();

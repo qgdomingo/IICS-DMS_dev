@@ -16,8 +16,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.ustiics_dms.controller.filedownload.FileDownloadFunctions;
+import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.File;
 import com.ustiics_dms.utility.AesEncryption;
 
@@ -33,6 +35,9 @@ public class DownloadArchivedFolder extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		
 		try {
+			HttpSession session = request.getSession();
+			Account acc = (Account)session.getAttribute("currentCredentials");
+			
 			int id = Integer.parseInt(AesEncryption.decrypt(request.getParameter("id")));
 			String stringId = AesEncryption.decrypt(request.getParameter("id"));
 			List <File> file = ArchiveDocumentFunctions.getBinaryStream(id);

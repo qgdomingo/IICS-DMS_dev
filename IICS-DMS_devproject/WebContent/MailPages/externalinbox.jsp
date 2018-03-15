@@ -21,7 +21,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Inbox | IICS DMS</title>
+		<title>External Inbox | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
@@ -152,7 +152,7 @@
 		</div>
 
 		<div class="ui segment">
-			<div class="ui dimmer" id="inbox_loading">
+			<div class="ui dimmer" id="external_inbox_loading">
 				<div class="ui text loader">Retrieving External Inbox</div>
 			</div>
 		
@@ -220,30 +220,35 @@
 			<div class="header neutral-modal">
 				<h3 class="ui header neutral-modal">
 					<i class="envelope icon"></i>
-					View Mail
+					View External Mail
 				</h3>
 			</div>
 			<div class="modal-content">
 				<p class="element-rmb"><b>Sender: </b><span id="view_mail_sender"></span></p>
 				<p class="element-rmb"><b>Affiliation: </b><span id="view_mail_affiliation"></span></p>
 				<p class="element-rmb"><b>Contact Number: </b><span id="view_mail_contact"></span></p>
-				<p class="element-rmb"><b>Mail Timestamp: </b><span id="view_mail_timestamp"></span></p>
+				<p class="element-rmb"><b>Received Timestamp: </b><span id="view_mail_timestamp"></span></p>
 				
 				<h5 class="ui horizontal header divider">
   					<i class="envelope icon"></i>
   					Message
 				</h5>
 				
-				<p><b>Subject: </b><span id="view_mail_subject"></span></p>
-				
 				<div class="ui form element-mb">
+					<div class="field">
+						<label>Subject:</label>
+						<input type="text" id="view_mail_subject" readonly/>
+					</div>
+
 					<div class="field">
 						<label>Message:</label>	
 						<textarea rows="5" id="view_mail_message" readonly></textarea>
 					</div>
 				</div>
 				
-				<form class="ui form element-mb" method="GET" action="${pageContext.request.contextPath}/RetrieveExternalMailAttachment" id="view_attachment_form">
+				<form class="ui form element-mb" method="GET" action="${pageContext.request.contextPath}/RetrieveExternalMailAttachment" 
+					id="view_attachment_form">
+					
 					<input type="hidden" name="id" id="view_attachment_id">
 					<input type="hidden" name="type" id="view_attachment_type">
 					
@@ -355,6 +360,6 @@
 	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/mail/external_inbox.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/externalmail/external_inbox.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/notifications.js"></script>
 </html>

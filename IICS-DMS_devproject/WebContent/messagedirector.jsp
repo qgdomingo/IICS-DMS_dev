@@ -15,12 +15,12 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Message for the Director | IICS DMS</title>
+		<title>Message to the Director | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-		<link rel="stylesheet" href="resource/semanticui/semantic.min.css">
-		<link rel="stylesheet" href="resource/css/master.css">
-		<link rel="stylesheet" href="resource/css/login.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/master.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/login.css">
 		
 		<!-- SITE ICON CONFIGS -->
 		<link rel="apple-touch-icon" sizes="180x180" href="${pageContext.request.contextPath}/resource/siteicon/apple-touch-icon.png">
@@ -50,7 +50,7 @@
 				<br>
 				
 			<!-- START OF MESSAGE FORM -->
-				<form class="ui equal width form" method="post" action="SendMailToDirector" enctype="multipart/form-data"
+				<form class="ui equal width form" method="post" action="${pageContext.request.contextPath}/SendMailToDirector" enctype="multipart/form-data"
 					id="message_director_form">
 				
 				<!-- SENDER'S INFORMATION --> 
@@ -124,7 +124,7 @@
 			  <div class="bar">
 			  	<div class="progress"></div>
 			  </div>
-			  <div class="label">Uploading Document</div>
+			  <div class="label">Sending Mail</div>
 			</div>
 		</div>
 		
@@ -162,10 +162,10 @@
 		
 		
 	</body>
-	<script src="resource/js/jquery-3.2.1.min.js"></script>
-	<script src="resource/semanticui/semantic.min.js"></script>
-	<script src="resource/js/jquery.form.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/session/session_check.js"></script>
-	<script src="resource/js/master.js"></script>
-	<script src="resource/js/mail/external_send_mail.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/externalmail/external_message_director.js"></script>
 </html>

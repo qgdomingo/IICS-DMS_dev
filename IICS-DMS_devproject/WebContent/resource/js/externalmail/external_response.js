@@ -24,20 +24,21 @@
 	
 	function getMailInformation(id) {
 		
-		var data = { id: id }
+		var data = { threadNumber: id }
 		
 		$.get(getContextPath() + '/RetrieveExternalUserDetailsThreadNo', $.param(data), function(response) {
 			$('#sender_info').text(response[0].firstName + ' ' + response[0].lastName + ' (' + response[0].email + ')');
 			$('#contact_info').text(response[0].contactNumber);
 			$('#affiliation_info').text(response[0].affiliation);
 			$('#thread_number').val(response[0].threadNumber);
+			$('#subject_info').val(response[0].subject);
 		});
 		
 	}
     
-	/* SUBMIT - Response Director Form */
-	$('#response_director_form').ajaxForm({
-		beforeSubmit: isResponseDirectorFormValid,
+	/* SUBMIT - Reply to Director Form */
+	$('#reply_to_director_form').ajaxForm({
+		beforeSubmit: isReplyToFormValid,
 		uploadProgress: function(event, position, total, percentComplete) {
 			 updateUploadProgress(percentComplete);
 	    },
@@ -56,8 +57,8 @@
 	});
 
 
-	/* FORM VALIDATION - Response Director Form */
-	$('#response_director_form').form({
+	/* FORM VALIDATION - Reply to Director Form */
+	$('#reply_to_director_form').form({
 		fields: {
 			subject: {
 				identifier: 'subject',
@@ -82,8 +83,8 @@
 	});
 	
 	/* BOOLEAN VALIDATION - Response Director Form */
-	function isResponseDirectorFormValid() {
-		if( $('#response_director_form').form('is valid') ) {
+	function isReplyToFormValid() {
+		if( $('#reply_to_director_form').form('is valid') ) {
 			activatePageLoading('Sending Message');
 			openAndInitializeUploadProgress();
 			return true;
@@ -91,12 +92,6 @@
 		else {
 			return false;
 		}
-	}
-	
-	/* CLEAR - Message  */
-	function clearResponseDirectorForm() {
-		removeCSSClass('#response_director_form', 'error');		
-	  	$('#response_director_form').form('reset');
 	}
 	
 /*

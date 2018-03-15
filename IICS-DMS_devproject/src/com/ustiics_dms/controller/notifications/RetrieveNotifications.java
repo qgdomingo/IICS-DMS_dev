@@ -32,11 +32,10 @@ public class RetrieveNotifications extends HttpServlet {
 		
 		List<Notification> notifList = new ArrayList<Notification>();
 	    response.setCharacterEncoding("UTF-8");
-		
-	    HttpSession session = request.getSession();
-	    Account acc = (Account) session.getAttribute("currentCredentials");
 	    
 		try {
+		    HttpSession session = request.getSession();
+		    Account acc = (Account) session.getAttribute("currentCredentials");
 			
 			ResultSet userNotif = (ResultSet) NotificationFunctions.retrieveUserNotifications(acc.getEmail());
 			

@@ -101,21 +101,22 @@
 	    },
 		success: function(response) {  
 			closeUploadProgress();
-			if (response) {
+			if (response == 'invalid ref no'){
+				callFailModal('Reference Number Existing', 'The reference number you entered already exists. ' + 
+						'Please do check on the View Incoming Documents page for the document.');
+			}
+			else if(response) {
 				responseText = response + '';
 				clearIncomingDocsForm();
 				callSuccessModal('Incoming Document Upload Success', 'Your document has been successfully uploaded.'
 						+ ' The document reference number is: ' + responseText);
-			}
-			else {
-				callFailModal('Incoming Document Upload Failed', 'We are unable to upload your document, please try again.');
 			}
 			
 			deactivatePageLoading();
 		},
 		error: function(response) {
 			closeUploadProgress();
-			callFailRequestModal();
+			callFailModal('Incoming Document Upload Failed', 'We are unable to upload your document, please try again.');
 			deactivatePageLoading();
 		}
 	});

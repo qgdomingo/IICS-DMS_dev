@@ -37,7 +37,8 @@ public class LoginFunctions {
 	public static Account authorize(String username) throws SQLException
 	{
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("SELECT * FROM accounts WHERE email = ?");
+		PreparedStatement prep = con.prepareStatement("SELECT email, title, faculty_number, first_name, middle_initial, "
+				+ "last_name, department, user_type, status, time_created, contact_number FROM accounts WHERE email = ?");
 		prep.setString(1,  username);
 		ResultSet result = prep.executeQuery();
 		
@@ -45,18 +46,19 @@ public class LoginFunctions {
 
 		if (result.next()) //servlet authorizes user privilege extracting from db
 		{
-			String fullName = result.getString("first_Name") + " " + result.getString("last_Name");
+			String fullName = result.getString("first_name") + " " + result.getString("last_name");
 			
 			acc = new Account(
 				result.getString("time_created"),
-				result.getInt("faculty_Number"),
+				result.getInt("faculty_number"),
 				result.getString("title"),
 				result.getString("contact_number"),
-				result.getString("first_Name"),
+				result.getString("first_name"),
+				result.getString("middle_initial"),
 				result.getString("last_Name"),
 				fullName,
 				result.getString("email"),
-				result.getString("user_Type"),
+				result.getString("user_type"),
 				result.getString("department"),
 				result.getString("status")
 			);

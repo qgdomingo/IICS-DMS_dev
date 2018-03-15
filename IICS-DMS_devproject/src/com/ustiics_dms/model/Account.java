@@ -11,6 +11,7 @@ public class Account  {
 	private String title;
 	private String contactNumber;
 	private String firstName;
+	private String middleInitial;
 	private String lastName;
 	private String fullName;
 	private String email;
@@ -18,20 +19,17 @@ public class Account  {
 	private String department;
 	private String status;
 
-
-	public Account()
-	{
-		
-	}
+	public Account() { }
 	
 	public Account(String creationTimestamp, int facultyNumber, String title, String contactNumber, String firstName,
-			String lastName, String fullName, String email, String userType, String department, String status) {
+			String middleInitial, String lastName, String fullName, String email, String userType, String department, String status) {
 		super();
 		this.creationTimestamp = creationTimestamp;
 		this.facultyNumber = facultyNumber;
 		this.title = title;
 		this.contactNumber = contactNumber;
 		this.firstName = firstName;
+		this.middleInitial = middleInitial;
 		this.lastName = lastName;
 		this.fullName = fullName;
 		this.email = email;
@@ -140,6 +138,14 @@ public class Account  {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getMiddleInitial() {
+		return middleInitial;
+	}
+
+	public void setMiddleInitial(String middleInitial) {
+		this.middleInitial = middleInitial;
 	}
 	
 	

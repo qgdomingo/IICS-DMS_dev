@@ -42,23 +42,24 @@ public class RetrieveExternalSentMail extends HttpServlet {
 			
 			while(externalMail.next())
 			{
-				ResultSet rs = (ResultSet) ExternalMailFunctions.getExternalUserDetails(externalMail.getString("id"));
+				ResultSet externalUser = (ResultSet) ExternalMailFunctions.getExternalUserDetails(externalMail.getString("thread_number"));
 				
-				if(rs.next())
+				if(externalUser.next())
 				{
-					String recipientName = rs.getString("first_name") + " " + rs.getString("last_name") + " " + rs.getString("email");
-					String senderName = ManageTasksFunctions.getFullName(externalMail.getString("sent_by")) + " " + externalMail.getString("sent_by");
+					String recipientName = externalUser.getString("first_name") + " " + externalUser.getString("last_name") + " (" + externalUser.getString("email") + ")";
+					String senderName = ManageTasksFunctions.getFullName(externalMail.getString("sent_by")) + " (" + externalMail.getString("sent_by") + ")";
 					external.add(new SentExternalMail(
+							externalMail.getString("type"),
 							recipientName,
-							rs.getString("affiliation"),
-							rs.getString("contact_number"),
+							externalUser.getString("affiliation"),
+							externalUser.getString("contact_number"),
 							senderName,
-							rs.getString("sent_timestamp"),
-							rs.getString("subject"),
-							rs.getString("message"),
+							externalMail.getString("date_created"),
+							externalMail.getString("subject"),
+							externalMail.getString("message"),
 							externalMail.getString("id"),
-							rs.getString("file_name"),
-							rs.getString("thread_number")
+							externalMail.getString("file_name"),
+							externalMail.getString("thread_number")
 							 ));	
 				}
 			}

@@ -9,18 +9,19 @@ import com.ustiics_dms.utility.AesEncryption;
 
 public class ProfileFunctions {
 	
-	public static void editUserProfile(String facultyNo, String title, String contactNumber, String firstName, String lastName, String email, String currentEmail) throws SQLException
+	public static void editUserProfile(String facultyNo, String title, String contactNumber, String firstName, String middleInitial, String lastName, String email, String currentEmail) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("UPDATE accounts SET faculty_number = ?, title = ?, contact_number = ?, first_name = ?, last_name = ?, email = ? WHERE email = ?");
+			PreparedStatement prep = con.prepareStatement("UPDATE accounts SET faculty_number = ?, title = ?, contact_number = ?, first_name = ?, middle_initial = ?, last_name = ?, email = ? WHERE email = ?");
 			
 			prep.setString(1, facultyNo);
 			prep.setString(2, title);
 			prep.setString(3, contactNumber);
 			prep.setString(4, firstName);
-			prep.setString(5, lastName);
-			prep.setString(6, email);
-			prep.setString(7, currentEmail);
+			prep.setString(5, middleInitial);
+			prep.setString(6, lastName);
+			prep.setString(7, email);
+			prep.setString(8, currentEmail);
 
 			prep.executeUpdate();
 	}

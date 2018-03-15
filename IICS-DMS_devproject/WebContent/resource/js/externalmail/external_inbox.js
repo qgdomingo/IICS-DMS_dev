@@ -50,7 +50,7 @@
 	
 	/* GET - EXTERNAL INBOX MAIL */
 	function getExternalInbox() {
-		addCSSClass('#inbox_loading', 'active');
+		addCSSClass('#external_inbox_loading', 'active');
 			
 		$.get(getContextPath() + '/RetrieveExternalMail', function(response) {
 			$('#external_inbox_tablebody').empty();
@@ -71,14 +71,14 @@
 				});
 				selectExternalInboxRow();
 				isExternalInboxMailTableEmpty = false;
-				removeCSSClass('#inbox_loading', 'active');
+				removeCSSClass('#external_inbox_loading', 'active');
 			} 
 			else if(response.length == 0)
 			{
 				$('<tr>').appendTo('#external_inbox_tablebody')
 					.append($('<td class="center-text" colspan="4">')
-							.text("You do not have any external mail right now."));
-				removeCSSClass('#inbox_loading', 'active');
+							.text("You do not have any mail from external source at the moment."));
+				removeCSSClass('#external_inbox_loading', 'active');
 			}
 		})
 		.fail((response) => {
@@ -86,7 +86,7 @@
 			$('<tr>').appendTo('#external_inbox_tablebody')
 			.append($('<td class="center-text error" colspan="4">')
 					.text("Unable to retrieve your external inbox. Please try refreshing the page."));
-			removeCSSClass('#inbox_loading', 'active');
+			removeCSSClass('#external_inbox_loading', 'active');
 		});
 	}
 	
@@ -111,7 +111,6 @@
 			
 			$('#view_mail_dialog').modal({
 				closable: false,
-				observeChanges: true,
 				autofocus: false,
 				centered: false,
 				onHidden: function() {
@@ -130,7 +129,7 @@
 		$('#view_mail_affiliation').text(selectedData.affiliation);
 		$('#view_mail_timestamp').text(selectedData.timestamp);
 		
-		$('#view_mail_subject').text(selectedData.subject);
+		$('#view_mail_subject').val(selectedData.subject);
 		$('#view_mail_message').val(selectedData.message);
 			
 		if( !(selectedData.fileName == '') ) {
@@ -143,7 +142,7 @@
 		}
 	}
 	
-	/* SET as READ - Inbox Row */
+	/* SET as READ - External Inbox Row */
 	function setMailAsRead(mailID) {
 		var data = {
 			id: localExternalInboxMailData[mailID].id

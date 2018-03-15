@@ -36,11 +36,14 @@ public class EditUser extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("UTF-8");
 		
-		
 		try {
+			HttpSession session = request.getSession();
+			Account acc = (Account)session.getAttribute("currentCredentials");
+			
 			String email = request.getParameter("email");
 			String facultyNo = request.getParameter("faculty_no");
 			String firstName = request.getParameter("first_name");
+			String middleInitial = request.getParameter("middle_initial");
 			String lastName = request.getParameter("last_name");
 			String userType = request.getParameter("user_type");
 			String department = request.getParameter("department");
@@ -54,10 +57,8 @@ public class EditUser extends HttpServlet {
 				department = "IICS";
 			}
 			
-			ManageUserFunctions.updateAccount(email, facultyNo, firstName, lastName, userType, department, title, contactNumber, originalEmail);
+			ManageUserFunctions.updateAccount(email, facultyNo, firstName, middleInitial, lastName, userType, department, title, contactNumber, originalEmail);
 			
-			HttpSession session = request.getSession();
-			Account acc = (Account) session.getAttribute("currentCredentials");
 			String fullName = firstName + " " + lastName;
 			String additonalInfo = fullName + "(" + email + ")";
 			LogsFunctions.addLog("System", "Update User", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), additonalInfo);

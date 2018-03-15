@@ -32,9 +32,10 @@ public class IncomingDocuments extends HttpServlet {
 		List<IncomingDocument> incomingFiles = new ArrayList<IncomingDocument>();
 	    response.setCharacterEncoding("UTF-8");
 		
-	    HttpSession session = request.getSession();
-	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
+		    HttpSession session = request.getSession();
+		    Account acc = (Account) session.getAttribute("currentCredentials");
+			
 			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveDocuments("Incoming", acc.getDepartment());
 			while(documentFiles.next()) 
 			{ 

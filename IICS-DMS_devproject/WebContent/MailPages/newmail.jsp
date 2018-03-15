@@ -165,6 +165,14 @@
 					  	<% } %>
 					</select>
 				</div>
+				<div class="field">
+					<label>Mail PDF Size:</label>
+					<select class="ui fluid dropdown" id="new_mail_size_select">
+					  	<option value="A4">A4</option>
+					  	<option value="SHORTBOND">Short Bond Paper</option>
+					  	<option value="LONGBOND">Long Bond Paper</option>
+					</select>
+				</div>
 			</div>
 		
 			<br>
@@ -174,6 +182,7 @@
 			<!-- FORM FOR LETTER -->
 				<form class="ui form" method="post" action="${pageContext.request.contextPath}/ForwardMail" id="letter_form"> 
 					<input type="hidden" name="type" id="mail_letter_type" />
+					<input type="hidden" name="paper_size" id="mail_letter_size" />
 				
 				<% if(!restrictionCase1) { %>
 					<h3 class="ui diving header">
@@ -274,6 +283,7 @@
 			<!-- FORM FOR MEMO AND NOTICE -->
 				<form class="ui form" method="post" action="${pageContext.request.contextPath}/ForwardMail" id="memo_notice_form"> 
 					<input type="hidden" name="type" id="mail_memo_notice_type" />
+					<input type="hidden" name="paper_size" id="mail_memo_notice_size" />
 				
 				<% if(!restrictionCase1) { %>
 					<h3 class="ui diving header">

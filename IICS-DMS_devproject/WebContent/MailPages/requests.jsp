@@ -217,7 +217,6 @@
 						<th>Sender</th>
 						<th>Type</th>
 						<th>Subject</th>
-						<th>Status</th>
 						<th>Timestamp</th>
 					</tr>
 				</thead>
@@ -237,109 +236,133 @@
 				</h3>
 			</div>
 			<div class="modal-content">
-				<div class="ui stackable grid">
-					<div class="eight wide column">
-						<p class="element-rmb"><b>Type: </b><span id="view_mail_type"></span></p>
-						<p class="element-rmb"><b>Timestamp: </b><span id="view_mail_timestamp"></span></p>
-						<p class="element-rmb"><b>Sender: </b><span id="view_mail_sender"></span></p>
-						<p class="element-rmb"><b>Status: </b><span id="view_mail_status"></span></p>
 				
-						<h5 class="ui dividing header">
-		  					Mail Recipients
-						</h5> 
+				<p class="element-rmb"><b>Sender: </b><span id="view_mail_sender"></span></p>
+				<p class="element-rmb"><b>Type: </b><span id="view_mail_type"></span></p>
+				<p class="element-rmb"><b>Timestamp: </b><span id="view_mail_timestamp"></span></p>
+				<p class="element-rmb"><b>Status: </b><span id="view_mail_status"></span></p>
+				
+				<form class="ui form element-mb element-mt">
+				
+					<h4 class="ui dividing header">
+						<i class="users icon"></i>
+		 				Mail Recipients
+					</h4> 
+					
+					<div class="field">
+						<label>Recipient:</label>
+		  				<select class="ui fluid search selection dropdown" multiple="" name="internal_to" id="view_mail_recipient" disabled>
+							<option value="">Select Users</option>
+						</select>
+					</div>			
+					
+					<div class="field">
+						<label>External Recipient:</label>
+		  				<select class="ui fluid search selection dropdown" multiple="" name="external_to" id="view_mail_external_recipient" disabled>
+							<option value="">Select Users</option>
+						</select>	
+					</div>	
+					
+					<h4 class="ui dividing header">
+						<i class="envelope icon"></i>
+	  					Message Contents [Read Only Fields]
+					</h4> 
 						
-						<p class="element-rmb"><b>Recipient: </b><span id="view_mail_recipient"></span></p>
-						<p class="element-rmb"><b>External Recipient: </b><span id="view_mail_external_recipient"></span></p>
+					<div class="field">
+						<label>Mail PDF Size:</label>
+						<select class="ui dropdown" id="view_mail_size_select" disabled>
+						  	<option value="A4">A4</option>
+						  	<option value="SHORTBOND">Short Bond Paper</option>
+						  	<option value="LONGBOND">Long Bond Paper</option>
+						</select>
+					</div>	
 						
-						<h5 class="ui dividing header">
-		  					<span id="view_mail_type_label"></span> Content
-						</h5> 
-						
-						<div class="ui form element-mb">
-							
-							<div class="field">
-								<label>Addressee:</label>
-								<input type="text" id="view_mail_addressee" readonly/>
-							</div>	
-							
-							<div class="field" id="view_mail_line2_field">
-								<label>Addressee Line 2:</label>
-								<input type="text" id="view_mail_line2" readonly/>
-							</div>	
-							
-							<div class="field" id="view_mail_line3_field">
-								<label>Addressee Line 3:</label>
-								<input type="text" id="view_mail_line3" readonly/>
-							</div>	
-							
-							<div class="field" id="view_mail_from_field">
-								<label>From:</label>
-								<input type="text" id="view_mail_from" readonly/>
-							</div>	
-							
-							<div class="field">
-								<label>Subject:</label>
-								<input type="text" id="view_mail_subject" readonly/>
-							</div>		
+					<div class="field">
+						<label>Addressee:</label>
+						<input type="text" id="view_mail_addressee" readonly/>
+					</div>	
+					
+					<div class="field" id="view_mail_line2_field">
+						<label>Addressee Line 2:</label>
+						<input type="text" id="view_mail_line2" readonly/>
+					</div>	
+					
+					<div class="field" id="view_mail_line3_field">
+						<label>Addressee Line 3:</label>
+						<input type="text" id="view_mail_line3" readonly/>
+					</div>	
+					
+					<div class="field" id="view_mail_from_field">
+						<label>From:</label>
+						<input type="text" id="view_mail_from" readonly/>
+					</div>	
+					
+					<div class="field">
+						<label>Subject:</label>
+						<input type="text" id="view_mail_subject" readonly/>
+					</div>		
 
-							<div class="field">
-								<label>Message:</label>	
-								<textarea rows="5" id="view_mail_message" readonly></textarea>
-							</div>
-							
-							<div class="field">
-								<label>Closing Remark:</label>
-								<input type="text" id="view_mail_closingremark" readonly/>
-							</div>
+					<div class="field">
+						<label>Message:</label>	
+						<textarea rows="6" id="view_mail_message" readonly></textarea>
+					</div>
+					
+					<div class="field">
+						<label>Closing Remark:</label>
+						<input type="text" id="view_mail_closingremark" readonly/>
+					</div>
+						
+				</form>
+
+				<h4 class="ui dividing header">
+					<i class="comments icon"></i>
+  					Approver's Fields
+				</h4> 
+				
+				<!-- NOTE FORM -->
+				<form class="ui form" action="${pageContext.request.contextPath}/EditRequestNote" method="POST" id="edit_note_form">
+					<input type="hidden" name="id" id="view_mail_note_id">
+				
+					<div  class="field element-rmb">
+						<label>Comments:</label>
+						<textarea name="note" rows="2" id="view_mail_note"></textarea>
+					</div>
+					<button type="submit" class="ui tiny fluid orange button">
+						<i class="pencil icon"></i>
+						Edit Note
+					</button>
+					
+					<div class="ui orange message" id="note_orange_message">
+						<i class="close icon" id="close_note_orange_message"></i>
+						<div class="header">Note update failed.</div>
+					</div>
+					<div class="ui green message" id="note_green_message">
+						<i class="close icon" id="close_note_green_message"></i>
+						<div class="header">Note updated!</div>
+					</div>
+				</form>
+				
+				<br>
+					
+				<!-- SET DOCUMENT AS DONE FORM -->
+				<form class="ui form" action="${pageContext.request.contextPath}/ApproveRequestMail" method="POST" id="mark_as_done_form">
+					<input type="hidden" name="id" id="view_mail_done_id">
+				
+					<button class="ui tiny fluid green button" type="button" id="mark_as_done_btn">
+						<i class="check icon"></i>
+						Approve Mail Request
+					</button>
+					<div class="ui compact segment element-rmt" id="mark_as_done_conf">
+						<h4>Are you sure you want to approve this mail?</h4>
+						<div class="ui buttons">
+					 		<button name="button_choice" value="Mark as Done" class="ui green button" type="submit">Yes</button>
+					  		<div class="or"></div>
+					  		<button class="ui button" type="button" id="mark_as_done_no">No</button>
 						</div>
 					</div>
 					
-					<div class="eight wide column">
-						<!-- NOTE FORM -->
-						<form class="ui form" action="${pageContext.request.contextPath}/EditRequestNote" method="POST" id="edit_note_form">
-							<input type="hidden" name="id" id="view_mail_note_id">
-						
-							<div  class="field element-rmb">
-								<label>Note:</label>
-								<textarea name="note" rows="2" id="view_mail_note"></textarea>
-							</div>
-							<button type="submit" class="ui tiny fluid orange button">
-								<i class="pencil icon"></i>
-								Edit Note
-							</button>
-							
-							<div class="ui orange message" id="note_orange_message">
-								<i class="close icon" id="close_note_orange_message"></i>
-								<div class="header">Note update failed.</div>
-							</div>
-							<div class="ui green message" id="note_green_message">
-								<i class="close icon" id="close_note_green_message"></i>
-								<div class="header">Note updated!</div>
-							</div>
-						</form>
-						
-						<br>
-						
-						<!-- SET DOCUMENT AS DONE FORM -->
-						<form class="ui form" action="${pageContext.request.contextPath}/ApproveRequestMail" method="POST" id="mark_as_done_form">
-							<input type="hidden" name="id" id="view_mail_done_id">
-						
-							<button class="ui tiny fluid green button" type="button" id="mark_as_done_btn">
-								<i class="check icon"></i>
-								Approve Mail Request
-							</button>
-							<div class="ui compact segment element-rmt" id="mark_as_done_conf">
-								<h4>Are you sure you want to approve this mail?</h4>
-								<div class="ui buttons">
-							 		<button name="button_choice" value="Mark as Done" class="ui green button" type="submit">Yes</button>
-							  		<div class="or"></div>
-							  		<button class="ui button" type="button" id="mark_as_done_no">No</button>
-								</div>
-							</div>
-							
-						</form>
-					</div>
-				</div>
+				</form>
+				
 			</div>
 			<div class="actions center-text">
 				<button class="ui ok secondary button">Close</button>
@@ -428,6 +451,7 @@
 	<script src="${pageContext.request.contextPath}/resource/js/session/non_staff_check.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/directory.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/mail/request_mail.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/notifications.js"></script>
 </html>

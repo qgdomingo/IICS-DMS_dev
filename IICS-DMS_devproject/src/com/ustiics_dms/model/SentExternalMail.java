@@ -23,10 +23,10 @@ public class SentExternalMail {
 	private String fileName;
 	private String threadNumber;
 	
-	public SentExternalMail(String recipientName, String affiliation, String recipientContactNo, String senderName,
+	public SentExternalMail(String type, String recipientName, String affiliation, String recipientContactNo, String senderName,
 			String timeStamp, String subject, String message, String mailID, String fileName, String threadNumber) {
 		super();
-		this.type = "Internal to External";
+		this.type = type;
 		this.recipientName = recipientName;
 		this.affiliation = affiliation;
 		this.recipientContactNo = recipientContactNo;

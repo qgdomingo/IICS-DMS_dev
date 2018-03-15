@@ -35,10 +35,14 @@ public class AddUser extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		
 		try {
+			HttpSession session = request.getSession();
+			Account acc = (Account) session.getAttribute("currentCredentials");
+			
 			String email = request.getParameter("email");
 			String facultyNo = request.getParameter("faculty_no");
 			String firstName = request.getParameter("first_name");
 			String lastName = request.getParameter("last_name");
+			String middleInitial = request.getParameter("middle_initial");
 			String fullName = firstName + " " + lastName;
 			String userType = request.getParameter("user_type");
 			String department = request.getParameter("department");
@@ -51,11 +55,9 @@ public class AddUser extends HttpServlet {
 				department = "IICS";
 			}
 	
-			ManageUserFunctions.addAccount(email, facultyNo, firstName, lastName, fullName, userType, department, title, contactNumber);
+			ManageUserFunctions.addAccount(email, facultyNo, firstName, middleInitial, lastName, fullName, userType, department, title, contactNumber);
 			
 			String additonalInfo = fullName + "(" + email + ")";
-			HttpSession session = request.getSession();
-			Account acc = (Account) session.getAttribute("currentCredentials");
 			LogsFunctions.addLog("System", "Add User", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), additonalInfo);
 			
 			ArrayList<Account> newUserList = new ArrayList<Account>();

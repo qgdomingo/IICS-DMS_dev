@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
@@ -28,6 +29,9 @@ public class RetrieveUsers extends HttpServlet {
 	    response.setCharacterEncoding("UTF-8");
 		
 		try {
+			HttpSession session = request.getSession();
+			Account acc = (Account)session.getAttribute("currentCredentials");
+			
 			ResultSet accounts = (ResultSet) ManageUserFunctions.viewAccounts();
 			while(accounts.next()) { 
 				users.add(new Account(accounts.getString("time_created"),
@@ -35,6 +39,7 @@ public class RetrieveUsers extends HttpServlet {
 									  accounts.getString("title"),
 									  accounts.getString("contact_number"),
 									  accounts.getString("first_name"),
+									  accounts.getString("middle_initial"),
 									  accounts.getString("last_name"),
 									  accounts.getString("first_name") + " " + accounts.getString("last_name"),
 									  accounts.getString("email"),

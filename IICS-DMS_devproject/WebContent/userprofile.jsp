@@ -160,7 +160,7 @@
 				<div class="ui center aligned eight wide computer eight wide table sixteen wide mobile column">
 					<h2 class="ui icon header">
 						<i class="circular user icon"></i>
-						<div class="content"><%= acc.getFullName() %></div>
+						<div class="content"><%= acc.getTitle() %> <%= acc.getFirstName() %> <%= acc.getMiddleInitial() %> <%= acc.getLastName() %></div>
 						<div class="sub header"><%= acc.getUserType() %></div>
 				<% if(!userType.equalsIgnoreCase("Director") && !userType.equalsIgnoreCase("Faculty Secretary") 
 					&& !userType.equalsIgnoreCase("Staff") && !userType.equalsIgnoreCase("Supervisor")) { %>	
@@ -235,7 +235,7 @@
 						</div>
 						<div class="required four wide field">
 							<label>Middle Initial:</label> 
-							<input type="text" name="middile_initial" value=""/>
+							<input type="text" name="middile_initial" value="<%= acc.getMiddleInitial() %>"/>
 						</div> 
 					</div>
 					<div class="two fields">

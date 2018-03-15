@@ -80,7 +80,7 @@ public class FileUploadFunctions {
 	}
 	
 	public static void uploadOutgoingDocument(String threadNumber, String recipient, String documentTitle, String category, FileItem item, String description, String fullName, String email, String department) throws SQLException, IOException
-	{
+	{	
 			Connection con = DBConnect.getConnection();
 			String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(item.getInputStream());
 			PreparedStatement prep = con.prepareStatement("INSERT INTO outgoing_documents (thread_number, source_recipient, title, category, file_name, file_data, checksum, description, created_by, email, department) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
@@ -267,6 +267,43 @@ public class FileUploadFunctions {
 			return list;
 	}
 	
+	public static String [] getGroupByDepartmentNoFaculty(String department, String email) throws SQLException
+	{
+			Connection con = DBConnect.getConnection();
+			String sqlStatement = null;
+			boolean trigger = false;
+			if(department.equalsIgnoreCase("IICS"))
+			{
+				sqlStatement = "SELECT email FROM accounts WHERE department = ? AND NOT email = ?";
+			}
+			else
+			{
+				sqlStatement = "SELECT email FROM accounts WHERE department = ? AND NOT email = ? AND NOT user_type = ?";
+				trigger = true;
+			}
+			PreparedStatement prep = con.prepareStatement(sqlStatement);
+			
+			prep.setString(1, department);
+			prep.setString(2, email);
+			
+			if(trigger) {
+				prep.setString(3, "Faculty");
+			}
+			
+			ResultSet rs = prep.executeQuery();
+			
+			String emailList = "";
+			
+			while(rs.next())
+			{
+				emailList += rs.getString("email") + ",";
+			}
+			
+			String list [] = emailList.split(",");
+			
+			return list;
+	}
+	
 	public static String getGroupHead(String department) throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
@@ -361,4 +398,21 @@ public class FileUploadFunctions {
 			NotificationFunctions.addNotification("Incoming Documents Page", des, FileUploadFunctions.getGroupByDepartment(department, email));
 	}
 
+	public static boolean checkIfExistingReferenceNo(String source, String referenceNo) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("SELECT reference_no FROM incoming_documents WHERE reference_no = ?");
+		prep.setString(1, getReferenceNo(source) + referenceNo);
+		
+		ResultSet rs = prep.executeQuery();
+		
+		boolean trigger = false;
+		if(rs.next())
+		{
+			trigger = true;
+		}
+		
+		return trigger;
+	}
+	
 }

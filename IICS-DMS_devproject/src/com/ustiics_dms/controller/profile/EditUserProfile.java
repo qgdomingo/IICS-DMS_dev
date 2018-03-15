@@ -38,6 +38,7 @@ public class EditUserProfile extends HttpServlet {
 			String title = request.getParameter("title");
 			String contactNumber = request.getParameter("cellphone_number");
 			String firstName = request.getParameter("first_name");
+			String middleInitial = request.getParameter("middle_initial");
 			String lastName = request.getParameter("last_name");
 			String email = request.getParameter("email");
 			String password = request.getParameter("current_password");
@@ -47,7 +48,7 @@ public class EditUserProfile extends HttpServlet {
 			{
 				if(!ManageUserFunctions.checkMail("email"))
 				{
-					ProfileFunctions.editUserProfile(facultyNo, title, contactNumber, firstName, lastName, email, acc.getEmail());
+					ProfileFunctions.editUserProfile(facultyNo, title, contactNumber, firstName, middleInitial, lastName, email, acc.getEmail());
 		
 					session.setAttribute("currentCredentials", LoginFunctions.authorize(email));
 					acc = (Account) session.getAttribute("currentCredentials");

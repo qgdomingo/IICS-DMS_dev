@@ -5,6 +5,9 @@
 	$(document).ready( function() {
 		getRequestMail();
 		
+		getListOfUsers('#view_mail_recipient');
+		getExternalTo('#view_mail_external_recipient');
+		
 		$('#note_orange_message').hide();
 		$('#note_green_message').hide();
 		$('#mark_as_done_conf').hide();
@@ -33,7 +36,7 @@
 	
 	/* CUSTOM SEARCH FILTER: Date Range */
 	function filterDateRange(data, min, max) {
-		var dateData = new Date( data[4] ).getTime(); 
+		var dateData = new Date( data[3] ).getTime(); 
 			
 		if ( ( isNaN(min) && isNaN(max) ) ||
 		     ( isNaN(min) && dateData <= max ) ||
@@ -67,13 +70,12 @@
 						.append($('<td>').text(requestMail.senderName + ' (' + requestMail.sentBy+ ')'))
 						.append($('<td>').text(requestMail.type))
 						.append($('<td>').text(requestMail.subject))
-						.append($('<td>').text(requestMail.status))
 						.append($('<td>').text(requestMail.dateCreated))
 				});
 					
 				// bind events and classes to the table after all data received
 				requestMailTable = $('#request_table').DataTable({
-					'order': [[4, 'desc']]
+					'order': [[3, 'desc']]
 				});
 				selectRequestMailRow();
 				isRequestMailTableEmpty = false;
@@ -82,15 +84,15 @@
 			else if(response.length == 0)
 			{
 				$('<tr>').appendTo('#request_tablebody')
-					.append($('<td class="center-text" colspan="5>')
+					.append($('<td class="center-text" colspan="4">')
 							.text("You do not have any request mail right now."));
 				removeCSSClass('#request_loading', 'active');
 			}
 		})
-		.fail((response) => {
+		.fail( function(response) {
 			$('#request_tablebody').empty();
 			$('<tr>').appendTo('#request_tablebody')
-			.append($('<td class="center-text error" colspan="5">')
+			.append($('<td class="center-text error" colspan="4">')
 					.text("Unable to retrieve your request mail. Please try refreshing the page."));
 			removeCSSClass('#request_loading', 'active');
 		});
@@ -103,7 +105,6 @@
 			getMailData(selectedID);
 			
 			$('#view_mail_dialog').modal({
-				closable: false,
 				observeChanges: true,
 				autofocus: false,
 				onHidden: function() {
@@ -119,16 +120,16 @@
 	function getMailData(mailID) {
 		var selectedData = localRequestMailData[mailID];
 		var mailType = selectedData.type;
-		console.log(selectedData);
-		
+
 		$('#view_mail_type').text(selectedData.type);
 		$('#view_mail_timestamp').text(selectedData.dateCreated);
 		$('#view_mail_sender').text(selectedData.senderName + ' (' + selectedData.sentBy + ')');
 		$('#view_mail_status').text(selectedData.status);
 		
-		$('#view_mail_recipient').text(selectedData.recipient);
-		$('#view_mail_external_recipient').text(selectedData.externalRecipient);
+		setInternalToList(selectedData.recipient);
+		setExternalToList(selectedData.externalRecipient);
 		
+		$('#view_mail_size_select').dropdown('set selected', selectedData.paperSize);
 		$('#view_mail_addressee').val(selectedData.addressLine1);
 		
 		if(mailType == 'Letter') {
@@ -155,6 +156,16 @@
 		$('#view_mail_note_id').val(selectedData.id);
 		$('#view_mail_note').val(selectedData.note);
 		$('#view_mail_done_id').val(selectedData.id);
+	}
+	
+	function setInternalToList(recipient) {
+		var arrayRecipient = recipient.split(",");
+		$('#view_mail_recipient').dropdown('set selected', arrayRecipient);
+	}
+	
+	function setExternalToList(externalRecipient) {
+		var arrayExternalRecipient = externalRecipient.split(",");
+		$('#view_mail_external_recipient').dropdown('set selected', arrayExternalRecipient);
 	}
 	
 /*
@@ -207,9 +218,9 @@
 	$('#mark_as_done_form').ajaxForm({
 		beforeSubmit: initializePageForMarkAsDone,
 		success: function(response) {  
-			callSuccessModal('Mail Approval Success', 'This mail has been approved. Refreshing page to update data.');
-			
-			setTimeout(function(){  window.location.reload(); }, 2000);
+			callSuccessModal('Mail Approval Success', 'This mail has been approved. ');
+			deactivatePageLoading();
+			requestMailTable.row('#'+selectedID).remove().draw();
 		},
 		error: function(response) { 
 			deactivatePageLoading();
@@ -226,7 +237,7 @@
 	
 	/* Fix Elements on Modal Hide */
 	function reinitializeMarkAsDone() {
-		$('#mark_as_done_form').hide();
+		$('#mark_as_done_form').show();
 		$('#mark_as_done_conf').hide();
 		$('#mark_as_done_btn').prop("disabled", false);
 	}
