@@ -129,7 +129,7 @@ public class ForwardMail extends HttpServlet {
 				String title = acc.getTitle() + acc.getFullName();
 				if(type.equalsIgnoreCase("Letter"))
 				{
-					addressLine1 = request.getParameter("addressee");
+					addressLine1 = request.getParameter("addressee_line1");
 					addressLine2 = request.getParameter("addressee_line2");
 					addressLine3 = request.getParameter("addressee_line3");
 					

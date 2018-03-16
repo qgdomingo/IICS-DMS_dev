@@ -448,11 +448,13 @@ public class MailFunctions {
 		
 		String academicYear = AcademicYearFunctions.getAcademicYearMail();
 		
+		isoNumber = isoNumber.substring(6);
+		
 		Paragraph lineOnePara = new Paragraph(new Phrase(lineSpacing, addressLine1, FontFactory.getFont(FontFactory.HELVETICA_BOLD,fntSize)));
 		
-		Paragraph lineTwoPara = new Paragraph(new Phrase(lineSpacing, addressLine2, FontFactory.getFont(FontFactory.HELVETICA_BOLD,fntSize)));
+		Paragraph lineTwoPara = new Paragraph(new Phrase(lineSpacing, addressLine2, FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE,fntSize)));
 		
-		Paragraph lineThreePara = new Paragraph(new Phrase(lineSpacing, addressLine3, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+		Paragraph lineThreePara = new Paragraph(new Phrase(lineSpacing, addressLine3, FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE,fntSize)));
 		
 		Paragraph isoNumberPara = new Paragraph(new Phrase(lineSpacing, isoNumber, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 		
@@ -475,13 +477,11 @@ public class MailFunctions {
 			doc.add(isoNumberPara);
 			doc.add(yearPara);
 			doc.add(Chunk.NEWLINE);
-			doc.add(Chunk.NEWLINE);
 			doc.add(datePara);
 			doc.add(Chunk.NEWLINE);
 			doc.add(lineOnePara);
 			doc.add(lineTwoPara);
 			doc.add(lineThreePara);
-			doc.add(Chunk.NEWLINE);
 			doc.add(Chunk.NEWLINE);
 			doc.add(messagePara);
 			doc.add(Chunk.NEWLINE);
@@ -495,9 +495,9 @@ public class MailFunctions {
 		}
 		else if(type.equalsIgnoreCase("Notice Of Meeting"))
 		{
-			lineOnePara = new Paragraph(new Phrase(lineSpacing, "TO:	" + addressLine1, FontFactory.getFont(FontFactory.HELVETICA_BOLD,fntSize)));
-			lineTwoPara = new Paragraph(new Phrase(lineSpacing, "RE:	" + addressLine2, FontFactory.getFont(FontFactory.HELVETICA_BOLD,fntSize)));
-			lineThreePara = new Paragraph(new Phrase(lineSpacing, "FR:	" + addressLine3, FontFactory.getFont(FontFactory.HELVETICA_BOLD,fntSize)));
+			lineOnePara = new Paragraph(new Phrase(lineSpacing, "TO:	" + addressLine1, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+			lineTwoPara = new Paragraph(new Phrase(lineSpacing, "RE:	" + addressLine2, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+			lineThreePara = new Paragraph(new Phrase(lineSpacing, "FR:	" + addressLine3, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 			datePara = new Paragraph(new Phrase(lineSpacing, "DATE:	" + date, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 			
 			doc.add(isoNumberPara);

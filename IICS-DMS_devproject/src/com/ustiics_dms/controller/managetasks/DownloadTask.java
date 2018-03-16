@@ -34,7 +34,7 @@ public class DownloadTask extends HttpServlet {
 		try {
 			 int id = Integer.parseInt(AesEncryption.decrypt(request.getParameter("id")));
 			 String email = AesEncryption.decrypt(request.getParameter("email"));
-			 System.out.println("we are widjubur");
+
 			 File file = ManageTasksFunctions.getFile(id, email);
 			 
 			 String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(file.getDataStream());
