@@ -99,7 +99,6 @@ public class PasswordRecoveryFunctions {
 			{
 				flag = false;
 			}
-			
 			return flag;
 	}
 	

@@ -42,16 +42,16 @@ public class EmailRecovery extends HttpServlet {
 			{
 				PasswordRecoveryFunctions.deleteExistingRecoveryCode(recipient);
 				String subject = "IICS DMS Password Reset";
-				
 				/*********************** Start of E-Mail Message **********************/
-				String message = "Good day " +  recipient + ",";
+				
 				String code = GenerateCode.generateRecoveryCode();
-				message += "your security code is: " + code;
+				String message = code;
 				/************************ End of E-Mail Message **********************/
 				
-				String userName = "iics2014dmsystem@gmail.com";
-				String password = "bluespace09";
-				
+				String userName = (String) getServletContext().getInitParameter("USERNAME");
+				String password = (String) getServletContext().getInitParameter("PASSWORD");
+				System.out.println(userName);
+				System.out.println(password);
 				SendMail.send(recipient, subject, message, userName, password); //send email
 				
 				PasswordRecoveryFunctions.addRecoveryCode(recipient, code); //add to database
@@ -61,7 +61,7 @@ public class EmailRecovery extends HttpServlet {
 			}
 			else
 			{
-				response.setStatus(HttpServletResponse.SC_OK);
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				response.getWriter().write("success - no email sent");
 			}
 		} catch (Exception e) {

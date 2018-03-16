@@ -238,7 +238,7 @@ public class ExternalMailFunctions {
 		
 	}
 	
-	public static void send(String type,String to, String subject, String msg, String threadNumber, int id, final String user,final String pass, String contextPath) throws Exception
+	public static void send(String type,String to, String subject, String msg, String threadNumber, int id, final String user,final String pass, String contextPath, String title, String name , String position , String department) throws Exception
     { 
   
 	    Properties props = new Properties();
@@ -257,14 +257,14 @@ public class ExternalMailFunctions {
 	    {
 		  	  protected PasswordAuthentication getPasswordAuthentication() 
 		  	  {
-		  	 	 return new PasswordAuthentication(user,pass);
+		  	 	 return new PasswordAuthentication(AesEncryption.decrypt(user),AesEncryption.decrypt(pass));
 		  	  }
 	    });
     
 		   File file = ExternalMailFunctions.getPdf(id,type);
 		 
 		   MimeMessage message = new MimeMessage(session);
-	       message.setFrom(new InternetAddress(user));
+	       message.setFrom(new InternetAddress(AesEncryption.decrypt(user)));
 	       message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
 	       message.setSubject(subject);
 	       Multipart multipart = new MimeMultipart();
@@ -281,14 +281,28 @@ public class ExternalMailFunctions {
 		        
 		       multipart.addBodyPart(attachment);
 	       }
-	       
+	       String first = title + name;
+	       String second = position;
+	       String third = department;
 	       MimeBodyPart messageContent = new MimeBodyPart();
-	       multipart.addBodyPart(messageContent);
-	       messageContent.setText(msg + "\r\n \r\n" 
-	       + contextPath + "/replyfromemail.jsp?thread_number=" + threadNumber);
-
 	       
-	
+	       String line = "";
+	       for(int x = 0; x < 90;x++)
+	       {
+	    	   line += "-";
+	       }
+	       String parsedMessage = 
+	    		   "The Director has sent you a message:" + "<br>" +
+	    		    line + "<br>" +
+	    			msg + "<br><br><br><br>" +
+	    			"<b><i>" + first + "</i></b>" + "<br>" +
+	    			"<i>" + second + "</i>" + "<br>" +
+	    			"<i>" + third +  "</i>" + "<br><br>" + line + "<br><br>" + 
+	    			"Use this link to reply to this message: " + contextPath + "/replyfromemail.jsp?thread_number=" + threadNumber;
+	       
+
+	       messageContent.setContent(parsedMessage, "text/html; charset=utf-8");
+	       multipart.addBodyPart(messageContent);
 	       message.setContent(multipart);
 	       Transport.send(message);
     }
@@ -330,7 +344,7 @@ public class ExternalMailFunctions {
 			return rs.getInt("Auto_increment")-1;
 	}
 	
-	public static void saveSentExternalMail(String type, String threadNumber, String subject, String message, FileItem fileData, String sentBy, String contextPath) throws Exception
+	public static void saveSentExternalMail(String type, String threadNumber, String subject, String message, FileItem fileData, String sentBy, String contextPath, String title, String name, String position, String department, String username, String password) throws Exception
 	{
 		Connection con = DBConnect.getConnection();
 		
@@ -346,10 +360,10 @@ public class ExternalMailFunctions {
 
 		prep.executeUpdate();
 		threadNumber = AesEncryption.encrypt(threadNumber);
-		ExternalMailFunctions.send(type,recipient, subject, message, threadNumber , ExternalMailFunctions.getIncrement(), "iics2014dmsystem@gmail.com", "bluespace09", contextPath);
+		ExternalMailFunctions.send(type,recipient, subject, message, threadNumber , ExternalMailFunctions.getIncrement(), username, password, contextPath ,title, name, position, department);
 	}
 	
-	public static void saveSentExternalMail(String type, String threadNumber, String subject, String message, String sentBy, String contextPath) throws Exception
+	public static void saveSentExternalMail(String type, String threadNumber, String subject, String message, String sentBy, String contextPath, String title, String name, String position, String department,String username, String password) throws Exception
 	{
 		Connection con = DBConnect.getConnection();
 		
@@ -363,7 +377,7 @@ public class ExternalMailFunctions {
 
 		prep.executeUpdate();
 		threadNumber = AesEncryption.encrypt(threadNumber);
-		ExternalMailFunctions.send(type,recipient, subject, message, threadNumber , ExternalMailFunctions.getIncrement(), "iics2014dmsystem@gmail.com", "bluespace09", contextPath);
+		ExternalMailFunctions.send(type,recipient, subject, message, threadNumber ,ExternalMailFunctions.getIncrement(), username, password, contextPath ,title, name, position, department);
 	}
 	
 	public static String getName(String id) throws SQLException

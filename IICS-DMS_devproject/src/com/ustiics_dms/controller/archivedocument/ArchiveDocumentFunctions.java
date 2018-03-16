@@ -62,7 +62,9 @@ public class ArchiveDocumentFunctions
 				prep.setString(14, academicYear);
 				
 				prep.executeUpdate();
+				
 		    }
+				prep.close();
 			
 			deleteCurrentDocuments();
 	}
@@ -78,7 +80,7 @@ public class ArchiveDocumentFunctions
 					+ "time_created, department, null FROM outgoing_documents ORDER BY time_created DESC" );
 
 			ResultSet rs = prep.executeQuery();
-			
+			prep.close();
 			return rs;
 	}
 	
@@ -89,13 +91,15 @@ public class ArchiveDocumentFunctions
 			prep.setString(1, "Current");
 
 			ResultSet rs = prep.executeQuery();
-			
+			String year = "";
 			if(rs.next())
 			{
-				return rs.getString("start_year") + "-" + rs.getString("end_year");
+				year = rs.getString("start_year") + "-" + rs.getString("end_year");
+				rs.close();
+				prep.close();
 			}
 
-			return null;
+			return year;
 	}
 	
 	private static void deleteCurrentDocuments() throws SQLException
@@ -109,6 +113,8 @@ public class ArchiveDocumentFunctions
 			prep = con.prepareStatement("DELETE FROM outgoing_documents");
 			
 			prep.executeUpdate();
+			
+			prep.close();
 	}
 	
 	private static void createFolder() throws SQLException
@@ -127,6 +133,8 @@ public class ArchiveDocumentFunctions
 			prep.setString(2, getAcademicYear());
 			
 			prep.executeUpdate();
+			
+			prep.close();
 	}
 	
 	public static String getAcadYear() throws SQLException
@@ -142,6 +150,10 @@ public class ArchiveDocumentFunctions
 			String start = rs.getString("start_year").substring(2);
 			String end = rs.getString("end_year").substring(2);
 			String year = start + "-" + end;
+			
+			rs.close();
+			prep.close();
+			
 			return year;
 	}
 	
@@ -171,7 +183,10 @@ public class ArchiveDocumentFunctions
 			{
 				counter = rs.getInt("COUNT(*)") + 1;
 			}
-
+			
+			rs.close();
+			prep.close();
+			
 			return counter;
 	}
 	
@@ -183,6 +198,8 @@ public class ArchiveDocumentFunctions
 		prep.setString(1, timestamp);
 
 		prep.executeUpdate();
+		
+		prep.close();
 		
 	}
 
@@ -220,6 +237,8 @@ public class ArchiveDocumentFunctions
 		prep.setString(1, "Enabled");
 		prep.setString(2, id);
 		prep.executeUpdate();
+
+		prep.close();
 		
 	}
 	
@@ -231,6 +250,8 @@ public class ArchiveDocumentFunctions
 		prep.setString(1, "Disabled");
 		prep.setString(2, id);
 		prep.executeUpdate();
+
+		prep.close();
 		
 	}
 	
@@ -249,7 +270,10 @@ public class ArchiveDocumentFunctions
 	           String fileName = rs.getString("file_name");
 	           Blob fileData = rs.getBlob("file_data");
 	           String description = rs.getString("description");
-
+	           
+		       rs.close();
+		   	   prep.close();
+		   	   
 	           return new File(id, fileName, fileData, description);
 	       }
 	       return null;
@@ -270,9 +294,12 @@ public class ArchiveDocumentFunctions
 	           String fileName = rs.getString("file_name");
 	           InputStream fileData = rs.getBinaryStream("file_data");
 	           String description = rs.getString("description");
-
+	           
 	           archiveFiles.add( new File(id, fileName, fileData, description));
 	       }
+	        rs.close();
+			prep.close();
+			 
 	       return archiveFiles;
 	}
 	
@@ -287,8 +314,11 @@ public class ArchiveDocumentFunctions
 	       ResultSet rs = prep.executeQuery();
 	       
 	       rs.next();
-	       
-	       return rs.getString("archive_title");
+	       String title = rs.getString("archive_title");
+	       rs.close();
+		   prep.close();
+		    
+	       return title;
 	}
 	
 	public static String retrieveArchiveDate() throws Exception
@@ -301,6 +331,10 @@ public class ArchiveDocumentFunctions
 		   if(rs.next()) {
 			   archive = rs.getString("date");
 		   }
+		   
+		   rs.close();
+		   prep.close();
+		    
 		   
 		   String archiveDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		   
@@ -319,7 +353,9 @@ public class ArchiveDocumentFunctions
 		   {
 			   result = true;
 		   }
-		   
+		   rs.close();
+		   prep.close();
+		    
 		   return result;
 	}
 	
@@ -328,6 +364,9 @@ public class ArchiveDocumentFunctions
 	   Connection con = DBConnect.getConnection();
 	   PreparedStatement prep = con.prepareStatement("DELETE FROM archive_date");
 	   prep.executeUpdate();
+
+	   prep.close();
+	    
 	}
 	
 	public static ResultSet retrieveArchivedDocuments(String id) throws SQLException

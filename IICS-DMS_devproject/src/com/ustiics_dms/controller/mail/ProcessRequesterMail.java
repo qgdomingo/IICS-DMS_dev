@@ -33,22 +33,22 @@ public class ProcessRequesterMail extends HttpServlet {
 		
 		try {
 			
-			String id = request.getParameter("id");
+			String id = "8";//request.getParameter("id");
 			HttpSession session = request.getSession();
 			Account acc = (Account) session.getAttribute("currentCredentials");
 			
-			String type = request.getParameter("type");
-			String[] recipient = request.getParameterValues("internal_to");
-			String[] externalRecipient = request.getParameterValues("external_to");
-			String subject = request.getParameter("subject");
-			String message = request.getParameter("message");
-			String closingLine = request.getParameter("closing_line");
-			String addressLine1 = request.getParameter("addressee_line1");
-			String addressLine2 = "";
-			String addressLine3 = "";
+			String type = "Memo";//request.getParameter("type");
+			String[] recipient = new String [3];//request.getParameterValues("internal_to");
+			String[] externalRecipient = null;//request.getParameterValues("external_to");
+			String subject = "Test";//request.getParameter("subject");
+			String message = "Message for my friends";//request.getParameter("message");
+			String closingLine = "Thank you";//request.getParameter("closing_line");
+			String addressLine1 = "Eldridge";//request.getParameter("addressee_line1");
+			String addressLine2 = "Faculty Head";
+			String addressLine3 = "IICS";
 			String from = "";
-			String button = request.getParameter("submit_btn");
-			String paperSize = request.getParameter("paper_size");
+			String button = "export";// request.getParameter("submit_btn");
+			String paperSize = "A4";//request.getParameter("paper_size");
 			
 			if(type.equalsIgnoreCase("Letter"))
 			{
@@ -106,40 +106,40 @@ public class ProcessRequesterMail extends HttpServlet {
 					response.getWriter().write("invalid send mail");
 					return;
 				}
-				
+				String approvedBy = MailFunctions.getApprover(id);
 				if(type.equalsIgnoreCase("Letter"))
 				{
-					MailFunctions.saveRequestMailInformation(id, type, null, null, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, addressLine2, addressLine3, closingLine, paperSize);
+					MailFunctions.saveRequestMailInformation(id, type, null, null, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, addressLine2, addressLine3, closingLine, paperSize,approvedBy);
 				}
 				else if(type.equalsIgnoreCase("Memo") || type.equalsIgnoreCase("Notice Of Meeting"))
 				{
-					MailFunctions.saveRequestMailInformation(id, type, null, null, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, from, subject, closingLine, paperSize);
+					MailFunctions.saveRequestMailInformation(id, type, null, null, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, from, subject, closingLine, paperSize,approvedBy);
 				}	
 				
 				int latestID = MailFunctions.getIncrement();
 				File file = MailFunctions.getPdf(latestID);
 				MailFunctions.addExportedMail (latestID, acc.getEmail());
 				LogsFunctions.addLog("System", "Export Mail", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), subject);
-				
-				String contentType = this.getServletContext().getMimeType(file.getFileName());
-
-				response.setHeader("Content-Type", contentType);
-		        response.setHeader("Content-Length", String.valueOf(file.getFileData().length()));
-		        response.setHeader("Content-Disposition", "inline; filename=\"" + file.getFileName() + "\"");
-
-				Blob fileData = file.getFileData();
-		        InputStream is = fileData.getBinaryStream();
-		
-		        byte[] bytes = new byte[1024];
-		        int bytesRead;
-		
-		        while ((bytesRead = is.read(bytes)) != -1) 
-		        {
-		        	// Write image data to Response.
-		           response.getOutputStream().write(bytes, 0, bytesRead);
-		        }
-		        
-		        return;
+//				
+//				String contentType = this.getServletContext().getMimeType(file.getFileName());
+//
+//				response.setHeader("Content-Type", contentType);
+//		        response.setHeader("Content-Length", String.valueOf(file.getFileData().length()));
+//		        response.setHeader("Content-Disposition", "inline; filename=\"" + file.getFileName() + "\"");
+//
+//				Blob fileData = file.getFileData();
+//		        InputStream is = fileData.getBinaryStream();
+//		
+//		        byte[] bytes = new byte[1024];
+//		        int bytesRead;
+//		
+//		        while ((bytesRead = is.read(bytes)) != -1) 
+//		        {
+//		        	// Write image data to Response.
+//		           response.getOutputStream().write(bytes, 0, bytesRead);
+//		        }
+//		        
+//		        return;
 			}
 		}
 		catch(Exception e) {

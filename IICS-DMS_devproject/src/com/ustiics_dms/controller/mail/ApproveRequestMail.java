@@ -34,7 +34,7 @@ public class ApproveRequestMail extends HttpServlet {
 		    Account acc = (Account) session.getAttribute("currentCredentials");
 			
 			String id = request.getParameter("id");
-			MailFunctions.approveRequestMail(id);
+			MailFunctions.approveRequestMail(id, acc.getEmail());
 			
 			ResultSet mailInfo = MailFunctions.getRequestInformation(id);
 			mailInfo.next();

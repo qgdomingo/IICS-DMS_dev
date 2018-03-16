@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import com.google.gson.Gson;
 import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.model.Account;
+import com.ustiics_dms.utility.AesEncryption;
 
 /*
  * Login.java
@@ -57,6 +58,7 @@ public class Login extends HttpServlet {
 				else 
 				{
 					redirectURL = "/home.jsp"; 
+
 				}
 				
 				Map<String, String> data = new HashMap<>();

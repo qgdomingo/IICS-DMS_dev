@@ -6,18 +6,26 @@
   </welcome-file-list>
   <context-param>
     <param-name>jdbcDriver</param-name>
-    <param-value>QW3ELt19wnX4IncON0pytPYjJQ7R7KdcfgTP7pypuKI=</param-value>
+    <param-value>qmVJxaakjfR2RpWZtcWa3k9kaW5p+/zwF+Hn4LqRMBM=</param-value>
   </context-param>
   <context-param>
     <param-name>jdbcUrl</param-name>
-    <param-value>ZObe4rdvMhFMUtf3CC/+QxybRpQLuFS2peJV20oADFQMp8K+hv2wQqDJR/yW/W/y</param-value>
+    <param-value>eVcNb1dV/KeG1GnIpP8iTqgyWx0FWzso91l3s2nD40fn0PCNl9j6S+acvzeIFctP</param-value>
   </context-param>
   <context-param>
     <param-name>dbUserName</param-name>
-    <param-value>NyiG//i7loPFfdUoO9BFuA==</param-value>
+    <param-value>kcLZqkaylgpYU7GTzvbcZQ==</param-value>
   </context-param>
   <context-param>
     <param-name>dbPassword</param-name>
-    <param-value>719bTBvphWewRiCiCj3D/A==</param-value>
+    <param-value>kcLZqkaylgpYU7GTzvbcZQ==</param-value>
+  </context-param>
+    <context-param>
+    <param-name>USERNAME</param-name>
+    <param-value>aFHYh9voqt82vd/dcsh2aLu8+dhJ0Y6xDag++J1bdaU=</param-value>
+  </context-param>
+    <context-param>
+    <param-name>PASSWORD</param-name>
+    <param-value>32d6Vq3PcRQtmTx5Lp0bvA==</param-value>
   </context-param>
 </web-app>

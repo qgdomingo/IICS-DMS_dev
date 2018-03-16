@@ -73,14 +73,15 @@ public class RespondToExternalMail extends HttpServlet {
 			String subject = tempStorage[1];
 			String message = tempStorage[2];
 			threadNumber = AesEncryption.encrypt(threadNumber);
-
+			String username = (String) (String) getServletContext().getInitParameter("USERNAME");
+			String password = (String) (String) getServletContext().getInitParameter("PASSWORD");
 			if(fileData != null)
 			{
-				ExternalMailFunctions.saveSentExternalMail("Internal to External", threadNumber, subject, message, fileData, acc.getEmail(), request.getServerName() + ":" +request.getServerPort() + request.getContextPath());
+				ExternalMailFunctions.saveSentExternalMail("Internal to External", threadNumber, subject, message, fileData, acc.getEmail(), request.getServerName() + ":" +request.getServerPort() + request.getContextPath(),acc.getTitle(),acc.getFullName(),acc.getUserType(),acc.getDepartment(),username,password);
 			}
 			else if(fileData == null)
 			{
-				ExternalMailFunctions.saveSentExternalMail("Internal to External", threadNumber, subject, message, acc.getEmail(), request.getServerName() + ":" +request.getServerPort() + request.getContextPath());
+				ExternalMailFunctions.saveSentExternalMail("Internal to External", threadNumber, subject, message, acc.getEmail(), request.getServerName() + ":" +request.getServerPort() + request.getContextPath(),acc.getTitle(),acc.getFullName(),acc.getUserType(),acc.getDepartment(),username,password);
 			}
 		
 			LogsFunctions.addLog("System", "External Mail", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), subject);

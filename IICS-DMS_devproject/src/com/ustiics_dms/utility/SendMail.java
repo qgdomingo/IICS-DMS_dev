@@ -27,7 +27,7 @@ public class SendMail
     {
   	  protected PasswordAuthentication getPasswordAuthentication() 
   	  {
-  	 	 return new PasswordAuthentication(user,pass);
+  	 	 return new PasswordAuthentication(AesEncryption.decrypt(user),AesEncryption.decrypt(pass));
   	  }
    });
     
@@ -35,10 +35,21 @@ public class SendMail
    {
  
     MimeMessage message = new MimeMessage(session);
-       message.setFrom(new InternetAddress(user));
+       message.setFrom(new InternetAddress(AesEncryption.decrypt(user)));
        message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
        message.setSubject(sub);
-       message.setText(msg);
+       String line = "";
+       for(int x = 0; x < 90;x++)
+       {
+    	   line += "-";
+       }
+       String messageParsed = 
+    		   "Password Recovery" + "<br><br>" +
+   	    		    line + "<br><br>" +
+   	    		 "Use this code to reset your password: " + "<b>" + msg + "</b>";
+   	    		
+
+       message.setContent(messageParsed, "text/html; charset=utf-8");
 
 
        
@@ -48,7 +59,7 @@ public class SendMail
     }
     catch(Exception e)
     {
-    	
+    	e.printStackTrace();
     }
   }  
 }

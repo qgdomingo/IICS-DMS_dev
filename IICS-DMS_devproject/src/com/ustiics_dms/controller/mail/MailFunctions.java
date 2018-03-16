@@ -38,6 +38,38 @@ import com.ustiics_dms.model.File;
 
 public class MailFunctions {
 	
+	public static void saveMailInformation(String type, String[] recipient, String[] externalRecipient, String  subject, String message, String  name, String  sentBy, String department, String addressLine1, String addressLine2, String addressLine3, String closingLine, String paperSize, String approvedBy) throws Exception
+	{
+		Connection con = DBConnect.getConnection();
+		
+		PreparedStatement prep = con.prepareStatement("INSERT INTO mail (iso_number, type, subject, file_data, checksum, sender_name, sent_by, school_year, department) VALUES (?,?,?,?,?,?,?,?,?)");
+		String isoNumber = getISONumber(department, type);
+		InputStream pdf = createPdf(type, recipient, subject, name, message, isoNumber, sentBy, addressLine1, addressLine2, addressLine3, closingLine, paperSize, approvedBy);
+		
+		prep.setString(1, isoNumber);
+		prep.setString(2, type);
+		prep.setString(3, subject);
+		prep.setBinaryStream(4, pdf, pdf.available() );
+		String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(pdf);
+		prep.setString(5, md5);
+		prep.setString(6, name);
+		prep.setString(7, sentBy);
+		prep.setString(8, ManageTasksFunctions.getSchoolYear());
+		prep.setString(9, department);
+		pdf.reset();
+		int count = prep.executeUpdate();
+		
+		if(recipient != null) {
+			sendInternalMail(recipient);
+			String des = ManageTasksFunctions.getFullName(sentBy) +" has sent you a mail, " + subject;
+			NotificationFunctions.addNotification("Mail Page", des, recipient);
+		}
+		
+		if(externalRecipient != null) {
+			ExternalMail.send(externalRecipient, subject, getIncrement(), "iics2014dmsystem@gmail.com", "bluespace09");
+		}
+	}
+	
 	public static void saveMailInformation(String type, String[] recipient, String[] externalRecipient, String  subject, String message, String  name, String  sentBy, String department, String addressLine1, String addressLine2, String addressLine3, String closingLine, String paperSize) throws Exception
 	{
 		Connection con = DBConnect.getConnection();
@@ -82,6 +114,18 @@ public class MailFunctions {
 		prep.executeUpdate();
 	}
 	
+	public static void saveRequestMailInformation(String id, String type, String[] recipient, String[] externalRecipient, String  subject, String message, String  name, String  sentBy, String department, String addressLine1, String addressLine2, String addressLine3, String closingLine, String paperSize, String approvedBy) throws Exception
+	{
+		saveMailInformation(type, recipient, externalRecipient, subject, message, name, sentBy, department, addressLine1, addressLine2, addressLine3, closingLine, paperSize, approvedBy);
+	
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("DELETE FROM request WHERE id = ? AND status = ?");
+		prep.setString(1, id);
+		prep.setString(2, "Approved");
+		
+		prep.executeUpdate();
+	}
+	
 	public static String getISONumber(String department, String type) throws SQLException
 	{
 
@@ -111,8 +155,8 @@ public class MailFunctions {
 	public static String getAcadYear() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT start_year, end_year FROM academic_year");
-			
+			PreparedStatement prep = con.prepareStatement("SELECT start_year, end_year FROM academic_year where status = ?");
+			prep.setString(1,"Current");
 
 			ResultSet rs = prep.executeQuery();
 			
@@ -326,12 +370,13 @@ public class MailFunctions {
 		
 	}
 	
-	public static void approveRequestMail(String id) throws SQLException, IOException, DocumentException
+	public static void approveRequestMail(String id, String approver) throws SQLException, IOException, DocumentException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("UPDATE request SET status = ? WHERE id = ?");
+			PreparedStatement prep = con.prepareStatement("UPDATE request SET status = ?, approved_by = ? WHERE id = ?");
 			prep.setString(1, "Approved");
-			prep.setString(2, id);
+			prep.setString(2, approver);
+			prep.setString(3, id);
 			
 			prep.executeUpdate();
 
@@ -443,8 +488,176 @@ public class MailFunctions {
 			
 	}
 	
-	public static InputStream createPdf(String type,String[] recipient, String subject, String name, String message, String isoNumber, String email, String addressLine1, String addressLine2, String addressLine3, String closingLine, String paperSize) throws IOException, DocumentException, SQLException {
+	public static InputStream createPdf(String type,String[] recipient, String subject, String name, String message, String isoNumber, String email, String addressLine1, String addressLine2, String addressLine3, String closingLine, String paperSize, String approvedBy) throws IOException, DocumentException, SQLException {
+		Document doc = null;
+		if(paperSize.equals("LONGBOND"))
+		{
+			doc =  new Document(PageSize.LEGAL, 72, 72, 72, 72);
+		}
+		else if(paperSize.equals("SHORTBOND"))
+		{
+			 Rectangle shortBond = new Rectangle(612,792);
+			doc =  new Document(shortBond, 72, 72, 72, 72);
+		}
+		else if(paperSize.equals("A4"))
+		{
+			doc =  new Document(PageSize.A4, 72, 72, 72, 72);
+		}  
+	    ByteArrayOutputStream out = new ByteArrayOutputStream();            
+	    PdfWriter writer;
+	    
+	    writer = PdfWriter.getInstance(doc, out);
+	            
+	    doc.open();
+	    writer.setStrictImageSequence(true);
+	    
+	    float fntSize, lineSpacing;
+	    fntSize = 11.5f;
+	    lineSpacing = 20f;
+	    
+	    String month = getMonth();
+	    String day = getDay();
+	    String year = getYear();
+	    String date = day + " " + month + " " + year;
+	    
+		String title = getTitle(email) + " " + getFullName(email);
+		String position = getPosition(email);
+		
+		String academicYear = AcademicYearFunctions.getAcademicYearMail();
+		
+		isoNumber = isoNumber.substring(6);
+		
+		Paragraph lineOnePara = new Paragraph(new Phrase(lineSpacing, addressLine1, FontFactory.getFont(FontFactory.HELVETICA_BOLD,fntSize)));
+		
+		Paragraph lineTwoPara = new Paragraph(new Phrase(lineSpacing, addressLine2, FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE,fntSize)));
+		
+		Paragraph lineThreePara = new Paragraph(new Phrase(lineSpacing, addressLine3, FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE,fntSize)));
+		
+		Paragraph isoNumberPara = new Paragraph(new Phrase(lineSpacing, isoNumber, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+		
+		Paragraph messagePara = new Paragraph(new Phrase(lineSpacing, message, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+		
+		messagePara.setAlignment(Element.ALIGN_JUSTIFIED);
+		
+		Paragraph yearPara = new Paragraph(new Phrase(lineSpacing, academicYear, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+		
+		Paragraph datePara = new Paragraph(new Phrase(lineSpacing, date, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 
+		Paragraph closingPara = new Paragraph(new Phrase(lineSpacing, closingLine, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+		
+		Paragraph signatoryPara = new Paragraph(new Phrase(lineSpacing, title, FontFactory.getFont(FontFactory.HELVETICA_BOLD,fntSize)));
+		
+		Paragraph positionPara = new Paragraph(new Phrase(lineSpacing, position, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+		String titleApprover = MailFunctions.getTitle(approvedBy);
+		String nameApprover = MailFunctions.getFullName(approvedBy);
+		String userTypeApprover = MailFunctions.getTitle(approvedBy);
+		
+		Chunk glue = new Chunk(new VerticalPositionMark());
+		Paragraph p = new Paragraph(title);
+		p.add(new Chunk(glue));
+		p.add(titleApprover + " " + nameApprover);
+		
+		Chunk gluePosition = new Chunk(new VerticalPositionMark());
+		Paragraph p2 = new Paragraph(position);
+		p2.add(new Chunk(gluePosition));
+		p2.add(userTypeApprover);
+		if(type.equalsIgnoreCase("Letter"))
+		{
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(isoNumberPara);
+			doc.add(yearPara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(datePara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(lineOnePara);
+			doc.add(lineTwoPara);
+			doc.add(lineThreePara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(messagePara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(closingPara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(p);
+			doc.add(p2);
+		    doc.close();
+		}
+		else if(type.equalsIgnoreCase("Notice Of Meeting"))
+		{
+			lineOnePara = new Paragraph(new Phrase(lineSpacing, "TO:	" + addressLine1, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+			lineTwoPara = new Paragraph(new Phrase(lineSpacing, "RE:	" + addressLine2, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+			lineThreePara = new Paragraph(new Phrase(lineSpacing, "FR:	" + addressLine3, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+			datePara = new Paragraph(new Phrase(lineSpacing, "DATE:	" + date, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+			
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(isoNumberPara);
+			doc.add(yearPara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(datePara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(lineOnePara);
+			doc.add(lineTwoPara);
+			doc.add(lineThreePara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(messagePara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(closingPara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(p);
+			doc.add(p2);
+			doc.close();
+		}
+		else if(type.equalsIgnoreCase("Memo"))
+		{
+			lineOnePara = new Paragraph(new Phrase(lineSpacing, "TO:	" + addressLine1, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+			lineTwoPara = new Paragraph(new Phrase(lineSpacing, "FROM:	" + addressLine2, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+			lineThreePara = new Paragraph(new Phrase(lineSpacing, "SUBJECT:	" + addressLine3, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+			datePara = new Paragraph(new Phrase(lineSpacing, "DATE:	" + date, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
+			
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(isoNumberPara);
+			doc.add(yearPara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(lineOnePara);
+			doc.add(lineTwoPara);
+			doc.add(lineThreePara);
+			doc.add(datePara);
+			DottedLineSeparator separator = new DottedLineSeparator();
+	        separator.setPercentage(59500f / 523f);
+	        Chunk linebreak = new Chunk(separator);
+	        doc.add(linebreak);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(messagePara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(closingPara);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(p);
+			doc.add(p2);
+			doc.close();
+		}
+	        
+	    return new ByteArrayInputStream(out.toByteArray());
+	    }
+	
+	public static InputStream createPdf(String type,String[] recipient, String subject, String name, String message, String isoNumber, String email, String addressLine1, String addressLine2, String addressLine3, String closingLine, String paperSize) throws IOException, DocumentException, SQLException {
 		Document doc = null;
 		if(paperSize.equals("LONGBOND"))
 		{
@@ -505,15 +718,7 @@ public class MailFunctions {
 		
 		Paragraph positionPara = new Paragraph(new Phrase(lineSpacing, position, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 		
-		Chunk glue = new Chunk(new VerticalPositionMark());
-		Paragraph p = new Paragraph(title);
-		p.add(new Chunk(glue));
-		p.add("Maricel Balais");
-		
-		Chunk gluePosition = new Chunk(new VerticalPositionMark());
-		Paragraph p2 = new Paragraph(position);
-		p2.add(new Chunk(gluePosition));
-		p2.add("Department Head");
+
 		if(type.equalsIgnoreCase("Letter"))
 		{
 			doc.add(Chunk.NEWLINE);
@@ -535,8 +740,8 @@ public class MailFunctions {
 			doc.add(closingPara);
 			doc.add(Chunk.NEWLINE);
 			doc.add(Chunk.NEWLINE);
-			doc.add(p);
-			doc.add(p2);
+			doc.add(signatoryPara);
+			doc.add(positionPara);
 		    doc.close();
 		}
 		else if(type.equalsIgnoreCase("Notice Of Meeting"))
@@ -608,7 +813,8 @@ public class MailFunctions {
 		}
 	        
 	    return new ByteArrayInputStream(out.toByteArray());
-	}
+	    }
+		
 	
 	public static String getMonth() 
 	{
@@ -852,6 +1058,23 @@ public class MailFunctions {
 	           return rs.getString("checksum");
 	       }
 	       return null;
+	}
+	
+	public static String getApprover(String id) throws SQLException 
+	{
+			Connection con = DBConnect.getConnection();
+			
+
+	       PreparedStatement prep = con.prepareStatement("SELECT approved_by FROM request WHERE id = ?");
+	       prep.setString(1, id);
+
+	       ResultSet rs = prep.executeQuery();
+	       String approver ="";
+	       if (rs.next()) 
+	       {
+	           approver = rs.getString("approved_by");
+	       }
+	       return approver;
 	}
 
 }
