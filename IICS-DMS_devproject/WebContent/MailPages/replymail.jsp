@@ -21,7 +21,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Reply Mail | IICS DMS</title>
+		<title>Reply to External Mail | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
@@ -113,8 +113,8 @@
 					<i class="large sidebar icon"></i>
 				</a>
 				<div class="item">
-					<i class="large inbox icon"></i>
-					External Inbox
+					<i class="large reply icon"></i>
+					Reply to External Mail
 				</div>
 				<div class="right menu">
 					<a class="item user-account-bgcolor mobile hidden" href="${pageContext.request.contextPath}/userprofile.jsp">
@@ -138,7 +138,7 @@
 		
 <!-- ACTUAL PAGE CONTENTS -->
 
-		<h3 class="ui dividing header element-rmt">
+		<h3 class="ui dividing header element-rmt element-mb">
 			<a href="${pageContext.request.contextPath}/mail/externalinbox.jsp">
 				<i class="black chevron left icon"></i>
 			</a> 
@@ -147,55 +147,52 @@
 
 		<!-- START OF MESSAGE FORM -->
 			<form class="ui equal width form" method="post" action="${pageContext.request.contextPath}/RespondToExternalMail" enctype="multipart/form-data"
-					id="response_external_form">
+					id="reply_to_external_form">
 				
-				<!-- SENDER'S INFORMATION --> 
-					<h3 class="ui dividing header">
-						<i class="user icon"></i>
-						<div class="content">Sender's Information</div>
-					</h3>
-					
-					<div class="ui segment">
-						<p class="element-rmb"><b>Sender: </b><span id="sender_info"></span></p>
-						<p class="element-rmb"><b>Contact Number: </b><span id="contact_info"></span></p>
-						<p class="element-rmb"><b>Affiliation: </b><span id="affiliation_info"></span></p>
-						<p class="element-rmb"><b>Subject: </b><span id="subject_info"></span></p>
-					</div>
-					
-					<input name="thread_number" type="hidden" id="thread_number"/>
-					
-				<!-- MESSAGE BODY -->
-					<h3 class="ui dividing header">
-						<i class="mail icon"></i>
-						<div class="content">Message</div>
-					</h3>
-					<div class="required field">
-						<label>Subject:</label>
-						<input name="subject" type="text"/>
-					</div>
-					<div class="required field">
-						<label>Message:</label>
-						<textarea rows="5" name="message"></textarea>
-					</div>
-					<div class="inline field">
-						<label>Attachment:</label>
-						<input type="file" name="file"/>
-					</div>
-					
-					<p>CAPTCHA</p>
-					
-					<br>
-					
-					<div class="ui error message"></div>
-					
-					<button class="fluid ui large green button" type="submit">
-						<i class="send icon"></i>
-						Send Message
-					</button>
-				</form>
-		
+			<!-- SENDER'S INFORMATION --> 
+				<h4 class="ui dividing header">
+					<i class="user icon"></i>
+					<div class="content">Sender's Information</div>
+				</h4>
+				
+				<div class="ui segment">
+					<p class="element-rmb"><b>Sender: </b><span id="sender_info"></span></p>
+					<p class="element-rmb"><b>Contact Number: </b><span id="contact_info"></span></p>
+					<p class="element-rmb"><b>Affiliation: </b><span id="affiliation_info"></span></p>
+					<p class="element-rmb"><b>Reply to Subject: </b><span id="subject_info"></span></p>
+				</div>
+				
+				<input name="thread_number" type="hidden" id="thread_number"/>
+				
+			<!-- MESSAGE BODY -->
+				<h4 class="ui dividing header">
+					<i class="mail icon"></i>
+					<div class="content">Message</div>
+				</h4>
+				<div class="required field">
+					<label>Subject:</label>
+					<input name="subject" type="text"/>
+				</div>
+				<div class="required field">
+					<label>Message:</label>
+					<textarea rows="5" name="message"></textarea>
+				</div>
+				<div class="inline field">
+					<label>Attachment:</label>
+					<input type="file" name="file"/>
+				</div>
 			
-<!-- END OF ACTUAL PAGE CONTENTS -->
+				<br>
+				
+				<div class="ui error message"></div>
+				
+				<button class="ui green button element-mb" type="submit">
+					<i class="send icon"></i>
+					Send Message
+				</button>
+			</form>
+
+<!-- END OF ACTUAL PAGE CONTENTS --> 
 		</div>
 		
 		<!-- PROGRESS MODAL -->
@@ -204,7 +201,7 @@
 			  <div class="bar">
 			  	<div class="progress"></div>
 			  </div>
-			  <div class="label">Uploading Document</div>
+			  <div class="label">Sending Mail</div>
 			</div>
 		</div>
 		
@@ -237,9 +234,6 @@
 			</div>
 			<div class="modal-content">
 				<p id="successdia_content"></p>
-			</div>
-			<div class="actions center-text">
-				<button class="ui ok secondary button">Okay</button>
 			</div>
 		</div>
 		
@@ -287,6 +281,6 @@
 	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/mail/external_send_reply.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/externalmail/external_send_reply.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/notifications.js"></script>
 </html>

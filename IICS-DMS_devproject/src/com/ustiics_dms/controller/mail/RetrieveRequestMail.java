@@ -54,7 +54,8 @@ public class RetrieveRequestMail extends HttpServlet {
 						requestInfo.getString("subject"),
 						requestInfo.getString("message"),
 						requestInfo.getString("closing_remarks"),
-						requestInfo.getString("note")
+						requestInfo.getString("note"),
+						requestInfo.getString("paper_size")
 				));		
 			}
 			

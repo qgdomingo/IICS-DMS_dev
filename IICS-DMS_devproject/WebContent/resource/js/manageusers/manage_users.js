@@ -128,7 +128,7 @@
 		$('#edit_title').val(localDataReference.title);
 		$('#edit_firstname').val(existingData[1]);
 		$('#edit_lastname').val(existingData[2]);
-		//TODO $('#edit_middleinitial').val()
+		$('#edit_middleinitial').val(localDataReference.middleInitial);
 		$('#edit_email').val(existingData[3]);
 		$('#edit_cellphone_number').val(localDataReference.contactNumber);
 		$('#edit_usertype').dropdown('set selected', existingData[4]);

@@ -3,19 +3,19 @@
  */
 
 	$(document).ready( function() {
-		getSentMail();
+		getExternalSentMail();
 	});
 
 /*
  *  VARIABLES
  */
 	// For checking
-	var isSentMailTableEmpty = true;
+	var isExternalSentMailTableEmpty = true;
 	
 	// Table References
-	var sentMailTable;
+	var externalSentMailTable;
 	var selectedID;
-	var localData;
+	var localExternalSentMailData;
 	
 	// For Search Functions
 	var minimumDate_send_timestamp;
@@ -46,17 +46,17 @@
 		}
 	);
 	
-	/* GET - SENT MAIL */
-	function getSentMail() {
-		addCSSClass('#sent_mail_loading', 'active');
+	/* GET - EXTERNAL SENT MAIL */
+	function getExternalSentMail() {
+		addCSSClass('#external_sent_mail_loading', 'active');
 			
 		$.get(getContextPath() + '/RetrieveExternalSentMail', function(response) {
 			$('#sent_mail_tablebody').empty();
 			if(!response.length == 0) 
 			{
-				localData = response;
+				localExternalSentMailData = response;
 				$.each(response, (index, sentMail) => {
-					$('<tr id="'+index+'">').appendTo('#sent_mail_tablebody')
+					$('<tr id="'+index+'">').appendTo('#external_sent_mail_tablebody')
 						.append($('<td>').text(sentMail.recipientName))
 						.append($('<td>').text(sentMail.affiliation))
 						.append($('<td>').text(sentMail.subject))
@@ -64,36 +64,36 @@
 				});
 					
 				// bind events and classes to the table after all data received
-				sentMailTable = $('#sent_mail_table').DataTable({
+				externalSentMailTable = $('#external_sent_mail_table').DataTable({
 					'order': [[3, 'desc']]
 				});
-				selectSentMailRow();
-				isSentMailTableEmpty = false;
-				removeCSSClass('#sent_mail_loading', 'active');
+				selectExternalSentMailRow();
+				isExternalSentMailTableEmpty = false;
+				removeCSSClass('#external_sent_mail_loading', 'active');
 			} 
 			else if(response.length == 0)
 			{
-				$('<tr>').appendTo('#sent_mail_tablebody')
-					.append($('<td class="center-text" colspan="5">')
-							.text("You do not have any sent mail right now."));
-				removeCSSClass('#sent_mail_loading', 'active');
+				$('<tr>').appendTo('#external_sent_mail_tablebody')
+					.append($('<td class="center-text" colspan="4">')
+							.text("You do not have any external sent mail right now."));
+				removeCSSClass('#external_sent_mail_loading', 'active');
 			}
 		})
 		.fail((response) => {
-			$('#inbox_tablebody').empty();
-			$('<tr>').appendTo('#sent_mail_tablebody')
-			.append($('<td class="center-text error" colspan="5">')
-					.text("Unable to retrieve your sent mail. Please try refreshing the page."));
-			removeCSSClass('#sent_mail_loading', 'active');
+			$('#external_sent_mail_tablebody').empty();
+			$('<tr>').appendTo('#external_sent_mail_tablebody')
+			.append($('<td class="center-text error" colspan="4">')
+					.text("Unable to retrieve your external sent mail. Please try refreshing the page."));
+			removeCSSClass('#external_sent_mail_loading', 'active');
 		});
 	}
 
-	/* SELECT ROW - Sent Mail */
-	function selectSentMailRow() {
-		$('#sent_mail_table tbody').on('dblclick', 'tr', function() {
+	/* SELECT ROW - External Sent Mail */
+	function selectExternalSentMailRow() {
+		$('#external_sent_mail_table tbody').on('dblclick', 'tr', function() {
 	    	selectedID = $(this).attr('id')
     		
-	    	setData(selectedID);
+	    	setExternalMailData(selectedID);
 
 	    	$('#view_mail_dialog').modal({
 	    		closeable: false
@@ -101,16 +101,16 @@
 		});
 	}
 	
-	function setData(id) {
-		var selectedData = localData[id];
+	function setExternalMailData(id) {
+		var selectedData = localExternalSentMailData[id];
 
 		$('#view_mail_recipient').text(selectedData.recipientName);
 		$('#view_mail_affiliation').text(selectedData.affiliation);
 		$('#view_mail_contact').text(selectedData.recipientContactNo);
 		$('#view_mail_sender').text(selectedData.senderName);
 		$('#view_mail_timestamp').text(selectedData.timeStamp);
-		$('#view_mail_subject').text(selectedData.subject);
-		$('#view_mail_message').text(selectedData.message);
+		$('#view_mail_subject').val(selectedData.subject);
+		$('#view_mail_message').val(selectedData.message);
 		$('#view_attachment_type').val(selectedData.type);
 		$('#view_attachment_id').val(selectedData.mailID);
 		$('#view_mail_file_name').text(selectedData.fileName)
@@ -121,12 +121,7 @@
  */
 	/* SEARCH - Sent Mail */
 	$('#search_mail').on('input', function() {
-		if(!isSentMailTableEmpty) sentMailTable.search( $(this).val() ).draw();
-	});
-	
-	/* SEARCH - Sent Mail */
-	$('#search_type').on('change', function() {
-		if(!isSentMailTableEmpty) sentMailTable.column(2).search( $(this).val() ).draw();
+		if(!isExternalSentMailTableEmpty) externalSentMailTable.search( $(this).val() ).draw();
 	});
 		
 	/* SEARCH - Mail Sent From */
@@ -136,10 +131,10 @@
 		formatter: dateFormat,
 		today: true,
 		onChange: ((date, text, mode) => {
-			if(!isSentMailTableEmpty) 
+			if(!isExternalSentMailTableEmpty) 
 			{
 				minimumDate_send_timestamp = new Date(text + ' 00:00:00').getTime();
-				sentMailTable.draw();
+				externalSentMailTable.draw();
 			}
 		}) 
 	});
@@ -151,31 +146,24 @@
 		formatter: dateFormat,
 		today: true,
 		onChange: ((date, text, mode) => {
-			if(!isSentMailTableEmpty) 
+			if(!isExternalSentMailTableEmpty) 
 			{
 				maximumDate_send_timestamp = new Date(text + ' 23:59:59').getTime();
-				sentMailTable.draw();
+				externalSentMailTable.draw();
 			}
 		}) 
 	});
-		
-	/* SEARCH - Academic Year */
-	$('#search_acad_year').on('change', function() {
-		if(!isSentMailTableEmpty) sentMailTable.column(3).search( $(this).val() ).draw();
-	});
-	
-	/* CLEAR SEARCH EVENT - Sent */
+			
+	/* CLEAR SEARCH EVENT - External Sent */
 	$('#clear_search').click(() => {
-		clearInboxSearch();
+		clearExternalSentMail();
 	});
 		
-	/* CLEAR SEARCH - Sent */
-	function clearInboxSearch() {
+	/* CLEAR SEARCH - External Sent */
+	function clearExternalSentMail() {
 		$('#search_mail').val('');
 		$('#search_sentfrom_calendar').calendar('clear');
 		$('#search_sentto_calendar').calendar('clear');
-		$('#search_type').dropdown('restore defaults');
-		$('#search_acad_year').dropdown('restore defaults');
-		if(!isSentMailTableEmpty) sentMailTable.search('').draw();
+		if(!isExternalSentMailTableEmpty) externalSentMailTable.search('').draw();
 	}
 	

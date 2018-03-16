@@ -30,10 +30,10 @@ public class IncomingDocumentsThread extends HttpServlet {
 		List<IncomingDocument> incomingFiles = new ArrayList<IncomingDocument>();
 	    response.setCharacterEncoding("UTF-8");
 		
-	    HttpSession session = request.getSession();
-	    Account acc = (Account) session.getAttribute("currentCredentials");
-	    
 		try {
+		    HttpSession session = request.getSession();
+		    Account acc = (Account) session.getAttribute("currentCredentials");
+			
 			String source = request.getParameter("source");
 			
 			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveIncomingThread(source, acc.getDepartment());

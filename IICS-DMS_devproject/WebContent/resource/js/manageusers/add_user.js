@@ -48,7 +48,8 @@
 	        if(!response.length == 0) {
 	        	if(!isUsersTableEmpty)
 				{
-	        		table.row.add( $(addNewRowData(response[0], localAccountsData.length + 1))[0] ).draw();
+	        		localAccountsData.push(response[0]);
+	        		table.row.add( $(addNewRowData(response[0], localAccountsData.length-1))[0] ).draw();
 					table.order( [7, 'desc'] ).draw();
 				}
 				else

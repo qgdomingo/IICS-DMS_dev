@@ -6,6 +6,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.ustiics_dms.model.Account;
 
 
 @WebServlet("/AddSource")
@@ -21,6 +24,9 @@ public class AddSource extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		
 		try {	
+		    HttpSession session = request.getSession();
+		    Account acc = (Account) session.getAttribute("currentCredentials");
+			
 			String source = request.getParameter("source");
 			SourcesFunctions.addSource(source);
 			

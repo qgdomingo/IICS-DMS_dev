@@ -10,8 +10,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
+import com.ustiics_dms.model.Account;
 
 /**
  *  GetAcadYear.java
@@ -28,6 +30,9 @@ public class GetAcadYear extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		try {
+			HttpSession session = request.getSession();
+			Account acc = (Account)session.getAttribute("currentCredentials");
+
 			ResultSet rs = (ResultSet) AcademicYearFunctions.getAcademicYear();
 			List<String> acadyearConfig = new ArrayList<>();
 
@@ -41,8 +46,10 @@ public class GetAcadYear extends HttpServlet {
 		    response.setContentType("application/json");
 		    response.setCharacterEncoding("UTF-8");
 		    response.getWriter().write(json);
+		    
 		} catch(Exception e) {
 			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		
 	}

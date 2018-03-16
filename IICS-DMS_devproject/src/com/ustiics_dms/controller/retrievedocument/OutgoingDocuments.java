@@ -34,10 +34,12 @@ public class OutgoingDocuments extends HttpServlet {
 		
 		List<OutgoingDocument> outgoingFiles = new ArrayList<OutgoingDocument>();
 	    response.setCharacterEncoding("UTF-8");
-		
-	    HttpSession session = request.getSession();
-	    Account acc = (Account) session.getAttribute("currentCredentials");
+
 		try {
+			
+		    HttpSession session = request.getSession();
+		    Account acc = (Account) session.getAttribute("currentCredentials");
+			
 			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveDocuments("Outgoing", acc.getDepartment());
 			while(documentFiles.next()) 
 			{ 

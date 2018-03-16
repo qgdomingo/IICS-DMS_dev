@@ -99,21 +99,21 @@
 				$('<tr>').appendTo('#assignedtask_tablebody')
 				.append($('<td class="center-text" colspan="4">')
 						.text("You did not assign the task to anyone. Click on Edit Task to assign to a user."));
-				removeCSSClass('#viewcreatedtask_table_loading', 'active');
+				removeCSSClass('#createdtaskdetails_loading', 'active');
 			}
 			else
 			{
 				$('<tr>').appendTo('#assignedtask_tablebody')
 				.append($('<td class="center-text" colspan="4">')
 						.text("Unable to retrieve tasks assigned."));
-				removeCSSClass('#viewcreatedtask_table_loading', 'active');
+				removeCSSClass('#createdtaskdetails_loading', 'active');
 			}
 		})
 		.fail ((response) => {
 			$('<tr>').appendTo('#assignedtask_tablebody')
 			.append($('<td class="center-text" colspan="4">')
 					.text("Unable to retrieve tasks assigned."));
-			removeCSSClass('#viewcreatedtask_table_loading', 'active');
+			removeCSSClass('#createdtaskdetails_loading', 'active');
 		});
 	}
 	

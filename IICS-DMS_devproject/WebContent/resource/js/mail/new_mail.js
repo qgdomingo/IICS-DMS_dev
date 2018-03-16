@@ -14,27 +14,38 @@
 		}
 	});
 	
+	$('#new_mail_size_select').change( function() {
+		$('#mail_letter_size').val( $('#new_mail_size_select').val() );
+		$('#mail_memo_notice_size').val( $('#new_mail_size_select').val() );
+	});
+	
 	$('#new_mail_type_select').change( function() {
 		displayAppropriateForm();
 	});
 	
 	function displayAppropriateForm() {
 		tempVal = $('#new_mail_type_select').val();
+		paperSize = $('#new_mail_size_select').val();
 		
 		if (tempVal == 'Letter') {
+			$('#mail_letter_size').show();
 			$('#letter_form').show();
 			$('#memo_notice_form').hide();
 			$('#generate_iso_form').hide();
 			$('#mail_letter_type').val(tempVal);
+			$('#mail_letter_size').val(paperSize);
 		}
 		else if (tempVal == 'Memo' || tempVal == 'Notice Of Meeting') {
+			$('#mail_letter_size').show();
 			$('#letter_form').hide();
 			$('#memo_notice_form').show();
 			$('#generate_iso_form').hide();
 			$('#mail_type_label').text(tempVal);
 			$('#mail_memo_notice_type').val(tempVal);
+			$('#mail_memo_notice_size').val(paperSize);
 		}
 		else if(tempVal == 'ISO'){
+			$('#mail_letter_size').hide();
 			$('#letter_form').hide();
 			$('#memo_notice_form').hide();
 			$('#generate_iso_form').show();
@@ -133,6 +144,8 @@
 		removeCSSClass('#letter_form', 'error');		
 	  	$('#letter_form').form('reset');
 	  	$('#mail_letter_type').val(tempVal);
+	  	$('#mail_letter_size').val( $('#new_mail_size_select').val() );
+	  	
 	  	if( ! ($('#user_type').val() == 'Faculty') ) {
 			$('#internal_letter_to').dropdown('restore defaults');
 		  	$('#external_letter_to').dropdown('restore defaults');
@@ -235,6 +248,7 @@
 		removeCSSClass('#memo_notice_form', 'error');		
 	  	$('#memo_notice_form').form('reset');
 	  	$('#mail_memo_notice_type').val(tempVal);
+		$('#mail_memo_notice_size').val( $('#new_mail_size_select').val() );
 	  	if( ! ($('#user_type').val() == 'Faculty') ) {
 			$('#internal_memo_notice_to').dropdown('restore defaults');
 		  	$('#external_memo_notice_to').dropdown('restore defaults');

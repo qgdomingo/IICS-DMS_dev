@@ -124,14 +124,14 @@
         	  );
         	  clearAddEventFields();
         	  resetAddEventButtons();
-        	  callSuccessModal('Added New Task', 'A Task has successfully been created.');
+        	  callSuccessModal('Added New Event', 'A new event has successfully been created.');
       	  
           },
           error: function(response) {
         	  removeCSSClass('#add_event_form', 'error');
         	  removeCSSClass('#add_event_form', 'loading');
         	  resetAddEventButtons();
-        	  callFailModal('Fail to Add a New Task', 'We are unable to create a new task. Please Try Again.');
+        	  callFailModal('Fail to Add a New Event', 'We are unable to create a new event. Please Try Again.');
           }
 	});
 

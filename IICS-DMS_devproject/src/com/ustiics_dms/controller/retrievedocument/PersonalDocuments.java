@@ -32,9 +32,10 @@ public class PersonalDocuments extends HttpServlet {
 		List<PersonalDocument> personalFiles = new ArrayList<PersonalDocument>();
 	    response.setCharacterEncoding("UTF-8");
 	    
-	    HttpSession session = request.getSession();
-	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
+		    HttpSession session = request.getSession();
+		    Account acc = (Account) session.getAttribute("currentCredentials");
+			
 			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveDocuments("Personal", acc.getEmail());
 			while(documentFiles.next()) 
 			{ 

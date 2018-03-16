@@ -21,7 +21,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Sent Mail | IICS DMS</title>
+		<title>External Sent Mail | IICS DMS</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/semanticui/semantic.min.css">
@@ -116,7 +116,7 @@
 				</a>
 				<div class="item">
 					<i class="large send icon"></i>
-					Sent Mail
+					External Sent Mail
 				</div>
 				<div class="right menu">
 					<a class="item user-account-bgcolor mobile hidden" href="${pageContext.request.contextPath}/userprofile.jsp">
@@ -152,7 +152,7 @@
 		</div> 
 
 		<div class="ui segment">
-			<div class="ui dimmer" id="sent_mail_loading">
+			<div class="ui dimmer" id="external_sent_mail_loading">
 				<div class="ui text loader">Retrieving External Sent Mail</div>
 			</div>
 		
@@ -198,7 +198,7 @@
 			</form>
 					
 			<!-- TABLE AREA -->
-			<table class="ui compact selectable table" id="sent_mail_table">
+			<table class="ui compact selectable table" id="external_sent_mail_table">
 				<thead>
 					<tr>
 						<th>Recipient</th>
@@ -207,7 +207,7 @@
 						<th>Timestamp</th>
 					</tr>
 				</thead>
-				<tbody id="sent_mail_tablebody"></tbody>			
+				<tbody id="external_sent_mail_tablebody"></tbody>			
 			</table>	
 		
 		</div>
@@ -236,9 +236,13 @@
   					Message
 				</h5>
 				
-				<p><b>Subject: </b><span id="view_mail_subject"></span></p>
-				
 				<div class="ui form element-mb">
+					
+					<div class="field">
+						<label>Subject:</label>
+						<input type="text" id="view_mail_subject" readonly/>
+					</div>
+				
 					<div class="field">
 						<label>Message:</label>	
 						<textarea rows="5" id="view_mail_message" readonly></textarea>
@@ -348,6 +352,6 @@
 	<script src="${pageContext.request.contextPath}/resource/calendarpicker/calendar.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/generalpages.js"></script>
-	<script src="${pageContext.request.contextPath}/resource/js/mail/external_sent.js"></script>
+	<script src="${pageContext.request.contextPath}/resource/js/externalmail/external_sent.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/notifications.js"></script>
 </html>

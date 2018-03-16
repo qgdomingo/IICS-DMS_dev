@@ -26,7 +26,7 @@ public class FileDownload extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		response.setCharacterEncoding("UTF-8");
 		
 		try {
 			int id = Integer.parseInt(AesEncryption.decrypt(request.getParameter("id")));

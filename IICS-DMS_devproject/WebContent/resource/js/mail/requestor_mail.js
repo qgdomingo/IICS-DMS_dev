@@ -5,6 +5,11 @@
 	$(document).ready( function() {
 		getRequestMail();
 		
+		if( ! ($('#user_type').val() == 'Faculty') ) {
+			getListOfUsers('#view_mail_recipient');
+			getExternalTo('#view_mail_external_recipient');
+		}
+		
 	});
 
 /*
@@ -19,6 +24,8 @@
 	
 	// Local Data
 	var localRequestMailData;
+	var internalToList = [];
+	var externalToList = [];
 	
 	// For Search Functions
 	var minimumDate_send_timestamp;
@@ -104,8 +111,10 @@
 				observeChanges: true,
 				autofocus: false,
 				onHidden: function() {
-					hideNoteMessages();
-					reinitializeMarkAsDone();
+					clearRequestorForm();
+					removeCSSClass('#requestor_form', 'success');
+					removeCSSClass('#requestor_form', 'error');
+					$('#view_mail_close').attr("disabled", false);
 				}
 			}).modal('show');
 			
@@ -123,9 +132,15 @@
 		$('#view_mail_sender').text(selectedData.senderName + ' (' + selectedData.sentBy + ')');
 		$('#view_mail_status').text(selectedData.status);
 		
-		$('#view_mail_recipient').val(selectedData.recipient);
-		$('#view_mail_external_recipient').val(selectedData.externalRecipient);
+		if( ! ($('#user_type').val() == 'Faculty') ) {
+			setInternalToList(selectedData.recipient);
+			setExternalToList(selectedData.externalRecipient);
+		}
 		
+		$('#view_mail_type_form').val(selectedData.type);
+		$('#view_mail_id_form').val(selectedData.id);
+		
+		$('#view_mail_size_select').dropdown('set selected', selectedData.paperSize);
 		$('#view_mail_addressee').val(selectedData.addressLine1);
 		
 		if(mailType == 'Letter') {
@@ -153,14 +168,163 @@
 		
 		if(selectedData.status == 'Pending') {
 			$('#submit_edit').show();
-			$('#submit_send').hide();
 			$('#submit_download').hide();
+			
+			if( !($('#user_type').val() == 'Faculty') )  $('#submit_send').hide();
 		}
 		else if(selectedData.status = 'Approved') {
 			$('#submit_edit').hide();
-			$('#submit_send').show();
 			$('#submit_download').show();
+			
+			if( !($('#user_type').val() == 'Faculty') )  $('#submit_send').show();
 		}
+	}
+	
+	function setInternalToList(recipient) {
+		var arrayRecipient = recipient.split(",");
+		$('#view_mail_recipient').dropdown('set selected', arrayRecipient);
+	}
+	
+	function setExternalToList(externalRecipient) {
+		var arrayExternalRecipient = externalRecipient.split(",");
+		$('#view_mail_external_recipient').dropdown('set selected', arrayExternalRecipient);
+	}
+	
+/*
+ * FORM SUBMISSION
+ */
+	/* SUBMIT - Requestor Form */
+	$('#requestor_form').ajaxForm({
+		beforeSubmit: isRequestorFormValid,
+		success: function(response) {  
+			$('#view_mail_close').attr("disabled", false);
+			removeCSSClass('#requestor_form','loading');
+			
+			if(response == 'success edit') {
+				addCSSClass('#requestor_form','success');
+			}
+			else if (response == 'invalid send mail') {
+				callFailModal('Unable to Send Letter','Please add at least one recipient on the "TO" field on the Mail Recipients section');
+			}
+			else {
+				clearRequestorForm();
+				requestMailTable.row('#'+selectedID).remove().draw();
+				callSuccessModal('Mail Processed Successfully ','Your mail has been processed without errors.');
+			}
+
+		},
+		error: function(response) {
+			callFailModal('Unable to Forward Mail','An error has occured while processing your mail, please try again.');
+			removeCSSClass('#requestor_form','loading');
+		}
+	});
+
+	/* CUSTOM FORM RULE - If Needed a Second Addressee Line */
+	$.fn.form.settings.rules.letterLine2 = function(value) {
+		var type = $('#view_mail_type_form').val();
+		
+		if( (type == 'Letter' && !(value == ''))  || 
+		    (!(type == 'Letter')) ) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	};
+	
+	/* CUSTOM FORM RULE - If Needed a Second Addressee Line */
+	$.fn.form.settings.rules.fromField = function(value) {
+		var type = $('#view_mail_type_form').val();
+		
+		if( (!(type == 'Letter') && !(value == ''))  || 
+		    ((type == 'Letter')) ) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	};
+	
+	/* FORM VALIDATION - Requestor Form */
+	$('#requestor_form').form({
+		fields: {
+			addressee_line1: {
+				identifier: 'addressee_line1',
+				rules: [
+					{
+						type   : 'empty',
+						prompt : 'Please an addressee of the mail'
+					}
+				]
+			},
+			addressee_line2: {
+				identifier: 'addressee_line2',
+				rules: [
+					{
+						type   : 'letterLine2[]',
+						prompt : 'Please enter at least the second line header of the addressee. (e.g. Affiliation of the Addressee)'
+					}
+				]
+			},
+			from: {
+				identifier: 'from',
+				rules: [
+					{
+						type   : 'fromField[]',
+						prompt : 'Please enter office from whom the mail is'
+					}
+				]
+			},
+			subject: {
+				identifier: 'subject',
+				rules: [
+					{
+						type   : 'empty',
+						prompt : 'Please enter a subject of the letter'
+					}
+				]
+			},
+			message: {
+				identifier: 'message',
+				rules: [
+					{
+						type   : 'empty',
+						prompt : 'Please enter the letter content'
+					}
+				]
+			},
+			closing_line: {
+				identifier: 'closing_line',
+				rules: [
+					{
+						type   : 'empty',
+						prompt : 'Please enter a complimentary closing line of the letter. (e.g. Sincrely Yours, )'
+					}
+				]
+			}
+		}
+	});
+	
+	/* BOOLEAN VALIDATION - Requestor Form */
+	function isRequestorFormValid() {
+		if( $('#requestor_form').form('is valid') ) {
+			$('#view_mail_close').attr("disabled", true);
+			addCSSClass('#requestor_form','loading');
+			return true;
+		} 
+		else {
+			return false;
+		}
+	}
+	
+	/* CLEAR - Requestor Form */
+	function clearRequestorForm() {
+		removeCSSClass('#requestor_form', 'error');		
+	  	$('#requestor_form').form('reset');
+	  	if( ! ($('#user_type').val() == 'Faculty') ) {
+			$('#view_mail_recipient').dropdown('restore defaults');
+		  	$('#view_mail_external_recipient').dropdown('restore defaults');
+	  	}
 	}
 	
 /*
@@ -206,6 +370,10 @@
 		}) 
 	});
 			
+	$('#search_status').on('change', function() {
+		if(!isRequestMailTableEmpty) requestMailTable.column(3).search( $(this).val() ).draw();
+	});
+	
 	/* CLEAR SEARCH EVENT - Request */
 	$('#clear_search').click(() => {
 		clearRequestSearch();
@@ -217,6 +385,7 @@
 		$('#search_type').dropdown('restore defaults');
 		$('#search_sentfrom_calendar').calendar('clear');
 		$('#search_sentto_calendar').calendar('clear');
+		$('#search_status').dropdown('restore defaults');
 		if(!isRequestMailTableEmpty) requestMailTable.search('').draw();
 	}
 	

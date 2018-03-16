@@ -27,13 +27,14 @@ public class RetrieveUserDirectory extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-	    Account acc = (Account) session.getAttribute("currentCredentials");
 	    
 		List<Account> users = new ArrayList<Account>();
 	    response.setCharacterEncoding("UTF-8");
 		
 		try {
+			HttpSession session = request.getSession();
+		    Account acc = (Account) session.getAttribute("currentCredentials");
+			
 			String userType = acc.getUserType();
 			ResultSet accounts = null;
 			

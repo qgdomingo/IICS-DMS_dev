@@ -43,6 +43,9 @@ public class SubmitTask extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		
 		try {
+			HttpSession session = request.getSession();
+			Account acc = (Account)session.getAttribute("currentCredentials");
+
 			multifiles = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 
 			int counter = 0;
@@ -67,9 +70,6 @@ public class SubmitTask extends HttpServlet {
 			String documentDescription = tempStorage[1];
 			String id = tempStorage[2];
 			String deadline = tempStorage[3];
-			HttpSession session = request.getSession();
-			
-			Account acc = (Account)session.getAttribute("currentCredentials");
 			
 			ManageTasksFunctions.submitTask(documentTitle,  fileData, documentDescription, acc.getEmail(), id, deadline);
 

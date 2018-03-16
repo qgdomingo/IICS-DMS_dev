@@ -207,7 +207,7 @@
 			
 				<div class="required inline field">
 					<label>File to Upload:</label>
-					<input type="file" name="file[]" multiple/>
+					<input type="file" name="file"/>
 				</div>
 			
 				<div class="field">
@@ -279,7 +279,7 @@
 					
 				<div class="required inline field">
 					<label>File to Upload:</label>
-					<input type="file" name="file[]" multiple/>
+					<input type="file" name="file" />
 				</div>
 			
 				<div class="field">
@@ -395,7 +395,7 @@
 				
 				<div class="required inline field">
 					<label>File to Upload:</label>
-					<input type="file" name="file[]" multiple/>
+					<input type="file" name="file" />
 				</div>
 				
 				<div class="field">

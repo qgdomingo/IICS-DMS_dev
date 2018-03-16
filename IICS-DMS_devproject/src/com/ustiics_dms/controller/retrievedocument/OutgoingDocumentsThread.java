@@ -32,14 +32,15 @@ public class OutgoingDocumentsThread extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String source = request.getParameter("source");
-
 		List<OutgoingDocument> outgoingFiles = new ArrayList<OutgoingDocument>();
 	    response.setCharacterEncoding("UTF-8");
 		
-	    HttpSession session = request.getSession();
-	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
+		    HttpSession session = request.getSession();
+		    Account acc = (Account) session.getAttribute("currentCredentials");
+			
+			String source = request.getParameter("source");
+		    
 			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveOutgoingThread(source, acc.getDepartment());
 			while(documentFiles.next()) 
 			{ 

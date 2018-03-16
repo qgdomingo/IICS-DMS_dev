@@ -55,7 +55,7 @@ public class MailFunctions {
 		prep.setString(8, ManageTasksFunctions.getSchoolYear());
 		prep.setString(9, department);
 		pdf.reset();
-		prep.executeUpdate();
+		int count = prep.executeUpdate();
 		
 		if(recipient != null) {
 			sendInternalMail(recipient);
@@ -66,6 +66,18 @@ public class MailFunctions {
 		if(externalRecipient != null) {
 			ExternalMail.send(externalRecipient, subject, getIncrement(), "iics2014dmsystem@gmail.com", "bluespace09");
 		}
+	}
+	
+	public static void saveRequestMailInformation(String id, String type, String[] recipient, String[] externalRecipient, String  subject, String message, String  name, String  sentBy, String department, String addressLine1, String addressLine2, String addressLine3, String closingLine) throws Exception
+	{
+		saveMailInformation(type, recipient, externalRecipient, subject, message, name, sentBy, department, addressLine1, addressLine2, addressLine3, closingLine);
+	
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("DELETE FROM request WHERE id = ? AND status = ?");
+		prep.setString(1, id);
+		prep.setString(2, "Approved");
+		
+		prep.executeUpdate();
 	}
 	
 	public static String getISONumber(String department, String type) throws SQLException
@@ -147,9 +159,13 @@ public class MailFunctions {
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("SHOW TABLE STATUS WHERE `Name` = 'mail'");
 			ResultSet rs = prep.executeQuery();
-			rs.next();
-
-			return rs.getInt("Auto_increment")-1;
+			
+			int returningNumber = 1;
+			if(rs.next()) {
+				returningNumber = rs.getInt("Auto_increment")-1;
+			}
+			
+			return returningNumber;
 	}
 
 	public static ResultSet getInbox(String email) throws SQLException
@@ -193,7 +209,7 @@ public class MailFunctions {
 	}
 	
 	//Requests
-	public static void forwardRequestMail(String id, String type, String[] recipient, String[] externalRecipient, String  subject, String  message, String  name, String  sentBy, String userType, String department, String addressLine1, String addressLine2, String addressLine3, String closingRemarks) throws SQLException
+	public static void forwardRequestMail(String id, String type, String[] recipient, String[] externalRecipient, String  subject, String  message, String  name, String  sentBy, String userType, String department, String addressLine1, String addressLine2, String addressLine3, String closingRemarks, String paperSize) throws SQLException
 	{
 		String recipientString = "";
 		
@@ -208,7 +224,7 @@ public class MailFunctions {
 		} 
 		
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("UPDATE request SET type = ? recipient = ? external_recipient = ? subject = ? message = ? sender_name = ? sent_by = ? department =? address_line1 = ? address_line2 = ? address_line3 = ? closing_remarks = ? WHERE id = ? ");
+		PreparedStatement prep = con.prepareStatement("UPDATE request SET type = ?, recipient = ?, external_recipient = ?, subject = ?, message = ?, sender_name = ?, sent_by = ?, department = ?, address_line1 = ?, address_line2 = ?, address_line3 = ?, closing_remarks = ?, paper_size = ? WHERE id = ? ");
 		prep.setString(1, type);
 		prep.setString(2, recipientString);
 		prep.setString(3, externalRecipientString);
@@ -221,14 +237,15 @@ public class MailFunctions {
 		prep.setString(10, addressLine2);
 		prep.setString(11, addressLine3);
 		prep.setString(12, closingRemarks);
-		prep.setString(13, id);
+		prep.setString(13, paperSize);
+		prep.setString(14, id);
 		prep.executeUpdate();
 
-		String des = name +" sent you a mail request, "+ subject + ", for your approval.";
+		String des = name +" has sent you a new update on the mail request, "+ subject + ", for your approval.";
 		NotificationFunctions.addNotification("Request Mail Page", des, getToSendRequestApprovers(sentBy, userType, department));
 	}
 	
-	public static void forwardRequestMail(String type, String[] recipient, String[] externalRecipient, String  subject, String  message, String  name, String  sentBy, String userType, String department, String addressLine1, String addressLine2, String addressLine3, String closingRemarks) throws SQLException
+	public static void forwardRequestMail(String type, String[] recipient, String[] externalRecipient, String  subject, String  message, String  name, String  sentBy, String userType, String department, String addressLine1, String addressLine2, String addressLine3, String closingRemarks, String paperSize) throws SQLException
 	{
 		String recipientString = "";
 		
@@ -243,7 +260,7 @@ public class MailFunctions {
 		} 
 		
 		Connection con = DBConnect.getConnection();
-		PreparedStatement prep = con.prepareStatement("INSERT INTO request (type, recipient, external_recipient, subject, message, sender_name, sent_by, department, address_line1, address_line2, address_line3, closing_remarks) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+		PreparedStatement prep = con.prepareStatement("INSERT INTO request (type, recipient, external_recipient, subject, message, sender_name, sent_by, department, address_line1, address_line2, address_line3, closing_remarks, paper_size) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		prep.setString(1, type);
 		prep.setString(2, recipientString);
 		prep.setString(3, externalRecipientString);
@@ -256,6 +273,7 @@ public class MailFunctions {
 		prep.setString(10, addressLine2);
 		prep.setString(11, addressLine3);
 		prep.setString(12, closingRemarks);
+		prep.setString(13, paperSize);
 		prep.executeUpdate();
 
 		String des = name +" sent you a mail request, "+ subject + ", for your approval.";
@@ -266,7 +284,7 @@ public class MailFunctions {
 	{
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("SELECT id, type, recipient, external_recipient, subject, message, sender_name, sent_by, "
-					+ "date_created, status, note, address_line1, address_line2, address_line3, closing_remarks FROM request WHERE department = ? AND status = ?");
+					+ "date_created, status, note, address_line1, address_line2, address_line3, closing_remarks, paper_size FROM request WHERE department = ? AND status = ?");
 			
 			prep.setString(1, department);
 			prep.setString(2, "Pending");
@@ -279,7 +297,7 @@ public class MailFunctions {
 	{
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("SELECT id, type, recipient, external_recipient, subject, message, sender_name, sent_by, "
-					+ "date_created, status, note, address_line1, address_line2, address_line3, closing_remarks FROM request WHERE sent_by = ?");
+					+ "date_created, status, note, address_line1, address_line2, address_line3, closing_remarks, paper_size FROM request WHERE sent_by = ?");
 			
 			prep.setString(1, email);
 			ResultSet rs = prep.executeQuery();
@@ -443,7 +461,7 @@ public class MailFunctions {
 	    String year = getYear();
 	    String date = day + " " + month + " " + year;
 	    
-		String title = getTitle(email) + " " + name;
+		String title = getTitle(email) + " " + getFullName(email);
 		String position = getPosition(email);
 		
 		String academicYear = AcademicYearFunctions.getAcademicYearMail();
@@ -474,6 +492,10 @@ public class MailFunctions {
 		
 		if(type.equalsIgnoreCase("Letter"))
 		{
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
 			doc.add(isoNumberPara);
 			doc.add(yearPara);
 			doc.add(Chunk.NEWLINE);
@@ -500,6 +522,10 @@ public class MailFunctions {
 			lineThreePara = new Paragraph(new Phrase(lineSpacing, "FR:	" + addressLine3, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 			datePara = new Paragraph(new Phrase(lineSpacing, "DATE:	" + date, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 			
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
 			doc.add(isoNumberPara);
 			doc.add(yearPara);
 			doc.add(Chunk.NEWLINE);
@@ -528,6 +554,10 @@ public class MailFunctions {
 			lineThreePara = new Paragraph(new Phrase(lineSpacing, "SUBJECT:	" + addressLine3, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 			datePara = new Paragraph(new Phrase(lineSpacing, "DATE:	" + date, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 			
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
+			doc.add(Chunk.NEWLINE);
 			doc.add(isoNumberPara);
 			doc.add(yearPara);
 			doc.add(Chunk.NEWLINE);
@@ -700,13 +730,31 @@ public class MailFunctions {
 		return position;
 	}
 	
+	public static String getFullName(String email) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		
+		PreparedStatement prep = con.prepareStatement("SELECT first_name, middle_initial, last_name FROM accounts WHERE email = ?");
+		
+		prep.setString(1, email);
+		
+		ResultSet rs = prep.executeQuery();
+		String fullname = "";
+		if(rs.next())
+		{
+			fullname = rs.getString("first_name") + " " + rs.getString("middle_initial") + " " + rs.getString("last_name");
+		}
+		
+		return fullname;
+	}
+	
 	public static String[] getToSendRequestApprovers(String email, String userType, String department) throws SQLException
 	{
 		Connection con = DBConnect.getConnection();
 		ArrayList<String> emailList = new ArrayList<String>();
 		PreparedStatement prep = con.prepareStatement("SELECT email FROM accounts WHERE NOT email = ? and user_type = ? and department = ?");
 		prep.setString(1, email);
-		System.out.println(userType);
+
 		if(userType.equalsIgnoreCase("Faculty"))
 		{
 			prep.setString(2, "Department Head");

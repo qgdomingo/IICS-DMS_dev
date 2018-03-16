@@ -31,7 +31,7 @@ public class Logout extends HttpServlet {
 		try {
 			HttpSession session = request.getSession();
 			
-			if(session.getAttribute("currentCredentials") != null) {
+			if(session != null || session.getAttribute("currentCredentials") != null) {
 				Account acc = (Account) session.getAttribute("currentCredentials");
 				LogsFunctions.addLog("System", "Logout", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
 				session.invalidate();

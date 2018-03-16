@@ -94,7 +94,7 @@
 				
 				<!-- AFTER FORM -->	
 				<p>Having trouble remembering your password? Click <a href="#" id="forgotpass_btn">here</a>!</p>
-				<p>Do you have some lovely messages for the Director? <a href="messagedirector.jsp"> Send a message</a>.</p>
+				<p>Do you have some inquiries to the Director? <a href="messagedirector.jsp"> Send a message</a>.</p>
 			</div>
 		</div>
 		

@@ -36,7 +36,7 @@ public class RetrieveExternalUserDetails extends HttpServlet {
 			
 			String id = AesEncryption.decrypt(request.getParameter("threadNo"));
 			ResultSet externalMail = (ResultSet) ExternalMailFunctions.getExternalUserDetails(id);
-			
+
 			if(externalMail.next())
 			{
 				external.add(new ExternalUser(

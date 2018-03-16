@@ -17,10 +17,11 @@ public class RequestMail {
 	private String message;
 	private String closingRemark;
 	private String note;
+	private String paperSize;
 	
 	public RequestMail(String id, String type, String senderName, String sentBy, String status, String dateCreated,
 			String recipient, String externalRecipient, String addressLine1, String addressLine2, String addressLine3,
-			String subject, String message, String closingRemark, String note) {
+			String subject, String message, String closingRemark, String note, String paperSize) {
 		super();
 		this.id = id;
 		this.type = type;
@@ -37,6 +38,7 @@ public class RequestMail {
 		this.message = message;
 		this.closingRemark = closingRemark;
 		this.note = note;
+		this.paperSize = paperSize;
 	}
 	public String getId() {
 		return id;
@@ -127,6 +129,12 @@ public class RequestMail {
 	}
 	public void setNote(String note) {
 		this.note = note;
+	}
+	public String getPaperSize() {
+		return paperSize;
+	}
+	public void setPaperSize(String paperSize) {
+		this.paperSize = paperSize;
 	}
 	
 }
