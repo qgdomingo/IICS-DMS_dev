@@ -167,8 +167,8 @@
 				</div>
 				<div class="field">
 					<label>Mail PDF Size:</label>
-					<select class="ui fluid dropdown" id="new_mail_size_select">
-					  	<option value="A4">A4</option>
+					<select name="paper_size" class="ui fluid dropdown" id="new_mail_size_select">
+						<option value="A4">A4</option>
 					  	<option value="SHORTBOND">Short Bond Paper</option>
 					  	<option value="LONGBOND">Long Bond Paper</option>
 					</select>

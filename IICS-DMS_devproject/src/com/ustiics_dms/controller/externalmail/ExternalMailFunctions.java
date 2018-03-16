@@ -47,15 +47,31 @@ public class ExternalMailFunctions {
 		prep.setString(6, affiliation);
 		prep.setString(7, subject);
 		prep.setString(8, message);
+		prep.setString(9, fileData.getName());
+		prep.setBinaryStream(10, fileData.getInputStream(), (int) fileData.getSize());
 		
-		if(fileData != null) {
-			prep.setString(9, fileData.getName());
-			prep.setBinaryStream(10, fileData.getInputStream(), (int) fileData.getSize());
-		}
-		else {
-			prep.setString(9, null);
-			prep.setBinaryStream(10, null);
-		}
+		prep.executeUpdate();
+		
+		String fullName = firstName + " " + lastName;
+		LogsFunctions.addLog("System", "External Sent to Director", emailAddress, fullName, "External", "None", subject);
+		
+		String des = fullName +", external user, has sent you a mail, " + subject;
+		NotificationFunctions.addNotification("External Mail Page", des, getDirectorRecipient());
+	}
+	
+	public static void SendMailToDirector (String firstName, String lastName, String emailAddress, String contactNumber, String affiliation, String subject, String message) throws SQLException, IOException 
+	{
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("INSERT INTO external_mail (thread_number, first_name, last_name, email, contact_number, affiliation, subject, message) VALUES (?,?,?,?,?,?,?,?)");
+
+		prep.setInt(1, getCounter());
+		prep.setString(2, firstName);
+		prep.setString(3, lastName);
+		prep.setString(4, emailAddress);
+		prep.setString(5, contactNumber);
+		prep.setString(6, affiliation);
+		prep.setString(7, subject);
+		prep.setString(8, message);
 
 		prep.executeUpdate();
 		
@@ -93,14 +109,10 @@ public class ExternalMailFunctions {
 			prep.setString(7, subject);
 			prep.setString(8, message);
 			
-			if(fileData != null) {
-				prep.setString(9, fileData.getName());
-				prep.setBinaryStream(10, fileData.getInputStream(), (int) fileData.getSize());
-			}
-			else {
-				prep.setString(9, null);
-				prep.setBinaryStream(10, null);
-			}
+			prep.setString(9, fileData.getName());
+			prep.setBinaryStream(10, fileData.getInputStream(), (int) fileData.getSize());
+
+			
 		
 			prep.executeUpdate();
 		
@@ -109,6 +121,41 @@ public class ExternalMailFunctions {
 			NotificationFunctions.addNotification("External Mail Page", des, getDirectorRecipient());
 		}
 	}
+	
+	public static void SendMailToDirector (String threadNumber, String message) throws SQLException, IOException 
+	{
+		
+		Connection con = DBConnect.getConnection();
+		PreparedStatement prep = con.prepareStatement("INSERT INTO external_mail (thread_number, first_name, last_name, email, contact_number, affiliation, subject, message) VALUES (?,?,?,?,?,?,?,?)");
+		
+		ResultSet rs = getExternalMailUsingThreadNo(threadNumber);
+		
+		if(rs.next())
+		{
+			String firstName = rs.getString("first_name");
+			String lastName = rs.getString("last_name");
+			String fullName = firstName + " " + lastName;
+			String email = rs.getString("email");
+			String contactNumber = rs.getString("contact_number");
+			String affiliation = rs.getString("affiliation");
+			String subject = rs.getString("subject");
+			
+			prep.setString(1, threadNumber);
+			prep.setString(2, firstName);
+			prep.setString(3, lastName);
+			prep.setString(4, email);
+			prep.setString(5, contactNumber);
+			prep.setString(6, affiliation);
+			prep.setString(7, subject);
+			prep.setString(8, message);
+		
+			prep.executeUpdate();
+		
+			LogsFunctions.addLog("System", "External Reply to Director", email, fullName, "External", "None", subject);
+			String des = fullName +", external user, has sent you a mail reply, " + subject;
+			NotificationFunctions.addNotification("External Mail Page", des, getDirectorRecipient());
+		}
+		}
 	
 	public static ResultSet getExternalMail(String threadNumber) throws SQLException
 	{
@@ -220,23 +267,27 @@ public class ExternalMailFunctions {
 	       message.setFrom(new InternetAddress(user));
 	       message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
 	       message.setSubject(subject);
-	
-	       int length = (int) file.getFileData().length();
-	       byte[] data = file.getFileData().getBytes(1, length);
-	       
 	       Multipart multipart = new MimeMultipart();
-	        
-	       MimeBodyPart messageContent = new MimeBodyPart();
 
-	       messageContent.setText(contextPath + "/replyfromemail.jsp?thread_number=" + threadNumber);
-	       MimeBodyPart attachment = new MimeBodyPart();
-	       attachment = new MimeBodyPart();
-	       DataSource source = new ByteArrayDataSource( data , "application/octet-stream");
-	       attachment.setDataHandler(new DataHandler(source));
-	       attachment.setFileName(file.getFileName());
-	        
+	       if(file.getFileName() != null)
+	       {
+		       int length = (int) file.getFileData().length();
+		       byte[] data = file.getFileData().getBytes(1, length);
+		       DataSource source = new ByteArrayDataSource( data , "application/octet-stream");
+		       MimeBodyPart attachment = new MimeBodyPart();
+		       attachment = new MimeBodyPart();
+		       attachment.setDataHandler(new DataHandler(source));
+		       attachment.setFileName(file.getFileName());
+		        
+		       multipart.addBodyPart(attachment);
+	       }
+	       
+	       MimeBodyPart messageContent = new MimeBodyPart();
 	       multipart.addBodyPart(messageContent);
-	       multipart.addBodyPart(attachment);
+	       messageContent.setText(msg + "\r\n \r\n" 
+	       + contextPath + "/replyfromemail.jsp?thread_number=" + threadNumber);
+
+	       
 	
 	       message.setContent(multipart);
 	       Transport.send(message);
@@ -292,6 +343,23 @@ public class ExternalMailFunctions {
 		prep.setString(5, fileData.getName());
 		prep.setBinaryStream(6, fileData.getInputStream(), (int) fileData.getSize());
 		prep.setString(7, sentBy);
+
+		prep.executeUpdate();
+		threadNumber = AesEncryption.encrypt(threadNumber);
+		ExternalMailFunctions.send(type,recipient, subject, message, threadNumber , ExternalMailFunctions.getIncrement(), "iics2014dmsystem@gmail.com", "bluespace09", contextPath);
+	}
+	
+	public static void saveSentExternalMail(String type, String threadNumber, String subject, String message, String sentBy, String contextPath) throws Exception
+	{
+		Connection con = DBConnect.getConnection();
+		
+		PreparedStatement prep = con.prepareStatement("INSERT INTO sent_external_mail (thread_number, recipient, subject, message, sent_by) VALUES (?,?,?,?,?)");
+		String recipient = getEmail(threadNumber);
+		prep.setString(1, AesEncryption.decrypt(threadNumber));
+		prep.setString(2, recipient);
+		prep.setString(3, subject);
+		prep.setString(4, message);
+		prep.setString(5, sentBy);
 
 		prep.executeUpdate();
 		threadNumber = AesEncryption.encrypt(threadNumber);

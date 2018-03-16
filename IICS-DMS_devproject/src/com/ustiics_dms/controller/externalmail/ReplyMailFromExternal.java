@@ -17,6 +17,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.utility.AesEncryption;
+import com.ustiics_dms.utility.VerifyRecaptcha;
 
 
 @WebServlet("/ReplyMailFromExternal")
@@ -37,7 +38,7 @@ public class ReplyMailFromExternal extends HttpServlet {
 			multifiles = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 
 			int counter = 0;
-			String[] tempStorage = new String[3];
+			String[] tempStorage = new String[5];
 			
 			FileItem fileData = null;
 			for(FileItem item : multifiles)
@@ -54,12 +55,35 @@ public class ReplyMailFromExternal extends HttpServlet {
 	            }
             }
 			
+			String captcha = tempStorage[4];
+			boolean verify = VerifyRecaptcha.verify(captcha);
+			
+			if(verify)
+			{
+				response.setContentType("text/plain");
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write("invalid captcha");
+			}
+			if(fileData != null && fileData.getSize() > 26214400)
+			{
+
+				response.setContentType("text/plain");
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write("above maximum size");
+			}
+			
 			String threadNumber = tempStorage[0];
 			String subject = tempStorage[1];
 			String message = tempStorage[2];
-
-			ExternalMailFunctions.SendMailToDirector(threadNumber, message, fileData);
 			
+			if(fileData != null)
+			{
+				ExternalMailFunctions.SendMailToDirector(threadNumber, message, fileData);
+			}
+			else if(fileData == null)
+			{
+				ExternalMailFunctions.SendMailToDirector(threadNumber, message);
+			}
 			 response.setContentType("text/plain");
 			 response.setStatus(HttpServletResponse.SC_OK);
 			 response.getWriter().write("success");

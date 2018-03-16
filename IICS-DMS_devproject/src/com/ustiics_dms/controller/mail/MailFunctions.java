@@ -24,8 +24,10 @@ import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
+import com.itextpdf.text.pdf.draw.VerticalPositionMark;
 import com.ustiics_dms.controller.academicyear.AcademicYearFunctions;
 import com.ustiics_dms.controller.fileupload.FileUploadFunctions;
 import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
@@ -36,13 +38,13 @@ import com.ustiics_dms.model.File;
 
 public class MailFunctions {
 	
-	public static void saveMailInformation(String type, String[] recipient, String[] externalRecipient, String  subject, String message, String  name, String  sentBy, String department, String addressLine1, String addressLine2, String addressLine3, String closingLine) throws Exception
+	public static void saveMailInformation(String type, String[] recipient, String[] externalRecipient, String  subject, String message, String  name, String  sentBy, String department, String addressLine1, String addressLine2, String addressLine3, String closingLine, String paperSize) throws Exception
 	{
 		Connection con = DBConnect.getConnection();
 		
 		PreparedStatement prep = con.prepareStatement("INSERT INTO mail (iso_number, type, subject, file_data, checksum, sender_name, sent_by, school_year, department) VALUES (?,?,?,?,?,?,?,?,?)");
 		String isoNumber = getISONumber(department, type);
-		InputStream pdf = createPdf(type, recipient, subject, name, message, isoNumber, sentBy, addressLine1, addressLine2, addressLine3, closingLine);
+		InputStream pdf = createPdf(type, recipient, subject, name, message, isoNumber, sentBy, addressLine1, addressLine2, addressLine3, closingLine, paperSize);
 		
 		prep.setString(1, isoNumber);
 		prep.setString(2, type);
@@ -68,9 +70,9 @@ public class MailFunctions {
 		}
 	}
 	
-	public static void saveRequestMailInformation(String id, String type, String[] recipient, String[] externalRecipient, String  subject, String message, String  name, String  sentBy, String department, String addressLine1, String addressLine2, String addressLine3, String closingLine) throws Exception
+	public static void saveRequestMailInformation(String id, String type, String[] recipient, String[] externalRecipient, String  subject, String message, String  name, String  sentBy, String department, String addressLine1, String addressLine2, String addressLine3, String closingLine, String paperSize) throws Exception
 	{
-		saveMailInformation(type, recipient, externalRecipient, subject, message, name, sentBy, department, addressLine1, addressLine2, addressLine3, closingLine);
+		saveMailInformation(type, recipient, externalRecipient, subject, message, name, sentBy, department, addressLine1, addressLine2, addressLine3, closingLine, paperSize);
 	
 		Connection con = DBConnect.getConnection();
 		PreparedStatement prep = con.prepareStatement("DELETE FROM request WHERE id = ? AND status = ?");
@@ -315,7 +317,7 @@ public class MailFunctions {
 		if(rs.next())
 		{
 			//String type, String[] recipient, String[] externalRecipient, String  subject, String message, String  name, String  sentBy, String department, String addressLine1, String addressLine2, String addressLine3, String closingLine
-			saveMailInformation(rs.getString("type"), null, null, rs.getString("subject"), rs.getString("message"), rs.getString("sender_name"), rs.getString("sent_by"), rs.getString("department"), rs.getString("address_line1"), rs.getString("address_line2"), rs.getString("address_line3"), rs.getString("closing_remarks"));
+			saveMailInformation(rs.getString("type"), null, null, rs.getString("subject"), rs.getString("message"), rs.getString("sender_name"), rs.getString("sent_by"), rs.getString("department"), rs.getString("address_line1"), rs.getString("address_line2"), rs.getString("address_line3"), rs.getString("closing_remarks"), rs.getString("paper_size"));
 			deleteRequest(id);
 			int latestID = MailFunctions.getIncrement();
 			
@@ -441,9 +443,22 @@ public class MailFunctions {
 			
 	}
 	
-	public static InputStream createPdf(String type,String[] recipient, String subject, String name, String message, String isoNumber, String email, String addressLine1, String addressLine2, String addressLine3, String closingLine) throws IOException, DocumentException, SQLException {
-	    Document doc = new Document(PageSize.A4, 50, 50, 50, 50);
-	       
+	public static InputStream createPdf(String type,String[] recipient, String subject, String name, String message, String isoNumber, String email, String addressLine1, String addressLine2, String addressLine3, String closingLine, String paperSize) throws IOException, DocumentException, SQLException {
+
+		Document doc = null;
+		if(paperSize.equals("LONGBOND"))
+		{
+			doc =  new Document(PageSize.LEGAL, 72, 72, 72, 72);
+		}
+		else if(paperSize.equals("SHORTBOND"))
+		{
+			 Rectangle shortBond = new Rectangle(612,792);
+			doc =  new Document(shortBond, 72, 72, 72, 72);
+		}
+		else if(paperSize.equals("A4"))
+		{
+			doc =  new Document(PageSize.A4, 72, 72, 72, 72);
+		}  
 	    ByteArrayOutputStream out = new ByteArrayOutputStream();            
 	    PdfWriter writer;
 	    
@@ -483,13 +498,22 @@ public class MailFunctions {
 		Paragraph yearPara = new Paragraph(new Phrase(lineSpacing, academicYear, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 		
 		Paragraph datePara = new Paragraph(new Phrase(lineSpacing, date, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
-		
+
 		Paragraph closingPara = new Paragraph(new Phrase(lineSpacing, closingLine, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 		
 		Paragraph signatoryPara = new Paragraph(new Phrase(lineSpacing, title, FontFactory.getFont(FontFactory.HELVETICA_BOLD,fntSize)));
 		
 		Paragraph positionPara = new Paragraph(new Phrase(lineSpacing, position, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 		
+		Chunk glue = new Chunk(new VerticalPositionMark());
+		Paragraph p = new Paragraph(title);
+		p.add(new Chunk(glue));
+		p.add("Maricel Balais");
+		
+		Chunk gluePosition = new Chunk(new VerticalPositionMark());
+		Paragraph p2 = new Paragraph(position);
+		p2.add(new Chunk(gluePosition));
+		p2.add("Department Head");
 		if(type.equalsIgnoreCase("Letter"))
 		{
 			doc.add(Chunk.NEWLINE);
@@ -511,8 +535,8 @@ public class MailFunctions {
 			doc.add(closingPara);
 			doc.add(Chunk.NEWLINE);
 			doc.add(Chunk.NEWLINE);
-			doc.add(signatoryPara);
-			doc.add(positionPara);
+			doc.add(p);
+			doc.add(p2);
 		    doc.close();
 		}
 		else if(type.equalsIgnoreCase("Notice Of Meeting"))
@@ -673,12 +697,12 @@ public class MailFunctions {
 	       return rs;
 	}
 	
-	public static void approveRequest(String type, String[] recipient, String externalRecipient, String  subject, String message, String  name, String  sentBy, String department, String addressLine1, String addressLine2, String addressLine3, String closingRemarks) throws SQLException, IOException, DocumentException
+	public static void approveRequest(String type, String[] recipient, String externalRecipient, String  subject, String message, String  name, String  sentBy, String department, String addressLine1, String addressLine2, String addressLine3, String closingRemarks, String paperSize) throws SQLException, IOException, DocumentException
 	{
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("INSERT INTO mail (iso_number, type, subject, file_data, checksum, sender_name, sent_by, school_year, department) VALUES (?,?,?,?,?,?,?,?,?)");
 			String isoNumber = getISONumber(department, type);
-			InputStream pdf = createPdf(type, recipient, subject, name, message, isoNumber, sentBy, addressLine1, addressLine2, addressLine3, closingRemarks);
+			InputStream pdf = createPdf(type, recipient, subject, name, message, isoNumber, sentBy, addressLine1, addressLine2, addressLine3, closingRemarks, paperSize);
 			
 			prep.setString(1, isoNumber);
 			prep.setString(2, type);

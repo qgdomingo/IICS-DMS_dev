@@ -4,4 +4,20 @@
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
+  <context-param>
+    <param-name>jdbcDriver</param-name>
+    <param-value>QW3ELt19wnX4IncON0pytPYjJQ7R7KdcfgTP7pypuKI=</param-value>
+  </context-param>
+  <context-param>
+    <param-name>jdbcUrl</param-name>
+    <param-value>ZObe4rdvMhFMUtf3CC/+QxybRpQLuFS2peJV20oADFQMp8K+hv2wQqDJR/yW/W/y</param-value>
+  </context-param>
+  <context-param>
+    <param-name>dbUserName</param-name>
+    <param-value>NyiG//i7loPFfdUoO9BFuA==</param-value>
+  </context-param>
+  <context-param>
+    <param-name>dbPassword</param-name>
+    <param-value>719bTBvphWewRiCiCj3D/A==</param-value>
+  </context-param>
 </web-app>

@@ -87,11 +87,11 @@ public class ProcessRequesterMail extends HttpServlet {
 				
 				if(type.equalsIgnoreCase("Letter"))
 				{
-					MailFunctions.saveRequestMailInformation(id, type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, addressLine2, addressLine3, closingLine);
+					MailFunctions.saveRequestMailInformation(id, type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, addressLine2, addressLine3, closingLine, paperSize);
 				}
 				else if(type.equalsIgnoreCase("Memo") || type.equalsIgnoreCase("Notice Of Meeting"))
 				{
-					MailFunctions.saveRequestMailInformation(id, type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, from, subject, closingLine);
+					MailFunctions.saveRequestMailInformation(id, type, recipient, externalRecipient, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, from, subject, closingLine, paperSize);
 				}	
 				
 				response.setContentType("text/plain");
@@ -109,11 +109,11 @@ public class ProcessRequesterMail extends HttpServlet {
 				
 				if(type.equalsIgnoreCase("Letter"))
 				{
-					MailFunctions.saveRequestMailInformation(id, type, null, null, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, addressLine2, addressLine3, closingLine);
+					MailFunctions.saveRequestMailInformation(id, type, null, null, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, addressLine2, addressLine3, closingLine, paperSize);
 				}
 				else if(type.equalsIgnoreCase("Memo") || type.equalsIgnoreCase("Notice Of Meeting"))
 				{
-					MailFunctions.saveRequestMailInformation(id, type, null, null, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, from, subject, closingLine);
+					MailFunctions.saveRequestMailInformation(id, type, null, null, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, from, subject, closingLine, paperSize);
 				}	
 				
 				int latestID = MailFunctions.getIncrement();

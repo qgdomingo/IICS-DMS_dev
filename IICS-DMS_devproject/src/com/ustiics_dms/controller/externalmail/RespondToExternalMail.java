@@ -18,6 +18,7 @@ import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.controller.mail.ExternalMail;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.utility.AesEncryption;
+import com.ustiics_dms.utility.VerifyRecaptcha;
 
 
 @WebServlet("/RespondToExternalMail")
@@ -59,13 +60,29 @@ public class RespondToExternalMail extends HttpServlet {
 	                fileData = item;
 	            }
             }
+		
+			
+			if(fileData != null && fileData.getSize() > 26214400)
+			{
+				response.setContentType("text/plain");
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write("above maximum size");
+			}
+			
 			String threadNumber = tempStorage[0];
 			String subject = tempStorage[1];
 			String message = tempStorage[2];
 			threadNumber = AesEncryption.encrypt(threadNumber);
 
-			ExternalMailFunctions.saveSentExternalMail("Internal to External", threadNumber, subject, message, fileData, acc.getEmail(), request.getServerName() + ":" +request.getServerPort() + request.getContextPath());
-			
+			if(fileData != null)
+			{
+				ExternalMailFunctions.saveSentExternalMail("Internal to External", threadNumber, subject, message, fileData, acc.getEmail(), request.getServerName() + ":" +request.getServerPort() + request.getContextPath());
+			}
+			else if(fileData == null)
+			{
+				ExternalMailFunctions.saveSentExternalMail("Internal to External", threadNumber, subject, message, acc.getEmail(), request.getServerName() + ":" +request.getServerPort() + request.getContextPath());
+			}
+		
 			LogsFunctions.addLog("System", "External Mail", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), subject);
 			
 			 response.setContentType("text/plain");

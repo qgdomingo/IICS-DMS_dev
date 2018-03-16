@@ -16,6 +16,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.utility.SendMail;
+import com.ustiics_dms.utility.VerifyRecaptcha;
 
 
 @WebServlet("/SendMailToDirector")
@@ -36,6 +37,7 @@ public class SendMailToDirector extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		
 		try {
+			
 			multifiles = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 
 			int counter = 0;
@@ -55,6 +57,15 @@ public class SendMailToDirector extends HttpServlet {
 	                fileData = item;
 	            }
             }
+
+			
+			if(fileData != null && fileData.getSize() > 26214400)
+			{
+
+				response.setContentType("text/plain");
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write("above maximum size");
+			}
 			
 			String firstName = tempStorage[0];
 			String lastName = tempStorage[1];
@@ -63,9 +74,24 @@ public class SendMailToDirector extends HttpServlet {
 			String affiliation = tempStorage[4];
 			String subject = tempStorage[5];
 			String message = tempStorage[6];
-		
-			ExternalMailFunctions.SendMailToDirector(firstName, lastName, emailAddress, contactNumber, affiliation ,subject, message, fileData);
+			String captcha = tempStorage[8];
+
+			boolean verify = VerifyRecaptcha.verify(captcha);
 			
+			if(verify)
+			{
+				response.setContentType("text/plain");
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write("invalid captcha");
+			}
+			if(fileData != null)
+			{
+				ExternalMailFunctions.SendMailToDirector(firstName, lastName, emailAddress, contactNumber, affiliation ,subject, message, fileData);
+			}
+			else if(fileData == null)
+			{
+				ExternalMailFunctions.SendMailToDirector(firstName, lastName, emailAddress, contactNumber, affiliation ,subject, message);
+			}
 			response.setContentType("text/plain");
 		    response.setStatus(HttpServletResponse.SC_OK);
 		    response.getWriter().write("success");

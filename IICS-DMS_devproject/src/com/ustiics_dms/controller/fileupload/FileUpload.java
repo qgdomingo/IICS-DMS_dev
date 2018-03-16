@@ -62,6 +62,13 @@ public class FileUpload extends HttpServlet {
 	            }
             }
 			
+			if(fileData.getSize() > 26214400)
+			{
+				response.setContentType("text/plain");
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write("above maximum size");
+			}
+			
 			//used by all documents
 			String documentType = tempStorage[0];
 			String documentTitle = "";
@@ -115,7 +122,7 @@ public class FileUpload extends HttpServlet {
 				
 				String des = ManageTasksFunctions.getFullName(acc.getEmail()) +" has uploaded a new incoming document, " + documentTitle;
 
-				NotificationFunctions.addNotification("Incoming Documents Page", des, FileUploadFunctions.getGroupByDepartmentNoFaculty(acc.getDepartment(), acc.getEmail()));
+				//NotificationFunctions.addNotification("Incoming Documents Page", des, FileUploadFunctions.getGroupByDepartmentNoFaculty(acc.getDepartment(), acc.getEmail()));
 
 				LogsFunctions.addLog("System", "Upload Incoming", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), documentTitle);
 

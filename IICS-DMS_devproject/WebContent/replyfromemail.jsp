@@ -85,7 +85,7 @@
 						<input type="file" name="file"/>
 					</div>
 					
-					<p>CAPTCHA</p>
+					<p><p><div class="g-recaptcha" data-sitekey="6LcVCE0UAAAAAHGbM4gbrmOD5aWy7_YXjaDAextQ"></div></p></p>
 					
 					<br>
 					
@@ -139,6 +139,7 @@
 		</div>
 				
 	</body>
+	<script src='https://www.google.com/recaptcha/api.js'></script>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
