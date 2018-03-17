@@ -266,7 +266,12 @@
 						
 					</div>
 				</form>
-					
+				
+				<button class="ui red button" id="delete_docs_btn">
+					<i class="remove icon"></i>
+					Delete Document
+				</button>		
+						
 				<!-- TABLE AREA -->
 				<table class="ui compact selectable table" id="personal_table">
 					<thead>
@@ -310,6 +315,27 @@
 			</div>
 			<div class="actions center-text">
 				<button class="ui ok secondary button" id="viewpersonal_close">Close</button>
+			</div>
+		</div>
+		
+		<!-- DELETE PERSONAL MODAL -->
+		<div class="ui tiny modal" id="delete_personal_dia">
+			<div class="ui header delete-modal">
+				<i class="remove circle icon"></i>
+				<div class="content">Delete Personal Document</div>
+			</div>
+			<div class="modal-content">
+				<p class="element-rmb">Are you sure you want to delete the selected documents?</p>
+			</div>
+			<div class="actions">
+				<button class="ui cancel grey button" id="delete_cancel_btn">
+					<i class="remove icon"></i>
+					Cancel
+				</button>
+				<button class="ui red button" type="submit" form="personal_docs_form" id="delete_conf_btn">
+					<i class="checkmark icon"></i>
+					Confirm Delete
+				</button>
 			</div>
 		</div>
 		

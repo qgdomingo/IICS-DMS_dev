@@ -6,6 +6,8 @@
 	$(document).ready(() => {
 		getPersonalDocuments();
 		retrieveCategory('#search_category');	
+		
+		$('#delete_docs_btn').hide();
 	});
 
 /*
@@ -77,6 +79,7 @@
 					'order': [[1, 'desc']]
 				});
 				selectPersonalDocsRow();
+				selectedRowsTogglers();
 				isPersonalDocsTableEmpty = false;
 				removeCSSClass('#personal_loading', 'active');
 			} 
@@ -110,7 +113,6 @@
 	function selectPersonalDocsRow() {
 		$('#personal_table tbody').on('dblclick', 'tr', function () {
 			getPersonalDocumentsData($(this).attr('id'));
-		   	$(this).toggleClass('active');
 		   	
 		    $('#viewpersonal_dialog').modal({
 				closable: false,
@@ -118,8 +120,62 @@
 				observeChanges: true
 			}).modal('show');
 		    
-		    $(this).toggleClass('active');
 		});
+		
+		$('#personal_table tbody').on('click', 'tr', function () {
+			$(this).toggleClass('active');
+			selectedRowsTogglers();
+		});
+	}
+	
+	/* TOGGLER - User Management Actions */
+	function selectedRowsTogglers() {
+		if(personalDocsTable.rows('.active').data().length >= 1) 
+		{
+			$('#delete_docs_btn').show();	
+		} 
+		else 
+		{
+			$('#delete_docs_btn').hide();
+		}
+	}
+	
+	$('#delete_docs_btn').click(function() {
+		$('#delete_personal_dia').modal({
+			closable: false
+		}).modal('show');
+	})
+	
+	$('#delete_conf_btn').click(function() {
+		$('#delete_personal_dia').modal('hide');
+		activatePageLoading('Deleting Documents');
+		
+		var data = {
+			selected: retrieveSelectedDocuments()
+		}
+		
+		console.log(data.selected);
+		$.post(getContextPath() + '/DeletePersonalDocument', $.param(data), function(){
+			deactivatePageLoading();
+			callSuccessModal('Personal Documents Deleted', 'The selected documents were successfully deleted.');
+			personalDocsTable.rows('.active').remove();
+			selectedRowsTogglers();
+		})
+		.fail( function(response) {
+			deactivatePageLoading();
+			callFailModal('Failed to Delete Documents', 'An error has occured in deleting the documents.');
+		});
+		
+	});
+	
+	function retrieveSelectedDocuments() {
+		var selectedDocs = [];
+		
+		$.each(personalDocsTable.rows('.active').ids(), (index, docsID) => {
+			selectedDocs.push(localPersonalDocsData[docsID].id);
+		});
+		
+		return selectedDocs;
 	}
 		
 	/* GET - Populate Dialog For View File */

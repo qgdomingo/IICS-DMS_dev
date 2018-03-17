@@ -71,15 +71,6 @@
 					}
 				]
 			},
-			title: {
-				identifier: 'title',
-				rules: [
-					{
-						type   : 'empty',
-						prompt : 'Please enter your title (e.g. Mr., Asst. Prof., Engr.)'
-					}
-				]
-			},
 			first_name: {
 				identifier: 'first_name',
 				rules: [
@@ -95,19 +86,6 @@
 					{
 						type   : 'empty',
 						prompt : 'Please enter your last name'
-					}
-				]
-			},
-			middile_initial: {
-				identifier: 'middile_initial',
-				rules: [
-					{
-						type   : 'empty',
-						prompt : 'Please enter your middle initial'
-					},
-					{
-						type : 'maxLength[5]',
-						prompt: 'Only a maximum of 5 characters is allowed for the middle initial field'
 					}
 				]
 			},
