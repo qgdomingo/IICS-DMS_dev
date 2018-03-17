@@ -219,7 +219,7 @@
 							<label>Faculty No.:</label>
 							<input type="text" name="faculty_no" value="<%= acc.getFacultyNumber() %>"/>
 						</div>
-						<div class="required field">
+						<div class="field">
 							<label>Title:</label>
 							<input type="text" name="title" value="<%= acc.getTitle() %>"/>
 						</div>
@@ -233,7 +233,7 @@
 							<label>Last Name:</label>
 							<input type="text" name="last_name" value="<%= acc.getLastName() %>"/>
 						</div>
-						<div class="required four wide field">
+						<div class="four wide field">
 							<label>Middle Initial:</label> 
 							<input type="text" name="middile_initial" value="<%= acc.getMiddleInitial() %>"/>
 						</div> 
