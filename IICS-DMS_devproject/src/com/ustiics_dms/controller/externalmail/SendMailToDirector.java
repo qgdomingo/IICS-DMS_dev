@@ -77,6 +77,7 @@ public class SendMailToDirector extends HttpServlet {
 				response.setContentType("text/plain");
 				response.setStatus(HttpServletResponse.SC_OK);
 				response.getWriter().write("above maximum size");
+				return;
 			}
 			
 			String firstName = tempStorage[0];
@@ -95,7 +96,9 @@ public class SendMailToDirector extends HttpServlet {
 				response.setContentType("text/plain");
 				response.setStatus(HttpServletResponse.SC_OK);
 				response.getWriter().write("invalid captcha");
+				return;
 			}
+			
 			if(fileData != null)
 			{
 				ExternalMailFunctions.SendMailToDirector(firstName, lastName, emailAddress, contactNumber, affiliation ,subject, message, fileData);

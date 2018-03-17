@@ -36,6 +36,7 @@
 			},
 			onHidden: () => {
 				enableAddUserForm();
+				$('#add_invalid_email_message').hide();
 				if(!isUsersTableEmpty) selectedRowsTogglers();
 			}
 		}).modal('show');
@@ -44,8 +45,12 @@
 	/* SUBMIT - Edit User Profile Form */
 	$('#adduser_form').ajaxForm({
 		 beforeSubmit: isAddUserFormValid,
-	     success: function(response) { 
-	        if(!response.length == 0) {
+	     success: function(response) {
+	    	if(response == 'existing email') {
+		        $('#add_invalid_email_message').show();
+		        enableAddUserForm();
+		    }
+	    	else if(!response.length == 0) {
 	        	if(!isUsersTableEmpty)
 				{
 	        		localAccountsData.push(response[0]);
@@ -60,17 +65,10 @@
 	        	cleanAddUserForm();
 				callSuccessModal('Success', 'A new account has successfully been added.');
 	        }
-	        else if(response == 'existing email') {
-	        	$('#edit_invalid_email_message').show();
-	        	enableEditUserForm();
-	        }
-	        else {
-	        	callFailModal('Unable to Add New User', 'An error has occured when adding a new account. ' +
-					'Please try again. If the problem persists, please contact your administrator.');
-	        }
 	     },
 	     error: function(response) {
-	    	 callFailRequestModal();
+	    	 callFailModal('Unable to Add New User', 'An error has occured when adding a new account. ' +
+				'Please try again. If the problem persists, please contact your administrator.');
 	     }
 	});
 

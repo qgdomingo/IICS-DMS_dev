@@ -147,6 +147,7 @@
 			},
 			onHidden: () => {
 				cleanEditUserForm();
+				$('#edit_invalid_email_message').hide();
 				selectedRowsTogglers();
 			}
 		}).modal('show');
@@ -157,23 +158,20 @@
 	$('#edituser_form').ajaxForm({
 		 beforeSubmit: isEditUserFormValid,
 	     success: function(response) { 
-	        if(!response.length == 0) {
+	    	if(response == 'existing email') {
+		        $('#edit_invalid_email_message').show();
+		        enableEditUserForm();
+		    }
+	    	else if(!response.length == 0) {
 	        	localAccountsData[selectedIndex] = response[0];
 	        	table.row('.active').remove();
 				table.row.add( $(addNewRowData(response[0], selectedIndex))[0] ).draw();	
 				callSuccessModal('Success', 'The account has successfully been updated.');
 	        }
-	        else if(response == 'existing email') {
-	        	$('#edit_invalid_email_message').show();
-	        	enableEditUserForm();
-	        }
-	        else {
-	        	callFailModal('Unable to Edit User', 'An error has occured when updating an account. ' +
-					'Please try again. If the problem persists, please contact your administrator.');
-	        }
 	     },
 	     error: function(response) {
-	    	 callFailRequestModal();
+	    	 callFailModal('Unable to Edit User', 'An error has occured when updating an account. ' +
+				'Please try again. If the problem persists, please contact your administrator.');
 	     }
 	});
 	

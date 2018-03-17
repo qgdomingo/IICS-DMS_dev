@@ -66,6 +66,14 @@ public class SubmitTask extends HttpServlet {
 	            }
             }
 			
+			if(fileData.getSize() > 26214400)
+			{
+				response.setContentType("text/plain");
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write("above maximum size");
+				return;
+			}
+			
 			String documentTitle = tempStorage[0];
 			String documentDescription = tempStorage[1];
 			String id = tempStorage[2];

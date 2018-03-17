@@ -265,24 +265,18 @@
 							<select class="ui fluid search selection dropdown" multiple="" name="event_invite" id="event_invite">
 								<option value="">Select Users</option>
 							</select>
-						  	<div class="ui orange buttons" id="directory_options_btn">
+						  	<div class="ui buttons">
 						  		<div class="ui button">Options</div>
-						  		<div class="ui floating dropdown icon button">
+						  		<div class="ui orange floating dropdown icon button">
     								<i class="dropdown icon"></i>
-								    <div class="menu"> 
-								      <div class="item">
-								    		<div class="ui checkbox">
-												<label>All Users</label>
-  												<input type="checkbox" />
-											</div>
-								      </div>
+								    <div class="menu" id="directory_options_btn"> 
+								      <div class="item all">Select All Users</div>
 								      <div class="divider"></div>
-								      <div class="item">
-								      		<div class="ui checkbox">
-												<label>All Department Head</label>
-  												<input type="checkbox" />
-											</div>
-								      </div>
+								      <div class="item dept">
+							      		<div class="ui checkbox">
+											<label>All Department Head</label>
+ 											<input type="checkbox" />
+										</div> 
 								      <div class="item">
 								      		<div class="ui checkbox">
 												<label>All Faculty</label>
@@ -308,11 +302,13 @@
 											</div>
 								      </div>
 								      <div class="item">
-								      		<div class="ui checkbox">
-												<label>CS Department</label>
-  												<input type="checkbox" />
-											</div>
+							      		<div class="ui checkbox">
+											<label>CS Department</label>
+ 												<input type="checkbox" />
+										</div>
 								      </div>
+								      <div class="divider"></div>
+								      <div class="item">Clear Selected</div>
 								    </div>
 								</div> 
 						  	</div> 
@@ -359,7 +355,7 @@
 					<input type="hidden" name="event_response_timestamp" id="event_response_timestamp"/>
 					
 					<div class="field">
-						<label>Response Details:</label>
+						<label>Remarks:</label>
 						<textarea rows="3" name="event_response_text"></textarea>
 					</div>
 					

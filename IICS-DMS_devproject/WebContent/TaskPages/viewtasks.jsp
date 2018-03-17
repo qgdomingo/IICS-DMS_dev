@@ -275,8 +275,13 @@
 					
 					<div class="required inline field">
 						<label>Attachment:</label>
-						<input type="file" name="file[]" multiple/>
+						<input type="file" name="file"/>
 					</div>
+					<p class="microcopy-hint element-rmt element-rmb">Maximum file upload limit: 25MB</p>
+					<p class="microcopy-hint element-rmt">
+						Supported File Formats: .docx, .doc, .xls, .xlsx, .ppt, .pptx, .pdf, .rar, 
+						.zip, .txt, .png, .jpg
+					</p>
 					
 					<div class="field">
 						<label>Description:</label>

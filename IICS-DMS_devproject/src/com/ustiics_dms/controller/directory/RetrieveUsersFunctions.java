@@ -13,7 +13,7 @@ public class RetrieveUsersFunctions {
 		
 		Connection con = DBConnect.getConnection();
 		String statement = "SELECT full_name, email, user_type, department FROM accounts WHERE " +
-				" NOT status = 'inactive' AND NOT email = ? AND NOT user_type = ?";
+				" NOT status = 'inactive' AND NOT email = ? AND NOT user_type = ? ORDER BY full_name";
 		
 		PreparedStatement prep = con.prepareStatement(statement);
 		prep.setString(1, email);
@@ -27,7 +27,8 @@ public class RetrieveUsersFunctions {
 	{
 		Connection con = DBConnect.getConnection();
 		String statement = "SELECT full_name, email, user_type, department FROM accounts "
-				+ "WHERE NOT email = ? AND NOT user_type = ? AND department = ? AND NOT status = 'inactive'";
+				+ "WHERE NOT email = ? AND NOT user_type = ? AND department = ? AND NOT status = 'inactive' "
+				+ "ORDER BY full_name";
 		
 		PreparedStatement prep = con.prepareStatement(statement);
 		
@@ -44,7 +45,8 @@ public class RetrieveUsersFunctions {
 	{
 		Connection con = DBConnect.getConnection();
 		String statement = "SELECT full_name, email, user_type, department FROM accounts "
-				+ "WHERE NOT email = ? AND NOT user_type = ? AND user_type = ? OR user_type =? AND NOT status = 'inactive'";
+				+ "WHERE NOT email = ? AND NOT user_type = ? AND user_type = ? OR user_type =? AND NOT status = 'inactive' "
+				+ "ORDER BY full_name";
 		
 		PreparedStatement prep = con.prepareStatement(statement);
 		
@@ -62,7 +64,8 @@ public class RetrieveUsersFunctions {
 	{
 		Connection con = DBConnect.getConnection();
 		String statement = "SELECT full_name, email, user_type, department FROM accounts "
-				+ "WHERE NOT email = ? AND NOT user_type = ? AND user_type = ? OR user_type = ? AND NOT status = 'inactive'";
+				+ "WHERE NOT email = ? AND NOT user_type = ? AND user_type = ? OR user_type = ? AND NOT status = 'inactive' "
+				+ "ORDER BY full_name";
 		
 		PreparedStatement prep = con.prepareStatement(statement);
 		
@@ -79,7 +82,7 @@ public class RetrieveUsersFunctions {
 	public static ResultSet retrieveExternalTo() throws SQLException
 	{
 		Connection con = DBConnect.getConnection();
-		String statement = "SELECT group_name, email, first_name, last_name FROM group_list";
+		String statement = "SELECT group_name, email, first_name, last_name FROM group_list ORDER BY last_name";
 		
 		PreparedStatement prep = con.prepareStatement(statement);
 		ResultSet result = prep.executeQuery();

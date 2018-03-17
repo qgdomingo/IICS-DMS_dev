@@ -61,12 +61,13 @@ public class FileUpload extends HttpServlet {
 	                fileData = item;
 	            }
             }
-			
+
 			if(fileData.getSize() > 26214400)
 			{
 				response.setContentType("text/plain");
 				response.setStatus(HttpServletResponse.SC_OK);
 				response.getWriter().write("above maximum size");
+				return;
 			}
 			
 			//used by all documents

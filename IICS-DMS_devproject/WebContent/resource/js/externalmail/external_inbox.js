@@ -132,13 +132,12 @@
 		$('#view_mail_subject').val(selectedData.subject);
 		$('#view_mail_message').val(selectedData.message);
 			
+		$('#view_attachment_form').hide();
 		if( !(selectedData.fileName == '') ) {
+			$('#view_attachment_form').show();
 			$('#view_attachment_id').val(selectedData.id);
 			$('#view_attachment_type').val(selectedData.type);
 			$('#view_mail_file_name').text(selectedData.fileName);
-		}
-		else {
-			$('#view_attachment_form').hide();
 		}
 	}
 	

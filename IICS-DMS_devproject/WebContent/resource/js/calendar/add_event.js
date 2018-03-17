@@ -145,7 +145,11 @@
 		            {
 		              type   : 'empty',
 		              prompt : 'Please enter the event title'
-		            }
+		            },
+					{
+						type : 'maxLength[100]',
+						prompt: 'Maximum of 100 characters in title'
+					}
 		          ]
 		        },
 		        event_location: {
@@ -154,7 +158,11 @@
 			        {
 			          type   : 'empty',
 			          prompt : 'Please enter the location of the event'
-			        }
+			        },
+					{
+						type : 'maxLength[150]',
+						prompt: 'Maximum of 150 characters in location'
+					}
 			       ]
 			     },
 			     event_start_datetime: {
@@ -199,7 +207,11 @@
 				    	{
 				    		type  : 'empty',
 				    		prompt: 'Please enter a description of the event'
-				    	}
+				    	},
+						{
+							type : 'maxLength[2000]',
+							prompt: 'Maximum of 2000 characters in description'
+						}
 				     ]
 				  }
 		       }

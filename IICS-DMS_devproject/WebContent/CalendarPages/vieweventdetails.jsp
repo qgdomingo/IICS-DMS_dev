@@ -202,7 +202,7 @@
 			<div id="invited_event_response">
 				<p class="element-rmb"><b>Response Status: </b><span id="event_response_status"></span></p>
 				<p class="element-rmb"><b>Response Timestamp: </b><span id="event_response_timestamp"></span></p>
-				<p class="element-rmb"><b>Response Details: </b><span id="event_response_details"></span></p>
+				<p class="element-rmb"><b>Remarks: </b><span id="event_response_details"></span></p>
 			</div>
 			
 			

@@ -162,10 +162,10 @@
 		
 		
 	</body>
-	<script src='https://www.google.com/recaptcha/api.js'></script>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery-3.2.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/semanticui/semantic.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/jquery.form.min.js"></script>
+	<script src='https://www.google.com/recaptcha/api.js'></script>
 	<script src="${pageContext.request.contextPath}/resource/js/session/session_check.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/master.js"></script>
 	<script src="${pageContext.request.contextPath}/resource/js/externalmail/external_message_director.js"></script>

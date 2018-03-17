@@ -59,6 +59,9 @@
 		            {
 		              type   : 'email',
 		              prompt : 'Please enter a valid e-mail address'
+		            },
+		            {
+		              type : 'maxLength[100]'
 		            }
 		            ]
 		    	}
@@ -202,8 +205,11 @@
 		          identifier: 'new_password',
 		          rules: [
 		            {
-		              type   : 'minLength[6]',
-		              prompt : 'Your password must be minimum of 6 characters'
+		              type   : 'minLength[8]',
+		              prompt : 'Your password must be minimum of 8 characters'
+		            },
+		            {
+		              type : 'maxLength[100]'
 		            }
 		          ]
 		    	},
@@ -213,6 +219,9 @@
 			          {
 			           type   : 'match[new_password]',
 			           prompt : 'The two passwords does not match'
+			         },
+			         {
+			            type : 'maxLength[100]'
 			         }
 			       ]
 			    }

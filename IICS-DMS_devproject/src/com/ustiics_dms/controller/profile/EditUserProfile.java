@@ -46,7 +46,7 @@ public class EditUserProfile extends HttpServlet {
 			boolean authenticate = LoginFunctions.authenticate(acc.getEmail(), password);;
 			if(authenticate)
 			{
-				if(!ManageUserFunctions.checkMail("email"))
+				if(!ManageUserFunctions.checkMail(email))
 				{
 					ProfileFunctions.editUserProfile(facultyNo, title, contactNumber, firstName, middleInitial, lastName, email, acc.getEmail());
 		

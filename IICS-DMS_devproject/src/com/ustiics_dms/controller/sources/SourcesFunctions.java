@@ -12,7 +12,8 @@ public class SourcesFunctions {
 	public static ResultSet getSourcesList() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT sources_name, default_reference FROM sources_list UNION SELECT sources_name, default_reference FROM external_list");
+			PreparedStatement prep = con.prepareStatement("SELECT sources_name, default_reference FROM sources_list "
+					+ "UNION SELECT sources_name, default_reference FROM external_list ORDER BY sources_name");
 		
 			ResultSet rs = prep.executeQuery();
 

@@ -101,7 +101,13 @@
 	    },
 		success: function(response) {  
 			closeUploadProgress();
-			if (response == 'invalid ref no'){
+			if(response == 'incorrect upload type') {
+				callFailModal('File Format Invalid', 'The file format you are trying to upload is invalid. ');
+			}	
+			else if(response == 'above maximum size') {
+	        	callFailModal('File Max Size Error', 'Your file has exceeded the maximum file size of 25MB. Please upload a smaller file');
+			} 
+			else if (response == 'invalid ref no') {
 				callFailModal('Reference Number Existing', 'The reference number you entered already exists. ' + 
 						'Please do check on the View Incoming Documents page for the document.');
 			}
@@ -149,6 +155,19 @@
 					{
 						type   : 'empty',
 						prompt : 'Please enter a title for the document'
+					},
+					{
+						type : 'maxLength[100]',
+						prompt: 'Maximum of 100 characters in title'
+					}
+				]
+			},
+			description: {
+				identifier: 'description',
+				rules: [
+					{
+						type : 'maxLength[2000]',
+						prompt: 'Maximum of 100 characters in description'
 					}
 				]
 			},

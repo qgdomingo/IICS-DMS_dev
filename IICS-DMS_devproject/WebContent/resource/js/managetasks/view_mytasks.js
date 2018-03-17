@@ -195,8 +195,13 @@
 			  },
 	          success: function(response) {  
 	        	  closeUploadProgress();
-	        	  
-	              if(response)
+	  			  if(response == 'incorrect upload type') {
+					  callFailModal('File Format Invalid', 'The file format you are trying to upload is invalid. ');
+				  }
+	  			  else if(response == 'above maximum size') {
+	        		  callFailModal('File Max Size Error', 'Your file has exceeded the maximum file size of 25MB. Please upload a smaller file');
+	        	  }
+	        	  else if(response)
 	              {
 	            	  localMyTasksData[selectedDataID]['status'] = response;
 	            	  myTasksTable.row('.active').remove();
@@ -205,14 +210,10 @@
 	            	  
 	            	  callSuccessModal('Task Upload Success', 'Your task has been successfully submitted.');
 	              }
-	              else
-	              {
-	            	  callFailModal('Task Upload Failed', 'We are unable to submit your task, please try again.');
-	              }
 	          },
 	          error: function(response) {
 	        	  closeUploadProgress();
-	        	  callFailRequestModal();
+	        	  callFailModal('Task Upload Failed', 'We are unable to submit your task, please try again.');
 	          }
 	     });
 	}
