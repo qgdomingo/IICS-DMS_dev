@@ -209,6 +209,11 @@
 					<label>File to Upload:</label>
 					<input type="file" name="file"/>
 				</div>
+				<p class="microcopy-hint element-rmt element-rmb">Maximum file upload limit: 25MB</p>
+				<p class="microcopy-hint element-rmt">
+					Supported File Formats: .docx, .doc, .xls, .xlsx, .ppt, .pptx, .pdf, .rar, 
+					.zip, .txt, .png, .jpg
+				</p>
 			
 				<div class="field">
 					<label>Document Description:</label>
@@ -280,9 +285,12 @@
 				<div class="required inline field">
 					<label>File to Upload:</label>
 					<input type="file" name="file" />
-					<p class="microcopy-hint">Maximum file upload limit: 25MB</p>
-
 				</div>
+				<p class="microcopy-hint element-rmt element-rmb">Maximum file upload limit: 25MB</p>
+				<p class="microcopy-hint element-rmt">
+					Supported File Formats: .docx, .doc, .xls, .xlsx, .ppt, .pptx, .pdf, .rar, 
+					.zip, .txt, .png, .jpg
+				</p>
 			
 				<div class="field">
 					<label>Document Description:</label>
@@ -399,6 +407,11 @@
 					<label>File to Upload:</label>
 					<input type="file" name="file" />
 				</div>
+				<p class="microcopy-hint element-rmt element-rmb">Maximum file upload limit: 25MB</p>
+				<p class="microcopy-hint element-rmt">
+					Supported File Formats: .docx, .doc, .xls, .xlsx, .ppt, .pptx, .pdf, .rar, 
+					.zip, .txt, .png, .jpg
+				</p>
 				
 				<div class="field">
 					<label>Document Description:</label>

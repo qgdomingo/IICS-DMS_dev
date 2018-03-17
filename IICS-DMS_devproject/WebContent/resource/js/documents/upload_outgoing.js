@@ -14,8 +14,10 @@
 	    },
 		success: function(response) {   
 			closeUploadProgress();
-			
-	        if(response == 'above maximum size') {
+			if(response == 'incorrect upload type') {
+				callFailModal('File Format Invalid', 'The file format you are trying to upload is invalid. ');
+			}	
+			else if(response == 'above maximum size') {
 	        	callFailModal('File Max Size Error', 'Your file has exceeded the maximum file size of 25MB. Please upload a smaller file');
 	        }
 			else {
