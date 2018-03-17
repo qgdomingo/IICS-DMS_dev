@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.IncomingDocument;
 import com.ustiics_dms.model.OutgoingDocument;
@@ -35,9 +36,10 @@ public class OutgoingDocumentsThread extends HttpServlet {
 		List<OutgoingDocument> outgoingFiles = new ArrayList<OutgoingDocument>();
 	    response.setCharacterEncoding("UTF-8");
 		
+	    HttpSession session = request.getSession();
+	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
-		    HttpSession session = request.getSession();
-		    Account acc = (Account) session.getAttribute("currentCredentials");
+
 			
 			String source = request.getParameter("source");
 		    
@@ -59,14 +61,18 @@ public class OutgoingDocumentsThread extends HttpServlet {
 		    response.getWriter().write(json);
 		   
 		} catch (SQLException e) {
+			try {
+				LogsFunctions.addErrorLog(e.getMessage(), acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}

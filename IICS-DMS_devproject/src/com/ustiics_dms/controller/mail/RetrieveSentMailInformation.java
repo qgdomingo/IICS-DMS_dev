@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Mail;
 import com.ustiics_dms.utility.AesEncryption;
@@ -34,9 +35,9 @@ public class RetrieveSentMailInformation extends HttpServlet {
 		List<Mail> mail = new ArrayList<Mail>();
 	    response.setCharacterEncoding("UTF-8");
 	    
+		HttpSession session = request.getSession();
+		Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
-		    HttpSession session = request.getSession();
-		    Account acc = (Account) session.getAttribute("currentCredentials");
 			
 		    String mailID = AesEncryption.decrypt(request.getParameter("id"));
 		    
@@ -63,6 +64,12 @@ public class RetrieveSentMailInformation extends HttpServlet {
 		    response.getWriter().write(json);
 		   
 		} catch (SQLException e) {
+			try {
+				LogsFunctions.addErrorLog(e.getMessage(), acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}

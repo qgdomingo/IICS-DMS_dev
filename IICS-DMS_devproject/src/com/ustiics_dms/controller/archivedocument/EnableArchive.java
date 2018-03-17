@@ -32,10 +32,10 @@ public class EnableArchive extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("UTF-8");
-		
+		HttpSession session = request.getSession();
+		Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
-			HttpSession session = request.getSession();
-			Account acc = (Account) session.getAttribute("currentCredentials");
+
 			
 			String id[] = request.getParameter("selected[]").split(",");
 			String purpose = request.getParameter("enable_archive_purpose");
@@ -53,6 +53,12 @@ public class EnableArchive extends HttpServlet {
 			response.getWriter().write("success");
 			
 		} catch (SQLException e) {
+			try {
+				LogsFunctions.addErrorLog(e.getMessage(), acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}

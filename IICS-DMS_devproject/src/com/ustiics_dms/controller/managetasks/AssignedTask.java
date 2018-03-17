@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Task;
@@ -33,10 +34,10 @@ public class AssignedTask extends HttpServlet {
 		List<Task> task = new ArrayList<Task>();
 	    response.setCharacterEncoding("UTF-8");
 		
+	    HttpSession session = request.getSession();
+	    Account acc = (Account) session.getAttribute("currentCredentials");
+	    
 		try {
-			
-		    HttpSession session = request.getSession();
-		    Account acc = (Account) session.getAttribute("currentCredentials");
 		    
 			ResultSet getTasks = (ResultSet) ManageTasksFunctions.getTaskAssigned(acc.getEmail());
 			
@@ -67,6 +68,12 @@ public class AssignedTask extends HttpServlet {
 		    response.getWriter().write(json);
 		    
 		} catch (SQLException e) {
+			try {
+				LogsFunctions.addErrorLog(e.getMessage(), acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}

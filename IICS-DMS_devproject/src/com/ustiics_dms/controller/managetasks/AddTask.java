@@ -36,11 +36,11 @@ public class AddTask extends HttpServlet {
 		List<String> task = new ArrayList<String>();
 		response.setCharacterEncoding("UTF-8");
 		
+		HttpSession session = request.getSession();
+		Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
 			
-			HttpSession session = request.getSession();
-			
-			Account acc = (Account) session.getAttribute("currentCredentials");
+
 			
 			String title = request.getParameter("title");
 			String deadline = request.getParameter("deadline");
@@ -78,6 +78,12 @@ public class AddTask extends HttpServlet {
 			response.getWriter().write(json);
 		} 
 		catch (SQLException e) {
+			try {
+				LogsFunctions.addErrorLog(e.getMessage(), acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}

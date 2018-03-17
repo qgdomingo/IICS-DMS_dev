@@ -3,6 +3,7 @@ package com.ustiics_dms.controller.mail;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -31,11 +32,12 @@ public class ProcessRequesterMail extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("UTF-8");
 		
+		HttpSession session = request.getSession();
+		Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
 			
 			String id = request.getParameter("id");
-			HttpSession session = request.getSession();
-			Account acc = (Account) session.getAttribute("currentCredentials");
+
 			
 			String type = request.getParameter("type");
 			String[] recipient = request.getParameterValues("internal_to");
@@ -138,6 +140,12 @@ public class ProcessRequesterMail extends HttpServlet {
 			}
 		}
 		catch(Exception e) {
+			try {
+				LogsFunctions.addErrorLog(e.getMessage(), acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			e.printStackTrace();
 		}

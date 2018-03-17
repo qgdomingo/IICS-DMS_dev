@@ -43,6 +43,22 @@ public class LogsFunctions {
 		prep.close();
 	}
 	
+	public static void addErrorLog( String information, String email, String name, String userType, String department) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		String fullUser = name + " (" + email + ")";
+		PreparedStatement prep = con.prepareStatement("INSERT INTO logs (type, information, user, user_type, department) VALUES (?,?,?,?,?)");
+		
+		prep.setString(1, "Error");
+		prep.setString(2, information);
+		prep.setString(3, fullUser);
+		prep.setString(4, userType);
+		prep.setString(5, department);
+		
+		prep.executeUpdate();
+		prep.close();
+	}
+	
 	public static void addLog(String type, String information, String email, String name, String userType, String department, String additionalInfo, String additionalInfo1) throws SQLException
 	{
 

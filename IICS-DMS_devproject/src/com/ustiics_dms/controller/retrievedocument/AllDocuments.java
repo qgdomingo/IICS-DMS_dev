@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.Document;
 import com.ustiics_dms.utility.AesEncryption;
@@ -32,10 +33,9 @@ public class AllDocuments extends HttpServlet {
 		List<Document> files = new ArrayList<Document>();
 	    response.setCharacterEncoding("UTF-8");
 		
-		try {
-		    HttpSession session = request.getSession();
-		    Account acc = (Account) session.getAttribute("currentCredentials");
-			
+	    HttpSession session = request.getSession();
+	    Account acc = (Account) session.getAttribute("currentCredentials");
+		try {			
 			ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveAllDocuments(acc.getEmail(), acc.getDepartment());
 			while(documentFiles.next()) 
 			{ 
@@ -65,6 +65,12 @@ public class AllDocuments extends HttpServlet {
 		    response.getWriter().write(json);
 		   
 		} catch (SQLException e) {
+			try {
+				LogsFunctions.addErrorLog(e.getMessage(), acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}

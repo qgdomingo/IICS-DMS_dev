@@ -35,10 +35,11 @@ public class ForwardMail extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/plain");
 		
+		HttpSession session = request.getSession();
+		Account acc = (Account) session.getAttribute("currentCredentials");
 		 try {
 		
-			HttpSession session = request.getSession();
-			Account acc = (Account) session.getAttribute("currentCredentials");
+
 			
 			String type = request.getParameter("type");
 			String[] recipient = request.getParameterValues("internal_to");
@@ -181,6 +182,12 @@ public class ForwardMail extends HttpServlet {
 
 		} 
 		catch (Exception e) {
+			try {
+				LogsFunctions.addErrorLog(e.getMessage(), acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}		

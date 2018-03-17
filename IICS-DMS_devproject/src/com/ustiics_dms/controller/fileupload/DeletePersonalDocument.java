@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.ustiics_dms.model.Account;
+import com.ustiics_dms.utility.AesEncryption;
 
 
 @WebServlet("/DeletePersonalDocument")
@@ -39,7 +40,8 @@ public class DeletePersonalDocument extends HttpServlet {
 			Account acc = (Account) session.getAttribute("currentCredentials");
 			for(String id : selected)
 			{
-					FileUploadFunctions.DeletePersonalDocument(id);
+					String tempId = AesEncryption.decrypt(id);
+					FileUploadFunctions.DeletePersonalDocument(tempId);
 				
 			}
 			

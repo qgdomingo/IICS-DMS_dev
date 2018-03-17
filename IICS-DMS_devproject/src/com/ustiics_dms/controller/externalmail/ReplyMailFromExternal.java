@@ -15,6 +15,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.utility.AesEncryption;
 import com.ustiics_dms.utility.VerifyRecaptcha;
@@ -33,6 +34,9 @@ public class ReplyMailFromExternal extends HttpServlet {
 		
 		List<FileItem> multifiles;
 		response.setCharacterEncoding("UTF-8");
+		
+		HttpSession session = request.getSession();
+		Account acc = (Account) session.getAttribute("currentCredentials");
 		
 		try {
 			multifiles = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
@@ -56,22 +60,29 @@ public class ReplyMailFromExternal extends HttpServlet {
             }
 			
 			String captcha = tempStorage[4];
-			boolean verify = VerifyRecaptcha.verify(captcha);
+
 			
-			String contentType = fileData.getContentType();
-			if(	!contentType.equals("application/pdf")||
-					!contentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document")||
-					!contentType.equals("application/x-zip-compressed")||
-					!contentType.equals("text/plain")||
-					!contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")||
-					!contentType.equals("image/jpeg")||
-					!contentType.equals("image/png"))
-				{
-					response.setContentType("text/plain");
-					response.setStatus(HttpServletResponse.SC_OK);
-					response.getWriter().write("incorrect upload type");
-				}
-			if(verify)
+			if(fileData != null)
+			{
+				String contentType = fileData.getContentType();
+				if(	!contentType.equals("application/pdf")||
+						!contentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document")||
+						!contentType.equals("application/x-zip-compressed")||
+						!contentType.equals("text/plain")||
+						!contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")||
+						!contentType.equals("image/jpeg")||
+						!contentType.equals("image/png"))
+					{
+						response.setContentType("text/plain");
+						response.setStatus(HttpServletResponse.SC_OK);
+						response.getWriter().write("incorrect upload type");
+						return;
+					}
+				
+			}
+			
+			boolean verify = VerifyRecaptcha.verify(captcha);
+			if(!verify)
 			{
 				response.setContentType("text/plain");
 				response.setStatus(HttpServletResponse.SC_OK);
@@ -103,6 +114,12 @@ public class ReplyMailFromExternal extends HttpServlet {
 			 response.setStatus(HttpServletResponse.SC_OK);
 			 response.getWriter().write("success");
 		}catch(Exception e) {
+			try {
+				LogsFunctions.addErrorLog(e.getMessage(), acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}

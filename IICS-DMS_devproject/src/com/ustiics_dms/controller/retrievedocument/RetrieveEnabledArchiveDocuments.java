@@ -1,6 +1,7 @@
 package com.ustiics_dms.controller.retrievedocument;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.ArchiveDocuments;
 import com.ustiics_dms.utility.AesEncryption;
@@ -29,11 +31,10 @@ public class RetrieveEnabledArchiveDocuments extends HttpServlet {
 		List<ArchiveDocuments> documents = new ArrayList<ArchiveDocuments>();
 	    response.setCharacterEncoding("UTF-8");
 		
+	    HttpSession session = request.getSession();
+	    Account acc = (Account) session.getAttribute("currentCredentials");
+	    
 		try {
-			
-		    HttpSession session = request.getSession();
-		    Account acc = (Account) session.getAttribute("currentCredentials");
-			
 		    ResultSet documentFiles = (ResultSet) RetrieveDocumentFunctions.retrieveEnabledArchivedDocuments(acc.getDepartment());
 
 			while(documentFiles.next()) 
@@ -62,6 +63,12 @@ public class RetrieveEnabledArchiveDocuments extends HttpServlet {
 			    response.getWriter().write(json);
 		   
 		} catch (Exception e) {
+			try {
+				LogsFunctions.addErrorLog(e.getMessage(), acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}

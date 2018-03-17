@@ -1,6 +1,7 @@
 package com.ustiics_dms.controller.fileupload;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -36,9 +37,10 @@ public class FileUpload extends HttpServlet {
 		List<FileItem> multifiles;
 		response.setCharacterEncoding("UTF-8");
 		
+		HttpSession session = request.getSession();
+		Account acc = (Account)session.getAttribute("currentCredentials");
 		try {
-			HttpSession session = request.getSession();
-			Account acc = (Account)session.getAttribute("currentCredentials");
+
 			multifiles = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 
 			int counter = 0;
@@ -167,6 +169,13 @@ public class FileUpload extends HttpServlet {
 				response.getWriter().write("success upload");
 			}
 		} catch (Exception e) {
+
+			try {
+					LogsFunctions.addErrorLog(e.getMessage(), acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		} 

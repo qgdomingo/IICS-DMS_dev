@@ -1,6 +1,8 @@
 package com.ustiics_dms.controller.mail;
 
 import java.io.IOException;
+import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -28,9 +30,9 @@ public class UpdateAcknowledgeTimeStamp extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("UTF-8");
 		
+	    HttpSession session = request.getSession();
+	    Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
-		    HttpSession session = request.getSession();
-		    Account acc = (Account) session.getAttribute("currentCredentials");
 		    
 			String mailID = AesEncryption.decrypt(request.getParameter("mail_id"));
 			String remark = request.getParameter("remark");
@@ -45,6 +47,12 @@ public class UpdateAcknowledgeTimeStamp extends HttpServlet {
 			response.getWriter().write(timestamp);
 			
 		} catch (Exception e) {
+			try {
+				LogsFunctions.addErrorLog(e.getMessage(), acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}

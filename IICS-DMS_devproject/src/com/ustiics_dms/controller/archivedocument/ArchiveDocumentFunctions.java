@@ -297,13 +297,10 @@ public class ArchiveDocumentFunctions
 	           String fileName = rs.getString("file_name");
 	           InputStream fileData = rs.getBinaryStream("file_data");
 	           String description = rs.getString("description");
-	           String checksum = rs.getString("checksum");
-	           String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(fileData);
+	           //String checksum = rs.getString("checksum");
 	          
-	           if(checksum.equals(md5))
-	           {
-	        	   archiveFiles.add( new File(id, fileName, fileData, description));
-	           }
+	          archiveFiles.add( new File(id, fileName, fileData, description));
+	           
 	       }
 	        rs.close();
 			prep.close();

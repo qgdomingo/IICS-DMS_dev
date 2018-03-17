@@ -1,6 +1,7 @@
 package com.ustiics_dms.controller.externalmail;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.model.ExternalMail;
@@ -31,11 +33,9 @@ public class RetrieveExternalSentMail extends HttpServlet {
 
 		List<SentExternalMail> external = new ArrayList<SentExternalMail>();
 	    response.setCharacterEncoding("UTF-8");
-		
+		HttpSession session = request.getSession();
+		Account acc = (Account) session.getAttribute("currentCredentials");
 		try {
-			
-		    HttpSession session = request.getSession();
-		    Account acc = (Account) session.getAttribute("currentCredentials");
 			
 			ResultSet externalMail = (ResultSet) ExternalMailFunctions.getSentExternalMail();
 			
@@ -70,6 +70,12 @@ public class RetrieveExternalSentMail extends HttpServlet {
 		    response.getWriter().write(json);
 		   
 		} catch (Exception e) {
+			try {
+				LogsFunctions.addErrorLog(e.getMessage(), acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}

@@ -40,13 +40,14 @@ public class Login extends HttpServlet {
 		String redirectURL = "";
 		
 		response.setCharacterEncoding("UTF-8");
-		
+		System.out.println(AesEncryption.encrypt("com.mysql.jdbc.Driver"));
+
 		try {
 			if(LoginFunctions.authenticate(email, password) == true)//authenticates if username and password is valid
 			{
 				HttpSession session = request.getSession();
 				session.setAttribute("currentCredentials", LoginFunctions.authorize(email));
-				
+
 				Account acc = (Account) session.getAttribute("currentCredentials");
 				
 				LogsFunctions.addLog("System", "Login", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());

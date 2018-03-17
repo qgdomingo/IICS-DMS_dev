@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.mysql.jdbc.ResultSet;
+import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.model.Account;
 
 @WebServlet("/RetrieveUsers")
@@ -28,9 +29,10 @@ public class RetrieveUsers extends HttpServlet {
 		List<Account> users = new ArrayList<Account>();
 	    response.setCharacterEncoding("UTF-8");
 		
+		HttpSession session = request.getSession();
+		Account acc = (Account)session.getAttribute("currentCredentials");
 		try {
-			HttpSession session = request.getSession();
-			Account acc = (Account)session.getAttribute("currentCredentials");
+
 			
 			ResultSet accounts = (ResultSet) ManageUserFunctions.viewAccounts();
 			while(accounts.next()) { 
@@ -55,6 +57,13 @@ public class RetrieveUsers extends HttpServlet {
 		    response.getWriter().write(json);
 		   
 		} catch (SQLException e) {
+
+			try {
+					LogsFunctions.addErrorLog(e.getMessage(), acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}

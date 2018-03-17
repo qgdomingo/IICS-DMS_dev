@@ -36,7 +36,6 @@ public class SendMailToDirector extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		
 		try {
-			System.out.println("test");
 			multifiles = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 
 			int counter = 0;
@@ -56,20 +55,26 @@ public class SendMailToDirector extends HttpServlet {
 	                fileData = item;
 	            }
             }
-
-			String contentType = fileData.getContentType();
-			if(	!contentType.equals("application/pdf")||
-					!contentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document")||
-					!contentType.equals("application/x-zip-compressed")||
-					!contentType.equals("text/plain")||
-					!contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")||
-					!contentType.equals("image/jpeg")||
-					!contentType.equals("image/png"))
-				{
-					response.setContentType("text/plain");
-					response.setStatus(HttpServletResponse.SC_OK);
-					response.getWriter().write("incorrect upload type");
-				}
+			
+			if(fileData != null)
+			{
+				String contentType = fileData.getContentType();
+				if(	!contentType.equals("application/pdf")||
+						!contentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document")||
+						!contentType.equals("application/x-zip-compressed")||
+						!contentType.equals("text/plain")||
+						!contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")||
+						!contentType.equals("image/jpeg")||
+						!contentType.equals("image/png"))
+					{
+						response.setContentType("text/plain");
+						response.setStatus(HttpServletResponse.SC_OK);
+						response.getWriter().write("incorrect upload type");
+						return;
+					}
+				
+			}
+			
 			if(fileData != null && fileData.getSize() > 26214400)
 			{
 
@@ -90,7 +95,7 @@ public class SendMailToDirector extends HttpServlet {
 
 			boolean verify = VerifyRecaptcha.verify(captcha);
 			
-			if(verify)
+			if(!verify)
 			{
 				response.setContentType("text/plain");
 				response.setStatus(HttpServletResponse.SC_OK);
