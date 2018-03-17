@@ -195,28 +195,16 @@
 				
 					<div class="field">
 						<label>To:</label>
-						<div class="ui action input">
-			  				<select class="ui fluid search selection dropdown" multiple="" name="internal_to" id="internal_letter_to">
-								<option value="">Select Users</option>
-							</select>
-			  				<button class="ui orange button" type="button">
-				  				<i class="address book outline icon"></i>
-				  				Options 
-			  				</button>
-						</div>
+		  				<select class="ui fluid search selection dropdown" multiple="" name="internal_to" id="internal_letter_to">
+							<option value="">Select Users</option>
+						</select>
 					</div>
 					
 					<div class="field">
 						<label>External To:</label>
-						<div class="ui action input">
-			  				<select class="ui fluid search selection dropdown" multiple="" name="external_to" id="external_letter_to">
-								<option value="">Select Users</option>
-							</select>
-			  				<button class="ui orange button" type="button">
-				  				<i class="address book outline icon"></i>
-				  				Options 
-			  				</button>
-						</div>
+		  				<select class="ui fluid search selection dropdown" multiple="" name="external_to" id="external_letter_to">
+							<option value="">Select Users</option>
+						</select>
 					</div>
 				<% } %>
 					
@@ -296,28 +284,16 @@
 				
 					<div class="field">
 						<label>To:</label>
-						<div class="ui action input">
-			  				<select class="ui fluid search selection dropdown" multiple="" name="internal_to" id="internal_memo_notice_to">
-								<option value="">Select Users</option>
-							</select>
-			  				<button class="ui orange button" type="button">
-				  				<i class="address book outline icon"></i>
-				  				Options 
-			  				</button>
-						</div>
+		  				<select class="ui fluid search selection dropdown" multiple="" name="internal_to" id="internal_memo_notice_to">
+							<option value="">Select Users</option>
+						</select>
 					</div>
 					
 					<div class="field">
 						<label>External To:</label>
-						<div class="ui action input">
-			  				<select class="ui fluid search selection dropdown" multiple="" name="external_to" id="external_memo_notice_to">
-								<option value="">Select Users</option>
-							</select>
-			  				<button class="ui orange button" type="button">
-				  				<i class="address book outline icon"></i>
-				  				Options 
-			  				</button>
-						</div>
+		  				<select class="ui fluid search selection dropdown" multiple="" name="external_to" id="external_memo_notice_to">
+							<option value="">Select Users</option>
+						</select>
 					</div>
 				<% } %>
 					

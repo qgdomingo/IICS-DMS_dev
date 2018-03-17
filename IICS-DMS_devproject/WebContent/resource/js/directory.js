@@ -100,7 +100,12 @@
 /*
  * DIRECTORY OPTIONS
  */
-	$('#directory_options_btn > .item').click(function() {
-		console.log('this was clicked');
-	})
+	function returnLocalDirectoryData() {
+		return localDirectoryData;
+	}
+	
+	function returnLocalExternalDirectory() {
+		return localExternalData;
+	}
+
 	

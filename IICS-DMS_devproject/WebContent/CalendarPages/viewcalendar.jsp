@@ -261,58 +261,9 @@
 					</div>
 					<div class="field">
 						<label>Invite:</label>
-						<div class="ui action input">
-							<select class="ui fluid search selection dropdown" multiple="" name="event_invite" id="event_invite">
-								<option value="">Select Users</option>
-							</select>
-						  	<div class="ui buttons">
-						  		<div class="ui button">Options</div>
-						  		<div class="ui orange floating dropdown icon button">
-    								<i class="dropdown icon"></i>
-								    <div class="menu" id="directory_options_btn"> 
-								      <div class="item all">Select All Users</div>
-								      <div class="divider"></div>
-								      <div class="item dept">
-							      		<div class="ui checkbox">
-											<label>All Department Head</label>
- 											<input type="checkbox" />
-										</div> 
-								      <div class="item">
-								      		<div class="ui checkbox">
-												<label>All Faculty</label>
-  												<input type="checkbox" />
-											</div>
-								      </div>
-								      <div class="item">
-								      		<div class="ui checkbox">
-												<label>All Staff</label>
-  												<input type="checkbox" />
-											</div>
-								      </div>
-								      <div class="item">
-								      		<div class="ui checkbox">
-												<label>IT Department</label>
-  												<input type="checkbox" />
-											</div>
-								      </div>
-								      <div class="item">
-								      		<div class="ui checkbox">
-												<label>IS Department</label>
-  												<input type="checkbox" />
-											</div>
-								      </div>
-								      <div class="item">
-							      		<div class="ui checkbox">
-											<label>CS Department</label>
- 												<input type="checkbox" />
-										</div>
-								      </div>
-								      <div class="divider"></div>
-								      <div class="item">Clear Selected</div>
-								    </div>
-								</div> 
-						  	</div> 
-						</div>
+						<select class="ui fluid search selection dropdown" multiple="" name="event_invite" id="event_invite">
+							<option value="">Select Users</option>
+						</select>
 					</div>
 					
 					<div class="ui error message"></div>

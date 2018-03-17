@@ -264,28 +264,16 @@
 					
 					<div class="field">
 						<label>Recipient:</label>
-						<div class="ui action input">
-			  				<select class="ui fluid search selection dropdown" multiple="" name="internal_to" id="view_mail_recipient">
-								<option value="">Select Users</option>
-							</select>
-			  				<button class="ui orange button" type="button">
-				  				<i class="address book outline icon"></i>
-				  				Options 
-			  				</button>
-						</div>
+		  				<select class="ui fluid search selection dropdown" multiple="" name="internal_to" id="view_mail_recipient">
+							<option value="">Select Users</option>
+						</select>
 					</div>			
 					
 					<div class="field">
 						<label>External Recipient:</label>
-						<div class="ui action input">
-			  				<select class="ui fluid search selection dropdown" multiple="" name="external_to" id="view_mail_external_recipient">
-								<option value="">Select Users</option>
-							</select>
-			  				<button class="ui orange button" type="button">
-				  				<i class="address book outline icon"></i>
-				  				Options 
-			  				</button>
-						</div>
+		  				<select class="ui fluid search selection dropdown" multiple="" name="external_to" id="view_mail_external_recipient">
+							<option value="">Select Users</option>
+						</select>
 					</div>	
 				<% } %>	
 				

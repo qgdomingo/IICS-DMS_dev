@@ -2,10 +2,16 @@
  * 
  */
 	var tempVal;
-
+	var localDiretoryData;
+	var localExternalDirectoryData;
+	
+	
 	$(document).ready( function() {
 		displayAppropriateForm();
-
+		
+		localDiretoryData = returnLocalDirectoryData();
+		localExternalDirectoryData = returnLocalExternalDirectory();
+		
 		if( ! ($('#user_type').val() == 'Faculty') ) {
 			getListOfUsers('#internal_letter_to');
 			getListOfUsers('#internal_memo_notice_to');

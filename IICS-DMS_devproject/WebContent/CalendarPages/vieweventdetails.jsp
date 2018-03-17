@@ -373,15 +373,9 @@
 					</div>
 					<div class="field">
 						<label>Invite:</label>
-						<div class="ui action input">
-							<select class="ui fluid search selection dropdown" multiple="" name="event_invite" id="edit_event_invite">
-								<option value="">Select Users</option>
-							</select>
-						  	<button class="ui orange button" type="button">
-						  		<i class="address book outline icon"></i>
-						  		Options 
-						  	</button>
-						</div>
+						<select class="ui fluid search selection dropdown" multiple="" name="event_invite" id="edit_event_invite">
+							<option value="">Select Users</option>
+						</select>
 					</div>
 					
 					<div class="ui error message"></div>
