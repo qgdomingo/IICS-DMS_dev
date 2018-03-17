@@ -248,7 +248,7 @@
 					</div>
 					
 					<div class="required field">
-						<label>Complimentary Closing Line:</label>
+						<label>Complimentary Closing Remarks:</label>
 						<input type="text" placeholder="Yours Truly, " name="closing_line"/>
 					</div>
 					

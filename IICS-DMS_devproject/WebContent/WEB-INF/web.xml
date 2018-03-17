@@ -20,11 +20,11 @@
     <param-name>dbPassword</param-name>
     <param-value>kcLZqkaylgpYU7GTzvbcZQ==</param-value>
   </context-param>
-    <context-param>
+  <context-param>
     <param-name>USERNAME</param-name>
     <param-value>aFHYh9voqt82vd/dcsh2aLu8+dhJ0Y6xDag++J1bdaU=</param-value>
   </context-param>
-    <context-param>
+  <context-param>
     <param-name>PASSWORD</param-name>
     <param-value>32d6Vq3PcRQtmTx5Lp0bvA==</param-value>
   </context-param>

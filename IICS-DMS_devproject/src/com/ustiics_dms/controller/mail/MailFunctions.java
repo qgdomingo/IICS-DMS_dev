@@ -563,7 +563,7 @@ public class MailFunctions {
 		Paragraph positionPara = new Paragraph(new Phrase(lineSpacing, position, FontFactory.getFont(FontFactory.HELVETICA,fntSize)));
 		String titleApprover = MailFunctions.getTitle(approvedBy);
 		String nameApprover = MailFunctions.getFullName(approvedBy);
-		String userTypeApprover = MailFunctions.getTitle(approvedBy);
+		String userTypeApprover = MailFunctions.getPosition(approvedBy);
 		
 		Chunk glue = new Chunk(new VerticalPositionMark());
 		Paragraph p = new Paragraph(title);
@@ -648,11 +648,7 @@ public class MailFunctions {
 			doc.add(lineOnePara);
 			doc.add(lineTwoPara);
 			doc.add(lineThreePara);
-			doc.add(datePara);
-			DottedLineSeparator separator = new DottedLineSeparator();
-	        separator.setPercentage(59500f / 523f);
-	        Chunk linebreak = new Chunk(separator);
-	        doc.add(linebreak);
+			doc.add(new Paragraph("___________________________________________________________________"));
 			doc.add(Chunk.NEWLINE);
 			doc.add(Chunk.NEWLINE);
 			doc.add(Chunk.NEWLINE);
@@ -807,10 +803,7 @@ public class MailFunctions {
 			doc.add(lineTwoPara);
 			doc.add(lineThreePara);
 			doc.add(datePara);
-			DottedLineSeparator separator = new DottedLineSeparator();
-	        separator.setPercentage(59500f / 523f);
-	        Chunk linebreak = new Chunk(separator);
-	        doc.add(linebreak);
+			doc.add(new Paragraph("___________________________________________________________________"));
 			doc.add(Chunk.NEWLINE);
 			doc.add(Chunk.NEWLINE);
 			doc.add(Chunk.NEWLINE);

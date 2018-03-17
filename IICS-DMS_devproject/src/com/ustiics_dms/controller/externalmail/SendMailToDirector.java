@@ -8,14 +8,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import com.ustiics_dms.model.Account;
-import com.ustiics_dms.utility.SendMail;
+
 import com.ustiics_dms.utility.VerifyRecaptcha;
 
 
@@ -37,7 +36,7 @@ public class SendMailToDirector extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		
 		try {
-			
+			System.out.println("test");
 			multifiles = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 
 			int counter = 0;

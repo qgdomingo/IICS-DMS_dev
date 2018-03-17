@@ -41,7 +41,7 @@ public class DownloadArchivedFolder extends HttpServlet {
 			int id = Integer.parseInt(AesEncryption.decrypt(request.getParameter("id")));
 			String stringId = AesEncryption.decrypt(request.getParameter("id"));
 			List <File> file = ArchiveDocumentFunctions.getBinaryStream(id);
-			 
+
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ZipOutputStream zip = new ZipOutputStream(out);
 			for(File f : file)

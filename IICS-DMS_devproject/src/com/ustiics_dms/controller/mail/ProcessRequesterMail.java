@@ -104,11 +104,11 @@ public class ProcessRequesterMail extends HttpServlet {
 				String approvedBy = MailFunctions.getApprover(id);
 				if(type.equalsIgnoreCase("Letter"))
 				{
-					MailFunctions.saveRequestMailInformation(id, type, null, null, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, addressLine2, addressLine3, closingLine, paperSize,approvedBy);
+					MailFunctions.saveRequestMailInformation(id, type, null, null, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, addressLine2, addressLine3, closingLine, paperSize, approvedBy);
 				}
 				else if(type.equalsIgnoreCase("Memo") || type.equalsIgnoreCase("Notice Of Meeting"))
 				{
-					MailFunctions.saveRequestMailInformation(id, type, null, null, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, from, subject, closingLine, paperSize,approvedBy);
+					MailFunctions.saveRequestMailInformation(id, type, null, null, subject, message, acc.getFullName(), acc.getEmail(), acc.getDepartment(), addressLine1, from, subject, closingLine, paperSize, approvedBy);
 				}	
 				
 				int latestID = MailFunctions.getIncrement();

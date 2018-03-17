@@ -404,6 +404,7 @@ public class FileUploadFunctions {
 			
 			String des = title + " has been marked as done by  " + ManageTasksFunctions.getFullName(email);
 			NotificationFunctions.addNotification("Incoming Documents Page", des, FileUploadFunctions.getGroupByDepartment(department, email));
+			info.close();
 	}
 
 	public static boolean checkIfExistingReferenceNo(String source, String referenceNo) throws SQLException
@@ -420,7 +421,20 @@ public class FileUploadFunctions {
 			trigger = true;
 		}
 		
+		rs.close();
+		prep.close();
+		
 		return trigger;
+	}
+	
+	public static void DeletePersonalDocument(String id) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		
+		PreparedStatement prep = con.prepareStatement("DELETE FROM personal_documents WHERE id = ?");
+		prep.setString(1, id);
+		prep.executeUpdate();
+		prep.close();
 	}
 	
 }

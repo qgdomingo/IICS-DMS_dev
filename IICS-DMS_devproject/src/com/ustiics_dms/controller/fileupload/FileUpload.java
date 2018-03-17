@@ -1,7 +1,6 @@
 package com.ustiics_dms.controller.fileupload;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.*;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
@@ -20,7 +18,6 @@ import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
 import com.ustiics_dms.controller.notifications.NotificationFunctions;
 import com.ustiics_dms.model.Account;
-import com.ustiics_dms.utility.SessionChecking;
 
 @WebServlet("/FileUpload")
 public class FileUpload extends HttpServlet {
@@ -135,7 +132,7 @@ public class FileUpload extends HttpServlet {
 				
 				returningReferenceNo = FileUploadFunctions.uploadIncomingDocument(threadNo, referenceNo, documentSource, documentTitle, category, actionRequired, fileData, description, fullName, acc.getEmail(),acc.getDepartment(), actionDue);
 				
-				String des = ManageTasksFunctions.getFullName(acc.getEmail()) +" has uploaded a new incoming document, " + documentTitle;
+				//String des = ManageTasksFunctions.getFullName(acc.getEmail()) +" has uploaded a new incoming document, " + documentTitle;
 
 				//NotificationFunctions.addNotification("Incoming Documents Page", des, FileUploadFunctions.getGroupByDepartmentNoFaculty(acc.getDepartment(), acc.getEmail()));
 
@@ -174,5 +171,7 @@ public class FileUpload extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		} 
 	}
+	
+
 
 }

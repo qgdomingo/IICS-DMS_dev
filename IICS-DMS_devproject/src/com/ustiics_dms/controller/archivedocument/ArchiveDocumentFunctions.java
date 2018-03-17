@@ -1,5 +1,6 @@
 package com.ustiics_dms.controller.archivedocument;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.Connection;
@@ -18,7 +19,7 @@ import com.ustiics_dms.model.File;
 public class ArchiveDocumentFunctions
 {
 	
-	public static void transferToArchived() throws SQLException
+	public static void transferToArchived() throws SQLException, IOException
 	{
 			Connection con = DBConnect.getConnection();
 			
@@ -26,10 +27,12 @@ public class ArchiveDocumentFunctions
 			
 			createFolder();
 			PreparedStatement prep = con.prepareStatement("INSERT INTO archived_documents (folder_id, type, source_recipient, title, "
-					+ "category, file_name, file_data, description, uploaded_by, email, upload_date, department, reference_no,"
-					+ " academic_year) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+					+ "category, file_name, file_data, checksum, description, uploaded_by, email, upload_date, department, reference_no,"
+					+ " academic_year) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			
 			ResultSet currentDocuments = getCurrentDocuments();
+			
+			
 			
 			String academicYear = getAcademicYear();
 			
@@ -45,7 +48,7 @@ public class ArchiveDocumentFunctions
 				}
 				
 				Blob tempBlob = currentDocuments.getBlob("file_data");
-				
+				String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(tempBlob.getBinaryStream());
 				prep.setInt(1, counter);
 				prep.setString(2, type);
 				prep.setString(3, currentDocuments.getString("source_recipient"));
@@ -53,13 +56,14 @@ public class ArchiveDocumentFunctions
 				prep.setString(5, currentDocuments.getString("category"));
 				prep.setString(6, currentDocuments.getString("file_name"));
 				prep.setBinaryStream(7, tempBlob.getBinaryStream(),(int) tempBlob.length());
-				prep.setString(8, currentDocuments.getString("description"));
-				prep.setString(9, currentDocuments.getString("created_by"));
-				prep.setString(10, currentDocuments.getString("email"));
-				prep.setString(11, currentDocuments.getString("time_created"));
-				prep.setString(12, currentDocuments.getString("department"));
-				prep.setString(13, refValue);
-				prep.setString(14, academicYear);
+				prep.setString(8, md5);
+				prep.setString(9, currentDocuments.getString("description"));
+				prep.setString(10, currentDocuments.getString("created_by"));
+				prep.setString(11, currentDocuments.getString("email"));
+				prep.setString(12, currentDocuments.getString("time_created"));
+				prep.setString(13, currentDocuments.getString("department"));
+				prep.setString(14, refValue);
+				prep.setString(15, academicYear);
 				
 				prep.executeUpdate();
 				
@@ -278,12 +282,12 @@ public class ArchiveDocumentFunctions
 	       return null;
 	}
 	
-	public static List <File> getBinaryStream (int id) throws SQLException 
+	public static List <File> getBinaryStream (int id) throws SQLException, IOException 
 	{
 		   Connection con = DBConnect.getConnection();
 		   
 		   List <File> archiveFiles = new ArrayList <File> ();
-	       PreparedStatement prep = con.prepareStatement("SELECT file_name, file_data, description FROM archived_documents WHERE folder_id = ?");
+	       PreparedStatement prep = con.prepareStatement("SELECT file_name, file_data, checksum, description FROM archived_documents WHERE folder_id = ?");
 	       prep.setInt(1, id);
 	       
 	       ResultSet rs = prep.executeQuery();
@@ -293,8 +297,13 @@ public class ArchiveDocumentFunctions
 	           String fileName = rs.getString("file_name");
 	           InputStream fileData = rs.getBinaryStream("file_data");
 	           String description = rs.getString("description");
-	           
-	           archiveFiles.add( new File(id, fileName, fileData, description));
+	           String checksum = rs.getString("checksum");
+	           String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(fileData);
+	          
+	           if(checksum.equals(md5))
+	           {
+	        	   archiveFiles.add( new File(id, fileName, fileData, description));
+	           }
 	       }
 	        rs.close();
 			prep.close();
