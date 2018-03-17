@@ -19,7 +19,7 @@ public class NotificationFunctions {
 		prep.setString(2, description);
 		
 		prep.executeUpdate();
-		
+		prep.close();
 		addToNotificationList(email);
 	}
 	
@@ -35,6 +35,7 @@ public class NotificationFunctions {
 			prep.setString(2, mailList);
 			
 			prep.executeUpdate();
+			prep.close();
 		}
 	}
 	
@@ -49,7 +50,7 @@ public class NotificationFunctions {
 		prep.setString(2, email);
 		
 		prep.executeUpdate();
-
+		prep.close();
 	}
 	
 	public static int getIncrement() throws SQLException
@@ -71,7 +72,7 @@ public class NotificationFunctions {
 		prep.setString(2, description);
 		
 		prep.executeUpdate();
-		
+		prep.close();
 		addToNotificationList(email);
 		
 	}
@@ -110,7 +111,7 @@ public class NotificationFunctions {
 			prep.setString(2, id);
 			prep.setString(3, email);
 			prep.executeUpdate();
-
+			prep.close();
 	}
 	
 	public static void updateAllNotificationStatus(String email) throws SQLException
@@ -120,6 +121,7 @@ public class NotificationFunctions {
 			prep.setString(1, "Read");
 			prep.setString(2, email);
 			prep.executeUpdate();
+			prep.close();
 
 	}
 }

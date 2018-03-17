@@ -26,8 +26,8 @@ public class ManageEventsFunctions {
 			prep.setString(5, endDateTime);
 			prep.setString(6, description);
 			prep.setString(7, createdBy);
-			prep.executeUpdate();
-			
+			prep.executeUpdate(); 
+			prep.close();
 			if(invited != null) {
 				inviteUsers(invited);
 				
@@ -48,7 +48,8 @@ public class ManageEventsFunctions {
 				
 				prep.setInt(1, id);
 				prep.setString(2, email);
-				prep.executeUpdate();
+				prep.executeUpdate(); 
+				prep.close();
 			}
 	}
 	
@@ -60,9 +61,16 @@ public class ManageEventsFunctions {
 		
 		ResultSet rs = prep.executeQuery();
 		
-		rs.next();
+		String fullName = "";
 		
-		return rs.getString("full_name");
+		if(rs.next())
+		{
+			fullName = rs.getString("full_name");
+			rs.close();
+			prep.close();
+		}
+		
+		return fullName;
 			
 	}
 	
@@ -74,9 +82,17 @@ public class ManageEventsFunctions {
 		
 		ResultSet rs = prep.executeQuery();
 		
-		rs.next();
+		String title = "";
 		
-		return rs.getString("title");
+		if(rs.next())
+		{
+			title = rs.getString("title");
+			rs.close();
+			prep.close();
+		}
+		
+		return title;
+		
 			
 	}
 	
@@ -85,9 +101,17 @@ public class ManageEventsFunctions {
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("SHOW TABLE STATUS WHERE `Name` = 'events'");
 			ResultSet rs = prep.executeQuery();
-			rs.next();
+			int increment = 0;
+			
+			if(rs.next())
+			{
+				increment = rs.getInt("Auto_increment") - 1;
+				rs.close();
+				prep.close();
+			}
+			
 
-			return rs.getInt("Auto_increment")-1;
+			return increment;
 	}
 	
 	public static ResultSet getCalendarEventsData(String email) throws SQLException
@@ -162,7 +186,9 @@ public class ManageEventsFunctions {
 		prep.setString(3, email);
 		prep.setString(4, id);
 		
-		prep.executeUpdate();
+		prep.executeUpdate(); 
+		prep.close();
+
 		
 		String des = getFullName(email) +" has responded " + response + " to your event, "+ retrieveEventTitle(id);
 		NotificationFunctions.addNotification("Calendar Page", des, retrieveEventOwner(id) );
@@ -199,8 +225,9 @@ public class ManageEventsFunctions {
 		prep.setString(7, id);
 		prep.setString(8, email);
 				
-		prep.executeUpdate();
-		
+		prep.executeUpdate(); 
+		prep.close();
+
 		assiginEditUsers(invited, id);
 	}
 	
@@ -223,8 +250,9 @@ public class ManageEventsFunctions {
 					PreparedStatement prep = con.prepareStatement("INSERT INTO events_invitation (event_id, email) VALUES (?,?)");
 					prep.setString(1, tempID);
 					prep.setString(2, user);
-					prep.executeUpdate();
-					
+					prep.executeUpdate(); 
+					prep.close();
+
 					String des = eventOwner +" is inviting you to an event, "+ title;
 					NotificationFunctions.addNotification("Calendar Page", des, user);
 				}
@@ -250,13 +278,15 @@ public class ManageEventsFunctions {
 				prep.setString(userCount, user);
 				userCount++;
 			}
-			prep.executeUpdate();
+			prep.executeUpdate(); 
+			prep.close();
 		}
 		else
 		{
 			PreparedStatement prep = con.prepareStatement("DELETE FROM events_invitation WHERE event_id = ?");
 			prep.setString(1, tempID);
-			prep.executeUpdate();
+			prep.executeUpdate(); 
+			prep.close(); 
 		}
 	}
 	
@@ -291,11 +321,13 @@ public class ManageEventsFunctions {
 		PreparedStatement prep = con.prepareStatement("DELETE FROM events WHERE event_id = ? AND created_by = ?");
 		prep.setString(1, id);
 		prep.setString(2, email);
-		prep.executeUpdate();
+		prep.executeUpdate(); 
+		prep.close();
 		
 		prep = con.prepareStatement("DELETE FROM events_invitation WHERE event_id = ? ");
 		prep.setString(1, id);
-		prep.executeUpdate();
+		prep.executeUpdate();  
+		prep.close();
 		
 	}
 	

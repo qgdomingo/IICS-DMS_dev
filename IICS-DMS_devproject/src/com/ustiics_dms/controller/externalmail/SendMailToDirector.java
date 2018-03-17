@@ -58,7 +58,19 @@ public class SendMailToDirector extends HttpServlet {
 	            }
             }
 
-			
+			String contentType = fileData.getContentType();
+			if(	!contentType.equals("application/pdf")||
+					!contentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document")||
+					!contentType.equals("application/x-zip-compressed")||
+					!contentType.equals("text/plain")||
+					!contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")||
+					!contentType.equals("image/jpeg")||
+					!contentType.equals("image/png"))
+				{
+					response.setContentType("text/plain");
+					response.setStatus(HttpServletResponse.SC_OK);
+					response.getWriter().write("incorrect upload type");
+				}
 			if(fileData != null && fileData.getSize() > 26214400)
 			{
 

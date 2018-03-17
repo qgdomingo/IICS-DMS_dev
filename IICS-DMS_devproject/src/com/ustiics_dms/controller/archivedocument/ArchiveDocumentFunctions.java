@@ -64,7 +64,7 @@ public class ArchiveDocumentFunctions
 				prep.executeUpdate();
 				
 		    }
-				prep.close();
+	
 			
 			deleteCurrentDocuments();
 	}
@@ -80,7 +80,6 @@ public class ArchiveDocumentFunctions
 					+ "time_created, department, null FROM outgoing_documents ORDER BY time_created DESC" );
 
 			ResultSet rs = prep.executeQuery();
-			prep.close();
 			return rs;
 	}
 	

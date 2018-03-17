@@ -34,6 +34,7 @@ public class FileUploadFunctions {
 
 			
 			prep.executeUpdate();
+			prep.close();
 	}
 	
 	public static String uploadIncomingDocument(String threadNumber, String referenceNo, String source, String documentTitle, String category, String actionRequired, FileItem item, String description, String fullName, String email, String department, String actionDue) throws SQLException, IOException
@@ -75,6 +76,7 @@ public class FileUploadFunctions {
 			}
 			
 			prep.executeUpdate();
+			prep.close();
 			
 			return returningReferenceNo;
 	}
@@ -103,6 +105,7 @@ public class FileUploadFunctions {
 			prep.setString(11, department);
 			
 			prep.executeUpdate();
+			prep.close();
 	}
 
 	public static String getReferenceNo(String source) throws SQLException
@@ -152,6 +155,7 @@ public class FileUploadFunctions {
 		prep.setString(2, source);
 		
 		prep.executeUpdate();
+		prep.close();
 	}
 	
 	public static String addExternalSource(String source) throws SQLException
@@ -164,6 +168,7 @@ public class FileUploadFunctions {
 			prep.setString(2, defaultReference);
 			
 			prep.executeUpdate();
+			prep.close();
 			
 			return defaultReference;
 	}
@@ -221,6 +226,7 @@ public class FileUploadFunctions {
 			prep.setInt(1, counter);
 
 			prep.executeUpdate();
+			prep.close();
 
 	}
 	
@@ -348,6 +354,7 @@ public class FileUploadFunctions {
 			prep.setString(2, id);
 
 			prep.executeUpdate();
+			prep.close();
 			
 			ResultSet info = RetrieveDocumentFunctions.retrieveSpecificIncoming(id);
 			
@@ -388,6 +395,7 @@ public class FileUploadFunctions {
 			prep.setString(3, type);
 
 			prep.executeUpdate();
+			prep.close();
 			
 			ResultSet info = RetrieveDocumentFunctions.retrieveSpecificIncoming(id);
 			info.next();

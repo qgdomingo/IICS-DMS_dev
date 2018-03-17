@@ -27,6 +27,7 @@ public class CategoryFunctions {
 
 			
 			prep.executeUpdate();
+			prep.close();
 
 	}
 

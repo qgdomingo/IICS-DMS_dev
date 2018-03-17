@@ -51,6 +51,7 @@ public class ExternalMailFunctions {
 		prep.setBinaryStream(10, fileData.getInputStream(), (int) fileData.getSize());
 		
 		prep.executeUpdate();
+		prep.close();
 		
 		String fullName = firstName + " " + lastName;
 		LogsFunctions.addLog("System", "External Sent to Director", emailAddress, fullName, "External", "None", subject);
@@ -74,6 +75,7 @@ public class ExternalMailFunctions {
 		prep.setString(8, message);
 
 		prep.executeUpdate();
+		prep.close();
 		
 		String fullName = firstName + " " + lastName;
 		LogsFunctions.addLog("System", "External Sent to Director", emailAddress, fullName, "External", "None", subject);
@@ -115,7 +117,7 @@ public class ExternalMailFunctions {
 			
 		
 			prep.executeUpdate();
-		
+			prep.close();
 			LogsFunctions.addLog("System", "External Reply to Director", email, fullName, "External", "None", subject);
 			String des = fullName +", external user, has sent you a mail reply, " + subject;
 			NotificationFunctions.addNotification("External Mail Page", des, getDirectorRecipient());
@@ -150,7 +152,8 @@ public class ExternalMailFunctions {
 			prep.setString(8, message);
 		
 			prep.executeUpdate();
-		
+			prep.close();
+			
 			LogsFunctions.addLog("System", "External Reply to Director", email, fullName, "External", "None", subject);
 			String des = fullName +", external user, has sent you a mail reply, " + subject;
 			NotificationFunctions.addNotification("External Mail Page", des, getDirectorRecipient());
@@ -185,12 +188,14 @@ public class ExternalMailFunctions {
 		PreparedStatement prep = con.prepareStatement("SELECT counter FROM thread_number WHERE type = ?");
 		prep.setString(1, "external mail");
 		ResultSet rs = prep.executeQuery();
+		
 		rs.next();
 		int counter = rs.getInt("counter");
 		prep = con.prepareStatement("UPDATE thread_number SET counter = ? WHERE type = ?");
 		prep.setInt(1, counter + 1);
 		prep.setString(2, "external mail");
 		prep.executeUpdate();
+		prep.close();
 		return rs.getInt("counter");
 		
 	}
@@ -281,7 +286,7 @@ public class ExternalMailFunctions {
 		        
 		       multipart.addBodyPart(attachment);
 	       }
-	       String first = title + name;
+	       String first = title + " " + name;
 	       String second = position;
 	       String third = department;
 	       MimeBodyPart messageContent = new MimeBodyPart();
@@ -359,6 +364,7 @@ public class ExternalMailFunctions {
 		prep.setString(7, sentBy);
 
 		prep.executeUpdate();
+		prep.close();
 		threadNumber = AesEncryption.encrypt(threadNumber);
 		ExternalMailFunctions.send(type,recipient, subject, message, threadNumber , ExternalMailFunctions.getIncrement(), username, password, contextPath ,title, name, position, department);
 	}
@@ -376,6 +382,7 @@ public class ExternalMailFunctions {
 		prep.setString(5, sentBy);
 
 		prep.executeUpdate();
+		prep.close();
 		threadNumber = AesEncryption.encrypt(threadNumber);
 		ExternalMailFunctions.send(type,recipient, subject, message, threadNumber ,ExternalMailFunctions.getIncrement(), username, password, contextPath ,title, name, position, department);
 	}
@@ -454,6 +461,7 @@ public class ExternalMailFunctions {
 		prep.setString(2, id);
 		
 		prep.executeUpdate();
+		prep.close();
 	}
 	
 	
