@@ -15,10 +15,13 @@ public class DBConnect {
 	
 	private static Connection getDBConnection() {
 		
-		try {
+		try {//"com.mysql.jdbc.Driver"
 		Class.forName(AesEncryption.decrypt("qmVJxaakjfR2RpWZtcWa3k9kaW5p+/zwF+Hn4LqRMBM="));
+		//"root"
 		String username = AesEncryption.decrypt("Awu84ohbyxEVYznIqhVNEw==");
+				//
 		String password = AesEncryption.decrypt("v3+X9sB4qFpk/JPxNROFJATqcliC2XiS5d9zSzrJktA=");
+//
 		String url = AesEncryption.decrypt("FYrRIcMajDR9ZPaWrq4n0qqWQLegusLkL+7K4vclS53bcKAyJL8UOpgThQ31lbH2");
 		try {
 			connection = DriverManager.getConnection(url , username , password);
