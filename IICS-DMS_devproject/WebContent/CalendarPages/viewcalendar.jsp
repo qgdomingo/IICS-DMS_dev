@@ -359,7 +359,7 @@
 					<input type="hidden" name="event_response_timestamp" id="event_response_timestamp"/>
 					
 					<div class="field">
-						<label>Response Details:</label>
+						<label>Remarks:</label>
 						<textarea rows="3" name="event_response_text"></textarea>
 					</div>
 					

@@ -95,19 +95,12 @@
 		activatePageLoading('Logging out');
 		
 		$.get(getContextPath() + '/Logout', (response) => {
-			if(response) 
-			{
-				window.location = getContextPath() + response.redirect;
-			}
-			else
-			{
-				callFailRequestModal();
-				removeCSSClass('#page_loading', 'active');
-			}
+			deactivatePageLoading();
+			window.location = getContextPath() + '/index.jsp';
 		})
 		 .fail((response) => {
-			 callFailRequestModal();
-			 removeCSSClass('#page_loading', 'active');
+			 deactivatePageLoading();
+			 window.location = getContextPath() + '/index.jsp';
 		 });
 	});
 	

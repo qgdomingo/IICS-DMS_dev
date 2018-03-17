@@ -17,10 +17,19 @@
 	    },
 		success: function(response) {  
 			closeUploadProgress();
-			clearMessageDirectorForm();
-			callSuccessModal('Message Successfully Sent', 'Your message has been sent to the Director. You will be receive ' 
-					+ ' a reply through the email address you entered.');
 			deactivatePageLoading();
+			
+			if(response == 'invalid captcha') {
+				callFailModal('Invalid Captcha', 'Please try answering the captcha again.');
+			}
+			else if(response == 'above maximum size') {
+				callFailModal('File Max Size Error', 'Your file has exceeded the maximum file size of 25MB. Please upload a smaller file');
+			}
+			else {
+				clearMessageDirectorForm();
+				callSuccessModal('Message Successfully Sent', 'Your message has been sent to the Director. You will be receive ' 
+						+ ' a reply through the email address you entered.');
+			}
 		},
 		error: function(response) {
 			closeUploadProgress();
@@ -38,6 +47,10 @@
 					{
 						type   : 'empty',
 						prompt : 'Please enter your first name'
+					},
+					{
+						type : 'maxLength[30]',
+						prompt: 'Maximum of 30 characters in first name'
 					}
 				]
 			},
@@ -47,6 +60,10 @@
 					{
 						type   : 'empty',
 						prompt : 'Please enter your last name'
+					},
+					{
+						type : 'maxLength[30]',
+						prompt: 'Maximum of 30 characters in last name'
 					}
 				]
 			},
@@ -56,6 +73,11 @@
 					{
 						type   : 'email',
 						prompt : 'Please enter a valid email address'
+					},
+					,
+					{
+						type : 'maxLength[50]',
+						prompt: 'Maximum of 30 characters in email'
 					}
 				]
 			},
@@ -78,6 +100,10 @@
 					{
 						type   : 'empty',
 						prompt : 'Please enter your affiliation'
+					},
+					{
+						type : 'maxLength[30]',
+						prompt: 'Maximum of 30 characters in affiliation'
 					}
 				]
 			},
@@ -87,6 +113,10 @@
 					{
 						type   : 'empty',
 						prompt : 'Please enter a subject of the message'
+					},
+					{
+						type : 'maxLength[50]',
+						prompt: 'Maximum of 50 characters in subject'
 					}
 				]
 			},
@@ -96,6 +126,10 @@
 					{
 						type   : 'empty',
 						prompt : 'Please enter a message'
+					},
+					{
+						type : 'maxLength[2000]',
+						prompt: 'Maximum of 2000 characters in message'
 					}
 				]
 			}

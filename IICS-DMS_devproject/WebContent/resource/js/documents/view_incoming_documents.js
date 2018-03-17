@@ -72,7 +72,7 @@
 			{
 				localIncomingDocsData = responseJson;
 				$.each(responseJson, (index, incomingDocs) => {
-					$('<tr id="'+index+'">').appendTo('#incoming_tablebody')
+					$('<tr id="'+index+'" class="'+setRowStatus(incomingDocs.status)+'">').appendTo('#incoming_tablebody')
 						.append($('<td>').text(incomingDocs.title))
 						.append($('<td>').text(incomingDocs.sourceRecipient))
 						.append($('<td>').text(incomingDocs.timeCreated))
@@ -117,12 +117,18 @@
 		});
 	}
 		
+	/* SET - Row as Undone */
+	function setRowStatus(status){
+		if(status == 'Received') {
+			return 'active unread_mail'
+		}
+	}
+	
 	/* SELECT ROW - Incoming Documents */
 	function selectIncomingDocsRow() {
 		$('#incoming_table tbody').on('dblclick', 'tr', function () {
 			selectedRowId = $(this).attr('id');
 			getIncomingDocumentsData($(this).attr('id'));
-		   	$(this).toggleClass('active');
 		   	
 		    $('#viewincoming_dialog').modal({
 				closable: false,
@@ -136,7 +142,6 @@
 				}
 			}).modal('show');
 		    
-		    $(this).toggleClass('active');
 		});
 	}
 		
@@ -314,6 +319,11 @@
 		success: function(response) {  
 			reinitializeMarkAsDone();
 			callSuccessModal('Document Status Update Success', 'The incoming document has been updated to done.');
+			
+			localIncomingDocsData[selectedRowId].status = 'Done';
+			removeCSSClass('#'+selectedRowId, 'active');
+			removeCSSClass('#'+selectedRowId, 'unread_mail');		
+			incomingDocsTable.cell('#'+selectedRowId, 6).data('Done').draw();			
 		},
 		error: function(response) { 
 			callFailRequestModal();

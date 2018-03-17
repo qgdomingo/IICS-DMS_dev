@@ -63,6 +63,7 @@ public class ReplyMailFromExternal extends HttpServlet {
 				response.setContentType("text/plain");
 				response.setStatus(HttpServletResponse.SC_OK);
 				response.getWriter().write("invalid captcha");
+				return;
 			}
 			if(fileData != null && fileData.getSize() > 26214400)
 			{
@@ -70,6 +71,7 @@ public class ReplyMailFromExternal extends HttpServlet {
 				response.setContentType("text/plain");
 				response.setStatus(HttpServletResponse.SC_OK);
 				response.getWriter().write("above maximum size");
+				return;
 			}
 			
 			String threadNumber = tempStorage[0];

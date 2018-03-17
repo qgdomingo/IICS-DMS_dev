@@ -111,9 +111,15 @@
 		$('#view_mail_timestamp').text(selectedData.timeStamp);
 		$('#view_mail_subject').val(selectedData.subject);
 		$('#view_mail_message').val(selectedData.message);
-		$('#view_attachment_type').val(selectedData.type);
-		$('#view_attachment_id').val(selectedData.mailID);
-		$('#view_mail_file_name').text(selectedData.fileName)
+		
+		$('#view_attachment_form').hide();
+		
+		if( !selectedData.fileName == '') {
+			$('#view_attachment_form').show();
+			$('#view_attachment_type').val(selectedData.type);
+			$('#view_attachment_id').val(selectedData.mailID);
+			$('#view_mail_file_name').text(selectedData.fileName);
+		}
 	}
 	
 /*

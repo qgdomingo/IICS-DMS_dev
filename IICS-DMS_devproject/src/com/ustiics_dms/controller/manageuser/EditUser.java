@@ -51,6 +51,14 @@ public class EditUser extends HttpServlet {
 			String title = request.getParameter("title");
 			String contactNumber = request.getParameter("cellphone_number");
 			
+			if(ManageUserFunctions.checkMail(email) && !email.equals(originalEmail))
+			{
+				response.setContentType("text/plain");
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write("existing email");
+				return;
+			}
+			
 			if(userType.equalsIgnoreCase("Director") || userType.equalsIgnoreCase("Faculty Secretary") 
 					|| userType.equalsIgnoreCase("Supervisor") || userType.equalsIgnoreCase("Staff"))
 			{

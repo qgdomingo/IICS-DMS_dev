@@ -57,8 +57,8 @@
 				identifier: 'new_password',
 				rules: [
 					{
-						type   : 'minLength[6]',
-			            prompt : 'Your password must be minimum of 6 characters'
+						type   : 'minLength[8]',
+			            prompt : 'Your password must be minimum of 8 characters'
 					}
 				]
 			},

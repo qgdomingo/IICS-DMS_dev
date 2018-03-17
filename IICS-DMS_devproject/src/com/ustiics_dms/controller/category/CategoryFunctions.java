@@ -12,7 +12,7 @@ public class CategoryFunctions {
 	public static ResultSet getCategoryList() throws SQLException
 	{
 			Connection con = DBConnect.getConnection();
-			PreparedStatement prep = con.prepareStatement("SELECT category_name FROM category_list");
+			PreparedStatement prep = con.prepareStatement("SELECT category_name FROM category_list ORDER BY category_name");
 		
 			ResultSet rs = prep.executeQuery();
 

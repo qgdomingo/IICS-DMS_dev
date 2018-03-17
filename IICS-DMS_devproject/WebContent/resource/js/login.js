@@ -40,6 +40,9 @@
 					{
 						type   : 'email',
 						prompt : 'Please enter a valid email address'
+					},
+					{
+						type   : 'maxLength[100]',
 					}
 				]
 			},
@@ -49,6 +52,9 @@
 					{
 						type   : 'empty',
 			            prompt : 'Please enter your password'
+					},
+					{
+						type   : 'maxLength[100]',
 					}
 				]
 			}

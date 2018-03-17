@@ -206,7 +206,7 @@
 							Password Rules
 						</div>
 						<ul class="list">
-							<li>Your password must be at least 6 characters in length</li>
+							<li>Your password must be at least 8 characters in length</li>
 						</ul>
 					</div>
 					<form class="ui form" method="POST" action="${pageContext.request.contextPath}/PasswordChange"  

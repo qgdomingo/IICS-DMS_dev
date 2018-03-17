@@ -58,6 +58,10 @@
 					{
 						type   : 'empty',
 						prompt : 'Please enter the reason for the enabling of archive folders'
+					},
+					{
+						type : 'maxLength[250]',
+						prompt: 'Maximum of 250 characters in purpose'
 					}
 				]
 			}
@@ -121,6 +125,10 @@
 					{
 						type   : 'empty',
 						prompt : 'Please enter the reason for the disabling of archive folders'
+					},
+					{
+						type : 'maxLength[250]',
+						prompt: 'Maximum of 250 characters in purpose'
 					}
 				]
 			}

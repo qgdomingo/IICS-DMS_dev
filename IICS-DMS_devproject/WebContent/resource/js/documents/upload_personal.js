@@ -16,22 +16,19 @@
 	     success: function(response) { 
 	    	closeUploadProgress();
 
-	        if(response)
-	        {
+	        if(response == 'above maximum size') {
+	        	callFailModal('File Max Size Error', 'Your file has exceeded the maximum file size of 25MB. Please upload a smaller file');
+	        }
+	        else {
 	        	clearPersonalDocsForm();
-	            callSuccessModal('Personal Document Upload Success', 'Your document has been successfully uploaded.');
+	            callSuccessModal('Personal Document Upload Success', 'Your document has been successfully uploaded.');     	
 	        }
-	        else
-	        {
-	        	callFailModal('Personal Document Upload Failed', 'We are unable to upload your document, please try again.');
-	        }
-	        
 	        deactivatePageLoading();
 	     },
 	     error: function(response) {
 	    	 closeUploadProgress();
 	    	 deactivatePageLoading();
-	    	 callFailRequestModal();
+	    	 callFailModal('Personal Document Upload Failed', 'We are unable to upload your document, please try again.');
 	     }
 	});
 
@@ -53,6 +50,19 @@
 					{
 						type   : 'empty',
 						prompt : 'Please enter a title for the document'
+					},
+					{
+						type : 'maxLength[100]',
+						prompt: 'Maximum of 100 characters in title'
+					}
+				]
+			},
+			description: {
+				identifier: 'description',
+				rules: [
+					{
+						type : 'maxLength[2000]',
+						prompt: 'Maximum of 100 characters in description'
 					}
 				]
 			},

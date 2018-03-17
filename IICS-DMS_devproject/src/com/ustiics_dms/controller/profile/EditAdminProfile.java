@@ -38,7 +38,7 @@ public class EditAdminProfile extends HttpServlet {
 			boolean authenticate = LoginFunctions.authenticate(acc.getEmail(), password);;
 			if(authenticate)
 			{
-				if(!ManageUserFunctions.checkMail("email"))
+				if(!ManageUserFunctions.checkMail(email))
 				{
 					ProfileFunctions.editUserProfile(email, acc.getEmail());
 		

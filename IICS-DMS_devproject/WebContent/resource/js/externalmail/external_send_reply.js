@@ -63,6 +63,10 @@
 					{
 						type   : 'empty',
 						prompt : 'Please enter a subject of the message'
+					},
+					{
+						type : 'maxLength[50]',
+						prompt: 'Maximum of 50 characters in subject'
 					}
 				]
 			},
@@ -72,6 +76,10 @@
 					{
 						type   : 'empty',
 						prompt : 'Please enter a message'
+					},
+					{
+						type : 'maxLength[2000]',
+						prompt: 'Maximum of 2000 characters in message'
 					}
 				]
 			}

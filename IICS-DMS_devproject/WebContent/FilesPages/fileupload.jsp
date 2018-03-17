@@ -280,6 +280,8 @@
 				<div class="required inline field">
 					<label>File to Upload:</label>
 					<input type="file" name="file" />
+					<p class="microcopy-hint">Maximum file upload limit: 25MB</p>
+
 				</div>
 			
 				<div class="field">
