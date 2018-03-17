@@ -50,7 +50,7 @@
 				<br>
 				
 			<!-- START OF MESSAGE FORM -->
-				<form class="ui equal width form" method="post" action="${pageContext.request.contextPath}/SendMailToDirector" enctype="multipart/form-data"
+				<form class="ui equal width form" method="POST" action="${pageContext.request.contextPath}/SendMailToDirector" enctype="multipart/form-data"
 					id="message_director_form">
 				
 				<!-- SENDER'S INFORMATION --> 
@@ -110,7 +110,7 @@
 					
 					<div class="ui error message"></div>
 					
-					<button class="fluid ui large green button" type="submit">
+					<button class="fluid ui large green button" type="Submit" form="message_director_form">
 						<i class="send icon"></i>
 						Send Message
 					</button>

@@ -9,6 +9,10 @@
     var bar = $('.bar');
     var percent = $('.label');
     
+    $(document).ready(function() {
+    	validationForm();
+    });
+    
     /* SUBMIT - Message Director Form */
 	$('#message_director_form').ajaxForm({
 		beforeSubmit: isMessageDirectorFormValid,
@@ -39,103 +43,100 @@
 	});
 
 	/* FORM VALIDATION - Message Director Form */
-	$('#message_director_form').form({
-		fields: {
-			first_name: {
-				identifier: 'first_name',
-				rules: [
-					{
-						type   : 'empty',
-						prompt : 'Please enter your first name'
-					},
-					{
-						type : 'maxLength[30]',
-						prompt: 'Maximum of 30 characters in first name'
-					}
-				]
-			},
-			last_name: {
-				identifier: 'last_name',
-				rules: [
-					{
-						type   : 'empty',
-						prompt : 'Please enter your last name'
-					},
-					{
-						type : 'maxLength[30]',
-						prompt: 'Maximum of 30 characters in last name'
-					}
-				]
-			},
-			email_address: {
-				identifier: 'email_address',
-				rules: [
-					{
-						type   : 'email',
-						prompt : 'Please enter a valid email address'
-					},
-					,
-					{
-						type : 'maxLength[50]',
-						prompt: 'Maximum of 30 characters in email'
-					}
-				]
-			},
-			contact_number: {
-				identifier: 'contact_number',
-				rules: [
-					{
-						type   : 'empty',
-						prompt : 'Please enter your contact number'
-					},
-					{
-						type   : 'exactLength[11]',
-						prompt : 'Your contact number must be 11 digits long'
-					}
-				]
-			},
-			affiliation: {
-				identifier: 'affiliation',
-				rules: [
-					{
-						type   : 'empty',
-						prompt : 'Please enter your affiliation'
-					},
-					{
-						type : 'maxLength[30]',
-						prompt: 'Maximum of 30 characters in affiliation'
-					}
-				]
-			},
-			subject: {
-				identifier: 'subject',
-				rules: [
-					{
-						type   : 'empty',
-						prompt : 'Please enter a subject of the message'
-					},
-					{
-						type : 'maxLength[50]',
-						prompt: 'Maximum of 50 characters in subject'
-					}
-				]
-			},
-			message: {
-				identifier: 'message',
-				rules: [
-					{
-						type   : 'empty',
-						prompt : 'Please enter a message'
-					},
-					{
-						type : 'maxLength[2000]',
-						prompt: 'Maximum of 2000 characters in message'
-					}
-				]
+	function validationForm() {
+		$('#message_director_form').form({
+			fields: {
+				first_name: {
+					identifier: 'first_name',
+					rules: [
+						{
+							type   : 'empty',
+							prompt : 'Please enter your first name'
+						},
+						{
+							type : 'maxLength[30]',
+							prompt: 'Maximum of 30 characters in first name'
+						}
+					]
+				},
+				last_name: {
+					identifier: 'last_name',
+					rules: [
+						{
+							type   : 'empty',
+							prompt : 'Please enter your last name'
+						},
+						{
+							type : 'maxLength[30]',
+							prompt: 'Maximum of 30 characters in last name'
+						}
+					]
+				},
+				email_address: {
+					identifier: 'email_address',
+					rules: [
+						{
+							type   : 'email',
+							prompt : 'Please enter a valid email address'
+						},
+						{
+							type : 'maxLength[50]',
+							prompt: 'Maximum of 30 characters in email'
+						}
+					]
+				},
+				contact_number: {
+					identifier: 'contact_number',
+					rules: [
+						{
+							type   : 'empty',
+							prompt : 'Please enter your contact number'
+						},
+						{
+							type   : 'exactLength[11]',
+							prompt : 'Your contact number must be 11 digits long'
+						}
+					]
+				},
+				affiliation: {
+					identifier: 'affiliation',
+					rules: [
+						{
+							type   : 'empty',
+							prompt : 'Please enter your affiliation'
+						},
+						{
+							type : 'maxLength[30]',
+							prompt: 'Maximum of 30 characters in affiliation'
+						}
+					]
+				},
+				subject: {
+					identifier: 'subject',
+					rules: [
+						{
+							type   : 'empty',
+							prompt : 'Please enter a subject of the message'
+						},
+						{
+							type : 'maxLength[50]',
+							prompt: 'Maximum of 50 characters in subject'
+						}
+					]
+				},
+				message: {
+					identifier: 'message',
+					rules: [
+						{
+							type   : 'empty',
+							prompt : 'Please enter a message'
+						}
+					]
+				}
+				
 			}
-			
-		}
-	});
+		});
+	}
 	
 	/* BOOLEAN VALIDATION - Message Director Form */
 	function isMessageDirectorFormValid() {
