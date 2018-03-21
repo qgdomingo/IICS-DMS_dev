@@ -27,7 +27,7 @@ public class ManageEventsFunctions {
 			prep.setString(6, description);
 			prep.setString(7, createdBy);
 			prep.executeUpdate(); 
-			prep.close();
+
 			if(invited != null) {
 				inviteUsers(invited);
 				
@@ -49,7 +49,6 @@ public class ManageEventsFunctions {
 				prep.setInt(1, id);
 				prep.setString(2, email);
 				prep.executeUpdate(); 
-				prep.close();
 			}
 	}
 	
@@ -66,8 +65,6 @@ public class ManageEventsFunctions {
 		if(rs.next())
 		{
 			fullName = rs.getString("full_name");
-			rs.close();
-			prep.close();
 		}
 		
 		return fullName;
@@ -87,8 +84,6 @@ public class ManageEventsFunctions {
 		if(rs.next())
 		{
 			title = rs.getString("title");
-			rs.close();
-			prep.close();
 		}
 		
 		return title;
@@ -106,8 +101,6 @@ public class ManageEventsFunctions {
 			if(rs.next())
 			{
 				increment = rs.getInt("Auto_increment") - 1;
-				rs.close();
-				prep.close();
 			}
 			
 
@@ -187,8 +180,6 @@ public class ManageEventsFunctions {
 		prep.setString(4, id);
 		
 		prep.executeUpdate(); 
-		prep.close();
-
 		
 		String des = getFullName(email) +" has responded " + response + " to your event, "+ retrieveEventTitle(id);
 		NotificationFunctions.addNotification("Calendar Page", des, retrieveEventOwner(id) );
@@ -226,7 +217,6 @@ public class ManageEventsFunctions {
 		prep.setString(8, email);
 				
 		prep.executeUpdate(); 
-		prep.close();
 
 		assiginEditUsers(invited, id);
 	}
@@ -251,7 +241,6 @@ public class ManageEventsFunctions {
 					prep.setString(1, tempID);
 					prep.setString(2, user);
 					prep.executeUpdate(); 
-					prep.close();
 
 					String des = eventOwner +" is inviting you to an event, "+ title;
 					NotificationFunctions.addNotification("Calendar Page", des, user);
@@ -279,14 +268,12 @@ public class ManageEventsFunctions {
 				userCount++;
 			}
 			prep.executeUpdate(); 
-			prep.close();
 		}
 		else
 		{
 			PreparedStatement prep = con.prepareStatement("DELETE FROM events_invitation WHERE event_id = ?");
 			prep.setString(1, tempID);
 			prep.executeUpdate(); 
-			prep.close(); 
 		}
 	}
 	
@@ -322,13 +309,10 @@ public class ManageEventsFunctions {
 		prep.setString(1, id);
 		prep.setString(2, email);
 		prep.executeUpdate(); 
-		prep.close();
-		
+
 		prep = con.prepareStatement("DELETE FROM events_invitation WHERE event_id = ? ");
 		prep.setString(1, id);
 		prep.executeUpdate();  
-		prep.close();
-		
 	}
 	
 	public static String retrieveEventOwner(String id) throws SQLException

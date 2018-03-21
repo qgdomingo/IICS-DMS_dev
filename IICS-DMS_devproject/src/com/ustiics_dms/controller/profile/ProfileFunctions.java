@@ -24,7 +24,6 @@ public class ProfileFunctions {
 			prep.setString(8, currentEmail);
 
 			prep.executeUpdate();
-			prep.close();
 	}
 	
 	public static void editUserProfile(String email, String currentEmail) throws SQLException
@@ -36,7 +35,6 @@ public class ProfileFunctions {
 			prep.setString(2, currentEmail);
 
 			prep.executeUpdate();
-			prep.close();
 	}
 	
 	public static void editPassword(String email, String newPassword) throws SQLException
@@ -48,7 +46,6 @@ public class ProfileFunctions {
 			prep.setString(2, email);
 
 			prep.executeUpdate();
-			prep.close();
 	}
 
 }

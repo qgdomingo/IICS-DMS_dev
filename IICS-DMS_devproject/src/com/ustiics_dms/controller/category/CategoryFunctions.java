@@ -24,10 +24,8 @@ public class CategoryFunctions {
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("INSERT INTO category_list (category_name) VALUES (?)");
 			prep.setString(1, category);
-
-			
+		
 			prep.executeUpdate();
-			prep.close();
 
 	}
 

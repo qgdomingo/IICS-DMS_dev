@@ -58,8 +58,7 @@ public class MailFunctions {
 		prep.setString(9, department);
 		pdf.reset();
 		int count = prep.executeUpdate();
-		prep.close();
-		
+
 		if(recipient != null) {
 			sendInternalMail(recipient);
 			String des = ManageTasksFunctions.getFullName(sentBy) +" has sent you a mail, " + subject;
@@ -91,7 +90,6 @@ public class MailFunctions {
 		prep.setString(9, department);
 		pdf.reset();
 		int count = prep.executeUpdate();
-		prep.close();
 		
 		if(recipient != null) {
 			sendInternalMail(recipient);
@@ -114,7 +112,7 @@ public class MailFunctions {
 		prep.setString(2, "Approved");
 		
 		prep.executeUpdate();
-		prep.close();
+
 	}
 	
 	public static void saveRequestMailInformation(String id, String type, String[] recipient, String[] externalRecipient, String  subject, String message, String  name, String  sentBy, String department, String addressLine1, String addressLine2, String addressLine3, String closingLine, String paperSize, String approvedBy) throws Exception
@@ -127,7 +125,7 @@ public class MailFunctions {
 		prep.setString(2, "Approved");
 		
 		prep.executeUpdate();
-		prep.close();
+
 	}
 	
 	public static String getISONumber(String department, String type) throws SQLException
@@ -149,7 +147,6 @@ public class MailFunctions {
 		prep.setString(2, department);
 		prep.setString(3, type);
 		prep.executeUpdate();
-		prep.close();
 		
 		String isoNumber = getAcadYear() + counter.getString("iso_number") + appendZeroes(updatedCounter) + updatedCounter;
 		
@@ -201,7 +198,6 @@ public class MailFunctions {
 				prep.setString(3, ManageTasksFunctions.getSchoolYear());
 				prep.setString(4, getDepartment(tempEmail));
 				prep.executeUpdate();
-				prep.close();
 				
 			}
 	}
@@ -292,7 +288,6 @@ public class MailFunctions {
 		prep.setString(13, paperSize);
 		prep.setString(14, id);
 		prep.executeUpdate();
-		prep.close();
 
 		String des = name +" has sent you a new update on the mail request, "+ subject + ", for your approval.";
 		NotificationFunctions.addNotification("Request Mail Page", des, getToSendRequestApprovers(sentBy, userType, department));
@@ -328,7 +323,6 @@ public class MailFunctions {
 		prep.setString(12, closingRemarks);
 		prep.setString(13, paperSize);
 		prep.executeUpdate();
-		prep.close();
 
 		String des = name +" sent you a mail request, "+ subject + ", for your approval.";
 		NotificationFunctions.addNotification("Request Mail Page", des, getToSendRequestApprovers(sentBy, userType, department));
@@ -387,7 +381,6 @@ public class MailFunctions {
 			prep.setString(3, id);
 			
 			prep.executeUpdate();
-			prep.close();
 
 			ResultSet requestInfo = getRequestInformation(id);
 			
@@ -422,7 +415,6 @@ public class MailFunctions {
 			prep.setString(1, id);
 			
 			prep.executeUpdate();
-			prep.close();
 			
 	}
 
@@ -436,7 +428,6 @@ public class MailFunctions {
 			prep.setString(2, id);
 			
 			prep.executeUpdate();
-			prep.close();
 			
 	}
 	
@@ -449,7 +440,6 @@ public class MailFunctions {
 		prep.setString(3, email);
 		
 		prep.executeUpdate();
-		prep.close();
 	}
 	
 	public static String updateAcknowledgeTimeStamp(String mailID, String remark, String email) throws SQLException
@@ -465,7 +455,6 @@ public class MailFunctions {
 		prep.setString(5, email);
 		
 		prep.executeUpdate();
-		prep.close();
 		
 		String des = ManageTasksFunctions.getFullName(email) +" acknowledged your mail, " + getMailTitle(mailID);
 		NotificationFunctions.addNotification("Mail Page", des, getMailSender(mailID));
@@ -879,7 +868,6 @@ public class MailFunctions {
 	    prep.setInt(1, id);
 	    prep.setString(2, email);
 	    prep.executeUpdate(); 
-	    prep.close();
 	}
 	
 	public static ResultSet getExportedMailID(String email) throws SQLException 
@@ -929,7 +917,6 @@ public class MailFunctions {
 			prep.setString(9, department);
 			pdf.reset();
 			prep.executeUpdate();
-			prep.close();
 	}
 	
 	public static String getTitle(String email) throws SQLException
@@ -1048,8 +1035,6 @@ public class MailFunctions {
 		prep.setString(6, ManageTasksFunctions.getSchoolYear());
 		
 		prep.executeUpdate();
-		prep.close();
-		
 		return isoNumber;
 	}
 	

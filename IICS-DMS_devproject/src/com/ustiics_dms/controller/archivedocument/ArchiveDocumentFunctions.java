@@ -98,8 +98,6 @@ public class ArchiveDocumentFunctions
 			if(rs.next())
 			{
 				year = rs.getString("start_year") + "-" + rs.getString("end_year");
-				rs.close();
-				prep.close();
 			}
 
 			return year;
@@ -116,8 +114,6 @@ public class ArchiveDocumentFunctions
 			prep = con.prepareStatement("DELETE FROM outgoing_documents");
 			
 			prep.executeUpdate();
-			
-			prep.close();
 	}
 	
 	private static void createFolder() throws SQLException
@@ -136,8 +132,6 @@ public class ArchiveDocumentFunctions
 			prep.setString(2, getAcademicYear());
 			
 			prep.executeUpdate();
-			
-			prep.close();
 	}
 	
 	public static String getAcadYear() throws SQLException
@@ -153,10 +147,7 @@ public class ArchiveDocumentFunctions
 			String start = rs.getString("start_year").substring(2);
 			String end = rs.getString("end_year").substring(2);
 			String year = start + "-" + end;
-			
-			rs.close();
-			prep.close();
-			
+
 			return year;
 	}
 	
@@ -187,9 +178,6 @@ public class ArchiveDocumentFunctions
 				counter = rs.getInt("COUNT(*)") + 1;
 			}
 			
-			rs.close();
-			prep.close();
-			
 			return counter;
 	}
 	
@@ -201,9 +189,7 @@ public class ArchiveDocumentFunctions
 		prep.setString(1, timestamp);
 
 		prep.executeUpdate();
-		
-		prep.close();
-		
+
 	}
 
 	public static boolean compareTime () throws SQLException, ParseException 
@@ -241,8 +227,6 @@ public class ArchiveDocumentFunctions
 		prep.setString(2, id);
 		prep.executeUpdate();
 
-		prep.close();
-		
 	}
 	
 	public static void updateFolderToDisable(String id) throws SQLException
@@ -254,8 +238,6 @@ public class ArchiveDocumentFunctions
 		prep.setString(2, id);
 		prep.executeUpdate();
 
-		prep.close();
-		
 	}
 	
 	public static File getFile (int id) throws SQLException 
@@ -273,10 +255,7 @@ public class ArchiveDocumentFunctions
 	           String fileName = rs.getString("file_name");
 	           Blob fileData = rs.getBlob("file_data");
 	           String description = rs.getString("description");
-	           
-		       rs.close();
-		   	   prep.close();
-		   	   
+
 	           return new File(id, fileName, fileData, description);
 	       }
 	       return null;
@@ -302,9 +281,7 @@ public class ArchiveDocumentFunctions
 	          archiveFiles.add( new File(id, fileName, fileData, description));
 	           
 	       }
-	        rs.close();
-			prep.close();
-			 
+
 	       return archiveFiles;
 	}
 	
@@ -320,9 +297,7 @@ public class ArchiveDocumentFunctions
 	       
 	       rs.next();
 	       String title = rs.getString("archive_title");
-	       rs.close();
-		   prep.close();
-		    
+
 	       return title;
 	}
 	
@@ -336,10 +311,6 @@ public class ArchiveDocumentFunctions
 		   if(rs.next()) {
 			   archive = rs.getString("date");
 		   }
-		   
-		   rs.close();
-		   prep.close();
-		    
 		   
 		   String archiveDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		   
@@ -358,9 +329,7 @@ public class ArchiveDocumentFunctions
 		   {
 			   result = true;
 		   }
-		   rs.close();
-		   prep.close();
-		    
+
 		   return result;
 	}
 	
@@ -370,8 +339,6 @@ public class ArchiveDocumentFunctions
 	   PreparedStatement prep = con.prepareStatement("DELETE FROM archive_date");
 	   prep.executeUpdate();
 
-	   prep.close();
-	    
 	}
 	
 	public static ResultSet retrieveArchivedDocuments(String id) throws SQLException

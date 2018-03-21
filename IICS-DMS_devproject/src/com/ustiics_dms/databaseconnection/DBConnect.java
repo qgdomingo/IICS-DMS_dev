@@ -6,7 +6,7 @@ import com.ustiics_dms.utility.AesEncryption;
 
 public class DBConnect {
 	
-	private DBConnect()
+  	private DBConnect()
 	{
 		
 	}
@@ -15,33 +15,25 @@ public class DBConnect {
 	
 	private static Connection getDBConnection() {
 		
-		try {//"com.mysql.jdbc.Driver"
-		Class.forName(AesEncryption.decrypt("qmVJxaakjfR2RpWZtcWa3k9kaW5p+/zwF+Hn4LqRMBM="));
-		//"root"
-		String username = AesEncryption.decrypt("Awu84ohbyxEVYznIqhVNEw==");
-				//
-		String password = AesEncryption.decrypt("v3+X9sB4qFpk/JPxNROFJATqcliC2XiS5d9zSzrJktA=");
-//
-		String url = AesEncryption.decrypt("FYrRIcMajDR9ZPaWrq4n0qqWQLegusLkL+7K4vclS53bcKAyJL8UOpgThQ31lbH2");
 		try {
+			
+			Class.forName(AesEncryption.decrypt("qmVJxaakjfR2RpWZtcWa3k9kaW5p+/zwF+Hn4LqRMBM="));
+			String username = AesEncryption.decrypt("Awu84ohbyxEVYznIqhVNEw==");
+			String password = AesEncryption.decrypt("v3+X9sB4qFpk/JPxNROFJATqcliC2XiS5d9zSzrJktA=");
+			String url = AesEncryption.decrypt("FYrRIcMajDR9ZPaWrq4n0qqWQLegusLkL+7K4vclS53bcKAyJL8UOpgThQ31lbH2");
 			connection = DriverManager.getConnection(url , username , password);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (Exception e) {
 			e.printStackTrace();
 		}
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		return connection;
 		
+		return connection;
 	}
 	
-
-		public static Connection getConnection() {
-			return ( (connection!=null)
-					 ?connection
-					 : getDBConnection()		 
-					);
-		}
+	public static Connection getConnection() {
+		return ( (connection!=null)
+				 ?connection
+				 : getDBConnection()		 
+				);
+	}
 }

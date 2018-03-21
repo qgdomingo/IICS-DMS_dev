@@ -30,8 +30,6 @@ public class AcademicYearFunctions {
 		
 			prep.executeUpdate();
 			
-			prep.close();
-			
 			setCounterToZero();
 			
 	}
@@ -51,7 +49,6 @@ public class AcademicYearFunctions {
 			prep.setInt(1, 0);
 			
 			prep.executeUpdate();
-			prep.close();
 			
 	}
 	
@@ -79,7 +76,6 @@ public class AcademicYearFunctions {
 			ResultSet rs = prep.executeQuery();
 			rs.next();
 			String schoolYear = "A.Y. " + rs.getString("start_year") + "-" + rs.getString("end_year");
-			prep.close();
 			
 			return schoolYear;
 	}

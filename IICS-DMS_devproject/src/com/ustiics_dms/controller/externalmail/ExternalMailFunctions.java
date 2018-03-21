@@ -51,7 +51,6 @@ public class ExternalMailFunctions {
 		prep.setBinaryStream(10, fileData.getInputStream(), (int) fileData.getSize());
 		
 		prep.executeUpdate();
-		prep.close();
 		
 		String fullName = firstName + " " + lastName;
 		LogsFunctions.addLog("System", "External Sent to Director", emailAddress, fullName, "External", "None", subject);
@@ -75,7 +74,6 @@ public class ExternalMailFunctions {
 		prep.setString(8, message);
 
 		prep.executeUpdate();
-		prep.close();
 		
 		String fullName = firstName + " " + lastName;
 		LogsFunctions.addLog("System", "External Sent to Director", emailAddress, fullName, "External", "None", subject);
@@ -114,10 +112,8 @@ public class ExternalMailFunctions {
 			prep.setString(9, fileData.getName());
 			prep.setBinaryStream(10, fileData.getInputStream(), (int) fileData.getSize());
 
-			
-		
 			prep.executeUpdate();
-			prep.close();
+
 			LogsFunctions.addLog("System", "External Reply to Director", email, fullName, "External", "None", subject);
 			String des = fullName +", external user, has sent you a mail reply, " + subject;
 			NotificationFunctions.addNotification("External Mail Page", des, getDirectorRecipient());
@@ -152,7 +148,6 @@ public class ExternalMailFunctions {
 			prep.setString(8, message);
 		
 			prep.executeUpdate();
-			prep.close();
 			
 			LogsFunctions.addLog("System", "External Reply to Director", email, fullName, "External", "None", subject);
 			String des = fullName +", external user, has sent you a mail reply, " + subject;
@@ -195,7 +190,6 @@ public class ExternalMailFunctions {
 		prep.setInt(1, counter + 1);
 		prep.setString(2, "external mail");
 		prep.executeUpdate();
-		prep.close();
 		return rs.getInt("counter");
 		
 	}
@@ -364,7 +358,6 @@ public class ExternalMailFunctions {
 		prep.setString(7, sentBy);
 
 		prep.executeUpdate();
-		prep.close();
 		threadNumber = AesEncryption.encrypt(threadNumber);
 		ExternalMailFunctions.send(type,recipient, subject, message, threadNumber , ExternalMailFunctions.getIncrement(), username, password, contextPath ,title, name, position, department);
 	}
@@ -382,7 +375,6 @@ public class ExternalMailFunctions {
 		prep.setString(5, sentBy);
 
 		prep.executeUpdate();
-		prep.close();
 		threadNumber = AesEncryption.encrypt(threadNumber);
 		ExternalMailFunctions.send(type,recipient, subject, message, threadNumber ,ExternalMailFunctions.getIncrement(), username, password, contextPath ,title, name, position, department);
 	}
@@ -461,7 +453,6 @@ public class ExternalMailFunctions {
 		prep.setString(2, id);
 		
 		prep.executeUpdate();
-		prep.close();
 	}
 	
 	

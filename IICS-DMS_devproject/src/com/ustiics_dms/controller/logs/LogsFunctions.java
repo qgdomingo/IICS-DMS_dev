@@ -23,7 +23,6 @@ public class LogsFunctions {
 		prep.setString(5, department);
 		
 		prep.executeUpdate();
-		prep.close();
 	}
 	
 	public static void addLog(String type, String information, String email, String name, String userType, String department, String additionalInfo) throws SQLException
@@ -40,7 +39,6 @@ public class LogsFunctions {
 		prep.setString(5, department);
 		
 		prep.executeUpdate();
-		prep.close();
 	}
 	
 	public static void addErrorLog( String information, String email, String name, String userType, String department) throws SQLException
@@ -56,7 +54,6 @@ public class LogsFunctions {
 		prep.setString(5, department);
 		
 		prep.executeUpdate();
-		prep.close();
 	}
 	
 	public static void addLog(String type, String information, String email, String name, String userType, String department, String additionalInfo, String additionalInfo1) throws SQLException
@@ -73,7 +70,6 @@ public class LogsFunctions {
 		prep.setString(4, userType);
 		prep.setString(5, department);
 		prep.executeUpdate();
-		prep.close();
 	}
 	
 	public static String getDescription(String information)

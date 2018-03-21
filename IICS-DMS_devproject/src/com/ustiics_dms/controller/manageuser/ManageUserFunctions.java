@@ -31,7 +31,6 @@ public class ManageUserFunctions {
 			prep.setString(11, contactNumber);
 
 			prep.executeUpdate();
-			prep.close();
 	}
 	
 	public static void updateAccount(String email, String facultyNo, String firstName, String middleInitial, String lastName, String userType, String department, String title, String contactNumber, String originalEmail) throws SQLException
@@ -54,7 +53,6 @@ public class ManageUserFunctions {
 			prep.setString(11, originalEmail);
 			
 			prep.executeUpdate();
-			prep.close();
 	}
 	
 	
@@ -67,7 +65,6 @@ public class ManageUserFunctions {
 			prep.setString(2, email);
 
 			prep.executeUpdate();
-			prep.close();
 	}
 	
 	public static void disableStatus(String email) throws SQLException
@@ -79,7 +76,6 @@ public class ManageUserFunctions {
 			prep.setString(2, email);
 			
 			prep.executeUpdate();
-			prep.close();
 	}
 	
 	public static ResultSet viewAccounts() throws SQLException
@@ -136,7 +132,6 @@ public class ManageUserFunctions {
 			prep.setString(8, currentEmail);
 
 			prep.executeUpdate();
-			prep.close();
 	}
 	
 	public static boolean checkMail(String email) throws SQLException

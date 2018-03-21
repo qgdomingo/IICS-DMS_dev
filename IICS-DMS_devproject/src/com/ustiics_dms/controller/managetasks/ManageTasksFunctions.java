@@ -43,7 +43,6 @@ public class ManageTasksFunctions {
 			prep.setString(5, assignedBy);
 			prep.setString(6, getSchoolYear());
 			prep.executeUpdate();
-			prep.close();
 			assignUsers(email);
 	}
 	
@@ -89,7 +88,6 @@ public class ManageTasksFunctions {
 			prep.setString(4, getSchoolYear());
 			prep.setString(5, getUserDepartment(mail));
 			prep.executeUpdate();
-			prep.close();
 		}
 	}
 	
@@ -239,7 +237,6 @@ public class ManageTasksFunctions {
 		id = AesEncryption.decrypt(id);
 		prep.setString(9, id);
 		prep.executeUpdate();
-		prep.close();
 		
 		String des = getFullName(email) +" has submitted his/her task for " + getTaskTitle(id);
 		NotificationFunctions.addNotification("Task Page", des, getTaskOwner(id)); 
@@ -316,7 +313,6 @@ public class ManageTasksFunctions {
 		prep.setString(6, userEmail);
 		
 		prep.executeUpdate();
-		prep.close();
 		
 		assignEditUsers(email, id);
 		
@@ -349,7 +345,6 @@ public class ManageTasksFunctions {
 					prep.setString(4, getSchoolYear());
 					prep.setString(5, getUserDepartment(mail));
 					prep.executeUpdate();
-					prep.close();
 					
 					String des = taskOwner +" assigned you a new task, "+ title;
 					NotificationFunctions.addNotification("Task Page", des, mail);
@@ -375,7 +370,6 @@ public class ManageTasksFunctions {
 				mailCount++;
 			}
 			prep.executeUpdate();
-			prep.close();
 	}
 	
 	public static boolean checkExists(String id, String email) throws SQLException 

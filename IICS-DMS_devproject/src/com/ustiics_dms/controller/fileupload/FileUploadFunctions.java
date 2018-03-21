@@ -32,9 +32,7 @@ public class FileUploadFunctions {
 			prep.setString(7, fullName);
 			prep.setString(8, email);
 
-			
 			prep.executeUpdate();
-			prep.close();
 	}
 	
 	public static String uploadIncomingDocument(String threadNumber, String referenceNo, String source, String documentTitle, String category, String actionRequired, FileItem item, String description, String fullName, String email, String department, String actionDue) throws SQLException, IOException
@@ -76,7 +74,6 @@ public class FileUploadFunctions {
 			}
 			
 			prep.executeUpdate();
-			prep.close();
 			
 			return returningReferenceNo;
 	}
@@ -105,7 +102,6 @@ public class FileUploadFunctions {
 			prep.setString(11, department);
 			
 			prep.executeUpdate();
-			prep.close();
 	}
 
 	public static String getReferenceNo(String source) throws SQLException
@@ -155,7 +151,6 @@ public class FileUploadFunctions {
 		prep.setString(2, source);
 		
 		prep.executeUpdate();
-		prep.close();
 	}
 	
 	public static String addExternalSource(String source) throws SQLException
@@ -168,7 +163,6 @@ public class FileUploadFunctions {
 			prep.setString(2, defaultReference);
 			
 			prep.executeUpdate();
-			prep.close();
 			
 			return defaultReference;
 	}
@@ -226,7 +220,6 @@ public class FileUploadFunctions {
 			prep.setInt(1, counter);
 
 			prep.executeUpdate();
-			prep.close();
 
 	}
 	
@@ -354,7 +347,6 @@ public class FileUploadFunctions {
 			prep.setString(2, id);
 
 			prep.executeUpdate();
-			prep.close();
 			
 			ResultSet info = RetrieveDocumentFunctions.retrieveSpecificIncoming(id);
 			
@@ -395,7 +387,6 @@ public class FileUploadFunctions {
 			prep.setString(3, type);
 
 			prep.executeUpdate();
-			prep.close();
 			
 			ResultSet info = RetrieveDocumentFunctions.retrieveSpecificIncoming(id);
 			info.next();
@@ -404,7 +395,6 @@ public class FileUploadFunctions {
 			
 			String des = title + " has been marked as done by  " + ManageTasksFunctions.getFullName(email);
 			NotificationFunctions.addNotification("Incoming Documents Page", des, FileUploadFunctions.getGroupByDepartment(department, email));
-			info.close();
 	}
 
 	public static boolean checkIfExistingReferenceNo(String source, String referenceNo) throws SQLException
@@ -420,10 +410,7 @@ public class FileUploadFunctions {
 		{
 			trigger = true;
 		}
-		
-		rs.close();
-		prep.close();
-		
+			
 		return trigger;
 	}
 	
@@ -434,7 +421,6 @@ public class FileUploadFunctions {
 		PreparedStatement prep = con.prepareStatement("DELETE FROM personal_documents WHERE id = ?");
 		prep.setString(1, id);
 		prep.executeUpdate();
-		prep.close();
 	}
 	
 }

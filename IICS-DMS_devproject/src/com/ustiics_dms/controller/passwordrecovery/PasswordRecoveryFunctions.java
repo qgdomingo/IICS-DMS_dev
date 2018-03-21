@@ -28,7 +28,6 @@ public class PasswordRecoveryFunctions {
 			prep.setString(2, encryptedCode);
 				
 			prep.executeUpdate();
-			prep.close();
 			LogsFunctions.addLog("System", "Request Code", email, ManageTasksFunctions.getFullName(email), ManageTasksFunctions.getUserType(email), ManageTasksFunctions.getDepartment(email));
 			
 	}
@@ -42,7 +41,6 @@ public class PasswordRecoveryFunctions {
 			prep.setString(1, email);
 			prep.setString(2, encryptedCode);
 			prep.executeUpdate();
-			prep.close();
 	}
 	
 	public static boolean checkRecoveryCode(String email, String code) throws SQLException
@@ -78,7 +76,6 @@ public class PasswordRecoveryFunctions {
 				prep.setString(2, email);
 				
 				prep.executeUpdate();
-				prep.close();
 				LogsFunctions.addLog("System", "Password Change", email, ManageTasksFunctions.getFullName(email), ManageTasksFunctions.getUserType(email), ManageTasksFunctions.getDepartment(email));
 				deleteRecoveryCode(email, code);
 				result = true;
@@ -108,12 +105,8 @@ public class PasswordRecoveryFunctions {
 			Connection con = DBConnect.getConnection();
 			PreparedStatement prep = con.prepareStatement("DELETE FROM account_recovery WHERE email = ?");
 
-			
 			prep.setString(1,  email);
 			prep.executeUpdate();
-			prep.close();
-			
-
 	}
 	
 }
