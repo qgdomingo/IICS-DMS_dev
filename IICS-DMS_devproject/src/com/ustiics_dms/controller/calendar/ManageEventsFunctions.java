@@ -1,5 +1,10 @@
 package com.ustiics_dms.controller.calendar;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,6 +13,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.ustiics_dms.controller.mail.MailFunctions;
 import com.ustiics_dms.controller.managetasks.ManageTasksFunctions;
 import com.ustiics_dms.controller.notifications.NotificationFunctions;
 import com.ustiics_dms.databaseconnection.DBConnect;
@@ -354,6 +369,57 @@ public class ManageEventsFunctions {
 		}
 		
 		return invited.toArray(new String[invited.size()]);
+	}
+	
+	public static InputStream createPDF (String id) throws SQLException, FileNotFoundException, DocumentException 
+	{
+		  ByteArrayOutputStream out = new ByteArrayOutputStream();            
+		  PdfWriter writer;
+		    
+		    
+		  Connection con = DBConnect.getConnection();
+			
+		  PreparedStatement eventDetails = con.prepareStatement("SELECT * FROM events WHERE event_id = ?");
+		  eventDetails.setString(1, id);
+		  ResultSet detailResults = eventDetails.executeQuery();
+		  detailResults.next();
+		  PreparedStatement eventInvitations = con.prepareStatement("SELECT * FROM events_invitation WHERE event_id = ?");
+		  eventInvitations.setString(1, id);
+		  ResultSet invitationResults = eventInvitations.executeQuery();
+		  invitationResults.next();
+		  Document document = new Document();
+		  writer = PdfWriter.getInstance(document, out);
+		  document.open();
+		  document.add(new Paragraph("Title: " + detailResults.getString("title")));
+		  document.add(new Paragraph("Description: " + detailResults.getString("description")));
+		  document.add(new Paragraph("Location: " + detailResults.getString("location")));
+		  document.add(new Paragraph("Date From: " + detailResults.getString("start_date")));
+		  document.add(new Paragraph("Date To: " + detailResults.getString("end_date") ));
+		  document.add(Chunk.NEWLINE);
+		  PdfPTable table = new PdfPTable(new float[] { 8, 5, 6 , 4 });
+		  table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+		  table.addCell("Name");
+	      table.addCell("Status");
+	      table.addCell("Remarks");
+	      table.addCell("Signature");
+		  table.setHeaderRows(1);
+		  PdfPCell[] cells = table.getRow(0).getCells(); 
+		  for (int j=0;j<cells.length;j++){
+		     cells[j].setBackgroundColor(BaseColor.WHITE);
+		  }
+	      while(invitationResults.next())
+	      {
+	    	     table.addCell(MailFunctions.getFullName(invitationResults.getString("email")));
+	             table.addCell(invitationResults.getString("status"));
+	             table.addCell(invitationResults.getString("response"));
+	             table.addCell("                ");
+	      }
+
+	      document.add(table);
+		  document.close();
+
+		  return new ByteArrayInputStream(out.toByteArray());
+
 	}
 }
 
