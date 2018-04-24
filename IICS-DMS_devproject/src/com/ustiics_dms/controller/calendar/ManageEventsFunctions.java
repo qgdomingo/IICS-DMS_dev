@@ -424,7 +424,6 @@ public class ManageEventsFunctions {
 		  table.addCell("Name");
 	      table.addCell("Status");
 	      table.addCell("Remarks");
-	      table.addCell("Signature");
 		  
 		  table.setHeaderRows(1);
 		  PdfPCell[] cells = table.getRow(0).getCells(); 
@@ -436,7 +435,6 @@ public class ManageEventsFunctions {
 	    	     table.addCell(MailFunctions.getFullName(invitationResults.getString("email")));
 	             table.addCell(invitationResults.getString("status"));
 	             table.addCell(invitationResults.getString("response"));
-	             table.addCell("                ");
 	      }
 
 	      document.add(table);

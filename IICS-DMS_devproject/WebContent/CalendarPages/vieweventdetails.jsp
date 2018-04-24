@@ -176,11 +176,19 @@
 					<i class="edit icon"></i>
 					Edit Event
 				</button>
-			
+
 				<button class="ui labeled icon red button element-mb" id="cancel_event_btn">
 					<i class="caledar times outline icon"></i>
 					Cancel Event
 				</button>
+				
+				<form method="GET" action="${pageContext.request.contextPath}/GeneratePDFEvent">
+					<input type="hidden" name="id" id="download_attendance_id">
+					<button class="ui labeled icon blue button element-mb" type="submit">
+						<i class="download icon"></i>
+						Download Attendance List
+					</button>
+				</form>
 			</div>
 			
 			<div id="invited_event_button">

@@ -13,25 +13,22 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.itextpdf.text.DocumentException;
 import com.ustiics_dms.controller.archivedocument.ArchiveDocumentFunctions;
+import com.ustiics_dms.utility.AesEncryption;
 
 
 @WebServlet("/GeneratePDFEvent")
 public class GeneratePDFEvent extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
     public GeneratePDFEvent() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
-		try {
-			
-			String eventId = "1";// request.getParameter("event_id");
-			
+
+		try {			
+			String eventId = AesEncryption.decrypt(request.getParameter("id"));
+
 			InputStream pdf = ManageEventsFunctions.createPDF(eventId);
 			int size = pdf.available();
 			
@@ -58,10 +55,8 @@ public class GeneratePDFEvent extends HttpServlet {
 		}
 	}
 
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-
+		doGet(request, response);
 	}
 
 }

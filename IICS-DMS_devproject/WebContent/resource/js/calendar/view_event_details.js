@@ -38,6 +38,8 @@
 	    setBackButton(originId);
 	    retrieveEventDetails(eventID);
 	    
+	    $('#download_attendance_id').val(eventID);
+	    
 	    // Populate Edit Event Form
 		getAllUsers('#edit_event_invite');
 	});
