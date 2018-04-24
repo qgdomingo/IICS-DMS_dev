@@ -18,7 +18,9 @@ import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -389,23 +391,41 @@ public class ManageEventsFunctions {
 		  invitationResults.next();
 		  Document document = new Document();
 		  writer = PdfWriter.getInstance(document, out);
+		  
 		  document.open();
-		  document.add(new Paragraph("Title: " + detailResults.getString("title")));
-		  document.add(new Paragraph("Description: " + detailResults.getString("description")));
-		  document.add(new Paragraph("Location: " + detailResults.getString("location")));
-		  document.add(new Paragraph("Date From: " + detailResults.getString("start_date")));
-		  document.add(new Paragraph("Date To: " + detailResults.getString("end_date") ));
+		  Paragraph titlePara = new Paragraph("Title: " + detailResults.getString("title"));
+		  titlePara.setIndentationLeft(55f);
+		  document.add(titlePara);
+		  
+		  Paragraph locationPara = new Paragraph("Location: " + detailResults.getString("location"));
+		  locationPara.setIndentationLeft(55f);
+		  document.add(locationPara);
+		  
+		  Paragraph startDatePara = new Paragraph("Start Date: " + detailResults.getString("start_date"));
+		  startDatePara.setIndentationLeft(55f);
+		  document.add(startDatePara);
+		  
+		  Paragraph endDatePara = new Paragraph("End Date: " + detailResults.getString("end_date"));
+		  endDatePara.setIndentationLeft(55f);
+		  document.add(endDatePara);
+		  
+		  Paragraph descriptionPara = new Paragraph("Description: " + detailResults.getString("description"));
+		  descriptionPara.setIndentationLeft(55f);
+		  document.add(descriptionPara);
+
 		  document.add(Chunk.NEWLINE);
 		  PdfPTable table = new PdfPTable(new float[] { 8, 5, 6 , 4 });
-		  table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+		  table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+
 		  table.addCell("Name");
 	      table.addCell("Status");
 	      table.addCell("Remarks");
 	      table.addCell("Signature");
+		  
 		  table.setHeaderRows(1);
 		  PdfPCell[] cells = table.getRow(0).getCells(); 
 		  for (int j=0;j<cells.length;j++){
-		     cells[j].setBackgroundColor(BaseColor.WHITE);
+		     cells[j].setHorizontalAlignment(Element.ALIGN_CENTER);
 		  }
 	      while(invitationResults.next())
 	      {
