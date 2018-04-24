@@ -58,7 +58,9 @@ public class EditEvent extends HttpServlet {
 			String eventDescription = request.getParameter("event_description");
 			String invited[] = request.getParameterValues("event_invite");
 			
-			ManageEventsFunctions.updateEvent(acc.getEmail(), id, title, location, allDayEvent_flag, startDateTime, endDateTime, eventDescription, invited);
+			int displayInvitedList = ( (request.getParameter("display_invited_list") != null) ? 1 : 0 );
+			
+			ManageEventsFunctions.updateEvent(acc.getEmail(), id, title, location, allDayEvent_flag, startDateTime, endDateTime, eventDescription, invited, displayInvitedList);
 			
 			LogsFunctions.addLog("System", "Update Event", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), title);
 			response.setContentType("text/plain");

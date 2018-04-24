@@ -50,8 +50,9 @@ public class RetrieveInvitationList extends HttpServlet {
 								event.getString("end_date"),
 								event.getString("description"),
 								ManageEventsFunctions.getFullName(event.getString("created_by")) 
-									+ "<" + event.getString("created_by") + ">")
-					);
+									+ "<" + event.getString("created_by") + ">",
+								event.getInt("display_invited")
+					));
 				}
 			}
 			

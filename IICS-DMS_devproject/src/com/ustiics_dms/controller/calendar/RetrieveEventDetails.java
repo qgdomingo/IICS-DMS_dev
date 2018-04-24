@@ -49,7 +49,9 @@ public class RetrieveEventDetails extends HttpServlet {
 					events.getString("description"),
 					ManageEventsFunctions.getFullName(events.getString("created_by")) 
 						+ "<" + events.getString("created_by") + ">",
-					events.getString("created_by")
+					events.getString("created_by"),
+					events.getInt("display_invited"),
+					events.getString("status")
 				));
 			}
 			

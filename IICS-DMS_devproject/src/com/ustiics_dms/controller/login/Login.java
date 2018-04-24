@@ -40,8 +40,7 @@ public class Login extends HttpServlet {
 		String redirectURL = "";
 		
 		response.setCharacterEncoding("UTF-8");
-		System.out.println(AesEncryption.encrypt("com.mysql.jdbc.Driver"));
-
+		
 		try {
 			if(LoginFunctions.authenticate(email, password) == true)//authenticates if username and password is valid
 			{

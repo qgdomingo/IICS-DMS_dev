@@ -14,11 +14,11 @@ import com.ustiics_dms.controller.logs.LogsFunctions;
 import com.ustiics_dms.model.Account;
 import com.ustiics_dms.utility.AesEncryption;
 
-@WebServlet("/DeleteEvent")
-public class DeleteEvent extends HttpServlet {
+@WebServlet("/CancelEvent")
+public class CancelEvent extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public DeleteEvent() {
+    public CancelEvent() {
         super();
     }
 
@@ -38,9 +38,9 @@ public class DeleteEvent extends HttpServlet {
 			String id = AesEncryption.decrypt(request.getParameter("id"));
 			
 			String title = ManageEventsFunctions.getEventTitle(id);
-			LogsFunctions.addLog("System", "Delete Event", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), title);
+			LogsFunctions.addLog("System", "Cancel Event", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), title);
 			
-			ManageEventsFunctions.deleteEvent(id, acc.getEmail());
+			ManageEventsFunctions.cancelEvent(id, acc.getEmail());
 			
 			response.setContentType("text/plain");
 			response.setStatus(HttpServletResponse.SC_OK);
@@ -49,7 +49,6 @@ public class DeleteEvent extends HttpServlet {
 			try {
 				LogsFunctions.addErrorLog(e.getMessage(), acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			e.printStackTrace();

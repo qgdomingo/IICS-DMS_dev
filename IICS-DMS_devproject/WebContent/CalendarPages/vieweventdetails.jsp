@@ -177,9 +177,9 @@
 					Edit Event
 				</button>
 			
-				<button class="ui labeled icon red button element-mb" id="delete_event_btn">
+				<button class="ui labeled icon red button element-mb" id="cancel_event_btn">
 					<i class="caledar times outline icon"></i>
-					Delete Event
+					Cancel Event
 				</button>
 			</div>
 			
@@ -196,10 +196,13 @@
 			<p class="element-rmb"><b>End Date and Time: </b><span id="event_end_datetime"></span></p>
 			<p class="element-rmb"><b>Created By: </b><span id="event_createdby"></span></p>
 			<p class="element-rmb"><b>Event Description: </b><span id="event_description"></span></p>
+			<p class="element-rmb"><b>Display Invited List to Users: </b><span id="event_display_invited_list"></span></p>
+			<p class="element-rmb"><b>Status: </b><span id="event_status"></span></p>
 			
 			<br>
 			
 			<div id="invited_event_response">
+				<h3>Your Event Response</h3>
 				<p class="element-rmb"><b>Response Status: </b><span id="event_response_status"></span></p>
 				<p class="element-rmb"><b>Response Timestamp: </b><span id="event_response_timestamp"></span></p>
 				<p class="element-rmb"><b>Remarks: </b><span id="event_response_details"></span></p>
@@ -377,7 +380,10 @@
 							<option value="">Select Users</option>
 						</select>
 					</div>
-					
+					<div class="ui checkbox" id="display_invited_list_toggle">
+						<label>Display Invited List to Users</label>
+  						<input type="checkbox" name="display_invited_list"/>
+					</div> 
 					<div class="ui error message"></div>
 				</form>
 			</div>
@@ -393,24 +399,27 @@
 			</div>
 		</div>
 		
-		<!-- DELETE EVENT MODAL -->
-		<div class="ui tiny modal" id="delete_event_modal">
+		<!-- CANCEL EVENT MODAL -->
+		<div class="ui tiny modal" id="cancel_event_modal">
 			<div class="ui header delete-modal">
 				<i class="times icon"></i>
-				<div class="content">Delete Event</div>
+				<div class="content">Cancel Event</div>
 			</div>
 			<div class="modal-content">
-				<p class="element-rmb">Are you sure you want to delete this event?</p>
-				<p class="element-rmb">Invited users will be notified that the event was deleted.</p>
+				<p class="element-rmb">Are you sure you want to cancel this event?</p>
+				<p class="element-rmb">ONCE CANCELLED, YOU CANNOT REVERT THIS ACTION.</p>
+				<p class="element-rmb">
+					Invited users will be notified that the event was canceled. 
+				</p>
 			</div>
 			<div class="actions">
-				<button class="ui cancel grey button" id="delete_event_cancel">
+				<button class="ui cancel grey button" id="cancel_event_cancel">
 					<i class="remove icon"></i>
 					Cancel
 				</button>
-				<button class="ui ok red button" type="submit" id="delete_event_submit">
+				<button class="ui ok red button" type="submit" id="cancel_event_submit">
 					<i class="checkmark icon"></i>
-					Confirm Event Delete
+					Confirm Event Cancel
 				</button>
 			</div>
 		</div>

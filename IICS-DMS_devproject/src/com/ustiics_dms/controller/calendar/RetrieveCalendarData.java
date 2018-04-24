@@ -48,6 +48,7 @@ public class RetrieveCalendarData extends HttpServlet {
 					events.getString("start_date"),
 					events.getString("end_date"),
 					events.getString("description"),
+					events.getString("status"),
 					events.getString("created_by")
 					)
 				);

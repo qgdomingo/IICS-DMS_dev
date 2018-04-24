@@ -174,7 +174,7 @@
 						Event List
 					</button>
 				</div>
-				
+
 				<!-- EVENT INVITATION LIST -->
 				<h3 class="element-rmb">Event Invitations</h3>
 				<div class="ui segment element-rmt" id="invitation_list_segment">
@@ -265,7 +265,11 @@
 							<option value="">Select Users</option>
 						</select>
 					</div>
-					
+					<div class="ui checkbox" id="display_invited_list_toggle">
+						<label>Display Invited List to Users</label>
+  						<input type="checkbox" name="display_invited_list"/>
+					</div> 
+
 					<div class="ui error message"></div>
 				</form>
 			</div>
@@ -298,7 +302,8 @@
 				<p class="element-rmb"><b>Start Date and Time: </b><span id="view_event_start_datetime"></span></p>
 				<p class="element-rmb"><b>End Date and Time: </b><span id="view_event_end_datetime"></span></p>
 				<p class="element-rmb"><b>Invited by: </b><span id="view_event_invited_by"></span></p>
-				<p><b>Event Description: </b><span id="view_event_description"></span></p>
+				<p class="element-rmb"><b>Event Description: </b><span id="view_event_description"></span></p>
+				<p><b>Display Invited List to Users: </b><span id="view_event_display_invited_list"></span></p>
 				
 				<form class="ui form" method="POST" action="${pageContext.request.contextPath}/SendInvitationResponse" 
 						id="event_response_form">

@@ -17,6 +17,8 @@
 	var tempResponseStatus;
 	var today = new Date();
 	
+	var userEmail = $('#account_email').val();
+	
 /*
  * DOCUMENT ON READY FUNCTION
  */
@@ -76,9 +78,11 @@
 				$('#event_start_datetime').text(data.startDateTime);
 				$('#event_end_datetime').text(data.endDateTime);
 				$('#event_createdby').text(data.createdBy);
-				$('#event_description').text(data.description);
+				$('#event_description').text(data.description);	
+				$('#event_display_invited_list').text( data.displayInvitedUsers ? "Visible" : "Hidden");
+				$('#event_status').text(data.status);
 				
-				setPageData();
+				setPageData(data.displayInvitedUsers, data.status);
 			}
 		}).fail( (response) => {
 			removeCSSClass('#eventdetails_loading', 'active');
@@ -87,14 +91,11 @@
 	}
 	
 	/* SET - Page Data */
-	function setPageData() {
-		var userEmail = $('#account_email').val();
+	function setPageData(displayInvitedUsersFlag, status) {
+		
 
 		if(userEmail == localEventData[0].email) {
 			$('#owner_event_buttons').show();
-			$('#owner_invited_users_table').show();
-			
-			getEventInvitedUsers();
 		} 
 		else {
 			$('#invited_event_response').show();
@@ -102,12 +103,22 @@
 			
 			getEventResponseDetails();
 		}
+
+		if(userEmail == localEventData[0].email || displayInvitedUsersFlag) {
+			$('#owner_invited_users_table').show();
+			getEventInvitedUsers();
+		}
+		
+		if(status == 'Cancelled') {
+			$('#invited_event_button').hide();
+			$('#owner_event_buttons').hide();
+		}
 	}
 	
 	/* GET - Event Invited Users */
 	function getEventInvitedUsers() {
 		var data = { id: eventID }
-		
+
 		$.get(getContextPath() + '/RetrieveEventInvitedList', $.param(data), (response) => {
 			if(!response.length == 0)
 			{
@@ -243,9 +254,9 @@
 	/* OPEN MODAL - Add Event Modal */
 	$('#edit_event_btn').click(function() {
 		$('#edit_event_modal').modal({
-			closable: false,
-			observeChanges: true,
-			centered: false,
+			closable	   : false,
+			observeChanges : true,
+			centered	   : false,
 			onShow: function() {
 				initializeCalendarInputs();
 				setEditEventModalData();
@@ -311,6 +322,7 @@
 		$('#edit_event_description').val(data.description);
 		$('#edit_event_invite').dropdown('set selected', localInvitedUsers);
 		
+		$('#display_invited_list_toggle').checkbox( (data.displayInvitedUsers ? 'check' : 'uncheck') );
 	}
 	
 	/* INITIALIZE - Input Field Show */
@@ -370,25 +382,24 @@
 	}
 	
 /*
- * DELETE EVENT 
+ * CANCEL EVENT 
  */
-	$('#delete_event_btn').click(function() {
-		$('#delete_event_modal').modal({
+	$('#cancel_event_btn').click(function() {
+		$('#cancel_event_modal').modal({
 			closable: false,
 			onApprove: function() {
-				activatePageLoading('Deleting Event');
+				activatePageLoading('Cancelling Event');
 				
 				var data = { id: eventID }
 				
-				$.post(getContextPath() + '/DeleteEvent', $.param(data), function(response) {
-					callSuccessModal('Event Delete Success', 'This event has been successfully deleted. ' 
-							+ 'Redirecting to Event List page');
-					
-					setTimeout(function(){  window.location.href = getContextPath() + '/calendar/vieweventlist.jsp'; }, 3000);
+				$.post(getContextPath() + '/CancelEvent', $.param(data), function(response) {
+					callSuccessModal('Event Cancel Success', 'This event has been successfully cancelled. ' 
+							+ 'Refreshing page in 2 seconds');
+		        	setTimeout(function(){  window.location.reload(); }, 2000);
 				})
 				.fail( function(response) {
 					deactivatePageLoading();
-					callFailModal('Failed to Delete Event', 'We are unable to process your request. Please try again.');
+					callFailModal('Failed to Cancel Event', 'We are unable to process your request. Please try again.');
 				});
 			}
 		}).modal('show');

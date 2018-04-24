@@ -44,9 +44,10 @@ public class RetrieveEventList extends HttpServlet {
 					events.getString("location"),
 					events.getString("start_date"),
 					events.getString("end_date"),
+					events.getString("status"),
 					ManageEventsFunctions.getFullName(events.getString("created_by")) 
-						+ "<" + events.getString("created_by") + ">")
-				);
+						+ "<" + events.getString("created_by") + ">"
+				));
 			}
 			
 			String json = new Gson().toJson(eventsList);

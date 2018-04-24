@@ -16,13 +16,20 @@
 /*
  * FUNCTIONS and EVENTS
  */
-
+	
+	/* DISPLAY INVITED USERS INFO */
+	$('.display_invited_info').popup({
+		on		 : 'hover',
+		position : 'top center',
+		content	 : 'When checked, the users invited on this event will NOT BE VISIBLE to the invited users.'
+	}).popup();
+	
 	/* OPEN MODAL - Add Event Modal */
 	$('#add_event_btn').click(function() {
 		$('#add_event_modal').modal({
-			closable: false,
-			observeChanges: true,
-			centered: false,
+			closable		: false,
+			observeChanges	: true,
+			centered		: false,
 			onShow: function() {
 				initializeCalendarInputs();
 				if(isNewlyLoadedDirectory) {
@@ -96,7 +103,6 @@
 			else { return false; }
 		}
 		else { return true; }
-	
 	};
 	
 	/* CUSTOM FORM RULE - If Needed a DATE Input */
@@ -106,7 +112,6 @@
 			else { return false; }
 		}
 		else { return true; }
-
 	};
 	
 	/* SUBMIT - Add Event */
@@ -125,7 +130,6 @@
         	  clearAddEventFields();
         	  resetAddEventButtons();
         	  callSuccessModal('Added New Event', 'A new event has successfully been created.');
-      	  
           },
           error: function(response) {
         	  removeCSSClass('#add_event_form', 'error');

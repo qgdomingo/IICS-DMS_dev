@@ -55,7 +55,9 @@ public class AddEvent extends HttpServlet {
 			String eventDescription = request.getParameter("event_description");
 			String invited[] = request.getParameterValues("event_invite");
 			
-			ManageEventsFunctions.addEvent(title, location, allDayEvent_flag, startDateTime, endDateTime, eventDescription, acc.getEmail(), invited);
+			int displayInvitedList = ( (request.getParameter("display_invited_list") != null) ? 1 : 0 );
+			
+			ManageEventsFunctions.addEvent(title, location, allDayEvent_flag, startDateTime, endDateTime, eventDescription, acc.getEmail(), invited, displayInvitedList);
 			
 			LogsFunctions.addLog("System", "Add Event", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), title);
 			
@@ -66,7 +68,6 @@ public class AddEvent extends HttpServlet {
 			try {
 				LogsFunctions.addErrorLog(e.getMessage(), acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			e.printStackTrace();

@@ -44,11 +44,12 @@
 			if(!response.length == 0) 
 			{
 				$.each(response, (index, event) => {
-					$('<tr id="'+event.id+'">').appendTo('#event_tablebody')		
+					$('<tr id="'+event.id+'" class="'+(event.status == "Cancelled" ? "negative" : "")+'">').appendTo('#event_tablebody')		
 						.append($('<td>').text(event.title))
 						.append($('<td>').text(event.location))
 						.append($('<td>').text(event.startDateTime))
 						.append($('<td>').text(event.endDateTime))
+						.append($('<td>').text(event.status))
 						.append($('<td>').text(event.createdBy))
 				});
 				
@@ -62,7 +63,7 @@
 			else if(response.length == 0)
 			{
 				$('<tr>').appendTo('#event_tablebody')
-					.append($('<td class="center-text" colspan="5">')
+					.append($('<td class="center-text" colspan="6">')
 							.text("You do not have any events. Go to the Calendar page and add one."));
 			}
 			
@@ -70,7 +71,7 @@
 		})
 		.fail( function(response) {
 			$('<tr>').appendTo('#event_tablebody')
-				.append($('<td class="center-text error" colspan="5">')
+				.append($('<td class="center-text error" colspan="6">')
 					.text("Unable to retrieve list of your events. :("));
 			removeCSSClass('#event_list_loading', 'active');
 		});	
@@ -125,10 +126,16 @@
 		}) 
 	});
 	
+	/* SEARCH - Status */
+	$('#search_event_status').on('change', function() {
+		if(!isEventListTableEmpty) eventListTable.column(4).search( $(this).val() ).draw();
+	});
+		
 	/* CLEAR SEARCH */
 	$('#search_clear').click( function() {
 		$('#search_event').val('');
 		$('#search_datefrom_calendar').calendar('clear');
 		$('#search_dateto_calendar').calendar('clear');
+		$('#search_event_status').dropdown('restore defaults');
 		if(!isEventListTableEmpty) eventListTable.search('').draw();
 	});

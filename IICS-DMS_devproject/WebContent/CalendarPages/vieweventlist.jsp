@@ -174,7 +174,7 @@
 			
 			<!-- SEARCH FIELDS FOR EVENTS -->
 			<form class="ui form">
-				<div class="four fields">
+				<div class="five fields">
 					
 					<!-- GLOBAL EVENT SEARCH -->
 					<div class="field">
@@ -204,6 +204,15 @@
 						</div>
 					</div>
 					
+					<!-- STATUS DROPDOWN -->
+					<div class="field">
+						<select class="ui fluid dropdown" id="search_event_status">
+							<option value="">Status</option>
+							<option value="Continued">Continued</option>
+							<option value="Cancelled">Cancelled</option>
+						</select>
+					</div>
+					
 					<div class="field">
 						<button class="ui grey button" type="button" id="search_clear">
 							Clear Search
@@ -219,6 +228,7 @@
 							<th>Location</th>
 							<th>Start Date and Time</th>
 							<th>End Date and Time</th>
+							<th>Status</th>
 							<th>Created by</th>
 						</tr>
 					</thead>

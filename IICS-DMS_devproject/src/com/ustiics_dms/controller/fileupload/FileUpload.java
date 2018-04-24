@@ -134,9 +134,9 @@ public class FileUpload extends HttpServlet {
 				
 				returningReferenceNo = FileUploadFunctions.uploadIncomingDocument(threadNo, referenceNo, documentSource, documentTitle, category, actionRequired, fileData, description, fullName, acc.getEmail(),acc.getDepartment(), actionDue);
 				
-				//String des = ManageTasksFunctions.getFullName(acc.getEmail()) +" has uploaded a new incoming document, " + documentTitle;
+				String des = ManageTasksFunctions.getFullName(acc.getEmail()) + " has uploaded a new incoming document, " + documentTitle;
 
-				//NotificationFunctions.addNotification("Incoming Documents Page", des, FileUploadFunctions.getGroupByDepartmentNoFaculty(acc.getDepartment(), acc.getEmail()));
+				NotificationFunctions.addNotification("Incoming Documents Page", des, FileUploadFunctions.getGroupByDepartmentNoFaculty(acc.getDepartment(), acc.getEmail()));
 
 				LogsFunctions.addLog("System", "Upload Incoming", acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment(), documentTitle);
 
@@ -173,7 +173,6 @@ public class FileUpload extends HttpServlet {
 			try {
 					LogsFunctions.addErrorLog(e.getMessage(), acc.getEmail(), acc.getFullName(), acc.getUserType(), acc.getDepartment());
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			e.printStackTrace();

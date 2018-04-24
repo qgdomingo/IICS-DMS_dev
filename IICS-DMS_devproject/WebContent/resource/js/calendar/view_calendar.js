@@ -31,6 +31,7 @@
 		
 		getCalendarData();
 		getInvitationList();
+		
 	}); 
 	
 /*
@@ -55,8 +56,8 @@
 						start: event.startDateTime,
 						end: event.endDateTime,
 						url: getContextPath() + '/calendar/vieweventdetails.jsp?id=' + encodeURIComponent(event.id)	
-							+ '&origin=1'
-							
+							+ '&origin=1', 
+						color: (event.status == 'Cancelled' ? 'rgb(237, 28, 36)' : '')
 					})
 				});
 				
@@ -126,12 +127,12 @@
 			
 			setEventInvitationDetails( selectedDataIndex );
 			$('#event_invitation_dialog').modal({
-				closable: false,
-				observeChanges: true,
+				closable	   : false,
+				centered	   : false,
+				observeChanges : true,
 				onHidden: function() {
 					removeCSSClass('#event_response_form', 'loading');
 					$('#event_response_close').prop("disabled", "");
-					
 				}
 			}).modal('show');
 		});
@@ -148,6 +149,7 @@
 		$('#view_event_end_datetime').text(selectedData.endDateTime);
 		$('#view_event_invited_by').text(selectedData.createdBy);
 		$('#view_event_description').text(selectedData.description);
+		$('#view_event_display_invited_list').text( selectedData.displayInvitedUsers ? "Visible" : "Hidden" );
 	}
 	
 	/* SUBMIT - Invitation Response Form */

@@ -36,7 +36,7 @@ public class RetrieveEventInvitedList extends HttpServlet {
 		
 		try {
 			String id = AesEncryption.decrypt(request.getParameter("id"));
-			
+
 			ResultSet events = (ResultSet) ManageEventsFunctions.getEventInvitedList(id);
 
 			while(events.next()) { 
